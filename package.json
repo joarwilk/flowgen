@@ -1,0 +1,11 @@
+{
+  "name": "flowgen",
+  "version": "1.0.0",
+  "description": "Generate flowtype definition files from AST",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
