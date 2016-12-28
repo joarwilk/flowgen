@@ -11,15 +11,11 @@ export default class Module extends Node {
     this.name = name;
   }
 
-  addChild = (node: Node) => {
-    this.children.push(node)
-  }
-
   print = () => {
-    console.log(this)
-    return this.children.map(child => {
-      console.log(child.print());
-      child.print()
-    }).join('\n')
+    return `declare module '${this.name}' {
+        ${this.children.map(child => {
+        return child.print()
+      }).join('\n\t')}
+    }`
   }
 }

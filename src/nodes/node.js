@@ -1,19 +1,5 @@
 /* @flow */
-export type RawNode = {
-  name?: {
-    text?: string
-  } | string,
-  type?: {
-    typeName?: {
-      text: string
-    }
-  },
-  moduleSpecifier?: {
-    text: string
-  },
-  parameters?: Array<RawNode>,
-  typeParameters?: Array<RawNode>
-}
+export type RawNode = any;
 
 import { stripDetailsFromTree } from '../parse'
 

@@ -1,16 +1,13 @@
 /* @flow */
+import type { RawNode } from '../nodes/node';
 
-export const moduleExports = (node: RawNode) => {
-  if (node.isDefault) {
-    return `declare module.exports: ${node.name}`
-  }
+import namespaceManager from '../namespaceManager';
 
-  // I dont think this case will ever happen right now
-  console.error('Encountered a non-default export to print');
-  return '';
+export const moduleExports = (node: RawNode): string => {
+  return `declare module.exports: ${node.expression.text}`
 }
 
-export const exporter = (node: RawNode) => {
+export const exporter = (node: RawNode): string => {
   let str = '';
 
   if (node.modifiers && node.modifiers.some(modifier => modifier.kind === 'ExportKeyword')) {
@@ -42,4 +39,20 @@ export const imports = (node: ImportNode, moduleName: string): string => {
   str += ` from '${moduleName}'`;
 
   return str;
+}
+
+export const namespace = (name: string, hidePunctuation: boolean = false) => {
+  if (namespaceManager.nsExists(name)) {
+    return `${name}${(hidePunctuation ? '' : '$')}`;
+  }
+
+  return name + (hidePunctuation ? '' : '.');
+}
+
+export const namespaceProp = (name: string) => {
+  if (namespaceManager.nsPropExists(name)) {
+    return `moment$${name}`;
+  }
+
+  return name;
 }

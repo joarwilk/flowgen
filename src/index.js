@@ -30,8 +30,6 @@ program
         return child.print();
       }).join(' ');
 
-      console.log(output)
-
       fs.writeFile('./' + options.outputFile, output, function(err) {
           if (err) {
               return console.log(err);

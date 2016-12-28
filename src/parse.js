@@ -27,10 +27,8 @@ export const parseNameFromNode = (node: RawNode, context: Node) => {
     return node.moduleSpecifier.text;
   }
 
-  console.log('wat', node)
-  throw new Error()
-
-  return 'wat';
+  console.log('INVALID NAME');
+  return 'INVALID NAME REF';
 }
 
 // Traverse a node and strip information we dont care about
@@ -60,20 +58,21 @@ export const stripDetailsFromTree = (root: RawNode) => {
 const traverseNode = (ast, context: Node) => {
   ast.statements.forEach(node => {
     switch (node.kind) {
+
       case ts.SyntaxKind.ModuleDeclaration:
-        if (node.flags === 4098 /* TODO: Replace with namespace flag enum */) {
-          const namespace = new NamespaceNode(node);
+        if (node.flags === 4098 || node.flags === 16 /* TODO: Replace with namespace flag enum */) {
+          const namespace = new NamespaceNode(node.name.text);
 
           context.addChild(namespace);
 
           // Create fake module based on the namespace
-          recursiveWalkTree(node.body, namespace); break;
+          traverseNode(node.body, namespace); break;
         } else {
           const module = new ModuleNode(node.name.text);
 
           context.addChild(module);
 
-          recursiveWalkTree(node.body, module); break;
+          traverseNode(node.body, module); break;
         }
 
       case ts.SyntaxKind.FunctionDeclaration:

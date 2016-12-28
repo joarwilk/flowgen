@@ -1,12 +1,12 @@
 /* @flow */
 import type { RawNode } from '../nodes/node';
 
-import * as common from './common';
+import printers from './index';
 
-const functionType = (func: RawNode, namespace: string = '', dotAsReturn: boolean = false) => {
-  const params = func.parameters.map(common.parameter).join(', ');
-  const generics = common.generics(func.typeParameters);
-  const returns = common.type(func.type, namespace);
+export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
+  const params = func.parameters.map(printers.common.parameter).join(', ');
+  const generics = printers.common.generics(func.typeParameters);
+  const returns = printers.node.printType(func.type);
 
   const firstPass = `${generics}(${params})${dotAsReturn ? ':' : ' =>'} ${returns}`;
 
@@ -21,8 +21,8 @@ const functionType = (func: RawNode, namespace: string = '', dotAsReturn: boolea
   return firstPass;
 }
 
-const functionDeclaration = (nodeName: string, node: RawNode, namespace: string = '') => {
-  let str = `declare ${common.export(node)}function ${nodeName}${functionType(node, namespace, true)}`;
+const functionDeclaration = (nodeName: string, node: RawNode) => {
+  let str = `declare ${printers.relationships.exporter(node)}function ${nodeName}${functionType(node, true)}`;
 
   return str;
 }

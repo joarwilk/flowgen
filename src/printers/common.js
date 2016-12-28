@@ -1,20 +1,20 @@
 /* @flow */
-import type { RawNode } from './nodes/node';
+import type { RawNode } from '../nodes/node';
 
-import nodePrinter from './node';
+import printers from './index';
 
-export const parameter = (param: RawNode) => {
+export const parameter = (param: RawNode): string => {
   let left = param.name.text;
   let right;
 
   if (param.name.kind === "ObjectBindingPattern") {
-    left = `{${param.name.elements.map(nodePrinter).join(', ')}}`
+    left = `{${param.name.elements.map(printers.node.printType).join(', ')}}`
   }
 
   if (!param.type) {
     right = "<<UNKNOWN PARAM FORMAT>>";
   } else {
-    right = nodePrinter(param.type);
+    right = printers.node.printType(param.type);
   }
 
   if (param.questionToken) {
@@ -30,14 +30,34 @@ export const parameter = (param: RawNode) => {
 
 
 
-export const parseTypeReference = (node) => {
+export const parseTypeReference = (node: RawNode): string => {
   if (node.typeName.left && node.typeName.right) {
-    return printType(node.typeName) + printGenerics(node.typeArguments);
+    return printers.node.printType(node.typeName) + generics(node.typeArguments);
   }
 
-  return node.typeName.text + printGenerics(node.typeArguments)
+  return node.typeName.text + generics(node.typeArguments)
 }
 
-export const printGenerics = (types) => (
-  (types && types.length) ? `<${types.map(printType).join(', ')}>` : ''
-)
+export const generics = (types: ?Array<RawNode>): string => {
+  if (types && types.length) {
+    return `<${types.map(printers.node.printType).join(', ')}>`;
+  }
+
+  return '';
+}
+
+export const comment = (jsdoc) => {
+  const blocks = jsdoc.map(doc => {
+    const comment = (doc.comment || '').replace('\n', '\n\t * ');
+
+    const tags = (doc.tags || []).map(tag => {
+      console.log(tag)
+
+      return `* @${tag.tagName.text} ${(tag.preParameterName || {}).text} ${tag.comment}`;
+    });
+
+    return comment + tags.join('\n');
+  }).join('');
+
+  return `/* ${blocks} */\n`;
+}

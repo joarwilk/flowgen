@@ -20,34 +20,39 @@ export const printType = (type: RawNode) => {
       return printers.functions.functionType(type);
 
     case "TypeLiteral":
-      return printers.declarations.interface(type);
+      return printers.declarations.interfaceType(type);
 
     case 'Identifier':
     case 'StringLiteralType':
-      return type.text;
+      return printers.relationships.namespace(type.text, true);
 
     case 'BindingElement':
     case 'TypeParameter':
       return type.name.text;
     case 'TypePredicate':
-      return type.type.typeName.text;
+      if (type.type.typeName) {
+        return type.type.typeName.text;
+      }
+
+      return printType(type.type);
 
     case 'QualifiedName':
-      return printType(type.left) + '.' + printType(type.right) + printers.common.generics(type.typeArguments);
+      return printers.relationships.namespace(type.left.text) + printType(type.right) + printers.common.generics(type.typeArguments);
 
     case 'TypeReference':
-      return printers.declarations.type(type);
+      return printers.declarations.typeReference(type)
 
     case 'LastNodeType':
       return `"${type.literal.text}"`;
 
+    case 'VariableDeclaration':
     case 'PropertyDeclaration':
       if (type.modifiers && type.modifiers.some(modifier => modifier.kind === 'PrivateKeyword')) {
         return '';
       }
 
       if (type.parameters) {
-        return type.name.text + ': ' + type.parameters.map(printers.common.parameters);
+        return type.name.text + ': ' + type.parameters.map(printers.common.parameter);
       }
 
       if (type.type) {
@@ -71,13 +76,14 @@ export const printType = (type: RawNode) => {
       return `${type.expression.text}$${type.name.text}`;
 
     case 'PropertySignature':
-      return printParameter(type)
+      return printers.common.parameter(type)
 
     case 'CallSignature':
-      return `(${type.parameters.map(printParameter).join(', ')}): ${printType(type.type)}`
+      return `(${type.parameters.map(printers.common.parameter).join(', ')}): ${printType(type.type)}`
 
     case 'UnionType':
-      return type.types.map(printType).join(' | ');
+      const join = type.types.length >= 5 ? '\n\t\t' : ' ';
+      return type.types.map(printType).join(`${join}| `);
 
     case 'ArrayType':
       return printType(type.elementType) + '[]';
@@ -86,7 +92,7 @@ export const printType = (type: RawNode) => {
       return 'this';
 
     case 'IndexSignature':
-      return `[${type.parameters.map(printParameter).join(', ')}]: ${printType(type.type)}`
+      return `[${type.parameters.map(printers.common.parameter).join(', ')}]: ${printType(type.type)}`
 
     case 'IntersectionType':
       return type.types.map(printType).join(' & ')
@@ -97,19 +103,27 @@ export const printType = (type: RawNode) => {
         return '';
       }
 
-      return type.name.text + printBasicFunction(type, true);
+      return type.name.text + printers.functions.functionType(type, true);
+
+
+    case 'ConstructorType':
+      // Not implemented. The return is just a guess.
+      return '(' + type.parameters.map(printers.common.parameter).join(', ') + ') => ' + printers.node.printType(type.type)
 
     case 'ConstructSignature':
-      return 'new ' + printBasicFunction(type, true);
+      return 'new ' + printers.functions.functionType(type, true);
 
     case 'TypeQuery':
       return 'typeof ' + type.exprName.text;
 
     case 'Constructor':
-      return 'constructor(' + type.parameters.map(printParameter).join(', ') + '): this';
+      return 'constructor(' + type.parameters.map(printers.common.parameter).join(', ') + '): this';
 
     case 'ParenthesizedType':
       return `(${printType(type.type)})`;
+
+    case 'VariableDeclaration':
+      return type.name.text + ': ' + printType(type.type);
   }
 
   console.log('NO PRINT IMPLEMENTED', type)
