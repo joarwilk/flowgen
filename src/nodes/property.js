@@ -7,19 +7,12 @@ import printers from '../printers';
 import namespaceManager from '../namespaceManager';
 
 export default class Property extends Node {
-  namespace: string;
   name: string;
 
-  constructor(node: RawNode, namespace: string = '') {
+  constructor(node: RawNode) {
     super(node);
 
-    this.namespace = namespace;
     this.name = this.raw.name.text;
-
-    if (namespace) {
-      console.log('registering ', namespace, this.name)
-      namespaceManager.registerProp(namespace, this.name);
-    }
   }
 
   print(namespace: string = '') {

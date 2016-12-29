@@ -14,6 +14,13 @@ export default class Namespace extends Node {
     namespaceManager.register(name);
   }
 
+  addChild(child: Node) {
+    child.namespace = this.name;
+    namespaceManager.registerProp(this.name, child.name);
+
+    this.children.push(child);
+  }
+
   print = () => {
     return this.children.map(child => {
       return child.print(this.name)

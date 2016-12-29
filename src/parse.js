@@ -11,10 +11,11 @@ import ModuleNode from './nodes/module';
 import VariableNode from './nodes/variable';
 import PropertyNode from './nodes/property';
 import NamespaceNode from './nodes/namespace';
-
+import namespaceManager from './namespaceManager';
+import printers from './printers';
 import getNodeName from './nodename';
 
-export const parseNameFromNode = (node: RawNode, context: Node) => {
+export const parseNameFromNode = (node: RawNode) => {
   if (node.name && node.name.text) {
     return node.name.text;
   }
@@ -65,7 +66,8 @@ const traverseNode = (ast, context: Node) => {
 
           context.addChild(namespace);
 
-          // Create fake module based on the namespace
+          namespaceManager.setContext(node.name.text);
+
           traverseNode(node.body, namespace); break;
         } else {
           const module = new ModuleNode(node.name.text);
@@ -95,6 +97,9 @@ const traverseNode = (ast, context: Node) => {
 
       case ts.SyntaxKind.ImportDeclaration:
         context.addChild(new ImportNode(node)); break;
+
+      default:
+        console.log('Missing node parse', node.kind);
     }
   })
 }

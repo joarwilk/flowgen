@@ -51,7 +51,7 @@ export const namespace = (name: string, hidePunctuation: boolean = false) => {
 
 export const namespaceProp = (name: string) => {
   if (namespaceManager.nsPropExists(name)) {
-    return `moment$${name}`;
+    return `${namespaceManager.getNSForProp(name)}$${name}`;
   }
 
   return name;

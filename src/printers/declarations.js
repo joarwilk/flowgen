@@ -11,9 +11,9 @@ export const variableDeclaration = (node: RawNode) => {
 }
 
 export const interfaceType = (node: RawNode, withSemicolons: boolean = false) => {
-  const members = node.members
+  let members = node.members
     .map(member => {
-      let str = '';
+      let str = '\n\t';
 
       if (member.jsDoc) {
         str += printers.common.comment(member.jsDoc);
@@ -21,9 +21,13 @@ export const interfaceType = (node: RawNode, withSemicolons: boolean = false) =>
 
       return str + printers.node.printType(member);
     })
-    .join(withSemicolons ? ';\n\t' : ',\n\t');
+    .join(withSemicolons ? ';' : ',');
 
-  return `{\t\n${members}\n}`;
+  if (members.length > 0) {
+    members += '\n';
+  }
+
+  return `{${members}}`;
 }
 
 export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
@@ -34,10 +38,10 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
     heritage = node.heritageClauses.map(clause => {
       return clause.types.map(printers.node.printType).join(', ')
     }).join(', ');
-    heritage = heritage.length > 0 ? `mixins ${heritage}` : '';
+    heritage = heritage.length > 0 ? `& ${heritage}` : '';
   }
 
-  let str = `declare ${printers.relationships.exporter(node)}class ${nodeName}${printers.common.generics(node.typeParameters)} ${heritage} ${interfaceType(node)}`;
+  let str = `declare ${printers.relationships.exporter(node)}type ${nodeName}${printers.common.generics(node.typeParameters)} = ${interfaceType(node)} ${heritage}`;
 
   return str;
 }

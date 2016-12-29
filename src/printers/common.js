@@ -48,16 +48,14 @@ export const generics = (types: ?Array<RawNode>): string => {
 
 export const comment = (jsdoc) => {
   const blocks = jsdoc.map(doc => {
-    const comment = (doc.comment || '').replace('\n', '\n\t * ');
+    const comment = (doc.comment || '').replace('\n', '\n\t * ');
 
     const tags = (doc.tags || []).map(tag => {
-      console.log(tag)
-
-      return `* @${tag.tagName.text} ${(tag.preParameterName || {}).text} ${tag.comment}`;
+      return `\n\t * @${tag.tagName.text} ${(tag.preParameterName || {}).text || ''} ${tag.comment}`;
     });
 
-    return comment + tags.join('\n');
+    return comment + tags.join('');
   }).join('');
 
-  return `/* ${blocks} */\n`;
+  return `/**\n\t * ${blocks} */\n`;
 }
