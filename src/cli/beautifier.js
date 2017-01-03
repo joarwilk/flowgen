@@ -8,6 +8,7 @@ export default function beautify(str: string) {
   const corrected = formatted.split(' ? : ').join('?: ')
                             // .split('(\n            ').join('(')
                              .split('declare\n').join('declare ')
+                             .split('declare     ').join('declare ')
                              .split(' < ').join('<')
                              .split(' > ').join('>');
 

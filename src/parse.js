@@ -107,11 +107,10 @@ const collectNode = (node: RawNode, context: Node, factory: Factory) => {
       break;
     case ts.SyntaxKind.EnumDeclaration:
       // not implemented
-      console.log(node);
       break;
 
     default:
-      console.log('Missing node parse', stripDetailsFromTree(node));
+      // Missing node parse, is bug
   }
 }
 

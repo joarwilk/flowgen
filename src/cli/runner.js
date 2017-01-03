@@ -30,7 +30,6 @@ export default (options: RunnerOptions) => {
 
       // Iterate all the files the user has passed in
       files.forEach((file, index) => {
-        const start = +new Date();
         // Get the module name from the file name
         const moduleName = getModuleNameFromFile(file);
 
@@ -43,27 +42,37 @@ export default (options: RunnerOptions) => {
         const intro = meta(moduleName, options.version);
 
         // Let the user know what's going on
-        console.log('Parsing', moduleName, '(#' + index + ')');
-
-        // Produce the flow library content
-        const flowDefinitions = compiler.compileDefinitionFile(file);
-
-        // Write the output to disk
-        const absoluteOutputFilePath: string = writeFile(outputFile, beautify(intro + flowDefinitions));
-
-        // Check if we should compile tests as well
-        if (options.compileTests) {
-          // Assume tests file is in same dir, named <filename>-tests.ts
-          // Based on DD conventions
-          const testFileName = path.dirname(file) + '/' + moduleName + '-tests.ts';
-          const testFileOutput = path.dirname(absoluteOutputFilePath) + '/test_' + moduleName + '.js';
-
-
-          // Try to compile the test file. Will fail silently if not present.
-          compiler.compileTest(testFileName, testFileOutput);
+        if (files.length > 3) {
+          // If we're compiling a lot of files, show more stats
+          const progress = Math.round((index / files.length) * 100);
+          process.stdout.write("\r\x1b[K")
+          process.stdout.write(progress + '% | ' + moduleName)
+        } else {
+          console.log('Parsing', moduleName);
         }
 
-        console.log(+new Date() - start);
+        // Produce the flow library content
+        try {
+          const flowDefinitions = compiler.compileDefinitionFile(file);
+
+          // Write the output to disk
+          const absoluteOutputFilePath: string = writeFile(outputFile, beautify(intro + flowDefinitions));
+
+          // Check if we should compile tests as well
+          if (options.compileTests) {
+            // Assume tests file is in same dir, named <filename>-tests.ts
+            // Based on DD conventions
+            const testFileName = path.dirname(file) + '/' + moduleName + '-tests.ts';
+            const testFileOutput = path.dirname(absoluteOutputFilePath) + '/test_' + moduleName + '.js';
+
+
+            // Try to compile the test file. Will fail silently if not present.
+            compiler.compileTest(testFileName, testFileOutput);
+          }
+        } catch (e) {
+          console.error('Parsing', moduleName, 'failed');
+          console.error(e);
+        }
       })
     }
   }
