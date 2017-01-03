@@ -26,9 +26,7 @@ flowgen lodash.d.ts
 ## The difficult parts
 
 ### Namespaces
-Namespaces have been a big headache. What it does right now is that it converts any namespace to a module  
-and then imports any references to that module. What's currently not working in terms of namespaces is exporting all
-properties of the namespace as a default object, but that should be a fairly trivial change.
+Namespaces have been a big headache. What it does right now is that it splits any namespace out into prefixed global scope declarations instead. It works OK, but its not pretty and there's some drawbacks to it.
 
 ### External library imports
 Definitions in TS and flow are often quite different, and imported types from other libraries dont usually have
