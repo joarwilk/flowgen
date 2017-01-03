@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 /* @flow */
 import { recursiveWalkTree } from './parse';
 import runner from './cli/runner';

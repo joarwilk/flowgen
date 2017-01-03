@@ -29,7 +29,7 @@ export default (options: RunnerOptions) => {
     compile: (files: Array<string>) => {
 
       // Iterate all the files the user has passed in
-      files.slice(2290, 999999).forEach((file, index) => {
+      files.forEach((file, index) => {
         const start = +new Date();
         // Get the module name from the file name
         const moduleName = getModuleNameFromFile(file);
