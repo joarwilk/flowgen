@@ -8,6 +8,6 @@ export default class Import extends Node {
   }
 
   print() {
-    console.log('printing import')
+    // TODO: Implement this.
   }
 }

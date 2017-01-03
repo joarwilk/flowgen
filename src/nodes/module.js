@@ -13,9 +13,9 @@ export default class Module extends Node {
 
   print = () => {
     return `declare module '${this.name}' {
-        ${this.children.map(child => {
+        ${this.getChildren().map(child => {
         return child.print()
       }).join('\n\t')}
-    }`
+    }\n`
   }
 }

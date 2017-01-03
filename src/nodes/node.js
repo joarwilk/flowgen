@@ -1,19 +1,22 @@
 /* @flow */
 export type RawNode = any;
 
+import _ from 'lodash';
 import { stripDetailsFromTree, parseNameFromNode } from '../parse'
 
 import printers from '../printers';
 
 export default class Node {
-  children: Array<Node>;
+  children: {
+    [key: string]: Node
+  };
   kind: string;
   name: string;
   raw: RawNode;
   namespace: ?string;
 
   constructor(node: ?RawNode) {
-    this.children = [];
+    this.children = {};
 
     if (node) {
       this.raw = stripDetailsFromTree(node);
@@ -21,8 +24,12 @@ export default class Node {
     }
   }
 
-  addChild(node: Node) {
-    this.children.push(node);
+  addChild(name:string, node: Node) {
+    this.children[name] = node;
+  }
+
+  getChildren() {
+    return _.toArray(this.children);
   }
 
   print() {

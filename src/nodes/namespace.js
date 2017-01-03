@@ -14,16 +14,31 @@ export default class Namespace extends Node {
     namespaceManager.register(name);
   }
 
-  addChild(child: Node) {
+  addChild(name: string, child: Node) {
     child.namespace = this.name;
     namespaceManager.registerProp(this.name, child.name);
 
-    this.children.push(child);
+    this.children[name] = child;
   }
 
   print = () => {
-    return this.children.map(child => {
+    const functions = this.getChildren().filter(child => child.raw && child.raw.kind === 'FunctionDeclaration');
+
+    const children = `${this.getChildren().map(child => {
       return child.print(this.name)
-    }).join('\n\n')
+    }).join('\n\n')}`;
+
+    if (functions.length) {
+      const nsGroup = `
+      declare var npm$namespace$${this.name}: {
+        ${functions.map(child => {
+          return `${child.name}: typeof ${this.name}$${child.name},`;
+        }).join('\n')}
+      }`;
+
+      return nsGroup + children;
+    }
+
+    return children;
   }
 }

@@ -5,6 +5,7 @@ import Node from './node';
 import printers from '../printers';
 
 import namespaceManager from '../namespaceManager';
+import { parseNameFromNode } from '../parse';
 
 export default class Property extends Node {
   name: string;
@@ -12,7 +13,7 @@ export default class Property extends Node {
   constructor(node: RawNode) {
     super(node);
 
-    this.name = this.raw.name.text;
+    this.name = parseNameFromNode(node);
   }
 
   print(namespace: string = '') {
@@ -33,14 +34,16 @@ export default class Property extends Node {
     }
 
     switch (this.raw.kind) {
+      case 'FunctionDeclaration':
+      out += printers.functions.functionDeclaration(name, this.raw); break;
       case 'ClassDeclaration':
-      out += printers.declarations.classDeclaration( this.raw); break;
+      out += printers.declarations.classDeclaration(this.raw); break;
       case 'InterfaceDeclaration':
       out += printers.declarations.interfaceDeclaration(name, this.raw); break;
       case 'TypeAliasDeclaration':
       out += printers.declarations.typeDeclaration(name, this.raw); break;
     }
 
-    return '\t' + out;
+    return out;
   }
 }

@@ -2,7 +2,6 @@
 import type { RawNode } from '../nodes/node'
 
 import _ from 'lodash';
-import getNodeName from '../nodename';
 
 import printers from './index';
 
@@ -22,6 +21,7 @@ export const printType = (type: RawNode) => {
     case "TypeLiteral":
       return printers.declarations.interfaceType(type);
 
+    case 'IdentifierObject':
     case 'Identifier':
     case 'StringLiteralType':
       return printers.relationships.namespace(type.text, true);
@@ -38,6 +38,9 @@ export const printType = (type: RawNode) => {
 
     case 'QualifiedName':
       return printers.relationships.namespace(type.left.text) + printType(type.right) + printers.common.generics(type.typeArguments);
+
+    case 'StringLiteral':
+      return type.text;
 
     case 'TypeReference':
       return printers.declarations.typeReference(type)
@@ -73,16 +76,20 @@ export const printType = (type: RawNode) => {
       return printType(type.expression) + printers.common.generics(type.typeArguments);
 
     case 'PropertyAccessExpression':
-      return `${type.expression.text}$${type.name.text}`;
+      return printers.relationships.namespace(type.expression.text) + printType(type.name)
+
+    case 'NodeObject':
+      return printers.relationships.namespace(type.expression.text) + printType(type.name);
 
     case 'PropertySignature':
       return printers.common.parameter(type)
 
     case 'CallSignature':
-      return `(${type.parameters.map(printers.common.parameter).join(', ')}): ${printType(type.type)}`
+      let str = `(${type.parameters.map(printers.common.parameter).join(', ')})`;
+      return type.type ? `${str}: ${printType(type.type)}` : str;
 
     case 'UnionType':
-      const join = type.types.length >= 5 ? '\n\t\t' : ' ';
+      const join = type.types.length >= 5 ? '\n' : ' ';
       return type.types.map(printType).join(`${join}| `);
 
     case 'ArrayType':
@@ -96,6 +103,10 @@ export const printType = (type: RawNode) => {
 
     case 'IntersectionType':
       return type.types.map(printType).join(' & ')
+
+    case 'SymbolKeyword':
+      // TODO: What to print here?
+      return '';
 
     case 'MethodDeclaration':
       // Skip methods marked as private
@@ -114,7 +125,7 @@ export const printType = (type: RawNode) => {
       return 'new ' + printers.functions.functionType(type, true);
 
     case 'TypeQuery':
-      return 'typeof ' + type.exprName.text;
+      return 'typeof ' +type.exprName.text;
 
     case 'Constructor':
       return 'constructor(' + type.parameters.map(printers.common.parameter).join(', ') + '): this';
@@ -126,7 +137,6 @@ export const printType = (type: RawNode) => {
       return type.name.text + ': ' + printType(type.type);
   }
 
-  console.log('NO PRINT IMPLEMENTED', type)
   return 'NO PRINT IMPLEMENTED: ' + type.kind;
 }
 

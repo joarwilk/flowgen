@@ -2,9 +2,12 @@
 import type { RawNode } from '../nodes/node';
 
 import namespaceManager from '../namespaceManager';
+import printers from './index';
 
 export const moduleExports = (node: RawNode): string => {
-  return `declare module.exports: ${node.expression.text}`
+  let name = printers.node.printType(node.expression);
+
+  return `declare module.exports: typeof ${name}`
 }
 
 export const exporter = (node: RawNode): string => {

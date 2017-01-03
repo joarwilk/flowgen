@@ -4,16 +4,16 @@ import type { RawNode } from '../nodes/node';
 import printers from './index';
 
 export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
-  const params = func.parameters.map(printers.common.parameter).join(', ');
+  const params = func.parameters.map(printers.common.parameter);
   const generics = printers.common.generics(func.typeParameters);
-  const returns = printers.node.printType(func.type);
+  const returns = func.type ? printers.node.printType(func.type) : 'void';
 
-  const firstPass = `${generics}(${params})${dotAsReturn ? ':' : ' =>'} ${returns}`;
+  const firstPass = `${generics}(${params.join(', ')})${dotAsReturn ? ':' : ' =>'} ${returns}`;
 
   // Make sure our functions arent too wide
   if (firstPass.length > 80) {
     // break params onto a new line for better formatting
-    const paramsWithNewlines = `\t${params}`;
+    const paramsWithNewlines = `\n${params.join(',\n')}`;
 
     return `${generics}(${paramsWithNewlines})${dotAsReturn ? ':' : ' =>'} ${returns}`;
   }
@@ -21,7 +21,7 @@ export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
   return firstPass;
 }
 
-const functionDeclaration = (nodeName: string, node: RawNode) => {
+export const functionDeclaration = (nodeName: string, node: RawNode) => {
   let str = `declare ${printers.relationships.exporter(node)}function ${nodeName}${functionType(node, true)}`;
 
   return str;

@@ -1,5 +1,6 @@
 /* @flow */
 import type { RawNode } from '../nodes/node';
+import type { JSDocTypeExpression } from 'typescript';
 
 import printers from './index';
 
@@ -46,16 +47,16 @@ export const generics = (types: ?Array<RawNode>): string => {
   return '';
 }
 
-export const comment = (jsdoc) => {
+export const comment = (jsdoc: Array<JSDocTypeExpression>) => {
   const blocks = jsdoc.map(doc => {
-    const comment = (doc.comment || '').replace('\n', '\n\t * ');
+    const comment = (doc.comment || '').replace('\n', '\n * ');
 
     const tags = (doc.tags || []).map(tag => {
-      return `\n\t * @${tag.tagName.text} ${(tag.preParameterName || {}).text || ''} ${tag.comment}`;
+      return `\n * @${tag.tagName.text} ${(tag.preParameterName || {}).text || ''} ${tag.comment}`;
     });
 
     return comment + tags.join('');
   }).join('');
 
-  return `/**\n\t * ${blocks} */\n`;
+  return `\n/**\n * ${blocks}\n*/\n`;
 }

@@ -1,7 +1,7 @@
 /* @flow */
 
-const namespaceProps = {};
-const namespaces: Array<string> = [];
+let namespaceProps = {};
+let namespaces: Array<string> = [];
 
 let context: string = '';
 
@@ -12,4 +12,9 @@ export default {
   nsPropExists: (name: string) => Object.keys(namespaceProps).includes(name),
   getNSForProp: (name: string) => namespaceProps[name],
   setContext: (namespace: string) => context = namespace,
+
+  reset: () => {
+    namespaceProps = {};
+    namespaces = [];
+  },
 }
