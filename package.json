@@ -2,12 +2,18 @@
   "name": "flowgen",
   "version": "1.0.0",
   "description": "Generate flowtype definition files from TypeScript",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "compile": "babel --out-dir lib ./src",
     "compile:watch": "npm run compile -- -w",
     "test": "jest"
   },
+  "bin": {
+    "flowgen": "./lib/index.js"
+  },
+  "files": [
+    "lib"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
