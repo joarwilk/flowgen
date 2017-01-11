@@ -44,7 +44,7 @@ class Factory {
     }
 
     if (Object.keys(this._propDeclarations).includes(name)) {
-      this._propDeclarations[name].addMember(getMembersFromNode(node));
+      this._propDeclarations[name].maybeAddMember(getMembersFromNode(node));
 
       return this._propDeclarations[name];
     }
