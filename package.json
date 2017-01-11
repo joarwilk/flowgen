@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "bin": {
-    "flowgen": "./lib/index.js"
+    "flowgen": "./lib/cli/index.js"
   },
   "files": [
     "lib"
