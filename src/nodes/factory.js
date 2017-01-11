@@ -10,6 +10,8 @@ import VariableNode from './variable';
 import PropertyNode from './property';
 import NamespaceNode from './namespace';
 
+import { getMembersFromNode, stripDetailsFromTree } from '../parse';
+
 class Factory {
   _modules: Object;
   _propDeclarations: Object;
@@ -42,13 +44,14 @@ class Factory {
     }
 
     if (Object.keys(this._propDeclarations).includes(name)) {
+      this._propDeclarations[name].addMember(getMembersFromNode(node));
+
       return this._propDeclarations[name];
     }
 
     const propNode = new PropertyNode(node);
     this._propDeclarations[name] = propNode;
 
-    // TODO: Return UnionNodes when applicable.
     return propNode;
   }
 

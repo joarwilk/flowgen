@@ -28,6 +28,23 @@ export default class Node {
     this.children[name] = node;
   }
 
+  /**
+   * Used for overloading the props of some types
+   */
+  addMember(members: Object | Array<Object>) {
+    if (!this.raw.members) {
+      return;
+    }
+
+    if (Array.isArray(members)) {
+      members.forEach(member => {
+        this.raw.members.push(stripDetailsFromTree(member));
+      });
+    } else {
+      this.raw.members.push(stripDetailsFromTree(members));
+    }
+  }
+
   getChildren() {
     return _.toArray(this.children);
   }
