@@ -12,6 +12,8 @@ export const printType = (type: RawNode) => {
     case 'AnyKeyword':
     case 'NumberKeyword':
     case 'BooleanKeyword':
+    case 'NullKeyword':
+    case 'UndefinedKeyword':
       return printers.basics.print(type.kind);
 
     case "FunctionType":
