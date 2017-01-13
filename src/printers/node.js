@@ -137,7 +137,9 @@ export const printType = (type: RawNode) => {
       return type.name.text + ': ' + printType(type.type);
   }
 
-  return 'NO PRINT IMPLEMENTED: ' + type.kind;
+  const output = `"NO PRINT IMPLEMENTED: ${type.kind}"`;
+  console.log(output);
+  return output;
 }
 
 export default printType;
