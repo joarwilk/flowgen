@@ -41,6 +41,9 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.BindingElement:
     case SyntaxKind.TypeParameter:
       return type.name.text;
+
+    case SyntaxKind.FirstTypeNode:
+    case SyntaxKind.LastTypeNode:
     case SyntaxKind.TypePredicate:
       if (type.type.typeName) {
         return type.type.typeName.text;
