@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 /* @flow */
-import { recursiveWalkTree } from './parse';
-import runner from './cli/runner';
+import { recursiveWalkTree } from '../parse';
+import runner from './runner';
 
 import program from 'commander';
 

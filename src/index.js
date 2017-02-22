@@ -1,3 +1,7 @@
 import compiler from './cli/compiler';
+import beautify from './cli/beautifier';
 
-export default compiler;
+export default {
+  beautify,
+  compiler
+};
