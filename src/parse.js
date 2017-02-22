@@ -110,7 +110,7 @@ const collectNode = (node: RawNode, context: Node, factory: Factory) => {
       break;
 
     default:
-      // Missing node parse, is bug
+      console.log('Missing node parse', ts.SyntaxKind[node.kind]);
   }
 }
 

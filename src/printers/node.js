@@ -1,55 +1,67 @@
 /* @flow */
-import type { RawNode } from '../nodes/node'
+import type {RawNode} from '../nodes/node'
+import {SyntaxKind} from 'typescript';
 
 import _ from 'lodash';
 
 import printers from './index';
 
 export const printType = (type: RawNode) => {
-  switch (type.kind) {
-    case 'VoidKeyword':
-    case 'StringKeyword':
-    case 'AnyKeyword':
-    case 'NumberKeyword':
-    case 'BooleanKeyword':
-      return printers.basics.print(type.kind);
 
-    case "FunctionType":
-    case "FunctionTypeAnnotation":
+  //TODO: #6 No match found in SyntaxKind enum
+  switch (type.kind) {
+    case 'FunctionTypeAnnotation':
       return printers.functions.functionType(type);
 
-    case "TypeLiteral":
+    case 'LastNodeType':
+      return `"${type.literal.text}"`;
+  }
+
+  switch (SyntaxKind[type.kind]) {
+    case SyntaxKind.VoidKeyword:
+    case SyntaxKind.StringKeyword:
+    case SyntaxKind.AnyKeyword:
+    case SyntaxKind.NumberKeyword:
+    case SyntaxKind.BooleanKeyword:
+    case SyntaxKind.NullKeyword:
+    case SyntaxKind.UndefinedKeyword:
+      return printers.basics.print(type.kind);
+
+    case SyntaxKind.FunctionType:
+      return printers.functions.functionType(type);
+
+    case SyntaxKind.TypeLiteral:
       return printers.declarations.interfaceType(type);
 
-    case 'IdentifierObject':
-    case 'Identifier':
-    case 'StringLiteralType':
+    case SyntaxKind.IdentifierObject:
+    case SyntaxKind.Identifier:
+    case SyntaxKind.StringLiteralType:
       return printers.relationships.namespace(type.text, true);
 
-    case 'BindingElement':
-    case 'TypeParameter':
+    case SyntaxKind.BindingElement:
+    case SyntaxKind.TypeParameter:
       return type.name.text;
-    case 'TypePredicate':
+
+    case SyntaxKind.FirstTypeNode:
+    case SyntaxKind.LastTypeNode:
+    case SyntaxKind.TypePredicate:
       if (type.type.typeName) {
         return type.type.typeName.text;
       }
 
       return printType(type.type);
 
-    case 'QualifiedName':
+    case SyntaxKind.QualifiedName:
       return printers.relationships.namespace(type.left.text) + printType(type.right) + printers.common.generics(type.typeArguments);
 
-    case 'StringLiteral':
+    case SyntaxKind.StringLiteral:
       return type.text;
 
-    case 'TypeReference':
+    case SyntaxKind.TypeReference:
       return printers.declarations.typeReference(type)
 
-    case 'LastNodeType':
-      return `"${type.literal.text}"`;
-
-    case 'VariableDeclaration':
-    case 'PropertyDeclaration':
+    case SyntaxKind.VariableDeclaration:
+    case SyntaxKind.PropertyDeclaration:
       if (type.modifiers && type.modifiers.some(modifier => modifier.kind === 'PrivateKeyword')) {
         return '';
       }
@@ -65,50 +77,49 @@ export const printType = (type: RawNode) => {
 
       return type.name.text + ': ';
 
-    case 'TupleType':
+    case SyntaxKind.TupleType:
       return `[${type.elementTypes.map(printType).join(', ')}]`
 
-
-    case 'MethodSignature':
+    case SyntaxKind.MethodSignature:
       return `${type.name.text}${printers.functions.functionType(type, true)}`
 
-    case 'ExpressionWithTypeArguments':
+    case SyntaxKind.ExpressionWithTypeArguments:
       return printType(type.expression) + printers.common.generics(type.typeArguments);
 
-    case 'PropertyAccessExpression':
+    case SyntaxKind.PropertyAccessExpression:
       return printers.relationships.namespace(type.expression.text) + printType(type.name)
 
-    case 'NodeObject':
+    case SyntaxKind.NodeObject:
       return printers.relationships.namespace(type.expression.text) + printType(type.name);
 
-    case 'PropertySignature':
+    case SyntaxKind.PropertySignature:
       return printers.common.parameter(type)
 
-    case 'CallSignature':
+    case SyntaxKind.CallSignature:
       let str = `(${type.parameters.map(printers.common.parameter).join(', ')})`;
       return type.type ? `${str}: ${printType(type.type)}` : str;
 
-    case 'UnionType':
+    case SyntaxKind.UnionType:
       const join = type.types.length >= 5 ? '\n' : ' ';
       return type.types.map(printType).join(`${join}| `);
 
-    case 'ArrayType':
+    case SyntaxKind.ArrayType:
       return printType(type.elementType) + '[]';
 
-    case 'ThisType':
+    case SyntaxKind.ThisType:
       return 'this';
 
-    case 'IndexSignature':
+    case SyntaxKind.IndexSignature:
       return `[${type.parameters.map(printers.common.parameter).join(', ')}]: ${printType(type.type)}`
 
-    case 'IntersectionType':
+    case SyntaxKind.IntersectionType:
       return type.types.map(printType).join(' & ')
 
-    case 'SymbolKeyword':
+    case SyntaxKind.SymbolKeyword:
       // TODO: What to print here?
       return '';
 
-    case 'MethodDeclaration':
+    case SyntaxKind.MethodDeclaration:
       // Skip methods marked as private
       if (type.modifiers && type.modifiers.some(modifier => modifier.kind === 'PrivateKeyword')) {
         return '';
@@ -116,28 +127,27 @@ export const printType = (type: RawNode) => {
 
       return type.name.text + printers.functions.functionType(type, true);
 
-
-    case 'ConstructorType':
+    case SyntaxKind.ConstructorType:
       // Not implemented. The return is just a guess.
       return '(' + type.parameters.map(printers.common.parameter).join(', ') + ') => ' + printers.node.printType(type.type)
 
-    case 'ConstructSignature':
+    case SyntaxKind.ConstructSignature:
       return 'new ' + printers.functions.functionType(type, true);
 
-    case 'TypeQuery':
-      return 'typeof ' +type.exprName.text;
+    case SyntaxKind.TypeQuery:
+      return 'typeof ' + type.exprName.text;
 
-    case 'Constructor':
+    case SyntaxKind.Constructor:
       return 'constructor(' + type.parameters.map(printers.common.parameter).join(', ') + '): this';
 
-    case 'ParenthesizedType':
+    case SyntaxKind.ParenthesizedType:
       return `(${printType(type.type)})`;
 
-    case 'VariableDeclaration':
-      return type.name.text + ': ' + printType(type.type);
   }
 
-  return 'NO PRINT IMPLEMENTED: ' + type.kind;
+  const output = `"NO PRINT IMPLEMENTED: ${type.kind}"`;
+  console.log(output);
+  return output;
 }
 
 export default printType;
