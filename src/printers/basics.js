@@ -4,7 +4,9 @@ const types = {
   StringKeyword: 'string',
   AnyKeyword: 'any',
   NumberKeyword: 'number',
-  BooleanKeyword: 'boolean'
+  BooleanKeyword: 'boolean',
+  NullKeyword: 'null',
+  UndefinedKeyword: 'void'
 }
 
 export const print = (kind: string): string => {
