@@ -5,7 +5,7 @@ import runner from './runner';
 
 import program from 'commander';
 
-const version = '1.0.0';
+const version = '1.2.0';
 
 program
   .version(version)
