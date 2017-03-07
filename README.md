@@ -5,6 +5,35 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 
 ## Usage
 
+### Module
+Install using `npm i flowgen`
+
+* Usage: *
+```js
+import { compiler } from 'flowgen';
+
+// To compile a d.ts file
+const flowdef = compiler.compileDefinitionFile(filename);
+
+// To compile a string
+const flowdef = compiler.compileDefinitionString(str);
+
+// To compile a typescript test file to JavaScript
+// esTarget = ES5/ES6 etc
+const testCase = compiler.compileTest(path, esTarget)
+```
+
+* Recommended second step: *
+
+```js
+import { beautify } from 'flowgen';
+
+// Make the definition human readable
+const readableDef = beautify(generatedFlowdef);
+```
+
+### CLI
+
 Standard usage (will produce `export.flow.js`):
 ```
 npm i -g flowgen
