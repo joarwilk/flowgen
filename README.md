@@ -8,7 +8,7 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 ### Module
 Install using `npm i flowgen`
 
-* Usage: *
+*Usage:*
 ```js
 import { compiler } from 'flowgen';
 
@@ -23,7 +23,7 @@ const flowdef = compiler.compileDefinitionString(str);
 const testCase = compiler.compileTest(path, esTarget)
 ```
 
-* Recommended second step: *
+*Recommended second step:*
 
 ```js
 import { beautify } from 'flowgen';
