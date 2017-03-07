@@ -5,10 +5,8 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 
 ## Usage
 
-### Module
-Install using `npm i flowgen`
+Install using `npm i flowgen --save`
 
-*Usage:*
 ```js
 import { compiler } from 'flowgen';
 
