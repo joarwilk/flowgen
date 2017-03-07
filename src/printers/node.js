@@ -45,6 +45,10 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.FirstTypeNode:
     case SyntaxKind.LastTypeNode:
     case SyntaxKind.TypePredicate:
+      if (type.literal) {
+        return type.literal.text;
+      }
+      
       if (type.type.typeName) {
         return type.type.typeName.text;
       }
