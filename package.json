@@ -1,33 +1,34 @@
 {
   "name": "flowgen",
-  "version": "1.2.0",
   "description": "Generate flowtype definition files from TypeScript",
+  "version": "1.2.0",
+  "bin": {
+    "flowgen": "./lib/cli/index.js"
+  },
+  "dependencies": {
+    "commander": "^2.11.0",
+    "js-beautify": "^1.6.7",
+    "lodash": "^4.17.4",
+    "paralleljs": "^0.2.1",
+    "typescript": "^2.4.2",
+    "typescript-compiler": "^1.4.1-2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "esformatter": "^0.10.0",
+    "jest": "^20.0.4"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "ISC",
   "main": "lib/index.js",
   "scripts": {
     "compile": "babel --out-dir lib ./src",
     "compile:watch": "npm run compile -- -w",
     "test": "jest"
-  },
-  "bin": {
-    "flowgen": "./lib/cli/index.js"
-  },
-  "files": [
-    "lib"
-  ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "babel-cli": "6.18.0",
-    "babel-preset-es2015": "6.18.0",
-    "babel-preset-react": "6.16.0",
-    "babel-preset-stage-2": "6.18.0",
-    "commander": "2.9.0",
-    "esformatter": "^0.10.0",
-    "jest": "17.0.3",
-    "js-beautify": "^1.6.7",
-    "lodash": "4.9.0",
-    "paralleljs": "^0.2.1",
-    "typescript": "2.1.4",
-    "typescript-compiler": "^1.4.1-2"
   }
 }

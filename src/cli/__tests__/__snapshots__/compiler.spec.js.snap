@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle bounded polymorphism 1`] = `"declare function fooGood<T>(obj: T): T"`;
+
+exports[`should handle maybe & nullable type 1`] = `"declare var a: string | null | void;"`;
