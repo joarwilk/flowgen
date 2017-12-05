@@ -61,7 +61,7 @@ a one-to-one mapping. Common cases are `React.ReactElement`, `React.CSSProps`etc
 This might require manual processing, or we add a set of hardcoded mutations that handle common cases.
 
 ### Odd TS conventions
-[Lodash](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/lodash/index.d.ts) has been one of the reference libraries i've worked with when creating the
+[Lodash](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/9fb1696ad55c0ac54bbf6e477f21b52536211a1e/types/lodash/index.d.ts) has been one of the reference libraries i've worked with when creating the
 converter. The definition is mostly just a series of interfaces with the same name being re-declared over and over again for each function, which doesn't translate to flow at all. There's multiple ways of solving this but I dont have a great solution for it in place yet.
 
 ## Contributing
