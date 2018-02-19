@@ -45,13 +45,12 @@ class Factory {
 
     if (Object.keys(this._propDeclarations).includes(name)) {
       this._propDeclarations[name].maybeAddMember(getMembersFromNode(node));
-
+      
       return this._propDeclarations[name];
     }
-
+    
     const propNode = new PropertyNode(node);
     this._propDeclarations[name] = propNode;
-
     return propNode;
   }
 
