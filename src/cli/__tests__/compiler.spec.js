@@ -21,14 +21,3 @@ it('should handle bounded polymorphism', () => {
 });
 
 
-it('should handle union strings', () => {
-  const ts = `
-    interface MyObj {
-      state?: "APPROVED" | "REQUEST_CHANGES" | "COMMENT" | "PENDING"
-    }
-  `;
-
-  const result = compiler.compileDefinitionString(ts);
-
-  expect(result).toMatchSnapshot();
-});
