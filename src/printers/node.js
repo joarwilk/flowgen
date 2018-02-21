@@ -7,7 +7,7 @@ import _ from 'lodash';
 import printers from './index';
 
 export const printType = (type: RawNode) => {
-
+  // debuggerif()
   //TODO: #6 No match found in SyntaxKind enum
   switch (type.kind) {
     case 'FunctionTypeAnnotation':
@@ -45,8 +45,13 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.FirstTypeNode:
     case SyntaxKind.LastTypeNode:
     case SyntaxKind.TypePredicate:
+      
       if (type.literal) {
-        return type.literal.text;
+        if (type.literal.kind === "StringLiteral") {
+          return "'" + type.literal.text + "'";
+        } else {
+          return type.literal.text;
+        }
       }
       
       if (type.type.typeName) {
@@ -59,6 +64,7 @@ export const printType = (type: RawNode) => {
       return printers.relationships.namespace(type.left.text) + printType(type.right) + printers.common.generics(type.typeArguments);
 
     case SyntaxKind.StringLiteral:
+      debugger
       return type.text;
 
     case SyntaxKind.TypeReference:
@@ -105,6 +111,7 @@ export const printType = (type: RawNode) => {
 
     case SyntaxKind.UnionType:
       const join = type.types.length >= 5 ? '\n' : ' ';
+      // debugger
       return type.types.map(printType).join(`${join}| `);
 
     case SyntaxKind.ArrayType:
