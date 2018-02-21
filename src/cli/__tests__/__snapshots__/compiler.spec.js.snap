@@ -3,9 +3,3 @@
 exports[`should handle bounded polymorphism 1`] = `"declare function fooGood<T>(obj: T): T"`;
 
 exports[`should handle maybe & nullable type 1`] = `"declare var a: string | null | void;"`;
-
-exports[`should handle union strings 1`] = `
-"declare interface MyObj {
-state?: 'APPROVED' | 'REQUEST_CHANGES' | 'COMMENT' | 'PENDING'
-} "
-`;

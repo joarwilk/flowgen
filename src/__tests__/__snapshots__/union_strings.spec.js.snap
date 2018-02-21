@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle union strings 1`] = `
+"declare interface MyObj {
+    state?: 'APPROVED' | 'REQUEST_CHANGES' | 'COMMENT' | 'PENDING'
+}"
+`;
