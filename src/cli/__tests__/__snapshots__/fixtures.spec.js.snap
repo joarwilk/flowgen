@@ -912,12 +912,14 @@ section of code to evaluate across multiple tick cycles.
  * @param  the function to run asynchronously
 */
 declare function schedule(asyncFunction: Scheduleable): void
+
 	
 /**
  * Fails a build, outputting a specific reason for failing into a HTML table.
  * @param  the String to output
 */
 declare function fail(message: MarkdownString): void
+
 	
 /**
  * Highlights low-priority issues, but does not fail the build. Message
@@ -925,6 +927,7 @@ declare function fail(message: MarkdownString): void
  * @param  the String to output
 */
 declare function warn(message: MarkdownString): void
+
 	
 /**
  * Adds a message to the Danger table, the only difference between this
@@ -932,12 +935,14 @@ declare function warn(message: MarkdownString): void
  * @param  the String to output
 */
 declare function message(message: MarkdownString): void
+
 	
 /**
  * Adds raw markdown into the Danger comment, under the table
  * @param  the String to output
 */
 declare function markdown(message: MarkdownString): void
+
 	declare var danger: DangerDSLType;
 	declare var peril: PerilDSL;
 	declare var results: DangerRuntimeContainer;
