@@ -67,3 +67,13 @@ converter. The definition is mostly just a series of interfaces with the same na
 ## Contributing
 
 All help is appreciated. Please [tweet at me](https://twitter.com/joarwilk) if you want some help getting started, or just want to discuss ideas on how to solve the trickier parts.
+
+## Distribution
+
+* `git pull origin master`
+* `yarn compile`
+* Change the version in `package.json`
+* `git add .`
+* `git commit -m "New release"
+* `npm publish`
+* `git push`
