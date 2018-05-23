@@ -2,10 +2,9 @@
 /* @flow */
 import { recursiveWalkTree } from '../parse';
 import runner from './runner';
+import {version} from '../../package.json';
 
 import program from 'commander';
-
-const version = '1.2.0';
 
 program
   .version(version)
