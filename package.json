@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "commander": "^2.11.0",
-    "js-beautify": "^1.6.7",
     "lodash": "^4.17.4",
     "paralleljs": "^0.2.1",
     "prettier": "^1.12.1",

@@ -2,6 +2,7 @@
 
 exports[`should handle union strings 1`] = `
 "declare interface MyObj {
-    state?: 'APPROVED' | 'REQUEST_CHANGES' | 'COMMENT' | 'PENDING'
-}"
+  state?: \\"APPROVED\\" | \\"REQUEST_CHANGES\\" | \\"COMMENT\\" | \\"PENDING\\";
+}
+"
 `;
