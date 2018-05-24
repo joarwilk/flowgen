@@ -31,7 +31,7 @@ export default {
     namespaceManager.reset();
 
     return compile(
-      ts.createSourceFile("/dev/null", string, ts.ScriptTarget.ES6, false)
+      ts.createSourceFile("/dev/null", string, ts.ScriptTarget.ES6, false),
     );
   },
 
@@ -43,8 +43,8 @@ export default {
         path,
         fs.readFileSync(path).toString(),
         ts.ScriptTarget.ES6,
-        false
-      )
+        false,
+      ),
     );
-  }
+  },
 };

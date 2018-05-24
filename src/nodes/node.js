@@ -8,7 +8,7 @@ import printers from "../printers";
 
 export default class Node {
   children: {
-    [key: string]: Node
+    [key: string]: Node,
   };
   kind: string;
   name: string;

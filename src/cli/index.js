@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 /* @flow */
-import { recursiveWalkTree } from '../parse';
-import runner from './runner';
-import {version} from '../../package.json';
+import { recursiveWalkTree } from "../parse";
+import runner from "./runner";
+import { version } from "../../package.json";
 
 import program from "commander";
 
@@ -11,7 +11,7 @@ program
   .option(
     "-o --output-file [outputFile]",
     "name for ouput file, defaults to export.flow.js",
-    "export.flow.js"
+    "export.flow.js",
   )
   .option("--flow-typed-format", "format outut for flow-typed")
   .option("--compile-tests", "compile any <filename>-tests.ts files found")
@@ -21,7 +21,7 @@ program
       flowTypedFormat: options.flowTypedFormat,
       compileTests: options.compileTests,
       out: options.outputFile,
-      version
+      version,
     }).compile(files);
   });
 

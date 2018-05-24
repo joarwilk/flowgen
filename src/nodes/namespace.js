@@ -23,7 +23,7 @@ export default class Namespace extends Node {
 
   print = () => {
     const functions = this.getChildren().filter(
-      child => child.raw && child.raw.kind === "FunctionDeclaration"
+      child => child.raw && child.raw.kind === "FunctionDeclaration",
     );
 
     const children = `${this.getChildren()

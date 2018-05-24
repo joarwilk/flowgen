@@ -3,7 +3,7 @@ import compiler from "../compiler";
 
 it("should handle maybe & nullable type", () => {
   const result = compiler.compileDefinitionString(
-    "let a: string | null | undefined"
+    "let a: string | null | undefined",
   );
 
   expect(result).toMatchSnapshot();

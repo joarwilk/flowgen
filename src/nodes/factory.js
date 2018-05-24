@@ -61,5 +61,5 @@ class Factory {
 }
 
 export default {
-  create: () => new Factory()
+  create: () => new Factory(),
 };

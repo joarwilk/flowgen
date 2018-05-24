@@ -6,7 +6,7 @@ const types = {
   NumberKeyword: "number",
   BooleanKeyword: "boolean",
   NullKeyword: "null",
-  UndefinedKeyword: "void"
+  UndefinedKeyword: "void",
 };
 
 export const print = (kind: string): string => {

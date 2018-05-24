@@ -17,7 +17,7 @@ type RunnerOptions = {
   version: string,
   out: string,
   flowTypedFormat: boolean,
-  compileTests: boolean
+  compileTests: boolean,
 };
 
 export default (options: RunnerOptions) => {
@@ -59,7 +59,7 @@ export default (options: RunnerOptions) => {
           // Write the output to disk
           const absoluteOutputFilePath: string = writeFile(
             outputFile,
-            beautify(intro + flowDefinitions)
+            beautify(intro + flowDefinitions),
           );
 
           // Check if we should compile tests as well
@@ -82,7 +82,7 @@ export default (options: RunnerOptions) => {
           console.error(e);
         }
       });
-    }
+    },
   };
 };
 

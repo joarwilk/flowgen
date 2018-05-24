@@ -17,5 +17,5 @@ export default {
   reset: () => {
     namespaceProps = {};
     namespaces = [];
-  }
+  },
 };

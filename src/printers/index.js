@@ -12,5 +12,5 @@ export default {
   common,
   functions,
   relationships,
-  node
+  node,
 };

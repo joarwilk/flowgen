@@ -83,35 +83,35 @@ const collectNode = (node: RawNode, context: Node, factory: Factory) => {
     case ts.SyntaxKind.FunctionDeclaration:
       context.addChild(
         parseNameFromNode(node),
-        factory.createPropertyNode(node, parseNameFromNode(node))
+        factory.createPropertyNode(node, parseNameFromNode(node)),
       );
       break;
 
     case ts.SyntaxKind.InterfaceDeclaration:
       context.addChild(
         parseNameFromNode(node),
-        factory.createPropertyNode(node, parseNameFromNode(node))
+        factory.createPropertyNode(node, parseNameFromNode(node)),
       );
       break;
 
     case ts.SyntaxKind.TypeAliasDeclaration:
       context.addChild(
         parseNameFromNode(node),
-        factory.createPropertyNode(node, parseNameFromNode(node))
+        factory.createPropertyNode(node, parseNameFromNode(node)),
       );
       break;
 
     case ts.SyntaxKind.ClassDeclaration:
       context.addChild(
         parseNameFromNode(node),
-        factory.createPropertyNode(node)
+        factory.createPropertyNode(node),
       );
       break;
 
     case ts.SyntaxKind.VariableStatement:
       context.addChild(
         parseNameFromNode(node),
-        factory.createVariableNode(node)
+        factory.createVariableNode(node),
       );
       break;
 

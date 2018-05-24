@@ -24,7 +24,7 @@ declare type commander$ICommand = {
   args: string[],
   _args: {
     required: boolean,
-    name: string
+    name: string,
   }[],
 
   /**
@@ -162,12 +162,12 @@ declare type commander$ICommand = {
     flags: string,
     description?: string,
     fn?: ((arg1: any, arg2: any) => void) | RegExp,
-    defaultValue?: any
+    defaultValue?: any,
   ): commander$ICommand,
   option(
     flags: string,
     description?: string,
-    defaultValue?: any
+    defaultValue?: any,
   ): commander$ICommand,
 
   /**
@@ -233,10 +233,10 @@ declare type commander$ICommand = {
    * @api  public
    */
   parseOptions(
-    argv: string[]
+    argv: string[],
   ): {
     args: string[],
-    unknown: string[]
+    unknown: string[],
   },
 
   /**
@@ -261,9 +261,9 @@ declare type commander$ICommand = {
    */
   optionMissingArgument(
     option: {
-      flags: string
+      flags: string,
     },
-    flag?: string
+    flag?: string,
   ): void,
 
   /**
@@ -358,7 +358,7 @@ declare type commander$ICommand = {
    * Output help information and exit.
    * @api  public
    */
-  help(): void
+  help(): void,
 };
 
 declare interface commander$IOptionStatic {
@@ -398,7 +398,7 @@ declare interface commander$IOption {
 
 declare type commander$IExportedCommand = {
   Command: commander$ICommandStatic,
-  Option: commander$IOptionStatic
+  Option: commander$IOptionStatic,
 } & commander$ICommand;
 
 declare module "commander" {

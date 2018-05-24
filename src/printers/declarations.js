@@ -13,7 +13,7 @@ export const variableDeclaration = (node: RawNode) => {
 
 export const interfaceType = (
   node: RawNode,
-  withSemicolons: boolean = false
+  withSemicolons: boolean = false,
 ) => {
   let members = node.members
     .map(member => {
@@ -50,7 +50,7 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
       .map(clause => {
         return clause.types
           .map(type =>
-            printers.relationships.namespaceProp(type.expression.text, true)
+            printers.relationships.namespaceProp(type.expression.text, true),
           )
           .join(" & ");
       })
@@ -61,7 +61,7 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
   const type = node.heritageClauses ? "type" : "interface";
 
   let str = `declare ${printers.relationships.exporter(
-    node
+    node,
   )}${type} ${nodeName}${printers.common.generics(node.typeParameters)} ${
     type === "type" ? "= " : ""
   }${interfaceType(node)} ${heritage}`;
@@ -71,9 +71,9 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
 
 export const typeDeclaration = (nodeName: string, node: RawNode) => {
   let str = `declare ${printers.relationships.exporter(
-    node
+    node,
   )}type ${nodeName}${printers.common.generics(
-    node.typeParameters
+    node.typeParameters,
   )} = ${printers.node.printType(node.type)};`;
 
   return str;
@@ -110,7 +110,7 @@ export const classDeclaration = (node: RawNode) => {
     node.name.text
   }${printers.common.generics(node.typeParameters)} ${heritage} ${interfaceType(
     node,
-    true
+    true,
   )}`;
 
   return str;

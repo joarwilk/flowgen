@@ -27,26 +27,26 @@ declare module "typescript" {
     flags: NodeFlags,
     decorators?: NodeArray<Decorator>,
     modifiers?: ModifiersArray,
-    parent?: Node
+    parent?: Node,
   } & TextRange;
 
   declare type NodeArray<T> = {
-    hasTrailingComma?: boolean
+    hasTrailingComma?: boolean,
   } & Array &
     TextRange;
 
   declare type ModifiersArray = {
-    flags: number
+    flags: number,
   } & NodeArray;
 
   declare type Identifier = {
     text: string,
-    originalKeywordKind?: SyntaxKind
+    originalKeywordKind?: SyntaxKind,
   } & PrimaryExpression;
 
   declare type QualifiedName = {
     left: EntityName,
-    right: Identifier
+    right: Identifier,
   } & Node;
 
   declare type EntityName = Identifier | QualifiedName;
@@ -57,38 +57,38 @@ declare module "typescript" {
     | BindingPattern;
   declare type Declaration = {
     _declarationBrand: any,
-    name?: DeclarationName
+    name?: DeclarationName,
   } & Node;
 
   declare type ComputedPropertyName = {
-    expression: Expression
+    expression: Expression,
   } & Node;
 
   declare type Decorator = {
-    expression: LeftHandSideExpression
+    expression: LeftHandSideExpression,
   } & Node;
 
   declare type TypeParameterDeclaration = {
     name: Identifier,
     constraint?: TypeNode,
-    expression?: Expression
+    expression?: Expression,
   } & Declaration;
 
   declare type SignatureDeclaration = {
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     parameters: NodeArray<ParameterDeclaration>,
-    type?: TypeNode
+    type?: TypeNode,
   } & Declaration;
 
   declare type VariableDeclaration = {
     parent?: VariableDeclarationList,
     name: Identifier | BindingPattern,
     type?: TypeNode,
-    initializer?: Expression
+    initializer?: Expression,
   } & Declaration;
 
   declare type VariableDeclarationList = {
-    declarations: NodeArray<VariableDeclaration>
+    declarations: NodeArray<VariableDeclaration>,
   } & Node;
 
   declare type ParameterDeclaration = {
@@ -96,38 +96,38 @@ declare module "typescript" {
     name: Identifier | BindingPattern,
     questionToken?: Node,
     type?: TypeNode,
-    initializer?: Expression
+    initializer?: Expression,
   } & Declaration;
 
   declare type BindingElement = {
     propertyName?: Identifier,
     dotDotDotToken?: Node,
     name: Identifier | BindingPattern,
-    initializer?: Expression
+    initializer?: Expression,
   } & Declaration;
 
   declare type PropertyDeclaration = {
     name: DeclarationName,
     questionToken?: Node,
     type?: TypeNode,
-    initializer?: Expression
+    initializer?: Expression,
   } & Declaration &
     ClassElement;
 
   declare type ObjectLiteralElement = {
-    _objectLiteralBrandBrand: any
+    _objectLiteralBrandBrand: any,
   } & Declaration;
 
   declare type PropertyAssignment = {
     _propertyAssignmentBrand: any,
     name: DeclarationName,
     questionToken?: Node,
-    initializer: Expression
+    initializer: Expression,
   } & ObjectLiteralElement;
 
   declare type ShorthandPropertyAssignment = {
     name: Identifier,
-    questionToken?: Node
+    questionToken?: Node,
   } & ObjectLiteralElement;
 
   declare type VariableLikeDeclaration = {
@@ -136,11 +136,11 @@ declare module "typescript" {
     name: DeclarationName,
     questionToken?: Node,
     type?: TypeNode,
-    initializer?: Expression
+    initializer?: Expression,
   } & Declaration;
 
   declare type BindingPattern = {
-    elements: NodeArray<BindingElement>
+    elements: NodeArray<BindingElement>,
   } & Node;
 
   /**
@@ -155,80 +155,80 @@ declare module "typescript" {
     _functionLikeDeclarationBrand: any,
     asteriskToken?: Node,
     questionToken?: Node,
-    body?: Block | Expression
+    body?: Block | Expression,
   } & SignatureDeclaration;
 
   declare type FunctionDeclaration = {
     name?: Identifier,
-    body?: Block
+    body?: Block,
   } & FunctionLikeDeclaration &
     Statement;
 
   declare type MethodDeclaration = {
-    body?: Block
+    body?: Block,
   } & FunctionLikeDeclaration &
     ClassElement &
     ObjectLiteralElement;
 
   declare type ConstructorDeclaration = {
-    body?: Block
+    body?: Block,
   } & FunctionLikeDeclaration &
     ClassElement;
 
   declare type SemicolonClassElement = {
-    _semicolonClassElementBrand: any
+    _semicolonClassElementBrand: any,
   } & ClassElement;
 
   declare type AccessorDeclaration = {
     _accessorDeclarationBrand: any,
-    body: Block
+    body: Block,
   } & FunctionLikeDeclaration &
     ClassElement &
     ObjectLiteralElement;
 
   declare type IndexSignatureDeclaration = {
-    _indexSignatureDeclarationBrand: any
+    _indexSignatureDeclarationBrand: any,
   } & SignatureDeclaration &
     ClassElement;
 
   declare type TypeNode = {
-    _typeNodeBrand: any
+    _typeNodeBrand: any,
   } & Node;
 
   declare type FunctionOrConstructorTypeNode = {
-    _functionOrConstructorTypeNodeBrand: any
+    _functionOrConstructorTypeNodeBrand: any,
   } & TypeNode &
     SignatureDeclaration;
 
   declare type TypeReferenceNode = {
     typeName: EntityName,
-    typeArguments?: NodeArray<TypeNode>
+    typeArguments?: NodeArray<TypeNode>,
   } & TypeNode;
 
   declare type TypePredicateNode = {
     parameterName: Identifier,
-    type: TypeNode
+    type: TypeNode,
   } & TypeNode;
 
   declare type TypeQueryNode = {
-    exprName: EntityName
+    exprName: EntityName,
   } & TypeNode;
 
   declare type TypeLiteralNode = {
-    members: NodeArray<Node>
+    members: NodeArray<Node>,
   } & TypeNode &
     Declaration;
 
   declare type ArrayTypeNode = {
-    elementType: TypeNode
+    elementType: TypeNode,
   } & TypeNode;
 
   declare type TupleTypeNode = {
-    elementTypes: NodeArray<TypeNode>
+    elementTypes: NodeArray<TypeNode>,
   } & TypeNode;
 
   declare type UnionOrIntersectionTypeNode = {
-    types: NodeArray<TypeNode>
+    types: NodeArray<TypeNode>,
   } & TypeNode;
 
   declare type UnionTypeNode = {} & UnionOrIntersectionTypeNode;
@@ -236,74 +236,74 @@ declare module "typescript" {
   declare type IntersectionTypeNode = {} & UnionOrIntersectionTypeNode;
 
   declare type ParenthesizedTypeNode = {
-    type: TypeNode
+    type: TypeNode,
   } & TypeNode;
 
   declare type StringLiteral = {
-    _stringLiteralBrand: any
+    _stringLiteralBrand: any,
   } & LiteralExpression &
     TypeNode;
 
   declare type Expression = {
     _expressionBrand: any,
-    contextualType?: Type
+    contextualType?: Type,
   } & Node;
 
   declare type UnaryExpression = {
-    _unaryExpressionBrand: any
+    _unaryExpressionBrand: any,
   } & Expression;
 
   declare type PrefixUnaryExpression = {
     operator: SyntaxKind,
-    operand: UnaryExpression
+    operand: UnaryExpression,
   } & UnaryExpression;
 
   declare type PostfixUnaryExpression = {
     operand: LeftHandSideExpression,
-    operator: SyntaxKind
+    operator: SyntaxKind,
   } & PostfixExpression;
 
   declare type PostfixExpression = {
-    _postfixExpressionBrand: any
+    _postfixExpressionBrand: any,
   } & UnaryExpression;
 
   declare type LeftHandSideExpression = {
-    _leftHandSideExpressionBrand: any
+    _leftHandSideExpressionBrand: any,
   } & PostfixExpression;
 
   declare type MemberExpression = {
-    _memberExpressionBrand: any
+    _memberExpressionBrand: any,
   } & LeftHandSideExpression;
 
   declare type PrimaryExpression = {
-    _primaryExpressionBrand: any
+    _primaryExpressionBrand: any,
   } & MemberExpression;
 
   declare type DeleteExpression = {
-    expression: UnaryExpression
+    expression: UnaryExpression,
   } & UnaryExpression;
 
   declare type TypeOfExpression = {
-    expression: UnaryExpression
+    expression: UnaryExpression,
   } & UnaryExpression;
 
   declare type VoidExpression = {
-    expression: UnaryExpression
+    expression: UnaryExpression,
   } & UnaryExpression;
 
   declare type AwaitExpression = {
-    expression: UnaryExpression
+    expression: UnaryExpression,
   } & UnaryExpression;
 
   declare type YieldExpression = {
     asteriskToken?: Node,
-    expression?: Expression
+    expression?: Expression,
   } & Expression;
 
   declare type BinaryExpression = {
     left: Expression,
     operatorToken: Node,
-    right: Expression
+    right: Expression,
   } & Expression;
 
   declare type ConditionalExpression = {
@@ -311,80 +311,80 @@ declare module "typescript" {
     questionToken: Node,
     whenTrue: Expression,
     colonToken: Node,
-    whenFalse: Expression
+    whenFalse: Expression,
   } & Expression;
 
   declare type FunctionExpression = {
     name?: Identifier,
-    body: Block | Expression
+    body: Block | Expression,
   } & PrimaryExpression &
     FunctionLikeDeclaration;
 
   declare type ArrowFunction = {
-    equalsGreaterThanToken: Node
+    equalsGreaterThanToken: Node,
   } & Expression &
     FunctionLikeDeclaration;
 
   declare type LiteralExpression = {
     text: string,
     isUnterminated?: boolean,
-    hasExtendedUnicodeEscape?: boolean
+    hasExtendedUnicodeEscape?: boolean,
   } & PrimaryExpression;
 
   declare type TemplateExpression = {
     head: LiteralExpression,
-    templateSpans: NodeArray<TemplateSpan>
+    templateSpans: NodeArray<TemplateSpan>,
   } & PrimaryExpression;
 
   declare type TemplateSpan = {
     expression: Expression,
-    literal: LiteralExpression
+    literal: LiteralExpression,
   } & Node;
 
   declare type ParenthesizedExpression = {
-    expression: Expression
+    expression: Expression,
   } & PrimaryExpression;
 
   declare type ArrayLiteralExpression = {
-    elements: NodeArray<Expression>
+    elements: NodeArray<Expression>,
   } & PrimaryExpression;
 
   declare type SpreadElementExpression = {
-    expression: Expression
+    expression: Expression,
   } & Expression;
 
   declare type ObjectLiteralExpression = {
-    properties: NodeArray<ObjectLiteralElement>
+    properties: NodeArray<ObjectLiteralElement>,
   } & PrimaryExpression &
     Declaration;
 
   declare type PropertyAccessExpression = {
     expression: LeftHandSideExpression,
     dotToken: Node,
-    name: Identifier
+    name: Identifier,
   } & MemberExpression;
 
   declare type ElementAccessExpression = {
     expression: LeftHandSideExpression,
-    argumentExpression?: Expression
+    argumentExpression?: Expression,
   } & MemberExpression;
 
   declare type CallExpression = {
     expression: LeftHandSideExpression,
     typeArguments?: NodeArray<TypeNode>,
-    arguments: NodeArray<Expression>
+    arguments: NodeArray<Expression>,
   } & LeftHandSideExpression;
 
   declare type ExpressionWithTypeArguments = {
     expression: LeftHandSideExpression,
-    typeArguments?: NodeArray<TypeNode>
+    typeArguments?: NodeArray<TypeNode>,
   } & TypeNode;
 
   declare type NewExpression = {} & CallExpression & PrimaryExpression;
 
   declare type TaggedTemplateExpression = {
     tag: LeftHandSideExpression,
-    template: LiteralExpression | TemplateExpression
+    template: LiteralExpression | TemplateExpression,
   } & MemberExpression;
 
   declare type CallLikeExpression =
@@ -394,29 +394,29 @@ declare module "typescript" {
     | Decorator;
   declare type AsExpression = {
     expression: Expression,
-    type: TypeNode
+    type: TypeNode,
   } & Expression;
 
   declare type TypeAssertion = {
     type: TypeNode,
-    expression: UnaryExpression
+    expression: UnaryExpression,
   } & UnaryExpression;
 
   declare type AssertionExpression = TypeAssertion | AsExpression;
   declare type JsxElement = {
     openingElement: JsxOpeningElement,
     children: NodeArray<JsxChild>,
-    closingElement: JsxClosingElement
+    closingElement: JsxClosingElement,
   } & PrimaryExpression;
 
   declare type JsxOpeningElement = {
     _openingElementBrand?: any,
     tagName: EntityName,
-    attributes: NodeArray<JsxAttribute | JsxSpreadAttribute>
+    attributes: NodeArray<JsxAttribute | JsxSpreadAttribute>,
   } & Expression;
 
   declare type JsxSelfClosingElement = {
-    _selfClosingElementBrand?: any
+    _selfClosingElementBrand?: any,
   } & PrimaryExpression &
     JsxOpeningElement;
 
@@ -425,23 +425,23 @@ declare module "typescript" {
     | JsxOpeningElement;
   declare type JsxAttribute = {
     name: Identifier,
-    initializer?: Expression
+    initializer?: Expression,
   } & Node;
 
   declare type JsxSpreadAttribute = {
-    expression: Expression
+    expression: Expression,
   } & Node;
 
   declare type JsxClosingElement = {
-    tagName: EntityName
+    tagName: EntityName,
   } & Node;
 
   declare type JsxExpression = {
-    expression?: Expression
+    expression?: Expression,
   } & Expression;
 
   declare type JsxText = {
-    _jsxTextExpressionBrand: any
+    _jsxTextExpressionBrand: any,
   } & Node;
 
   declare type JsxChild =
@@ -450,112 +450,112 @@ declare module "typescript" {
     | JsxElement
     | JsxSelfClosingElement;
   declare type Statement = {
-    _statementBrand: any
+    _statementBrand: any,
   } & Node;
 
   declare type Block = {
-    statements: NodeArray<Statement>
+    statements: NodeArray<Statement>,
   } & Statement;
 
   declare type VariableStatement = {
-    declarationList: VariableDeclarationList
+    declarationList: VariableDeclarationList,
   } & Statement;
 
   declare type ExpressionStatement = {
-    expression: Expression
+    expression: Expression,
   } & Statement;
 
   declare type IfStatement = {
     expression: Expression,
     thenStatement: Statement,
-    elseStatement?: Statement
+    elseStatement?: Statement,
   } & Statement;
 
   declare type IterationStatement = {
-    statement: Statement
+    statement: Statement,
   } & Statement;
 
   declare type DoStatement = {
-    expression: Expression
+    expression: Expression,
   } & IterationStatement;
 
   declare type WhileStatement = {
-    expression: Expression
+    expression: Expression,
   } & IterationStatement;
 
   declare type ForStatement = {
     initializer?: VariableDeclarationList | Expression,
     condition?: Expression,
-    incrementor?: Expression
+    incrementor?: Expression,
   } & IterationStatement;
 
   declare type ForInStatement = {
     initializer: VariableDeclarationList | Expression,
-    expression: Expression
+    expression: Expression,
   } & IterationStatement;
 
   declare type ForOfStatement = {
     initializer: VariableDeclarationList | Expression,
-    expression: Expression
+    expression: Expression,
   } & IterationStatement;
 
   declare type BreakOrContinueStatement = {
-    label?: Identifier
+    label?: Identifier,
   } & Statement;
 
   declare type ReturnStatement = {
-    expression?: Expression
+    expression?: Expression,
   } & Statement;
 
   declare type WithStatement = {
     expression: Expression,
-    statement: Statement
+    statement: Statement,
   } & Statement;
 
   declare type SwitchStatement = {
     expression: Expression,
-    caseBlock: CaseBlock
+    caseBlock: CaseBlock,
   } & Statement;
 
   declare type CaseBlock = {
-    clauses: NodeArray<CaseOrDefaultClause>
+    clauses: NodeArray<CaseOrDefaultClause>,
   } & Node;
 
   declare type CaseClause = {
     expression?: Expression,
-    statements: NodeArray<Statement>
+    statements: NodeArray<Statement>,
   } & Node;
 
   declare type DefaultClause = {
-    statements: NodeArray<Statement>
+    statements: NodeArray<Statement>,
   } & Node;
 
   declare type CaseOrDefaultClause = CaseClause | DefaultClause;
   declare type LabeledStatement = {
     label: Identifier,
-    statement: Statement
+    statement: Statement,
   } & Statement;
 
   declare type ThrowStatement = {
-    expression: Expression
+    expression: Expression,
   } & Statement;
 
   declare type TryStatement = {
     tryBlock: Block,
     catchClause?: CatchClause,
-    finallyBlock?: Block
+    finallyBlock?: Block,
   } & Statement;
 
   declare type CatchClause = {
     variableDeclaration: VariableDeclaration,
-    block: Block
+    block: Block,
   } & Node;
 
   declare type ClassLikeDeclaration = {
     name?: Identifier,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     heritageClauses?: NodeArray<HeritageClause>,
-    members: NodeArray<ClassElement>
+    members: NodeArray<ClassElement>,
   } & Declaration;
 
   declare type ClassDeclaration = {} & ClassLikeDeclaration & Statement;
@@ -563,208 +563,208 @@ declare module "typescript" {
   declare type ClassExpression = {} & ClassLikeDeclaration & PrimaryExpression;
 
   declare type ClassElement = {
-    _classElementBrand: any
+    _classElementBrand: any,
   } & Declaration;
 
   declare type InterfaceDeclaration = {
     name: Identifier,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     heritageClauses?: NodeArray<HeritageClause>,
-    members: NodeArray<Declaration>
+    members: NodeArray<Declaration>,
   } & Declaration &
     Statement;
 
   declare type HeritageClause = {
     token: SyntaxKind,
-    types?: NodeArray<ExpressionWithTypeArguments>
+    types?: NodeArray<ExpressionWithTypeArguments>,
   } & Node;
 
   declare type TypeAliasDeclaration = {
     name: Identifier,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
-    type: TypeNode
+    type: TypeNode,
   } & Declaration &
     Statement;
 
   declare type EnumMember = {
     name: DeclarationName,
-    initializer?: Expression
+    initializer?: Expression,
   } & Declaration;
 
   declare type EnumDeclaration = {
     name: Identifier,
-    members: NodeArray<EnumMember>
+    members: NodeArray<EnumMember>,
   } & Declaration &
     Statement;
 
   declare type ModuleDeclaration = {
     name: Identifier | LiteralExpression,
-    body: ModuleBlock | ModuleDeclaration
+    body: ModuleBlock | ModuleDeclaration,
   } & Declaration &
     Statement;
 
   declare type ModuleBlock = {
-    statements: NodeArray<Statement>
+    statements: NodeArray<Statement>,
   } & Node &
     Statement;
 
   declare type ImportEqualsDeclaration = {
     name: Identifier,
-    moduleReference: EntityName | ExternalModuleReference
+    moduleReference: EntityName | ExternalModuleReference,
   } & Declaration &
     Statement;
 
   declare type ExternalModuleReference = {
-    expression?: Expression
+    expression?: Expression,
   } & Node;
 
   declare type ImportDeclaration = {
     importClause?: ImportClause,
-    moduleSpecifier: Expression
+    moduleSpecifier: Expression,
   } & Statement;
 
   declare type ImportClause = {
     name?: Identifier,
-    namedBindings?: NamespaceImport | NamedImports
+    namedBindings?: NamespaceImport | NamedImports,
   } & Declaration;
 
   declare type NamespaceImport = {
-    name: Identifier
+    name: Identifier,
   } & Declaration;
 
   declare type ExportDeclaration = {
     exportClause?: NamedExports,
-    moduleSpecifier?: Expression
+    moduleSpecifier?: Expression,
   } & Declaration &
     Statement;
 
   declare type NamedImportsOrExports = {
-    elements: NodeArray<ImportOrExportSpecifier>
+    elements: NodeArray<ImportOrExportSpecifier>,
   } & Node;
 
   declare type NamedImports = NamedImportsOrExports;
   declare type NamedExports = NamedImportsOrExports;
   declare type ImportOrExportSpecifier = {
     propertyName?: Identifier,
-    name: Identifier
+    name: Identifier,
   } & Declaration;
 
   declare type ImportSpecifier = ImportOrExportSpecifier;
   declare type ExportSpecifier = ImportOrExportSpecifier;
   declare type ExportAssignment = {
     isExportEquals?: boolean,
-    expression: Expression
+    expression: Expression,
   } & Declaration &
     Statement;
 
   declare type FileReference = {
-    fileName: string
+    fileName: string,
   } & TextRange;
 
   declare type CommentRange = {
     hasTrailingNewLine?: boolean,
-    kind: SyntaxKind
+    kind: SyntaxKind,
   } & TextRange;
 
   declare type JSDocTypeExpression = {
-    type: JSDocType
+    type: JSDocType,
   } & Node;
 
   declare type JSDocType = {
-    _jsDocTypeBrand: any
+    _jsDocTypeBrand: any,
   } & TypeNode;
 
   declare type JSDocAllType = {
-    _JSDocAllTypeBrand: any
+    _JSDocAllTypeBrand: any,
   } & JSDocType;
 
   declare type JSDocUnknownType = {
-    _JSDocUnknownTypeBrand: any
+    _JSDocUnknownTypeBrand: any,
   } & JSDocType;
 
   declare type JSDocArrayType = {
-    elementType: JSDocType
+    elementType: JSDocType,
   } & JSDocType;
 
   declare type JSDocUnionType = {
-    types: NodeArray<JSDocType>
+    types: NodeArray<JSDocType>,
   } & JSDocType;
 
   declare type JSDocTupleType = {
-    types: NodeArray<JSDocType>
+    types: NodeArray<JSDocType>,
   } & JSDocType;
 
   declare type JSDocNonNullableType = {
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType;
 
   declare type JSDocNullableType = {
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType;
 
   declare type JSDocRecordType = {
-    members: NodeArray<JSDocRecordMember>
+    members: NodeArray<JSDocRecordMember>,
   } & JSDocType &
     TypeLiteralNode;
 
   declare type JSDocTypeReference = {
     name: EntityName,
-    typeArguments: NodeArray<JSDocType>
+    typeArguments: NodeArray<JSDocType>,
   } & JSDocType;
 
   declare type JSDocOptionalType = {
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType;
 
   declare type JSDocFunctionType = {
     parameters: NodeArray<ParameterDeclaration>,
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType &
     SignatureDeclaration;
 
   declare type JSDocVariadicType = {
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType;
 
   declare type JSDocConstructorType = {
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType;
 
   declare type JSDocThisType = {
-    type: JSDocType
+    type: JSDocType,
   } & JSDocType;
 
   declare type JSDocRecordMember = {
     name: Identifier | LiteralExpression,
-    type?: JSDocType
+    type?: JSDocType,
   } & PropertyDeclaration;
 
   declare type JSDocComment = {
-    tags: NodeArray<JSDocTag>
+    tags: NodeArray<JSDocTag>,
   } & Node;
 
   declare type JSDocTag = {
     atToken: Node,
-    tagName: Identifier
+    tagName: Identifier,
   } & Node;
 
   declare type JSDocTemplateTag = {
-    typeParameters: NodeArray<TypeParameterDeclaration>
+    typeParameters: NodeArray<TypeParameterDeclaration>,
   } & JSDocTag;
 
   declare type JSDocReturnTag = {
-    typeExpression: JSDocTypeExpression
+    typeExpression: JSDocTypeExpression,
   } & JSDocTag;
 
   declare type JSDocTypeTag = {
-    typeExpression: JSDocTypeExpression
+    typeExpression: JSDocTypeExpression,
   } & JSDocTag;
 
   declare type JSDocParameterTag = {
     preParameterName?: Identifier,
     typeExpression?: JSDocTypeExpression,
     postParameterName?: Identifier,
-    isBracketed: boolean
+    isBracketed: boolean,
   } & JSDocTag;
 
   declare type SourceFile = {
@@ -774,7 +774,7 @@ declare module "typescript" {
     text: string,
     amdDependencies: {
       path: string,
-      name: string
+      name: string,
     }[],
     moduleName: string,
     referencedFiles: FileReference[],
@@ -789,7 +789,7 @@ declare module "typescript" {
         because this containing file is intended to act as a default library.
         */
     hasNoDefaultLib: boolean,
-    languageVersion: ScriptTarget
+    languageVersion: ScriptTarget,
   } & Declaration;
 
   declare interface ScriptReferenceHost {
@@ -801,8 +801,8 @@ declare module "typescript" {
     readDirectory(
       rootDir: string,
       extension: string,
-      exclude: string[]
-    ): string[]
+      exclude: string[],
+    ): string[],
   } & ModuleResolutionHost;
 
   declare interface WriteFileCallback {
@@ -810,7 +810,7 @@ declare module "typescript" {
       fileName: string,
       data: string,
       writeByteOrderMark: boolean,
-      onError?: (message: string) => void
+      onError?: (message: string) => void,
     ): void;
   }
   declare class OperationCanceledException {}
@@ -847,27 +847,27 @@ declare module "typescript" {
     emit(
       targetSourceFile?: SourceFile,
       writeFile?: WriteFileCallback,
-      cancellationToken?: CancellationToken
+      cancellationToken?: CancellationToken,
     ): EmitResult,
     getOptionsDiagnostics(cancellationToken?: CancellationToken): Diagnostic[],
     getGlobalDiagnostics(cancellationToken?: CancellationToken): Diagnostic[],
     getSyntacticDiagnostics(
       sourceFile?: SourceFile,
-      cancellationToken?: CancellationToken
+      cancellationToken?: CancellationToken,
     ): Diagnostic[],
     getSemanticDiagnostics(
       sourceFile?: SourceFile,
-      cancellationToken?: CancellationToken
+      cancellationToken?: CancellationToken,
     ): Diagnostic[],
     getDeclarationDiagnostics(
       sourceFile?: SourceFile,
-      cancellationToken?: CancellationToken
+      cancellationToken?: CancellationToken,
     ): Diagnostic[],
 
     /**
      * Gets a type checker that can be used to semantically analyze source fils in the program.
      */
-    getTypeChecker(): TypeChecker
+    getTypeChecker(): TypeChecker,
   } & ScriptReferenceHost;
 
   declare interface SourceMapSpan {
@@ -933,12 +933,12 @@ declare module "typescript" {
     typeToString(
       type: Type,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): string;
     symbolToString(
       symbol: Symbol,
       enclosingDeclaration?: Node,
-      meaning?: SymbolFlags
+      meaning?: SymbolFlags,
     ): string;
     getSymbolDisplayBuilder(): SymbolDisplayBuilder;
     getFullyQualifiedName(symbol: Symbol): string;
@@ -947,18 +947,18 @@ declare module "typescript" {
     getContextualType(node: Expression): Type;
     getResolvedSignature(
       node: CallLikeExpression,
-      candidatesOutArray?: Signature[]
+      candidatesOutArray?: Signature[],
     ): Signature;
     getSignatureFromDeclaration(declaration: SignatureDeclaration): Signature;
     isImplementationOfOverload(node: FunctionLikeDeclaration): boolean;
     isUndefinedSymbol(symbol: Symbol): boolean;
     isArgumentsSymbol(symbol: Symbol): boolean;
     getConstantValue(
-      node: EnumMember | PropertyAccessExpression | ElementAccessExpression
+      node: EnumMember | PropertyAccessExpression | ElementAccessExpression,
     ): number;
     isValidPropertyAccess(
       node: PropertyAccessExpression | QualifiedName,
-      propertyName: string
+      propertyName: string,
     ): boolean;
     getAliasedSymbol(symbol: Symbol): Symbol;
     getExportsOfModule(moduleSymbol: Symbol): Symbol[];
@@ -971,56 +971,56 @@ declare module "typescript" {
       type: Type,
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildSymbolDisplay(
       symbol: Symbol,
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
       meaning?: SymbolFlags,
-      flags?: SymbolFormatFlags
+      flags?: SymbolFormatFlags,
     ): void;
     buildSignatureDisplay(
       signatures: Signature,
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildParameterDisplay(
       parameter: Symbol,
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildTypeParameterDisplay(
       tp: TypeParameter,
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildTypeParameterDisplayFromSymbol(
       symbol: Symbol,
       writer: SymbolWriter,
       enclosingDeclaraiton?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildDisplayForParametersAndDelimiters(
       parameters: Symbol[],
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildDisplayForTypeParametersAndDelimiters(
       typeParameters: TypeParameter[],
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
     buildReturnTypeDisplay(
       signature: Signature,
       writer: SymbolWriter,
       enclosingDeclaration?: Node,
-      flags?: TypeFormatFlags
+      flags?: TypeFormatFlags,
     ): void;
   }
   declare interface SymbolWriter {
@@ -1038,7 +1038,7 @@ declare module "typescript" {
     trackSymbol(
       symbol: Symbol,
       enclosingDeclaration?: Node,
-      meaning?: SymbolFlags
+      meaning?: SymbolFlags,
     ): void;
   }
   declare interface TypePredicate {
@@ -1062,7 +1062,7 @@ declare module "typescript" {
     symbol?: Symbol;
   }
   declare type StringLiteralType = {
-    text: string
+    text: string,
   } & Type;
 
   declare type ObjectType = {} & Type;
@@ -1070,7 +1070,7 @@ declare module "typescript" {
   declare type InterfaceType = {
     typeParameters: TypeParameter[],
     outerTypeParameters: TypeParameter[],
-    localTypeParameters: TypeParameter[]
+    localTypeParameters: TypeParameter[],
   } & ObjectType;
 
   declare type InterfaceTypeWithDeclaredMembers = {
@@ -1078,23 +1078,23 @@ declare module "typescript" {
     declaredCallSignatures: Signature[],
     declaredConstructSignatures: Signature[],
     declaredStringIndexType: Type,
-    declaredNumberIndexType: Type
+    declaredNumberIndexType: Type,
   } & InterfaceType;
 
   declare type TypeReference = {
     target: GenericType,
-    typeArguments: Type[]
+    typeArguments: Type[],
   } & ObjectType;
 
   declare type GenericType = {} & InterfaceType & TypeReference;
 
   declare type TupleType = {
     elementTypes: Type[],
-    baseArrayType: TypeReference
+    baseArrayType: TypeReference,
   } & ObjectType;
 
   declare type UnionOrIntersectionType = {
-    types: Type[]
+    types: Type[],
   } & Type;
 
   declare type UnionType = {} & UnionOrIntersectionType;
@@ -1102,7 +1102,7 @@ declare module "typescript" {
   declare type IntersectionType = {} & UnionOrIntersectionType;
 
   declare type TypeParameter = {
-    constraint: Type
+    constraint: Type,
   } & Type;
 
   declare interface Signature {
@@ -1206,7 +1206,7 @@ declare module "typescript" {
     getSourceFile(
       fileName: string,
       languageVersion: ScriptTarget,
-      onError?: (message: string) => void
+      onError?: (message: string) => void,
     ): SourceFile,
     getCancellationToken(): CancellationToken,
     getDefaultLibFileName(options: CompilerOptions): string,
@@ -1217,8 +1217,8 @@ declare module "typescript" {
     getNewLine(): string,
     resolveModuleNames(
       moduleNames: string[],
-      containingFile: string
-    ): ResolvedModule[]
+      containingFile: string,
+    ): ResolvedModule[],
   } & ModuleResolutionHost;
 
   declare interface TextSpan {
@@ -1246,7 +1246,7 @@ declare module "typescript" {
     readDirectory(
       path: string,
       extension?: string,
-      exclude?: string[]
+      exclude?: string[],
     ): string[];
     getMemoryUsage(): number;
     exit(exitCode?: number): void;
@@ -1289,22 +1289,22 @@ declare module "typescript" {
   declare function getPositionOfLineAndCharacter(
     sourceFile: SourceFile,
     line: number,
-    character: number
+    character: number,
   ): number;
   declare function getLineAndCharacterOfPosition(
     sourceFile: SourceFile,
-    position: number
+    position: number,
   ): LineAndCharacter;
   declare function isWhiteSpace(ch: number): boolean;
   declare function isLineBreak(ch: number): boolean;
   declare function couldStartTrivia(text: string, pos: number): boolean;
   declare function getLeadingCommentRanges(
     text: string,
-    pos: number
+    pos: number,
   ): CommentRange[];
   declare function getTrailingCommentRanges(
     text: string,
-    pos: number
+    pos: number,
   ): CommentRange[];
 
   /**
@@ -1313,11 +1313,11 @@ declare module "typescript" {
   declare function getShebang(text: string): string;
   declare function isIdentifierStart(
     ch: number,
-    languageVersion: ScriptTarget
+    languageVersion: ScriptTarget,
   ): boolean;
   declare function isIdentifierPart(
     ch: number,
-    languageVersion: ScriptTarget
+    languageVersion: ScriptTarget,
   ): boolean;
   declare function createScanner(
     languageVersion: ScriptTarget,
@@ -1326,57 +1326,57 @@ declare module "typescript" {
     text?: string,
     onError?: ErrorCallback,
     start?: number,
-    length?: number
+    length?: number,
   ): Scanner;
   declare function getDefaultLibFileName(options: CompilerOptions): string;
   declare function textSpanEnd(span: TextSpan): number;
   declare function textSpanIsEmpty(span: TextSpan): boolean;
   declare function textSpanContainsPosition(
     span: TextSpan,
-    position: number
+    position: number,
   ): boolean;
   declare function textSpanContainsTextSpan(
     span: TextSpan,
-    other: TextSpan
+    other: TextSpan,
   ): boolean;
   declare function textSpanOverlapsWith(
     span: TextSpan,
-    other: TextSpan
+    other: TextSpan,
   ): boolean;
   declare function textSpanOverlap(span1: TextSpan, span2: TextSpan): TextSpan;
   declare function textSpanIntersectsWithTextSpan(
     span: TextSpan,
-    other: TextSpan
+    other: TextSpan,
   ): boolean;
   declare function textSpanIntersectsWith(
     span: TextSpan,
     start: number,
-    length: number
+    length: number,
   ): boolean;
   declare function decodedTextSpanIntersectsWith(
     start1: number,
     length1: number,
     start2: number,
-    length2: number
+    length2: number,
   ): boolean;
   declare function textSpanIntersectsWithPosition(
     span: TextSpan,
-    position: number
+    position: number,
   ): boolean;
   declare function textSpanIntersection(
     span1: TextSpan,
-    span2: TextSpan
+    span2: TextSpan,
   ): TextSpan;
   declare function createTextSpan(start: number, length: number): TextSpan;
   declare function createTextSpanFromBounds(
     start: number,
-    end: number
+    end: number,
   ): TextSpan;
   declare function textChangeRangeNewSpan(range: TextChangeRange): TextSpan;
   declare function textChangeRangeIsUnchanged(range: TextChangeRange): boolean;
   declare function createTextChangeRange(
     span: TextSpan,
-    newLength: number
+    newLength: number,
   ): TextChangeRange;
   declare var unchangedTextChangeRange: TextChangeRange;
 
@@ -1389,7 +1389,7 @@ declare module "typescript" {
     Vn.
     */
   declare function collapseTextChangeRangesAcrossMultipleVersions(
-    changes: TextChangeRange[]
+    changes: TextChangeRange[],
   ): TextChangeRange;
   declare function getTypeParameterOwner(d: Declaration): Declaration;
   declare function getNodeConstructor(kind: SyntaxKind): () => Node;
@@ -1397,65 +1397,65 @@ declare module "typescript" {
   declare function forEachChild<T>(
     node: Node,
     cbNode: (node: Node) => T,
-    cbNodeArray?: (nodes: Node[]) => T
+    cbNodeArray?: (nodes: Node[]) => T,
   ): T;
   declare function createSourceFile(
     fileName: string,
     sourceText: string,
     languageVersion: ScriptTarget,
-    setParentNodes?: boolean
+    setParentNodes?: boolean,
   ): SourceFile;
   declare function updateSourceFile(
     sourceFile: SourceFile,
     newText: string,
     textChangeRange: TextChangeRange,
-    aggressiveChecks?: boolean
+    aggressiveChecks?: boolean,
   ): SourceFile;
   declare var version: string;
   declare function findConfigFile(searchPath: string): string;
   declare function resolveTripleslashReference(
     moduleName: string,
-    containingFile: string
+    containingFile: string,
   ): string;
   declare function resolveModuleName(
     moduleName: string,
     containingFile: string,
     compilerOptions: CompilerOptions,
-    host: ModuleResolutionHost
+    host: ModuleResolutionHost,
   ): ResolvedModuleWithFailedLookupLocations;
   declare function nodeModuleNameResolver(
     moduleName: string,
     containingFile: string,
-    host: ModuleResolutionHost
+    host: ModuleResolutionHost,
   ): ResolvedModuleWithFailedLookupLocations;
   declare function classicNameResolver(
     moduleName: string,
     containingFile: string,
     compilerOptions: CompilerOptions,
-    host: ModuleResolutionHost
+    host: ModuleResolutionHost,
   ): ResolvedModuleWithFailedLookupLocations;
   declare function createCompilerHost(
     options: CompilerOptions,
-    setParentNodes?: boolean
+    setParentNodes?: boolean,
   ): CompilerHost;
   declare function getPreEmitDiagnostics(
     program: Program,
     sourceFile?: SourceFile,
-    cancellationToken?: CancellationToken
+    cancellationToken?: CancellationToken,
   ): Diagnostic[];
   declare function flattenDiagnosticMessageText(
     messageText: string | DiagnosticMessageChain,
-    newLine: string
+    newLine: string,
   ): string;
   declare function createProgram(
     rootNames: string[],
     options: CompilerOptions,
     host?: CompilerHost,
-    oldProgram?: Program
+    oldProgram?: Program,
   ): Program;
   declare function parseCommandLine(
     commandLine: string[],
-    readFile?: (path: string) => string
+    readFile?: (path: string) => string,
   ): ParsedCommandLine;
 
   /**
@@ -1463,10 +1463,10 @@ declare module "typescript" {
    * @param fileName The path to the config file
    */
   declare function readConfigFile(
-    fileName: string
+    fileName: string,
   ): {
     config?: any,
-    error?: Diagnostic
+    error?: Diagnostic,
   };
 
   /**
@@ -1476,10 +1476,10 @@ declare module "typescript" {
    */
   declare function parseConfigFileText(
     fileName: string,
-    jsonText: string
+    jsonText: string,
   ): {
     config?: any,
-    error?: Diagnostic
+    error?: Diagnostic,
   };
 
   /**
@@ -1491,7 +1491,7 @@ declare module "typescript" {
   declare function parseConfigFile(
     json: any,
     host: ParseConfigHost,
-    basePath: string
+    basePath: string,
   ): ParsedCommandLine;
   declare var servicesVersion: string;
 
@@ -1527,7 +1527,7 @@ declare module "typescript" {
   }
 
   declare var npm$namespace$ScriptSnapshot: {
-    fromString: typeof ScriptSnapshot$fromString
+    fromString: typeof ScriptSnapshot$fromString,
   };
   declare function ScriptSnapshot$fromString(text: string): IScriptSnapshot;
   declare interface PreProcessedFileInfo {
@@ -1556,7 +1556,7 @@ declare module "typescript" {
     useCaseSensitiveFileNames(): boolean;
     resolveModuleNames(
       moduleNames: string[],
-      containingFile: string
+      containingFile: string,
     ): ResolvedModule[];
   }
   declare interface LanguageService {
@@ -1571,7 +1571,7 @@ declare module "typescript" {
      */
     getSyntacticClassifications(
       fileName: string,
-      span: TextSpan
+      span: TextSpan,
     ): ClassifiedSpan[];
 
     /**
@@ -1580,63 +1580,63 @@ declare module "typescript" {
      */
     getSemanticClassifications(
       fileName: string,
-      span: TextSpan
+      span: TextSpan,
     ): ClassifiedSpan[];
     getEncodedSyntacticClassifications(
       fileName: string,
-      span: TextSpan
+      span: TextSpan,
     ): Classifications;
     getEncodedSemanticClassifications(
       fileName: string,
-      span: TextSpan
+      span: TextSpan,
     ): Classifications;
     getCompletionsAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): CompletionInfo;
     getCompletionEntryDetails(
       fileName: string,
       position: number,
-      entryName: string
+      entryName: string,
     ): CompletionEntryDetails;
     getQuickInfoAtPosition(fileName: string, position: number): QuickInfo;
     getNameOrDottedNameSpan(
       fileName: string,
       startPos: number,
-      endPos: number
+      endPos: number,
     ): TextSpan;
     getBreakpointStatementAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): TextSpan;
     getSignatureHelpItems(
       fileName: string,
-      position: number
+      position: number,
     ): SignatureHelpItems;
     getRenameInfo(fileName: string, position: number): RenameInfo;
     findRenameLocations(
       fileName: string,
       position: number,
       findInStrings: boolean,
-      findInComments: boolean
+      findInComments: boolean,
     ): RenameLocation[];
     getDefinitionAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): DefinitionInfo[];
     getTypeDefinitionAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): DefinitionInfo[];
     getReferencesAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): ReferenceEntry[];
     findReferences(fileName: string, position: number): ReferencedSymbol[];
     getDocumentHighlights(
       fileName: string,
       position: number,
-      filesToSearch: string[]
+      filesToSearch: string[],
     ): DocumentHighlights[];
 
     /**
@@ -1645,43 +1645,43 @@ declare module "typescript" {
      */
     getOccurrencesAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): ReferenceEntry[];
     getNavigateToItems(
       searchValue: string,
-      maxResultCount?: number
+      maxResultCount?: number,
     ): NavigateToItem[];
     getNavigationBarItems(fileName: string): NavigationBarItem[];
     getOutliningSpans(fileName: string): OutliningSpan[];
     getTodoComments(
       fileName: string,
-      descriptors: TodoCommentDescriptor[]
+      descriptors: TodoCommentDescriptor[],
     ): TodoComment[];
     getBraceMatchingAtPosition(fileName: string, position: number): TextSpan[];
     getIndentationAtPosition(
       fileName: string,
       position: number,
-      options: EditorOptions
+      options: EditorOptions,
     ): number;
     getFormattingEditsForRange(
       fileName: string,
       start: number,
       end: number,
-      options: FormatCodeOptions
+      options: FormatCodeOptions,
     ): TextChange[];
     getFormattingEditsForDocument(
       fileName: string,
-      options: FormatCodeOptions
+      options: FormatCodeOptions,
     ): TextChange[];
     getFormattingEditsAfterKeystroke(
       fileName: string,
       position: number,
       key: string,
-      options: FormatCodeOptions
+      options: FormatCodeOptions,
     ): TextChange[];
     getDocCommentTemplateAtPosition(
       fileName: string,
-      position: number
+      position: number,
     ): TextInsertion;
     getEmitOutput(fileName: string): EmitOutput;
     getProgram(): Program;
@@ -1779,7 +1779,7 @@ declare module "typescript" {
     InsertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: boolean,
     PlaceOpenBraceOnNewLineForFunctions: boolean,
     PlaceOpenBraceOnNewLineForControlBlocks: boolean,
-    [s: string]: boolean | number | string
+    [s: string]: boolean | number | string,
   } & EditorOptions;
 
   declare interface DefinitionInfo {
@@ -1927,12 +1927,12 @@ declare module "typescript" {
     getClassificationsForLine(
       text: string,
       lexState: EndOfLineState,
-      syntacticClassifierAbsent: boolean
+      syntacticClassifierAbsent: boolean,
     ): ClassificationResult;
     getEncodedLexicalClassifications(
       text: string,
       endOfLineState: EndOfLineState,
-      syntacticClassifierAbsent: boolean
+      syntacticClassifierAbsent: boolean,
     ): Classifications;
   }
 
@@ -1969,7 +1969,7 @@ declare module "typescript" {
       fileName: string,
       compilationSettings: CompilerOptions,
       scriptSnapshot: IScriptSnapshot,
-      version: string
+      version: string,
     ): SourceFile;
 
     /**
@@ -1987,7 +1987,7 @@ declare module "typescript" {
       fileName: string,
       compilationSettings: CompilerOptions,
       scriptSnapshot: IScriptSnapshot,
-      version: string
+      version: string,
     ): SourceFile;
 
     /**
@@ -2000,7 +2000,7 @@ declare module "typescript" {
             */
     releaseDocument(
       fileName: string,
-      compilationSettings: CompilerOptions
+      compilationSettings: CompilerOptions,
     ): void;
     reportStats(): string;
   }
@@ -2096,11 +2096,11 @@ declare module "typescript" {
     docCommentTagName: string;
   }
   declare type DisplayPartsSymbolWriter = {
-    displayParts(): SymbolDisplayPart[]
+    displayParts(): SymbolDisplayPart[],
   } & SymbolWriter;
 
   declare function displayPartsToString(
-    displayParts: SymbolDisplayPart[]
+    displayParts: SymbolDisplayPart[],
   ): string;
   declare function getDefaultCompilerOptions(): CompilerOptions;
   declare interface TranspileOptions {
@@ -2117,21 +2117,21 @@ declare module "typescript" {
   }
   declare function transpileModule(
     input: string,
-    transpileOptions: TranspileOptions
+    transpileOptions: TranspileOptions,
   ): TranspileOutput;
   declare function transpile(
     input: string,
     compilerOptions?: CompilerOptions,
     fileName?: string,
     diagnostics?: Diagnostic[],
-    moduleName?: string
+    moduleName?: string,
   ): string;
   declare function createLanguageServiceSourceFile(
     fileName: string,
     scriptSnapshot: IScriptSnapshot,
     scriptTarget: ScriptTarget,
     version: string,
-    setNodeParents: boolean
+    setNodeParents: boolean,
   ): SourceFile;
   declare var disableIncrementalParsing: boolean;
   declare function updateLanguageServiceSourceFile(
@@ -2139,21 +2139,21 @@ declare module "typescript" {
     scriptSnapshot: IScriptSnapshot,
     version: string,
     textChangeRange: TextChangeRange,
-    aggressiveChecks?: boolean
+    aggressiveChecks?: boolean,
   ): SourceFile;
   declare function createGetCanonicalFileName(
-    useCaseSensitivefileNames: boolean
+    useCaseSensitivefileNames: boolean,
   ): (fileName: string) => string;
   declare function createDocumentRegistry(
-    useCaseSensitiveFileNames?: boolean
+    useCaseSensitiveFileNames?: boolean,
   ): DocumentRegistry;
   declare function preProcessFile(
     sourceText: string,
-    readImportFiles?: boolean
+    readImportFiles?: boolean,
   ): PreProcessedFileInfo;
   declare function createLanguageService(
     host: LanguageServiceHost,
-    documentRegistry?: DocumentRegistry
+    documentRegistry?: DocumentRegistry,
   ): LanguageService;
   declare function createClassifier(): Classifier;
 

@@ -3,5 +3,5 @@ import beautify from "./cli/beautifier";
 
 export default {
   beautify,
-  compiler
+  compiler,
 };

@@ -28,7 +28,7 @@ export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
 export const functionDeclaration = (nodeName: string, node: RawNode) => {
   // each functionDeclaration gets it's own line
   let str = `declare ${printers.relationships.exporter(
-    node
+    node,
   )}function ${nodeName}${functionType(node, true)}\n`;
 
   return str;
