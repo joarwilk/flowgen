@@ -7,13 +7,12 @@
  */
 
 declare interface commander$ICommandStatic {
-
-    /**
-     * Initialize a new `Command`.
-     * @param
-     * @api  public
-     */
-    new(name?: string): commander$ICommand
+  /**
+   * Initialize a new `Command`.
+   * @param
+   * @api  public
+   */
+  new(name?: string): commander$ICommand;
 }
 
 /**
@@ -22,13 +21,13 @@ declare interface commander$ICommandStatic {
 declare function whap(): void;
 
 declare type commander$ICommand = {
-    args: string[],
-    _args: {
-        required: boolean,
-        name: string
-    }[],
+  args: string[],
+  _args: {
+    required: boolean,
+    name: string,
+  }[],
 
-    /**
+  /**
      * Add command `name`.
      *
     The `.action()` callback is invoked when the
@@ -76,16 +75,16 @@ declare type commander$ICommand = {
      * @return  the new command
      * @api  public
     */
-    command(name: string, desc?: string, opts?: any): commander$ICommand,
+  command(name: string, desc?: string, opts?: any): commander$ICommand,
 
-    /**
-     * Add an implicit `help [cmd]` subcommand
-     * which invokes `--help` for the given command.
-     * @api  private
-     */
-    addImplicitHelpCommand(): void,
+  /**
+   * Add an implicit `help [cmd]` subcommand
+   * which invokes `--help` for the given command.
+   * @api  private
+   */
+  addImplicitHelpCommand(): void,
 
-    /**
+  /**
      * Parse expected `args`.
      *
     For example `["[type]"]` becomes `[{ required: false, name: 'type' }]`.
@@ -93,9 +92,9 @@ declare type commander$ICommand = {
      * @return  for chaining
      * @api  public
     */
-    parseExpectedArgs(args: string[]): commander$ICommand,
+  parseExpectedArgs(args: string[]): commander$ICommand,
 
-    /**
+  /**
      * Register callback `fn` for the command.
      *
     Examples:
@@ -110,9 +109,9 @@ declare type commander$ICommand = {
      * @return  for chaining
      * @api  public
     */
-    action(fn: (...args: any[]) => void): commander$ICommand,
+  action(fn: (...args: any[]) => void): commander$ICommand,
 
-    /**
+  /**
      * Define option with `flags`, `description` and optional
      * coercion `fn`.
 
@@ -159,39 +158,44 @@ declare type commander$ICommand = {
      * @return  for chaining
      * @api  public
     */
-    option(
-        flags: string,
-        description?: string,
-        fn?: ((arg1: any, arg2: any) => void) | RegExp,
-        defaultValue?: any): commander$ICommand,
-    option(flags: string, description?: string, defaultValue?: any): commander$ICommand,
+  option(
+    flags: string,
+    description?: string,
+    fn?: ((arg1: any, arg2: any) => void) | RegExp,
+    defaultValue?: any,
+  ): commander$ICommand,
+  option(
+    flags: string,
+    description?: string,
+    defaultValue?: any,
+  ): commander$ICommand,
 
-    /**
+  /**
      * Allow unknown options on the command line.
      * @param  if `true` or omitted, no error will be thrown
     for unknown options.
      * @api  public
     */
-    allowUnknownOption(arg?: boolean): commander$ICommand,
+  allowUnknownOption(arg?: boolean): commander$ICommand,
 
-    /**
-     * Parse `argv`, settings options and invoking commands when defined.
-     * @param
-     * @return  for chaining
-     * @api  public
-     */
-    parse(argv: string[]): commander$ICommand,
+  /**
+   * Parse `argv`, settings options and invoking commands when defined.
+   * @param
+   * @return  for chaining
+   * @api  public
+   */
+  parse(argv: string[]): commander$ICommand,
 
-    /**
-     * Execute a sub-command executable.
-     * @param
-     * @param
-     * @param
-     * @api  private
-     */
-    executeSubCommand(argv: string[], args: string[], unknown: string[]): any,
+  /**
+   * Execute a sub-command executable.
+   * @param
+   * @param
+   * @param
+   * @api  private
+   */
+  executeSubCommand(argv: string[], args: string[], unknown: string[]): any,
 
-    /**
+  /**
      * Normalize `args`, splitting joined short flags. For example
      * the arg "-abc" is equivalent to "-a -b -c".
     This also normalizes equal sign and splits "--abc=def" into "--abc def".
@@ -199,9 +203,9 @@ declare type commander$ICommand = {
      * @return  *
      * @api  private
     */
-    normalize(args: string[]): string[],
+  normalize(args: string[]): string[],
 
-    /**
+  /**
      * Parse command `args`.
      *
     When listener(s) are available those
@@ -211,60 +215,65 @@ declare type commander$ICommand = {
      * @return  for chaining
      * @api  private
     */
-    parseArgs(args: string[], unknown: string[]): commander$ICommand,
+  parseArgs(args: string[], unknown: string[]): commander$ICommand,
 
-    /**
-     * Return an option matching `arg` if any.
-     * @param
-     * @return  *
-     * @api  private
-     */
-    optionFor(arg: string): commander$IOption,
+  /**
+   * Return an option matching `arg` if any.
+   * @param
+   * @return  *
+   * @api  private
+   */
+  optionFor(arg: string): commander$IOption,
 
-    /**
-     * Parse options from `argv` returning `argv`
-     * void of these options.
-     * @param
-     * @return  *
-     * @api  public
-     */
-    parseOptions(argv: string[]): {
-        args: string[],
-        unknown: string[]
+  /**
+   * Parse options from `argv` returning `argv`
+   * void of these options.
+   * @param
+   * @return  *
+   * @api  public
+   */
+  parseOptions(
+    argv: string[],
+  ): {
+    args: string[],
+    unknown: string[],
+  },
+
+  /**
+   * Return an object containing options as key-value pairs
+   * @return  *
+   * @api  public
+   */
+  opts(): any,
+
+  /**
+   * Argument `name` is missing.
+   * @param
+   * @api  private
+   */
+  missingArgument(name: string): void,
+
+  /**
+   * `Option` is missing an argument, but received `flag` or nothing.
+   * @param
+   * @param
+   * @api  private
+   */
+  optionMissingArgument(
+    option: {
+      flags: string,
     },
+    flag?: string,
+  ): void,
 
-    /**
-     * Return an object containing options as key-value pairs
-     * @return  *
-     * @api  public
-     */
-    opts(): any,
+  /**
+   * Unknown option `flag`.
+   * @param
+   * @api  private
+   */
+  unknownOption(flag: string): void,
 
-    /**
-     * Argument `name` is missing.
-     * @param
-     * @api  private
-     */
-    missingArgument(name: string): void,
-
-    /**
-     * `Option` is missing an argument, but received `flag` or nothing.
-     * @param
-     * @param
-     * @api  private
-     */
-    optionMissingArgument(option: {
-        flags: string
-    }, flag?: string): void,
-
-    /**
-     * Unknown option `flag`.
-     * @param
-     * @api  private
-     */
-    unknownOption(flag: string): void,
-
-    /**
+  /**
      * Set the program version to `str`.
      *
     This method auto-registers the "-V, --version" flag
@@ -274,125 +283,124 @@ declare type commander$ICommand = {
      * @return  for chaining
      * @api  public
     */
-    version(str: string, flags?: string): commander$ICommand,
+  version(str: string, flags?: string): commander$ICommand,
 
-    /**
-     * Set the description to `str`.
-     * @param
-     * @return  *
-     * @api  public
-     */
-    description(str: string): commander$ICommand,
-    description(): string,
+  /**
+   * Set the description to `str`.
+   * @param
+   * @return  *
+   * @api  public
+   */
+  description(str: string): commander$ICommand,
+  description(): string,
 
-    /**
-     * Set an alias for the command
-     * @param
-     * @return  *
-     * @api  public
-     */
-    alias(alias: string): commander$ICommand,
-    alias(): string,
+  /**
+   * Set an alias for the command
+   * @param
+   * @return  *
+   * @api  public
+   */
+  alias(alias: string): commander$ICommand,
+  alias(): string,
 
-    /**
-     * Set / get the command usage `str`.
-     * @param
-     * @return  *
-     * @api  public
-     */
-    usage(str: string): commander$ICommand,
-    usage(): string,
+  /**
+   * Set / get the command usage `str`.
+   * @param
+   * @return  *
+   * @api  public
+   */
+  usage(str: string): commander$ICommand,
+  usage(): string,
 
-    /**
-     * Get the name of the command
-     * @param
-     * @return  *
-     * @api  public
-     */
-    name(): string,
+  /**
+   * Get the name of the command
+   * @param
+   * @return  *
+   * @api  public
+   */
+  name(): string,
 
-    /**
-     * Return the largest option length.
-     * @return  *
-     * @api  private
-     */
-    largestOptionLength(): number,
+  /**
+   * Return the largest option length.
+   * @return  *
+   * @api  private
+   */
+  largestOptionLength(): number,
 
-    /**
-     * Return help for options.
-     * @return  *
-     * @api  private
-     */
-    optionHelp(): string,
+  /**
+   * Return help for options.
+   * @return  *
+   * @api  private
+   */
+  optionHelp(): string,
 
-    /**
-     * Return command help documentation.
-     * @return  *
-     * @api  private
-     */
-    commandHelp(): string,
+  /**
+   * Return command help documentation.
+   * @return  *
+   * @api  private
+   */
+  commandHelp(): string,
 
-    /**
-     * Return program help documentation.
-     * @return  *
-     * @api  private
-     */
-    helpInformation(): string,
+  /**
+   * Return program help documentation.
+   * @return  *
+   * @api  private
+   */
+  helpInformation(): string,
 
-    /**
-     * Output help information for this command
-     * @api  public
-     */
-    outputHelp(): void,
+  /**
+   * Output help information for this command
+   * @api  public
+   */
+  outputHelp(): void,
 
-    /**
-     * Output help information and exit.
-     * @api  public
-     */
-    help(): void
-}
+  /**
+   * Output help information and exit.
+   * @api  public
+   */
+  help(): void,
+};
 
 declare interface commander$IOptionStatic {
-
-    /**
-     * Initialize a new `Option` with the given `flags` and `description`.
-     * @param
-     * @param
-     * @api  public
-     */
-    new(flags: string, description?: string): commander$IOption
+  /**
+   * Initialize a new `Option` with the given `flags` and `description`.
+   * @param
+   * @param
+   * @api  public
+   */
+  new(flags: string, description?: string): commander$IOption;
 }
 
 declare interface commander$IOption {
-    flags: string,
-        required: boolean,
-        optional: boolean,
-        bool: boolean,
-        short?: string,
-        long: string,
-        description: string,
+  flags: string;
+  required: boolean;
+  optional: boolean;
+  bool: boolean;
+  short?: string;
+  long: string;
+  description: string;
 
-        /**
-         * Return option name.
-         * @return  *
-         * @api  private
-         */
-        name(): string,
+  /**
+   * Return option name.
+   * @return  *
+   * @api  private
+   */
+  name(): string;
 
-        /**
-         * Check if `arg` matches the short or long flag.
-         * @param
-         * @return  *
-         * @api  private
-         */
-        is(arg: string): boolean
+  /**
+   * Check if `arg` matches the short or long flag.
+   * @param
+   * @return  *
+   * @api  private
+   */
+  is(arg: string): boolean;
 }
 
 declare type commander$IExportedCommand = {
-    Command: commander$ICommandStatic,
-    Option: commander$IOptionStatic
-} & commander$ICommand
+  Command: commander$ICommandStatic,
+  Option: commander$IOptionStatic,
+} & commander$ICommand;
 
-declare module 'commander' {
-    declare module.exports: commander$IExportedCommand;
+declare module "commander" {
+  declare module.exports: commander$IExportedCommand;
 }

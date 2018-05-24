@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle exported es module functions 1`] = `
-"declare export function routerReducer(state?: RouterState, action?: Action): RouterState
+"declare export function routerReducer(
+  state?: RouterState,
+  action?: Action
+): RouterState;
 declare export function syncHistoryWithStore(
-    history: History,
-    store: Store<any>,
-    options?: SyncHistoryWithStoreOptions): History & HistoryUnsubscribe"
+  history: History,
+  store: Store<any>,
+  options?: SyncHistoryWithStoreOptions
+): History & HistoryUnsubscribe;
+"
 `;

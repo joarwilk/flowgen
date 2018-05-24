@@ -1,16 +1,16 @@
 /* @flow */
-import type { RawNode } from './node';
+import type { RawNode } from "./node";
 
-import _ from 'lodash';
+import _ from "lodash";
 
-import ImportNode from './import';
-import ExportNode from './export';
-import ModuleNode from './module';
-import VariableNode from './variable';
-import PropertyNode from './property';
-import NamespaceNode from './namespace';
+import ImportNode from "./import";
+import ExportNode from "./export";
+import ModuleNode from "./module";
+import VariableNode from "./variable";
+import PropertyNode from "./property";
+import NamespaceNode from "./namespace";
 
-import { getMembersFromNode, stripDetailsFromTree } from '../parse';
+import { getMembersFromNode, stripDetailsFromTree } from "../parse";
 
 class Factory {
   _modules: Object;
@@ -45,22 +45,21 @@ class Factory {
 
     if (Object.keys(this._propDeclarations).includes(name)) {
       this._propDeclarations[name].maybeAddMember(getMembersFromNode(node));
-      
+
       return this._propDeclarations[name];
     }
-    
+
     const propNode = new PropertyNode(node);
     this._propDeclarations[name] = propNode;
     return propNode;
   }
 
-  createNamespaceNode = (name: string) => new NamespaceNode(name)
-  createImportNode = (node: RawNode) => new ImportNode(node)
-  createExportNode = (node: RawNode) => new ExportNode(node)
-  createVariableNode = (node: RawNode) => new VariableNode(node)
-
+  createNamespaceNode = (name: string) => new NamespaceNode(name);
+  createImportNode = (node: RawNode) => new ImportNode(node);
+  createExportNode = (node: RawNode) => new ExportNode(node);
+  createVariableNode = (node: RawNode) => new VariableNode(node);
 }
 
 export default {
-  create: () => new Factory()
+  create: () => new Factory(),
 };

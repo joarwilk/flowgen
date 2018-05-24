@@ -1,5 +1,5 @@
-import {SyntaxKind} from 'typescript';
+import { SyntaxKind } from "typescript";
 
 export default function getNodeName(node) {
-   return SyntaxKind[node.kind] || node.constructor + "";
+  return SyntaxKind[node.kind] || node.constructor + "";
 }

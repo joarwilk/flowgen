@@ -1,14 +1,14 @@
 /* @flow */
 export type RawNode = any;
 
-import _ from 'lodash';
-import { stripDetailsFromTree, parseNameFromNode } from '../parse'
+import _ from "lodash";
+import { stripDetailsFromTree, parseNameFromNode } from "../parse";
 
-import printers from '../printers';
+import printers from "../printers";
 
 export default class Node {
   children: {
-    [key: string]: Node
+    [key: string]: Node,
   };
   kind: string;
   name: string;
@@ -24,7 +24,7 @@ export default class Node {
     }
   }
 
-  addChild(name:string, node: Node) {
+  addChild(name: string, node: Node) {
     this.children[name] = node;
   }
 

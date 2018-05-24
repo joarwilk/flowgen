@@ -1,5 +1,5 @@
 /* @flow */
-import Node from './node';
+import Node from "./node";
 
 /**
  * A way to represent multiple nodes with the same name

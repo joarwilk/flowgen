@@ -1,6 +1,6 @@
 /* @flow */
-import type { RawNode } from './node';
-import Node from './node';
+import type { RawNode } from "./node";
+import Node from "./node";
 
 export default class Module extends Node {
   name: string;
@@ -13,9 +13,11 @@ export default class Module extends Node {
 
   print = () => {
     return `declare module '${this.name}' {
-        ${this.getChildren().map(child => {
-        return child.print()
-      }).join('\n\t')}
-    }\n`
-  }
+        ${this.getChildren()
+          .map(child => {
+            return child.print();
+          })
+          .join("\n\t")}
+    }\n`;
+  };
 }
