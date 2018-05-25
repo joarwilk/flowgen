@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle declared interfaces 1`] = `
+"declare interface ICustomMessage {
+  method(test: string): void;
+  otherMethod(literal: \\"A\\" | \\"B\\"): void;
+}
+"
+`;
