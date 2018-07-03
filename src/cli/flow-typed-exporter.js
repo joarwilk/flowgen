@@ -1,5 +1,6 @@
 // @flow
 import fs from "fs";
+import shell from "shelljs";
 
 export default function exportForFlowTyped(moduleName: string, output: string) {
   const folder = "../exports/" + moduleName + "_v1.x.x";
@@ -8,9 +9,9 @@ export default function exportForFlowTyped(moduleName: string, output: string) {
   const testfilePath = folder + "/test_" + moduleName + ".js";
 
   if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder);
+    shell.mkdir('-p', folder);
     fs.existsSync(folder + "/flow_v0.35.x-") ||
-      fs.mkdirSync(folder + "/flow_v0.35.x-");
+      shell.mkdir('-p', folder + "/flow_v0.35.x-");
   }
 
   fs.writeFileSync(testfilePath, "");
