@@ -145,6 +145,9 @@ export const printType = (type: RawNode) => {
 
     case SyntaxKind.IntersectionType:
       return type.types.map(printType).join(" & ");
+      
+    case SyntaxKind.LiteralType:
+      return type.value;
 
     case SyntaxKind.SymbolKeyword:
       // TODO: What to print here?
