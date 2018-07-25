@@ -24,7 +24,7 @@ const compile = sourceFile => {
  */
 export default {
   compileTest: (path: string, target: string) => {
-    tsc.compile(path, "--module commonjs -t ES5 --out " + target);
+    tsc.compile(path, "--module commonjs -t ES6 --out " + target);
   },
 
   compileDefinitionString: (string: string) => {
