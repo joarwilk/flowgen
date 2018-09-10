@@ -13,7 +13,7 @@ program
     "name for ouput file, defaults to export.flow.js",
     "export.flow.js",
   )
-  .option("--flow-typed-format", "format outut for flow-typed")
+  .option("--flow-typed-format", "format output for flow-typed")
   .option("--compile-tests", "compile any <filename>-tests.ts files found")
   .arguments("[files...]")
   .action((files, options) => {
