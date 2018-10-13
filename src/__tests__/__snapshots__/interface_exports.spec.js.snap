@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle exported interfaces 1`] = `
+"export interface UnaryFunction<T, R> {
+  (source: T): R;
+}
+"
+`;
