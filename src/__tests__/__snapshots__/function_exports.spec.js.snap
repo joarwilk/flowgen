@@ -12,3 +12,8 @@ declare export function syncHistoryWithStore(
 ): History & HistoryUnsubscribe;
 "
 `;
+
+exports[`should remove this annotation from functions 1`] = `
+"declare function addClickListener(onclick: (e: Event) => void): void;
+"
+`;
