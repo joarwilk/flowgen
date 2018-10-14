@@ -4,7 +4,9 @@ import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
 export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
-  const params = func.parameters.map(printers.common.parameter);
+  const params = func.parameters
+    .filter(param => param.name.text !== "this")
+    .map(printers.common.parameter);
   const generics = printers.common.generics(func.typeParameters);
   const returns = func.type ? printers.node.printType(func.type) : "void";
 

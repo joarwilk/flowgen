@@ -8,3 +8,10 @@ export function syncHistoryWithStore(history: History, store: Store<any>, option
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should remove this annotation from functions", () => {
+  const ts =
+    "function addClickListener(onclick: (this: void, e: Event) => void): void;";
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
