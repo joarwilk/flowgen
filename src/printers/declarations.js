@@ -60,11 +60,10 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
 
   const type = node.heritageClauses ? "type" : "interface";
 
-  let str = `declare ${printers.relationships.exporter(
-    node,
-  )}${type} ${nodeName}${printers.common.generics(node.typeParameters)} ${
-    type === "type" ? "= " : ""
-  }${interfaceType(node)} ${heritage}`;
+  let str = `${printers.relationships.exporter(node) ||
+    "declare "}${type} ${nodeName}${printers.common.generics(
+    node.typeParameters,
+  )} ${type === "type" ? "= " : ""}${interfaceType(node)} ${heritage}`;
 
   return str;
 };
