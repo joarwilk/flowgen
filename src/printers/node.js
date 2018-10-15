@@ -17,6 +17,12 @@ export const printType = (type: RawNode) => {
       return `"${type.literal.text}"`;
   }
 
+  const keywordPrefix =
+    type.modifiers &&
+    type.modifiers.some(modifier => modifier.kind === "StaticKeyword")
+      ? "static "
+      : "";
+
   switch (SyntaxKind[type.kind]) {
     case SyntaxKind.VoidKeyword:
     case SyntaxKind.StringKeyword:
@@ -84,15 +90,18 @@ export const printType = (type: RawNode) => {
 
       if (type.parameters) {
         return (
-          type.name.text + ": " + type.parameters.map(printers.common.parameter)
+          keywordPrefix +
+          type.name.text +
+          ": " +
+          type.parameters.map(printers.common.parameter)
         );
       }
 
       if (type.type) {
-        return type.name.text + ": " + printType(type.type);
+        return keywordPrefix + type.name.text + ": " + printType(type.type);
       }
 
-      return type.name.text + ": ";
+      return keywordPrefix + type.name.text + ": ";
 
     case SyntaxKind.TupleType:
       return `[${type.elementTypes.map(printType).join(", ")}]`;
@@ -162,7 +171,11 @@ export const printType = (type: RawNode) => {
         return "";
       }
 
-      return type.name.text + printers.functions.functionType(type, true);
+      return (
+        keywordPrefix +
+        type.name.text +
+        printers.functions.functionType(type, true)
+      );
 
     case SyntaxKind.ConstructorType:
       // Not implemented. The return is just a guess.
