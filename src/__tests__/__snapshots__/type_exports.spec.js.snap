@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle exported types 1`] = `
+"export type FactoryOrValue<T> = T | (() => T);
+"
+`;
