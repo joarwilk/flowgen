@@ -1,7 +1,7 @@
 {
   "name": "flowgen",
   "description": "Generate flowtype definition files from TypeScript",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "bin": {
     "flowgen": "./lib/cli/index.js"
   },
