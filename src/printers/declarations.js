@@ -69,9 +69,8 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
 };
 
 export const typeDeclaration = (nodeName: string, node: RawNode) => {
-  let str = `declare ${printers.relationships.exporter(
-    node,
-  )}type ${nodeName}${printers.common.generics(
+  let str = `${printers.relationships.exporter(node) ||
+    "declare "}type ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} = ${printers.node.printType(node.type)};`;
 
