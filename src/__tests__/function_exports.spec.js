@@ -1,5 +1,4 @@
-import compiler from "../cli/compiler";
-import beautify from "../cli/beautifier";
+import {compiler, beautify} from "..";
 
 it("should handle exported es module functions", () => {
   const ts = `export function routerReducer(state?: RouterState, action?: Action): RouterState;
