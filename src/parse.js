@@ -123,10 +123,26 @@ const collectNode = (node: RawNode, context: Node, factory: Factory) => {
       context.addChild(parseNameFromNode(node), factory.createImportNode(node));
       break;
 
+    case ts.SyntaxKind.ExportDeclaration:
+      let name;
+      if (node.exportClause) {
+        name = "";
+        ts.forEachChild(node.exportClause, node => {
+          name += `${parseNameFromNode(node)}, `;
+        });
+      } else {
+        name = parseNameFromNode(node);
+      }
+      context.addChild(name, factory.createExportDeclarationNode(node));
+      break;
+
     case ts.SyntaxKind.ImportEqualsDeclaration:
       break;
     case ts.SyntaxKind.EnumDeclaration:
-      // not implemented
+      context.addChild(
+        parseNameFromNode(node),
+        factory.createPropertyNode(node),
+      );
       break;
 
     default:
@@ -156,6 +172,10 @@ export function recursiveWalkTree(ast: any) {
 export function getMembersFromNode(node: any) {
   if (node.members) {
     return node.members;
+  }
+
+  if (node.type && node.type.members) {
+    return node.type.members;
   }
 
   console.log("NO MEMBERS_", node);
