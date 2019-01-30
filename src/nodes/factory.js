@@ -5,6 +5,7 @@ import _ from "lodash";
 
 import ImportNode from "./import";
 import ExportNode from "./export";
+import ExportDeclarationNode from "./export-declaration";
 import ModuleNode from "./module";
 import VariableNode from "./variable";
 import PropertyNode from "./property";
@@ -57,6 +58,8 @@ class Factory {
   createNamespaceNode = (name: string) => new NamespaceNode(name);
   createImportNode = (node: RawNode) => new ImportNode(node);
   createExportNode = (node: RawNode) => new ExportNode(node);
+  createExportDeclarationNode = (node: RawNode) =>
+    new ExportDeclarationNode(node);
   createVariableNode = (node: RawNode) => new VariableNode(node);
 }
 
