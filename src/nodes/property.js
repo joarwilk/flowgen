@@ -37,13 +37,16 @@ export default class Property extends Node {
         out += printers.functions.functionDeclaration(name, this.raw);
         break;
       case "ClassDeclaration":
-        out += printers.declarations.classDeclaration(this.raw);
+        out += printers.declarations.classDeclaration(name, this.raw);
         break;
       case "InterfaceDeclaration":
         out += printers.declarations.interfaceDeclaration(name, this.raw);
         break;
       case "TypeAliasDeclaration":
         out += printers.declarations.typeDeclaration(name, this.raw);
+        break;
+      case "EnumDeclaration":
+        out += printers.declarations.enumDeclaration(name, this.raw);
         break;
     }
 
