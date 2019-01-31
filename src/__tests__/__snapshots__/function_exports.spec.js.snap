@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle default exported es module functions 1`] = `
+"declare export default function routerReducer(
+  state?: RouterState,
+  action?: Action
+): RouterState;
+"
+`;
+
 exports[`should handle exported es module functions 1`] = `
 "declare export function routerReducer(
   state?: RouterState,
