@@ -11,13 +11,13 @@ export default class ExportDeclaration extends Node {
 
   print() {
     if (this.raw.exportClause) {
-      return `export {
+      return `declare export {
         ${this.raw.exportClause.elements.map(node => {
           return `${node.name.text}`;
         })}
       };`;
     } else {
-      return `export * from '${this.raw.moduleSpecifier.text}';`;
+      return `declare export * from '${this.raw.moduleSpecifier.text}';`;
     }
   }
 }
