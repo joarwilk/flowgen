@@ -15,10 +15,10 @@ export default class Import extends Node {
           ${elements.map(node => {
             return `${node.name.text}`;
           })}
-        } from '${this.raw.moduleSpecifier.text}';`;
+        } from '${this.raw.moduleSpecifier.text}';\n`;
       } else {
-        const name = this.raw.importClause.namedBindings.name;
-        return `import * as ${name} from '${this.raw.moduleSpecifier.text}';`;
+        const name = this.raw.importClause.namedBindings.name.text;
+        return `import * as ${name} from '${this.raw.moduleSpecifier.text}';\n`;
       }
     }
     // TODO: Implement this.
