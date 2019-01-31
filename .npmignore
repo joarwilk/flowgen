@@ -1,0 +1,5 @@
+ lib/__tests__
+node_modules
+lib
+tester/node_modules
+.idea
