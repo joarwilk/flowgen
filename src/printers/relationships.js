@@ -9,7 +9,7 @@ export const moduleExports = (node: RawNode): string => {
   if (node.isExportEquals) {
     return `declare module.exports: typeof ${name}`;
   } else {
-    return `export default typeof ${name}`;
+    return `declare export default typeof ${name}`;
   }
 };
 
