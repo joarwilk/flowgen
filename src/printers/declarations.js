@@ -1,5 +1,6 @@
 /* @flow */
 import type { RawNode } from "../nodes/node";
+import { SyntaxKind } from "typescript";
 
 import printers from "./index";
 
@@ -77,6 +78,23 @@ export const typeDeclaration = (nodeName: string, node: RawNode) => {
   return str;
 };
 
+export const enumDeclaration = (nodeName: string, node: RawNode) => {
+  const exporter = printers.relationships.exporter(node);
+  let members = "";
+  for (const [index, member] of node.members.entries()) {
+    members += `static ${member.name.text}: ${nodeName};`;
+    if (typeof member.initializer !== "undefined") {
+      members += `// ${member.initializer.text}\n`;
+    } else {
+      members += `// ${index}\n`;
+    }
+  }
+  return `declare ${exporter} class ${nodeName} {
+  constructor(...args: empty): mixed;
+  ${members}
+};\n`;
+};
+
 export const typeReference = (node: RawNode) => {
   if (node.typeName.left && node.typeName.right) {
     return (
@@ -91,7 +109,7 @@ export const typeReference = (node: RawNode) => {
   );
 };
 
-export const classDeclaration = (node: RawNode) => {
+export const classDeclaration = (nodeName: string, node: RawNode) => {
   let heritage = "";
 
   // If the class is extending something
@@ -104,12 +122,11 @@ export const classDeclaration = (node: RawNode) => {
     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
   }
 
-  let str = `declare ${printers.relationships.exporter(node)}class ${
-    node.name.text
-  }${printers.common.generics(node.typeParameters)} ${heritage} ${interfaceType(
+  let str = `declare ${printers.relationships.exporter(
     node,
-    true,
-  )}`;
+  )}class ${nodeName}${printers.common.generics(
+    node.typeParameters,
+  )} ${heritage} ${interfaceType(node, true)}`;
 
   return str;
 };

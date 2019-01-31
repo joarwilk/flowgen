@@ -7,6 +7,7 @@ const types = {
   BooleanKeyword: "boolean",
   NullKeyword: "null",
   UndefinedKeyword: "void",
+  ObjectKeyword: "{[key: string]: any}",
 };
 
 export const print = (kind: string): string => {

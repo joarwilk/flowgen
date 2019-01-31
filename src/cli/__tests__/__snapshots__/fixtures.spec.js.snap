@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`handles the danger.d.ts correctly 1`] = `
-"declare module 'danger' {
+"import * as GitHub from '@octokit/rest';
+declare module 'danger' {
         declare type MarkdownString = string;
 	
 /**

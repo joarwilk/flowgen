@@ -1,4 +1,5 @@
 /* @flow */
+
 import type { RawNode } from "../nodes/node";
 import { SyntaxKind } from "typescript";
 
@@ -31,6 +32,7 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.BooleanKeyword:
     case SyntaxKind.NullKeyword:
     case SyntaxKind.UndefinedKeyword:
+    case SyntaxKind.ObjectKeyword:
       return printers.basics.print(type.kind);
 
     case SyntaxKind.FunctionType:
@@ -62,12 +64,13 @@ export const printType = (type: RawNode) => {
       if (type.type.typeName) {
         return type.type.typeName.text;
       }
-
       return printType(type.type);
 
     case SyntaxKind.QualifiedName:
       return (
-        printers.relationships.namespace(type.left.text) +
+        printers.relationships.namespace(
+          type.left.text ? type.left.text : printType(type.left),
+        ) +
         printType(type.right) +
         printers.common.generics(type.typeArguments)
       );
@@ -154,7 +157,7 @@ export const printType = (type: RawNode) => {
 
     case SyntaxKind.IntersectionType:
       return type.types.map(printType).join(" & ");
-      
+
     case SyntaxKind.LiteralType:
       return type.value;
 
