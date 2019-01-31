@@ -27,9 +27,15 @@ export const parseNameFromNode = (node: RawNode) => {
       .join(" ");
 
     return declarations;
+  } else if (node.exportClause) {
+    let names = [];
+    ts.forEachChild(node.exportClause, child => {
+      names.push(parseNameFromNode(child));
+    });
+    return names.join(",");
   }
 
-  console.log("INVALID NAME");
+  console.log("INVALID NAME", ts.SyntaxKind[node.kind]);
   return "INVALID NAME REF";
 };
 
@@ -116,17 +122,30 @@ const collectNode = (node: RawNode, context: Node, factory: Factory) => {
       break;
 
     case ts.SyntaxKind.ExportAssignment:
-      context.addChild(parseNameFromNode(node), factory.createExportNode(node));
+      context.addChild(
+        "exportassign" + parseNameFromNode(node),
+        factory.createExportNode(node),
+      );
       break;
 
     case ts.SyntaxKind.ImportDeclaration:
       context.addChild(parseNameFromNode(node), factory.createImportNode(node));
       break;
 
+    case ts.SyntaxKind.ExportDeclaration:
+      context.addChild(
+        "exportdecl" + parseNameFromNode(node),
+        factory.createExportDeclarationNode(node),
+      );
+      break;
+
     case ts.SyntaxKind.ImportEqualsDeclaration:
       break;
     case ts.SyntaxKind.EnumDeclaration:
-      // not implemented
+      context.addChild(
+        parseNameFromNode(node),
+        factory.createPropertyNode(node),
+      );
       break;
 
     default:
@@ -156,6 +175,10 @@ export function recursiveWalkTree(ast: any) {
 export function getMembersFromNode(node: any) {
   if (node.members) {
     return node.members;
+  }
+
+  if (node.type && node.type.members) {
+    return node.type.members;
   }
 
   console.log("NO MEMBERS_", node);

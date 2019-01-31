@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle basic keywords 1`] = `
+"declare type A = {
+  a: void,
+  b: string,
+  c: any,
+  d: number,
+  e: boolean,
+  f: null,
+  g: void,
+  h: { [key: string]: any },
+  i: 1,
+  j: 2
+};
+"
+`;

@@ -1,6 +1,5 @@
 // @flow
-import compiler from "../cli/compiler";
-import beautify from "../cli/beautifier";
+import {compiler, beautify} from "..";
 
 it("should handle exported types", () => {
   const ts = "export declare type FactoryOrValue<T> = T | (() => T);";

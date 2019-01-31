@@ -1,5 +1,4 @@
-import compiler from "../cli/compiler";
-import beautify from "../cli/beautifier";
+import {compiler, beautify} from "..";
 
 it("should handle static methods ES6 classes", () => {
   const ts = `class Observable<T> implements Subscribable<T> {
