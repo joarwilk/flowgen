@@ -27,9 +27,15 @@ export const parseNameFromNode = (node: RawNode) => {
       .join(" ");
 
     return declarations;
+  } else if (node.exportClause) {
+    let names = [];
+    ts.forEachChild(node.exportClause, child => {
+      names.push(parseNameFromNode(child));
+    });
+    return names.join(",");
   }
 
-  console.log("INVALID NAME");
+  console.log("INVALID NAME", ts.SyntaxKind[node.kind]);
   return "INVALID NAME REF";
 };
 
@@ -127,16 +133,10 @@ const collectNode = (node: RawNode, context: Node, factory: Factory) => {
       break;
 
     case ts.SyntaxKind.ExportDeclaration:
-      let name;
-      if (node.exportClause) {
-        name = "";
-        ts.forEachChild(node.exportClause, node => {
-          name += `${parseNameFromNode(node)}, `;
-        });
-      } else {
-        name = parseNameFromNode(node);
-      }
-      context.addChild(name, factory.createExportDeclarationNode(node));
+      context.addChild(
+        "exportdecl" + parseNameFromNode(node),
+        factory.createExportDeclarationNode(node),
+      );
       break;
 
     case ts.SyntaxKind.ImportEqualsDeclaration:
