@@ -4,7 +4,7 @@ import { SyntaxKind } from "typescript";
 
 import printers from "./index";
 
-export const variableDeclaration = (node: RawNode) => {
+export const variableDeclaration = (node: RawNode): string => {
   const declarations = node.declarationList.declarations
     .map(printers.node.printType)
     .join(" ");
@@ -15,7 +15,7 @@ export const variableDeclaration = (node: RawNode) => {
 export const interfaceType = (
   node: RawNode,
   withSemicolons: boolean = false,
-) => {
+): string => {
   let members = node.members
     .map(member => {
       const printed = printers.node.printType(member);
@@ -42,7 +42,10 @@ export const interfaceType = (
   return `{${members}}`;
 };
 
-export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
+export const interfaceDeclaration = (
+  nodeName: string,
+  node: RawNode,
+): string => {
   let heritage = "";
 
   // If the class is extending something
@@ -50,9 +53,7 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
     heritage = node.heritageClauses
       .map(clause => {
         return clause.types
-          .map(type =>
-            printers.relationships.namespaceProp(type.expression.text, true),
-          )
+          .map(type => printers.node.printType(type))
           .join(" & ");
       })
       .join("");
@@ -69,7 +70,7 @@ export const interfaceDeclaration = (nodeName: string, node: RawNode) => {
   return str;
 };
 
-export const typeDeclaration = (nodeName: string, node: RawNode) => {
+export const typeDeclaration = (nodeName: string, node: RawNode): string => {
   let str = `${printers.relationships.exporter(node) ||
     "declare "}type ${nodeName}${printers.common.generics(
     node.typeParameters,
@@ -78,24 +79,32 @@ export const typeDeclaration = (nodeName: string, node: RawNode) => {
   return str;
 };
 
-export const enumDeclaration = (nodeName: string, node: RawNode) => {
+export const enumDeclaration = (nodeName: string, node: RawNode): string => {
   const exporter = printers.relationships.exporter(node);
   let members = "";
+  let instances = "";
   for (const [index, member] of node.members.entries()) {
-    members += `static ${member.name.text}: ${nodeName};`;
+    let value;
+    const name = `${nodeName}__${member.name.text}`;
     if (typeof member.initializer !== "undefined") {
-      members += `// ${member.initializer.text}\n`;
+      value = printers.node.printType(member.initializer);
     } else {
-      members += `// ${index}\n`;
+      value = index;
     }
+    instances += `declare class ${name} mixins ${nodeName} {}\n`;
+    members += `static +${
+      member.name.text
+    }: Class<${name}> & ${name} & ${value};`;
+    members += `// ${value}\n`;
   }
-  return `declare ${exporter} class ${nodeName} {
+  return `${instances}
+declare ${exporter} class ${nodeName} {
   constructor(...args: empty): mixed;
   ${members}
-};\n`;
+}\n`;
 };
 
-export const typeReference = (node: RawNode) => {
+export const typeReference = (node: RawNode): string => {
   if (node.typeName.left && node.typeName.right) {
     return (
       printers.node.printType(node.typeName) +
@@ -104,12 +113,14 @@ export const typeReference = (node: RawNode) => {
   }
 
   return (
-    printers.relationships.namespaceProp(node.typeName.text, true) +
-    printers.common.generics(node.typeArguments)
+    printers.relationships.namespaceProp(
+      printers.identifiers.print(node.typeName.text),
+      true,
+    ) + printers.common.generics(node.typeArguments)
   );
 };
 
-export const classDeclaration = (nodeName: string, node: RawNode) => {
+export const classDeclaration = (nodeName: string, node: RawNode): string => {
   let heritage = "";
 
   // If the class is extending something
