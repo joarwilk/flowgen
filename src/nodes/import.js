@@ -7,18 +7,43 @@ export default class Import extends Node {
     super(node);
   }
 
-  print() {
+  print(): string {
+    //TODO: move to printers
     if (this.raw.importClause) {
-      const elements = this.raw.importClause.namedBindings.elements;
-      if (elements) {
-        return `import type {
+      const bindings = this.raw.importClause.namedBindings;
+      const name = this.raw.importClause.name;
+      if (name && bindings) {
+        const elements = bindings.elements;
+        if (elements) {
+          return `import ${name.text}, {
           ${elements.map(node => {
             return `${node.name.text}`;
           })}
         } from '${this.raw.moduleSpecifier.text}';\n`;
-      } else {
-        const name = this.raw.importClause.namedBindings.name.text;
-        return `import * as ${name} from '${this.raw.moduleSpecifier.text}';\n`;
+        } else {
+          const namespace = bindings.name.text;
+          return `import ${name.text}, * as ${namespace} from '${
+            this.raw.moduleSpecifier.text
+          }';\n`;
+        }
+      }
+      if (name) {
+        return `import ${name.text} from '${this.raw.moduleSpecifier.text}';\n`;
+      }
+      if (bindings) {
+        const elements = bindings.elements;
+        if (elements) {
+          return `import type {
+          ${elements.map(node => {
+            return `${node.name.text}`;
+          })}
+        } from '${this.raw.moduleSpecifier.text}';\n`;
+        } else {
+          const name = bindings.name.text;
+          return `import * as ${name} from '${
+            this.raw.moduleSpecifier.text
+          }';\n`;
+        }
       }
     }
     // TODO: Implement this.
