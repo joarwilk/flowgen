@@ -3,23 +3,25 @@ import type { RawNode } from "./node";
 
 import _ from "lodash";
 
+import type Node from "./node";
 import ImportNode from "./import";
 import ExportNode from "./export";
 import ExportDeclarationNode from "./export-declaration";
 import ModuleNode from "./module";
-import VariableNode from "./variable";
 import PropertyNode from "./property";
 import NamespaceNode from "./namespace";
 
 import { getMembersFromNode, stripDetailsFromTree } from "../parse";
 
-class Factory {
+export class Factory {
   _modules: Object;
   _propDeclarations: Object;
+  _functionDeclarations: Object;
 
   constructor() {
     this._modules = {};
     this._propDeclarations = {};
+    this._functionDeclarations = {};
   }
 
   // If multiple declarations are found for the same module name
@@ -36,10 +38,26 @@ class Factory {
     return module;
   }
 
+  createFunctionDeclaration(node: RawNode, name: string, context: Node): void {
+    const propNode = new PropertyNode(node);
+
+    if (!this._functionDeclarations[name]) this._functionDeclarations[name] = 0;
+
+    if (Object.keys(this._functionDeclarations).includes(name)) {
+      this._functionDeclarations[name] += 1;
+    }
+
+    context.addChild(name + this._functionDeclarations[name], propNode);
+  }
+
   // Some definition files (like lodash) declare the same
   // interface/type/function multiple times as a way of overloading.
   // Flow does not support that, and this is where we handle that
-  createPropertyNode(node: RawNode, name?: string) {
+  createPropertyNode(
+    node: RawNode,
+    name?: string,
+    context?: Node,
+  ): PropertyNode {
     if (!name) {
       return new PropertyNode(node);
     }
@@ -55,14 +73,14 @@ class Factory {
     return propNode;
   }
 
-  createNamespaceNode = (name: string) => new NamespaceNode(name);
-  createImportNode = (node: RawNode) => new ImportNode(node);
-  createExportNode = (node: RawNode) => new ExportNode(node);
-  createExportDeclarationNode = (node: RawNode) =>
+  createNamespaceNode = (name: string): NamespaceNode =>
+    new NamespaceNode(name);
+  createImportNode = (node: RawNode): ImportNode => new ImportNode(node);
+  createExportNode = (node: RawNode): ExportNode => new ExportNode(node);
+  createExportDeclarationNode = (node: RawNode): ExportDeclarationNode =>
     new ExportDeclarationNode(node);
-  createVariableNode = (node: RawNode) => new VariableNode(node);
 }
 
 export default {
-  create: () => new Factory(),
+  create: (): Factory => new Factory(),
 };
