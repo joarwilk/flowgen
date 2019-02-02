@@ -1,31 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle basic enums 1`] = `
-"declare class Label {
+"declare class Label__LABEL_OPTIONAL mixins Label {}
+declare class Label__LABEL_REQUIRED mixins Label {}
+declare class Label__LABEL_REPEATED mixins Label {}
+
+declare class Label {
   constructor(...args: empty): mixed;
-  static LABEL_OPTIONAL: Label; // 0
-  static LABEL_REQUIRED: Label; // 1
-  static LABEL_REPEATED: Label; // 2
+  static +LABEL_OPTIONAL: Class<Label__LABEL_OPTIONAL> &
+    Label__LABEL_OPTIONAL &
+    0; // 0
+  static +LABEL_REQUIRED: Class<Label__LABEL_REQUIRED> &
+    Label__LABEL_REQUIRED &
+    1; // 1
+  static +LABEL_REPEATED: Class<Label__LABEL_REPEATED> &
+    Label__LABEL_REPEATED &
+    2; // 2
+}
+"
+`;
+
+exports[`should handle empty enums 1`] = `
+"declare class Empty {
+  constructor(...args: empty): mixed;
 }
 "
 `;
 
 exports[`should handle number enums 1`] = `
-"declare class Label {
+"declare class Label__ONE mixins Label {}
+declare class Label__TWO mixins Label {}
+declare class Label__THREE mixins Label {}
+declare class Label__NEGATIVE mixins Label {}
+declare class Label__DECIMAL mixins Label {}
+
+declare class Label {
   constructor(...args: empty): mixed;
-  static LABEL_OPTIONAL: Label; // 1
-  static LABEL_REQUIRED: Label; // 2
-  static LABEL_REPEATED: Label; // 3
+  static +ONE: Class<Label__ONE> & Label__ONE & 1; // 1
+  static +TWO: Class<Label__TWO> & Label__TWO & 2; // 2
+  static +THREE: Class<Label__THREE> & Label__THREE & 3; // 3
+  static +NEGATIVE: Class<Label__NEGATIVE> & Label__NEGATIVE & -123; // -123
+  static +DECIMAL: Class<Label__DECIMAL> & Label__DECIMAL & 3.14; // 3.14
 }
 "
 `;
 
 exports[`should handle string enums 1`] = `
-"declare class Label {
+"declare class Label__LABEL_OPTIONAL mixins Label {}
+declare class Label__LABEL_REQUIRED mixins Label {}
+declare class Label__LABEL_REPEATED mixins Label {}
+
+declare class Label {
   constructor(...args: empty): mixed;
-  static LABEL_OPTIONAL: Label; // LABEL_OPTIONAL
-  static LABEL_REQUIRED: Label; // LABEL_REQUIRED
-  static LABEL_REPEATED: Label; // LABEL_REPEATED
+  static +LABEL_OPTIONAL: Class<Label__LABEL_OPTIONAL> &
+    Label__LABEL_OPTIONAL &
+    \\"LABEL_OPTIONAL\\"; // \\"LABEL_OPTIONAL\\"
+  static +LABEL_REQUIRED: Class<Label__LABEL_REQUIRED> &
+    Label__LABEL_REQUIRED &
+    \\"LABEL_REQUIRED\\"; // \\"LABEL_REQUIRED\\"
+  static +LABEL_REPEATED: Class<Label__LABEL_REPEATED> &
+    Label__LABEL_REPEATED &
+    \\"LABEL_REPEATED\\"; // \\"LABEL_REPEATED\\"
 }
 "
 `;
