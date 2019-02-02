@@ -11,7 +11,7 @@
     "paralleljs": "^0.2.1",
     "prettier": "^1.12.1",
     "shelljs": "^0.8.2",
-    "typescript": "~2.4.2",
+    "typescript": "^3.3.1",
     "typescript-compiler": "^1.4.1-2"
   },
   "devDependencies": {
@@ -32,6 +32,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "esformatter": "^0.10.0",
+    "flow-bin": "^0.92.0",
     "jest": "^23.6.0"
   },
   "files": [
