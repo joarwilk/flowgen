@@ -7,7 +7,7 @@ import _ from "lodash";
 
 import printers from "./index";
 
-export const printType = (type: RawNode) => {
+export const printType = (type: RawNode): string => {
   // debuggerif()
   //TODO: #6 No match found in SyntaxKind enum
   switch (type.kind) {
@@ -33,6 +33,10 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.NullKeyword:
     case SyntaxKind.UndefinedKeyword:
     case SyntaxKind.ObjectKeyword:
+    case SyntaxKind.FalseKeyword:
+    case SyntaxKind.TrueKeyword:
+    case SyntaxKind.NeverKeyword:
+    case SyntaxKind.UnknownKeyword:
       return printers.basics.print(type.kind);
 
     case SyntaxKind.FunctionType:
@@ -44,20 +48,70 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.IdentifierObject:
     case SyntaxKind.Identifier:
     case SyntaxKind.StringLiteralType:
-      return printers.relationships.namespace(type.text, true);
+      return printers.relationships.namespace(
+        printers.relationships.namespaceProp(
+          printers.identifiers.print(type.text),
+        ),
+        true,
+      );
 
     case SyntaxKind.BindingElement:
     case SyntaxKind.TypeParameter:
+      if (type.constraint) {
+        return `${type.name.text}: ${printType(type.constraint)}`;
+      }
       return type.name.text;
+
+    case SyntaxKind.PrefixUnaryExpression:
+      switch (type.operator) {
+        case SyntaxKind.MinusToken:
+          return `-${type.operand.text}`;
+        default:
+          return '"NO PRINT IMPLEMENTED: PrefixUnaryExpression"';
+      }
+
+    case SyntaxKind.TypePredicate:
+      //TODO: replace with boolean %checks when supported in class declarations
+      return "boolean";
+
+    case SyntaxKind.IndexedAccessType:
+      return `$ElementType<${printType(type.objectType)}, ${printType(
+        type.indexType,
+      )}>`;
+
+    case SyntaxKind.TypeOperator:
+      switch (type.operator) {
+        case SyntaxKind.KeyOfKeyword:
+          return `$Keys<${printType(type.type)}>`;
+        default:
+          return `"NO PRINT IMPLEMENTED: TypeOperator ${
+            SyntaxKind[type.operator]
+          }"`;
+      }
+
+    case SyntaxKind.MappedType:
+      const constraint = type.typeParameter.constraint;
+      const typeName = printType(type.typeParameter.name);
+      const value = printType(type.type);
+      let source = `{[k: ${printType(constraint)}]: any}`;
+      if (constraint.operator === SyntaxKind.KeyOfKeyword) {
+        source = printType(constraint.type);
+      }
+      return `$ObjMapi<${source}, <${typeName}>(${typeName}) => ${value}>`;
+
+    case SyntaxKind.FirstLiteralToken:
+      return type.text;
 
     case SyntaxKind.FirstTypeNode:
     case SyntaxKind.LastTypeNode:
-    case SyntaxKind.TypePredicate:
+    case SyntaxKind.LiteralType:
       if (type.literal) {
         if (type.literal.kind === "StringLiteral") {
-          return "'" + type.literal.text + "'";
-        } else {
+          return JSON.stringify(type.literal.text);
+        } else if (type.literal.text) {
           return type.literal.text;
+        } else {
+          return printType(type.literal);
         }
       }
 
@@ -69,15 +123,16 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.QualifiedName:
       return (
         printers.relationships.namespace(
-          type.left.text ? type.left.text : printType(type.left),
+          type.left.text
+            ? printers.relationships.namespaceProp(type.left.text)
+            : printType(type.left),
         ) +
         printType(type.right) +
         printers.common.generics(type.typeArguments)
       );
 
     case SyntaxKind.StringLiteral:
-      debugger;
-      return type.text;
+      return JSON.stringify(type.text);
 
     case SyntaxKind.TypeReference:
       return printers.declarations.typeReference(type);
@@ -101,10 +156,19 @@ export const printType = (type: RawNode) => {
       }
 
       if (type.type) {
-        return keywordPrefix + type.name.text + ": " + printType(type.type);
+        return (
+          keywordPrefix +
+          printers.relationships.namespaceProp(type.name.text) +
+          ": " +
+          printType(type.type)
+        );
       }
 
-      return keywordPrefix + type.name.text + ": ";
+      return (
+        keywordPrefix +
+        printers.relationships.namespaceProp(type.name.text) +
+        ": "
+      );
 
     case SyntaxKind.TupleType:
       return `[${type.elementTypes.map(printType).join(", ")}]`;
