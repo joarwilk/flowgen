@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle imports 1`] = `
+"declare export default typeof module;
+declare export { module };
+declare export { GeneratorOptions };
+declare export * from \\"typescript\\"
+"
+`;
