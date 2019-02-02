@@ -6,63 +6,63 @@ declare module 'danger' {
         declare type MarkdownString = string;
 	
 /**
- * A platform agnostic reference to a Git commit 
+ * A platform agnostic reference to a Git commit
 */
 declare interface GitCommit {
 
 /**
- * The SHA for the commit 
+ * The SHA for the commit
 */
 sha: string,
 
 /**
- * Who wrote the commit 
+ * Who wrote the commit
 */
 author: GitCommitAuthor,
 
 /**
- * Who deployed the commit 
+ * Who deployed the commit
 */
 committer: GitCommitAuthor,
 
 /**
- * The commit message 
+ * The commit message
 */
 message: string,
 
 /**
- * Potential parent commits, and other assorted metadata 
+ * Potential parent commits, and other assorted metadata
 */
 tree: any,
 
 /**
- * SHAs for the commit's parents 
+ * SHAs for the commit's parents
 */
 parents?: string[],
 
 /**
- * Link to the commit 
+ * Link to the commit
 */
 url: string
 } 
 	
 /**
- * An author of a commit 
+ * An author of a commit
 */
 declare interface GitCommitAuthor {
 
 /**
- * The display name for the author 
+ * The display name for the author
 */
 name: string,
 
 /**
- * The authors email 
+ * The authors email
 */
 email: string,
 
 /**
- * ISO6801 date string 
+ * ISO6801 date string
 */
 date: string
 } 
@@ -111,12 +111,12 @@ data?: any
 declare interface DangerDSLJSONType {
 
 /**
- * The data only version of Git DSL 
+ * The data only version of Git DSL
 */
 git: GitJSONDSL,
 
 /**
- * The data only version of GitHub DSL 
+ * The data only version of GitHub DSL
 */
 github: GitHubDSL,
 
@@ -133,17 +133,17 @@ settings: {
 github: {
 
 /**
- * API token for the GitHub client to use 
+ * API token for the GitHub client to use
 */
 accessToken: string,
 
 /**
- * Optional URL for enterprise GitHub 
+ * Optional URL for enterprise GitHub
 */
 baseURL: string | void,
 
 /**
- * Optional headers to add to a request 
+ * Optional headers to add to a request
 */
 additionalHeaders: any
 },
@@ -244,121 +244,121 @@ If \`href\` and \`text\` are falsy, null is returned.
 If \`href\` is falsy and \`text\` is truthy, \`text\` is returned.
 If \`href\` is truthy and \`text\` is falsy, an <a> tag is returned with \`href\` as its href and text value.
 Otherwise, if \`href\` and \`text\` are truthy, an <a> tag is returned with the \`href\` and \`text\` inserted as expected.
- * @param  The HTML link's destination.
- * @param  The HTML link's text.
- * @returns  The HTML <a> tag.
+ * @param {string} href The HTML link's destination.
+ * @param {string} text The HTML link's text.
+ * @returns {string | null} The HTML <a> tag.
 */
 href(href: string, text: string): string | null,
 
 /**
  * Converts an array of strings into a sentence.
- * @param  The array of strings.
- * @returns  The sentence.
+ * @param {string[]} array The array of strings.
+ * @returns {string} The sentence.
 */
 sentence(array: string[]): string
 } 
 	
 /**
- * All Text diff values will be this shape 
+ * All Text diff values will be this shape
 */
 declare interface TextDiff {
 
 /**
- * The value before the PR's applied changes 
+ * The value before the PR's applied changes
 */
 before: string,
 
 /**
- * The value after the PR's applied changes 
+ * The value after the PR's applied changes
 */
 after: string,
 
 /**
- * A string containing the full set of changes 
+ * A string containing the full set of changes
 */
 diff: string,
 
 /**
- * A string containing just the added lines 
+ * A string containing just the added lines
 */
 added: string,
 
 /**
- * A string containing just the removed lines 
+ * A string containing just the removed lines
 */
 removed: string
 } 
 	
 /**
- * The results of running a JSON patch 
+ * The results of running a JSON patch
 */
 declare interface JSONPatch {
 
 /**
- * The JSON in a file at the PR merge base 
+ * The JSON in a file at the PR merge base
 */
 before: any,
 
 /**
- * The JSON in a file from the PR submitter 
+ * The JSON in a file from the PR submitter
 */
 after: any,
 
 /**
- * The set of operations to go from one JSON to another JSON 
+ * The set of operations to go from one JSON to another JSON
 */
 diff: JSONPatchOperation[]
 } 
 	
 /**
- * An individual operation inside an rfc6902 JSON Patch 
+ * An individual operation inside an rfc6902 JSON Patch
 */
 declare interface JSONPatchOperation {
 
 /**
- * An operation type 
+ * An operation type
 */
 op: string,
 
 /**
- * The JSON keypath which the operation applies on 
+ * The JSON keypath which the operation applies on
 */
 path: string,
 
 /**
- * The changes for applied 
+ * The changes for applied
 */
 value: string
 } 
 	
 /**
- * All JSON diff values will be this shape 
+ * All JSON diff values will be this shape
 */
 declare interface JSONDiffValue {
 
 /**
- * The value before the PR's applied changes 
+ * The value before the PR's applied changes
 */
 before: any,
 
 /**
- * The value after the PR's applied changes 
+ * The value after the PR's applied changes
 */
 after: any,
 
 /**
- * If both before & after are arrays, then you optionally get what is added. Empty if no additional objects. 
+ * If both before & after are arrays, then you optionally get what is added. Empty if no additional objects.
 */
 added?: any[],
 
 /**
- * If both before & after are arrays, then you optionally get what is removed. Empty if no removed objects. 
+ * If both before & after are arrays, then you optionally get what is removed. Empty if no removed objects.
 */
 removed?: any[]
 } 
 	
 /**
- * A map of string keys to JSONDiffValue 
+ * A map of string keys to JSONDiffValue
 */
 declare interface JSONDiff {
 [name: string]: JSONDiffValue
@@ -366,7 +366,7 @@ declare interface JSONDiff {
 	
 /**
  * The Git Related Metadata which is available inside the Danger DSL JSON
- * @namespace  JSONDSL
+ * @namespace JSONDSL
 */
 declare interface GitJSONDSL {
 
@@ -386,19 +386,19 @@ created_files: string[],
 deleted_files: string[],
 
 /**
- * The Git commit metadata 
+ * The Git commit metadata
 */
 commits: GitCommit[]
 } 
 	
 /**
- * The git specific metadata for a PR 
+ * The git specific metadata for a PR
 */
 declare type GitDSL = {
 
 /**
  * Offers the diff for a specific file
- * @param  the path to the json file
+ * @param {string} filename the path to the json file
 */
 diffForFile(filename: string): Promise<TextDiff | null>,
 
@@ -408,7 +408,7 @@ diffForFile(filename: string): Promise<TextDiff | null>,
 
 Note that if you are looking to just see changes like: before, after, added or removed - you
 should use \`JSONDiffForFile\` instead, as this can be a bit unweildy for a Dangerfile.
- * @param  the path to the json file
+ * @param {string} filename the path to the json file
 */
 JSONPatchForFile(filename: string): Promise<JSONPatch | null>,
 
@@ -426,7 +426,7 @@ This object is represented as \`JSONDiffValue\` but I don't know how to make Typ
 declare that kind of type structure.
 
 This should make it really easy to do work when specific keypaths have changed inside a JSON file.
- * @param  the path to the json file
+ * @param {string} filename the path to the json file
 */
 JSONDiffForFile(filename: string): Promise<JSONDiff>
 } & GitJSONDSL
@@ -434,38 +434,38 @@ JSONDiffForFile(filename: string): Promise<JSONDiff>
 	declare interface GitHubJSONDSL {
 
 /**
- * The issue metadata for a code review session 
+ * The issue metadata for a code review session
 */
 issue: GitHubIssue,
 
 /**
- * The PR metadata for a code review session 
+ * The PR metadata for a code review session
 */
 pr: GitHubPRDSL,
 
 /**
- * The PR metadata specifically formatted for using with the GitHub API client 
+ * The PR metadata specifically formatted for using with the GitHub API client
 */
 thisPR: GitHubAPIPR,
 
 /**
- * The github commit metadata for a code review session 
+ * The github commit metadata for a code review session
 */
 commits: GitHubCommit[],
 
 /**
- * The reviews left on this pull request 
+ * The reviews left on this pull request
 */
 reviews: GitHubReview[],
 
 /**
- * The people requested to review this PR 
+ * The people requested to review this PR
 */
 requested_reviewers: GitHubUser[]
 } 
 	
 /**
- * The GitHub metadata for your PR 
+ * The GitHub metadata for your PR
 */
 declare type GitHubDSL = {
 
@@ -477,14 +477,14 @@ A set up instance of the \\"github\\" npm module. You can get the full [API here
 api: GitHub,
 
 /**
- * A scope for useful functions related to GitHub 
+ * A scope for useful functions related to GitHub
 */
 utils: GitHubUtilsDSL
 } & GitHubJSONDSL
 
 	
 /**
- * Useful functions for GitHub related work 
+ * Useful functions for GitHub related work
 */
 declare interface GitHubUtilsDSL {
 
@@ -492,11 +492,11 @@ declare interface GitHubUtilsDSL {
  * Creates HTML for a sentence of clickable links for an array of paths.
  * This uses the source of the PR as the target, not the destination repo.
 You can manually set the target repo and branch however, to make it work how you want.
- * @param  A list of strings representing file paths
- * @param  Show either the file name, or the full path - defaults to just file name e.g. true.
- * @param  An optional override for the repo slug, ex: \\"orta/ORStackView\\"
- * @param  An optional override for the branch, ex: \\"v3\\"
- * @returns  A HTML string of <a>'s built as a sentence.
+ * @param {string} paths A list of strings representing file paths
+ * @param {string} useBasename Show either the file name, or the full path - defaults to just file name e.g. true.
+ * @param {string} repoSlug An optional override for the repo slug, ex: \\"orta/ORStackView\\"
+ * @param {string} branch An optional override for the branch, ex: \\"v3\\"
+ * @returns {string} A HTML string of <a>'s built as a sentence.
 */
 fileLinks(
 paths: string[],
@@ -507,9 +507,9 @@ branch?: string): string,
 /**
  * Downloads a file's contents via the GitHub API. You'll want to use
  * this instead of \`fs.readFile\` when aiming to support working with Peril.
- * @param  The path fo the file that exists
- * @param  An optional reference to the repo's slug: e.g. danger/danger-js
- * @param  An optional reference to a branch/sha
+ * @param {string} path The path fo the file that exists
+ * @param {string} repoSlug An optional reference to the repo's slug: e.g. danger/danger-js
+ * @param {string} ref An optional reference to a branch/sha
 */
 fileContents(path: string, repoSlug?: string, ref?: string): Promise<string>
 } 
@@ -531,22 +531,22 @@ labels: GitHubIssueLabel[]
 	declare interface GitHubIssueLabel {
 
 /**
- * The identifying number of this label 
+ * The identifying number of this label
 */
 id: number,
 
 /**
- * The URL that links to this label 
+ * The URL that links to this label
 */
 url: string,
 
 /**
- * The name of the label 
+ * The name of the label
 */
 name: string,
 
 /**
- * The color associated with this label 
+ * The color associated with this label
 */
 color: string
 } 
@@ -566,7 +566,7 @@ number: number,
 /**
  * The state for the PR
 */
-state: 'closed' | 'open' | 'locked' | 'merged',
+state: \\"closed\\" | \\"open\\" | \\"locked\\" | \\"merged\\",
 
 /**
  * Has the PR been locked to contributors only?
@@ -666,37 +666,37 @@ changed_files: number
 } 
 	
 /**
- * A GitHub specific implmentation of a git commit, it has GitHub user names instead of an email. 
+ * A GitHub specific implmentation of a git commit, it has GitHub user names instead of an email.
 */
 declare interface GitHubCommit {
 
 /**
- * The raw commit metadata 
+ * The raw commit metadata
 */
 commit: GitCommit,
 
 /**
- * The SHA for the commit 
+ * The SHA for the commit
 */
 sha: string,
 
 /**
- * the url for the commit on GitHub 
+ * the url for the commit on GitHub
 */
 url: string,
 
 /**
- * The GitHub user who wrote the code 
+ * The GitHub user who wrote the code
 */
 author: GitHubUser,
 
 /**
- * The GitHub user who shipped the code 
+ * The GitHub user who shipped the code
 */
 committer: GitHubUser,
 
 /**
- * An array of parent commit shas 
+ * An array of parent commit shas
 */
 parents: any[]
 } 
@@ -719,7 +719,7 @@ login: string,
 /**
  * Whether the user is an org, or a user
 */
-type: 'User' | 'Organization',
+type: \\"User\\" | \\"Organization\\",
 
 /**
  * The url for a users's image
@@ -814,8 +814,8 @@ repo: GitHubRepo
  * GitHubReview
  * While a review is pending, it will only have a user.  Once a review is complete, the rest of
 the review attributes will be present
- * @export  
- * @interface  GitHubReview
+ * @export
+ * @interface GitHubReview
 */
 declare interface GitHubReview {
 
@@ -843,26 +843,26 @@ commit_id?: string,
  * The state of the review
  * APPROVED, REQUEST_CHANGES, COMMENT or PENDING
 */
-state?: 'APPROVED' | 'REQUEST_CHANGES' | 'COMMENT' | 'PENDING'
+state?: \\"APPROVED\\" | \\"REQUEST_CHANGES\\" | \\"COMMENT\\" | \\"PENDING\\"
 } 
 	
 /**
- * Provides the current PR in an easily used way for params in \`github.api\` calls  
+ * Provides the current PR in an easily used way for params in \`github.api\` calls
 */
 declare interface GitHubAPIPR {
 
 /**
- * The repo owner 
+ * The repo owner
 */
 owner: string,
 
 /**
- * The repo name 
+ * The repo name
 */
 repo: string,
 
 /**
- * The PR number 
+ * The PR number
 */
 number: number
 } 
@@ -893,7 +893,7 @@ id: string
 } 
 	
 /**
- * A function with a callback function, which Danger wraps in a Promise 
+ * A function with a callback function, which Danger wraps in a Promise
 */
 declare type CallbackableFn = (callback: (done: any) => void) => void;
 	
@@ -910,14 +910,14 @@ declare type Scheduleable = Promise<any> | Promise<void> | CallbackableFn;
 section of code to evaluate across multiple tick cycles.
 
 \`schedule\` currently handles two types of arguments, either a promise or a function with a resolve arg.
- * @param  the function to run asynchronously
+ * @param {Function} asyncFunction the function to run asynchronously
 */
 declare function schedule(asyncFunction: Scheduleable): void
 
 	
 /**
  * Fails a build, outputting a specific reason for failing into a HTML table.
- * @param  the String to output
+ * @param {MarkdownString} message the String to output
 */
 declare function fail(message: MarkdownString): void
 
@@ -925,7 +925,7 @@ declare function fail(message: MarkdownString): void
 /**
  * Highlights low-priority issues, but does not fail the build. Message
  * is shown inside a HTML table.
- * @param  the String to output
+ * @param {MarkdownString} message the String to output
 */
 declare function warn(message: MarkdownString): void
 
@@ -933,20 +933,35 @@ declare function warn(message: MarkdownString): void
 /**
  * Adds a message to the Danger table, the only difference between this
  * and warn is the emoji which shows in the table.
- * @param  the String to output
+ * @param {MarkdownString} message the String to output
 */
 declare function message(message: MarkdownString): void
 
 	
 /**
  * Adds raw markdown into the Danger comment, under the table
- * @param  the String to output
+ * @param {MarkdownString} message the String to output
 */
 declare function markdown(message: MarkdownString): void
 
-	declare var danger: DangerDSLType;
-	declare var peril: PerilDSL;
-	declare var results: DangerRuntimeContainer;
+	
+/**
+ * The root Danger object. This contains all of the metadata you
+ * will be looking for in order to generate useful rules.
+*/
+declare var danger: DangerDSLType;
+	
+/**
+ * When Peril is running your Dangerfile, the Danger DSL is
+ * extended with additional options.
+*/
+declare var peril: PerilDSL;
+	
+/**
+ * The current results of a Danger run, this can be useful if you
+ * are wanting to introspect on whether a build has already failed.
+*/
+declare var results: DangerRuntimeContainer;
     }
 "
 `;
