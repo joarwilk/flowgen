@@ -6,16 +6,16 @@ import { stripDetailsFromTree, parseNameFromNode } from "../parse";
 
 import printers from "../printers";
 
-export default class Node {
+export default class Node<NodeType = RawNode> {
   children: {
     [key: string]: Node,
   };
   kind: string;
   name: string;
-  raw: RawNode;
+  raw: NodeType;
   namespace: ?string;
 
-  constructor(node: ?RawNode) {
+  constructor(node: ?NodeType) {
     this.children = {};
 
     if (node) {
@@ -24,14 +24,28 @@ export default class Node {
     }
   }
 
-  addChild(name: string, node: Node) {
+  addChild(name: string, node: Node): void {
     this.children[name] = node;
+  }
+
+  //TODO: remove this
+  addChildren(name: string, node: Node): void {
+    if (!this.children[name]) {
+      this.children[name] = node;
+      return;
+    }
+    if (this.children[name]) {
+      for (const key in node.children) {
+        this.children[name].addChild(key, node.children[key]);
+      }
+      return;
+    }
   }
 
   /**
    * Used for overloading the props of some types
    */
-  maybeAddMember(members: Object | Array<Object>) {
+  maybeAddMember(members: Object | Array<Object>): void {
     if (!this.raw.members) {
       return;
     }
@@ -45,11 +59,11 @@ export default class Node {
     }
   }
 
-  getChildren() {
+  getChildren(): Array<Node> {
     return _.toArray(this.children);
   }
 
-  print() {
+  print(namespace?: string): string {
     return printers.node.printType(this.raw);
   }
 }
