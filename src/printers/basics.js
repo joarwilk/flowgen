@@ -1,5 +1,6 @@
 /* @flow */
-const types = {
+
+const types: { [key: string]: string } = {
   VoidKeyword: "void",
   StringKeyword: "string",
   AnyKeyword: "any",

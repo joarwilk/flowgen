@@ -2,9 +2,6 @@
 
 import type { RawNode } from "../nodes/node";
 import { SyntaxKind } from "typescript";
-
-import _ from "lodash";
-
 import printers from "./index";
 
 export const printType = (type: RawNode): string => {
@@ -18,7 +15,7 @@ export const printType = (type: RawNode): string => {
       return `"${type.literal.text}"`;
   }
 
-  const keywordPrefix =
+  const keywordPrefix: string =
     type.modifiers &&
     type.modifiers.some(modifier => modifier.kind === "StaticKeyword")
       ? "static "
@@ -45,9 +42,9 @@ export const printType = (type: RawNode): string => {
     case SyntaxKind.TypeLiteral:
       return printers.declarations.interfaceType(type);
 
-    case SyntaxKind.IdentifierObject:
+    //case SyntaxKind.IdentifierObject:
     case SyntaxKind.Identifier:
-    case SyntaxKind.StringLiteralType:
+    //case SyntaxKind.StringLiteralType:
       return printers.relationships.namespace(
         printers.relationships.namespaceProp(
           printers.identifiers.print(type.text),
@@ -89,7 +86,7 @@ export const printType = (type: RawNode): string => {
           }"`;
       }
 
-    case SyntaxKind.MappedType:
+    case SyntaxKind.MappedType: {
       const constraint = type.typeParameter.constraint;
       const typeName = printType(type.typeParameter.name);
       const value = printType(type.type);
@@ -98,6 +95,7 @@ export const printType = (type: RawNode): string => {
         source = printType(constraint.type);
       }
       return `$ObjMapi<${source}, <${typeName}>(${typeName}) => ${value}>`;
+    }
 
     case SyntaxKind.FirstLiteralToken:
       return type.text;
@@ -188,25 +186,27 @@ export const printType = (type: RawNode): string => {
         printType(type.name)
       );
 
-    case SyntaxKind.NodeObject:
-      return (
-        printers.relationships.namespace(type.expression.text) +
-        printType(type.name)
-      );
+    // case SyntaxKind.NodeObject:
+    //   return (
+    //     printers.relationships.namespace(type.expression.text) +
+    //     printType(type.name)
+    //   );
 
     case SyntaxKind.PropertySignature:
       return printers.common.parameter(type);
 
-    case SyntaxKind.CallSignature:
+    case SyntaxKind.CallSignature: {
       let str = `(${type.parameters
         .map(printers.common.parameter)
         .join(", ")})`;
       return type.type ? `${str}: ${printType(type.type)}` : str;
+    }
 
-    case SyntaxKind.UnionType:
+    case SyntaxKind.UnionType: {
       const join = type.types.length >= 5 ? "\n" : " ";
       // debugger
       return type.types.map(printType).join(`${join}| `);
+    }
 
     case SyntaxKind.ArrayType:
       return printType(type.elementType) + "[]";
@@ -222,8 +222,8 @@ export const printType = (type: RawNode): string => {
     case SyntaxKind.IntersectionType:
       return type.types.map(printType).join(" & ");
 
-    case SyntaxKind.LiteralType:
-      return type.value;
+    // case SyntaxKind.LiteralType:
+    //   return type.value;
 
     case SyntaxKind.SymbolKeyword:
       // TODO: What to print here?
@@ -250,7 +250,7 @@ export const printType = (type: RawNode): string => {
         "(" +
         type.parameters.map(printers.common.parameter).join(", ") +
         ") => " +
-        printers.node.printType(type.type)
+        printType(type.type)
       );
 
     case SyntaxKind.ConstructSignature:

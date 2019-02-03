@@ -1,0 +1,41 @@
+// @flow
+import type { RawNode } from "../nodes/node";
+import type { JSDoc } from "typescript";
+
+// TODO: resolve circular dependencies
+declare export default {|
+  basics: {|
+    print(kind: string): string,
+  |},
+  identifiers: {|
+    print(kind: string): string,
+  |},
+  declarations: {|
+    variableDeclaration(node: RawNode): string,
+    interfaceType(node: RawNode, withSemicolons?: boolean): string,
+    interfaceDeclaration(nodeName: string, node: RawNode): string,
+    typeDeclaration(nodeName: string, node: RawNode): string,
+    enumDeclaration(nodeName: string, node: RawNode): string,
+    typeReference(node: RawNode): string,
+    classDeclaration(nodeName: string, node: RawNode): string,
+  |},
+  common: {|
+    parameter(param: RawNode): string,
+    parseTypeReference(node: RawNode): string,
+    generics(types: ?Array<RawNode>): string,
+    comment(jsdoc: Array<JSDoc>): string,
+  |},
+  functions: {|
+    functionType(func: RawNode, dotAsReturn?: boolean): string,
+    functionDeclaration(nodeName: string, node: RawNode): string,
+  |},
+  relationships: {|
+    moduleExports(node: RawNode): string,
+    exporter(node: RawNode): string,
+    namespace(name: string, hidePunctuation?: boolean): string,
+    namespaceProp(name: string, hidePunctuation?: boolean): string,
+  |},
+  node: {|
+    printType(type: RawNode): string,
+  |},
+|};

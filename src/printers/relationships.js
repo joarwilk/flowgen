@@ -1,7 +1,6 @@
 /* @flow */
 
 import type { RawNode } from "../nodes/node";
-import type ImportNode from "../nodes/import";
 
 import namespaceManager from "../namespaceManager";
 import printers from "./index";
@@ -72,7 +71,9 @@ export const namespaceProp = (
   hidePunctuation: boolean = false,
 ): string => {
   if (namespaceManager.nsPropExists(name)) {
-    return `${namespaceManager.getNSForProp(name)}$${name}`;
+    return `${namespaceManager.getNSForProp(name)}${
+      hidePunctuation ? "" : "$"
+    }${name}`;
   }
 
   return name;

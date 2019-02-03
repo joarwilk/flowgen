@@ -1,4 +1,4 @@
-/* @flow */
+/* @noflow */
 import * as basics from "./basics";
 import * as identifiers from "./identifiers";
 import * as declarations from "./declarations";

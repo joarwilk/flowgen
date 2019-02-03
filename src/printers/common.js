@@ -1,6 +1,7 @@
 /* @flow */
+
+import program from "commander";
 import type { RawNode } from "../nodes/node";
-import type { JSDoc } from "typescript";
 
 import printers from "./index";
 
@@ -47,7 +48,8 @@ export const generics = (types: ?Array<RawNode>): string => {
   return "";
 };
 
-export const comment = (jsdoc: Array<JSDoc>): string => {
+export const comment = (jsdoc: Array<any>): string => {
+  if (!program.opts().jsdoc) return "";
   const blocks = jsdoc
     .map(doc => {
       const comment = (doc.comment || "").replace("\n", "\n * ");

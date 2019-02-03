@@ -1,9 +1,12 @@
-/* @flow */
-import type { RawNode } from "../nodes/node";
+// @flow
 
+import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
-export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
+export const functionType = (
+  func: RawNode,
+  dotAsReturn: boolean = false,
+): string => {
   const params = func.parameters
     .filter(param => param.name.text !== "this")
     .map(printers.common.parameter);
@@ -27,7 +30,10 @@ export const functionType = (func: RawNode, dotAsReturn: boolean = false) => {
   return firstPass;
 };
 
-export const functionDeclaration = (nodeName: string, node: RawNode) => {
+export const functionDeclaration = (
+  nodeName: string,
+  node: RawNode,
+): string => {
   // each functionDeclaration gets it's own line
   let str = `declare ${printers.relationships.exporter(
     node,
