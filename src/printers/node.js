@@ -10,13 +10,6 @@ import printers from "./index";
 export const printType = (type: RawNode) => {
   // debuggerif()
   //TODO: #6 No match found in SyntaxKind enum
-  switch (type.kind) {
-    case "FunctionTypeAnnotation":
-      return printers.functions.functionType(type);
-
-    case "LastNodeType":
-      return `"${type.literal.text}"`;
-  }
 
   const keywordPrefix =
     type.modifiers &&
@@ -33,9 +26,12 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.NullKeyword:
     case SyntaxKind.UndefinedKeyword:
     case SyntaxKind.ObjectKeyword:
+    case SyntaxKind.FalseKeyword:
+    case SyntaxKind.TrueKeyword:
       return printers.basics.print(type.kind);
 
     case SyntaxKind.FunctionType:
+    case SyntaxKind.FunctionTypeAnnotation:
       return printers.functions.functionType(type);
 
     case SyntaxKind.TypeLiteral:
@@ -55,9 +51,11 @@ export const printType = (type: RawNode) => {
     case SyntaxKind.TypePredicate:
       if (type.literal) {
         if (type.literal.kind === "StringLiteral") {
-          return "'" + type.literal.text + "'";
-        } else {
+          return printType(type.literal);
+        } else if (type.literal.text) {
           return type.literal.text;
+        } else {
+          return printType(type.literal);
         }
       }
 
@@ -76,8 +74,7 @@ export const printType = (type: RawNode) => {
       );
 
     case SyntaxKind.StringLiteral:
-      debugger;
-      return type.text;
+      return "'" + type.text + "'";
 
     case SyntaxKind.TypeReference:
       return printers.declarations.typeReference(type);
