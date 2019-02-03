@@ -8,6 +8,8 @@ const types = {
   NullKeyword: "null",
   UndefinedKeyword: "void",
   ObjectKeyword: "{[key: string]: any}",
+  FalseKeyword: "false",
+  TrueKeyword: "true"
 };
 
 export const print = (kind: string): string => {
