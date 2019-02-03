@@ -6,49 +6,48 @@ import type {
   InterfaceDeclaration,
   TypeAliasDeclaration,
   EnumDeclaration,
+  VariableStatement,
   JSDoc,
 } from "typescript";
 import Node from "./node";
 
 import printers from "../printers";
-
 import namespaceManager from "../namespaceManager";
-import { parseNameFromNode } from "../parse";
+import { parseNameFromNode } from "../parse/ast";
 
-// TODO: why typescript doesn't describe jsDoc property
-// type RawFunctionDeclaration = {|
-//   ...$Exact<FunctionDeclaration>,
-//   jsDoc: Array<JSDoc>,
-//   kind: "FunctionDeclaration",
-// |};
-// type RawClassDeclaration = {|
-//   ...$Exact<ClassDeclaration>,
-//   jsDoc: Array<JSDoc>,
-//   kind: "ClassDeclaration",
-// |};
-// type RawInterfaceDeclaration = {|
-//   ...$Exact<InterfaceDeclaration>,
-//   jsDoc: Array<JSDoc>,
-//   kind: "InterfaceDeclaration",
-// |};
-// type RawTypeAliasDeclaration = {|
-//   ...$Exact<TypeAliasDeclaration>,
-//   jsDoc: Array<JSDoc>,
-//   kind: "TypeAliasDeclaration",
-// |};
-// type RawEnumDeclaration = {|
-//   ...$Exact<EnumDeclaration>,
-//   jsDoc: Array<JSDoc>,
-//   kind: "EnumDeclaration",
-// |};
+type PropertyNode =
+  | {
+      ...$Exact<FunctionDeclaration>,
+      kind: "FunctionDeclaration",
+      jsDoc: Array<JSDoc>,
+    }
+  | {
+      ...$Exact<ClassDeclaration>,
+      kind: "ClassDeclaration",
+      jsDoc: Array<JSDoc>,
+    }
+  | {
+      ...$Exact<InterfaceDeclaration>,
+      kind: "InterfaceDeclaration",
+      jsDoc: Array<JSDoc>,
+    }
+  | {
+      ...$Exact<TypeAliasDeclaration>,
+      kind: "TypeAliasDeclaration",
+      jsDoc: Array<JSDoc>,
+    }
+  | {
+      ...$Exact<EnumDeclaration>,
+      kind: "EnumDeclaration",
+      jsDoc: Array<JSDoc>,
+    }
+  | {
+      ...$Exact<VariableStatement>,
+      kind: "VariableStatement",
+      jsDoc: Array<JSDoc>,
+    };
 
-export default class Property extends Node<
-  | FunctionDeclaration
-  | ClassDeclaration
-  | InterfaceDeclaration
-  | TypeAliasDeclaration
-  | EnumDeclaration,
-> {
+export default class Property extends Node<PropertyNode> {
   name: string;
 
   constructor(node: RawNode) {
@@ -91,13 +90,17 @@ export default class Property extends Node<
         break;
       case "VariableStatement":
         for (const decl of this.raw.declarationList.declarations) {
-          if (namespace)
-            namespaceManager.registerProp(namespace, decl.name.text);
+          if (namespace && decl.name.kind === "Identifier") {
+            const text = (decl.name: any).text;
+            namespaceManager.registerProp(namespace, text);
+          }
         }
         out += printers.declarations.variableDeclaration(this.raw);
         break;
+      default:
+        /*::;(this.raw.kind: empty)*/
+        break;
     }
-
     return out;
   }
 }
