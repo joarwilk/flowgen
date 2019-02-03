@@ -3,7 +3,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:flowtype/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "prettier/flowtype"
   ],
   "plugins": ["flowtype", "jest"],
   "parserOptions": {
