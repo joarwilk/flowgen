@@ -1,5 +1,4 @@
 // @flow
-import fs from "fs";
 import path from "path";
 
 import meta from "./meta";
@@ -10,9 +9,10 @@ import compiler from "./compiler";
 import defaultExporter from "./default-exporter";
 import flowTypedExporter from "./flow-typed-exporter";
 
-import { readFileSync } from "fs";
-
 type RunnerOptions = {
+  jsdoc: boolean,
+  interfaceRecords: boolean,
+  stringEnums: boolean,
   version: string,
   out: string,
   flowTypedFormat: boolean,
