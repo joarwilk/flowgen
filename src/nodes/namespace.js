@@ -1,8 +1,6 @@
 /* @flow */
-import type { RawNode } from "./node";
 import { uniqBy, flatten } from "lodash";
 import Node from "./node";
-import printers from "../printers";
 
 import namespaceManager from "../namespaceManager";
 
@@ -16,7 +14,7 @@ export default class Namespace extends Node {
     namespaceManager.register(name);
   }
 
-  addChild(name: string, child: Node): void {
+  addChild(name: string, child: Node<>): void {
     child.namespace = this.name;
     namespaceManager.registerProp(this.name, child.name);
 

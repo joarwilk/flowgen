@@ -1,8 +1,6 @@
 /* @flow */
 import type { RawNode } from "./node";
 
-import _ from "lodash";
-
 import type Node from "./node";
 import ImportNode from "./import";
 import ExportNode from "./export";
@@ -11,7 +9,7 @@ import ModuleNode from "./module";
 import PropertyNode from "./property";
 import NamespaceNode from "./namespace";
 
-import { getMembersFromNode, stripDetailsFromTree } from "../parse";
+import { getMembersFromNode } from "../parse/ast";
 
 export class Factory {
   _modules: Object;
@@ -26,7 +24,7 @@ export class Factory {
 
   // If multiple declarations are found for the same module name
   // return the memoized instance of the module instead
-  createModuleNode(name: string) {
+  createModuleNode(name: string): ModuleNode {
     if (Object.keys(this._modules).includes(name)) {
       return this._modules[name];
     }
@@ -38,7 +36,11 @@ export class Factory {
     return module;
   }
 
-  createFunctionDeclaration(node: RawNode, name: string, context: Node): void {
+  createFunctionDeclaration(
+    node: RawNode,
+    name: string,
+    context: Node<>,
+  ): void {
     const propNode = new PropertyNode(node);
 
     if (!this._functionDeclarations[name]) this._functionDeclarations[name] = 0;
@@ -53,11 +55,7 @@ export class Factory {
   // Some definition files (like lodash) declare the same
   // interface/type/function multiple times as a way of overloading.
   // Flow does not support that, and this is where we handle that
-  createPropertyNode(
-    node: RawNode,
-    name?: string,
-    context?: Node,
-  ): PropertyNode {
+  createPropertyNode(node: RawNode, name?: string): PropertyNode {
     if (!name) {
       return new PropertyNode(node);
     }
