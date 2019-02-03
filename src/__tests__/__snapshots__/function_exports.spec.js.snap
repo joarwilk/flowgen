@@ -21,6 +21,15 @@ declare export function syncHistoryWithStore(
 "
 `;
 
+exports[`should handle function overload es module functions 1`] = `
+"declare export function routerReducer(
+  state?: RouterState,
+  action?: Action
+): RouterState;
+declare export function routerReducer(state?: RouterState): RouterState;
+"
+`;
+
 exports[`should remove this annotation from functions 1`] = `
 "declare function addClickListener(onclick: (e: Event) => void): void;
 "

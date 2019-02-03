@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle namespace function merging 1`] = `
+"declare var npm$namespace$test: {
+  test: typeof test$test
+};
+declare function test$test(err: number): void;
+
+declare function test$test(response: string): string;
+"
+`;
+
+exports[`should handle namespace merging 1`] = `
+"declare var npm$namespace$test: {
+  ok: typeof test$ok,
+  error: typeof test$error
+};
+declare export var test$ok: number;
+
+declare export var test$error: string;
+"
+`;
+
+exports[`should handle namespaces 1`] = `
+"declare var npm$namespace$test: {
+  ok: typeof test$ok
+};
+declare export var test$ok: number;
+"
+`;

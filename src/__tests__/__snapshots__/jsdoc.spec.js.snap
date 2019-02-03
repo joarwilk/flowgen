@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle basic jsdoc 1`] = `
+"declare var skip: number;
+/**
+ * @param {string} userToken User authentication token
+ * @returns {Promise<void>}
+ */
+declare function authorize(userToken: string): Promise<void>;
+
+/**
+ * Plain comment
+ */
+declare function test(): Promise<void>;
+"
+`;
+
+exports[`should remove jsdoc 1`] = `
+"declare function authorize(userToken: string): Promise<void>;
+"
+`;

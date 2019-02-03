@@ -1,11 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should handle basic enums 1`] = `
-"declare class Label__LABEL_OPTIONAL mixins Label {}
-declare class Label__LABEL_REQUIRED mixins Label {}
-declare class Label__LABEL_REPEATED mixins Label {}
-
-declare class Label {
+exports[`should handle basic enums: class 1`] = `
+"declare class Label {
   constructor(...args: empty): mixed;
   static +LABEL_OPTIONAL: Class<Label__LABEL_OPTIONAL> &
     Label__LABEL_OPTIONAL &
@@ -17,24 +13,32 @@ declare class Label {
     Label__LABEL_REPEATED &
     2; // 2
 }
+
+declare class Label__LABEL_OPTIONAL mixins Label {}
+declare class Label__LABEL_REQUIRED mixins Label {}
+declare class Label__LABEL_REPEATED mixins Label {}
 "
 `;
 
-exports[`should handle empty enums 1`] = `
+exports[`should handle basic enums: union 1`] = `
+"declare type Label = \\"LABEL_OPTIONAL\\" | \\"LABEL_REQUIRED\\" | \\"LABEL_REPEATED\\";
+"
+`;
+
+exports[`should handle empty enums: class 1`] = `
 "declare class Empty {
   constructor(...args: empty): mixed;
 }
 "
 `;
 
-exports[`should handle number enums 1`] = `
-"declare class Label__ONE mixins Label {}
-declare class Label__TWO mixins Label {}
-declare class Label__THREE mixins Label {}
-declare class Label__NEGATIVE mixins Label {}
-declare class Label__DECIMAL mixins Label {}
+exports[`should handle empty enums: union 1`] = `
+"declare type Empty = empty;
+"
+`;
 
-declare class Label {
+exports[`should handle number enums: class 1`] = `
+"declare class Label {
   constructor(...args: empty): mixed;
   static +ONE: Class<Label__ONE> & Label__ONE & 1; // 1
   static +TWO: Class<Label__TWO> & Label__TWO & 2; // 2
@@ -42,15 +46,22 @@ declare class Label {
   static +NEGATIVE: Class<Label__NEGATIVE> & Label__NEGATIVE & -123; // -123
   static +DECIMAL: Class<Label__DECIMAL> & Label__DECIMAL & 3.14; // 3.14
 }
+
+declare class Label__ONE mixins Label {}
+declare class Label__TWO mixins Label {}
+declare class Label__THREE mixins Label {}
+declare class Label__NEGATIVE mixins Label {}
+declare class Label__DECIMAL mixins Label {}
 "
 `;
 
-exports[`should handle string enums 1`] = `
-"declare class Label__LABEL_OPTIONAL mixins Label {}
-declare class Label__LABEL_REQUIRED mixins Label {}
-declare class Label__LABEL_REPEATED mixins Label {}
+exports[`should handle number enums: union 1`] = `
+"declare type Label = \\"ONE\\" | \\"TWO\\" | \\"THREE\\" | \\"NEGATIVE\\" | \\"DECIMAL\\";
+"
+`;
 
-declare class Label {
+exports[`should handle string enums: class 1`] = `
+"declare class Label {
   constructor(...args: empty): mixed;
   static +LABEL_OPTIONAL: Class<Label__LABEL_OPTIONAL> &
     Label__LABEL_OPTIONAL &
@@ -62,5 +73,14 @@ declare class Label {
     Label__LABEL_REPEATED &
     \\"LABEL_REPEATED\\"; // \\"LABEL_REPEATED\\"
 }
+
+declare class Label__LABEL_OPTIONAL mixins Label {}
+declare class Label__LABEL_REQUIRED mixins Label {}
+declare class Label__LABEL_REPEATED mixins Label {}
+"
+`;
+
+exports[`should handle string enums: union 1`] = `
+"declare type Label = \\"LABEL_OPTIONAL\\" | \\"LABEL_REQUIRED\\" | \\"LABEL_REPEATED\\";
 "
 `;

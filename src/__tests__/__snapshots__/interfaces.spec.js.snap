@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle interface inheritance 1`] = `
+"declare interface User {
+  firstName: string;
+}
+declare type SpecialUser = {
+  nice: number
+} & User;
+"
+`;
+
+exports[`should handle interface inheritance 2`] = `
+"declare type User = {
+  firstName: string
+};
+declare type SpecialUser = {
+  ...$Exact<User>,
+
+  nice: number
+};
+"
+`;
+
+exports[`should handle interface merging 1`] = `
+"declare interface User {
+  firstName: string;
+  lastName: string;
+  username: string;
+}
+"
+`;
+
+exports[`should handle interface merging 2`] = `
+"declare type User = {
+  firstName: string,
+  lastName: string,
+  username: string
+};
+"
+`;
+
+exports[`should handle single interface 1`] = `
+"declare interface User {
+  firstName: string;
+}
+"
+`;
+
+exports[`should handle single interface 2`] = `
+"declare type User = {
+  firstName: string
+};
+"
+`;
