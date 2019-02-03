@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle boolean literals in type 1`] = `
+"declare type MyFalsyType = string | false;
+declare type MyTruthyType = true | string;
+"
+`;
