@@ -15,6 +15,7 @@
     "node": true
   },
   "rules": {
+    "no-redeclare": "off",
     "no-console": "off",
     "no-unused-vars": [
       2,
