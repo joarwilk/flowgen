@@ -5,52 +5,39 @@
  * Flowgen v1.4.0
  * Author: [Joar Wilk](http://twitter.com/joarwilk)
  * Repo: http://github.com/joarwilk/flowgen
- * @flow
  */
 
 declare module "typescript" {
-  /**
- * Type of objects whose values are all of the same type.
- * The `in` and `for-in` operators can *not* be safely used,
-since `Object.prototype` may be modified by outside code.
-*/
-  declare export interface MapLike<T> {
-    [index: string]: T;
-  }
-  declare export type SortedReadonlyArray<T> = {
-    __sortedArrayBrand: any
-  } & $ReadOnlyArray<T>;
+  declare type MapLike<T> = {
+    [index: string]: T
+  };
 
-  declare export type SortedArray<T> = {
-    __sortedArrayBrand: any
-  } & Array<T>;
+  declare class SortedReadonlyArray<T> extends $ReadOnlyArray<T> {
 
-  /**
-   * ES6 Map interface, only read methods included.
-   */
-  declare export interface ReadonlyMap<T> {
-    get(key: string): T | void;
-    has(key: string): boolean;
-    forEach(action: (value: T, key: string) => void): void;
-    size: number;
-    keys(): Iterator<string>;
-    values(): Iterator<T>;
-    entries(): Iterator<[string, T]>;
+    __sortedArrayBrand: any
   }
 
-  /**
-   * ES6 Map interface.
-   */
-  declare export type Map<T> = {
-    set(key: string, value: T): Map<T>,
+  declare class SortedArray<T> extends Array<T> {
+    __sortedArrayBrand: any
+  }
+
+  declare class ReadonlyMap<T> {
+    get(key: string): T | void,
+    has(key: string): boolean,
+    forEach(action: (value: T, key: string) => void): void,
+    size: number,
+    keys(): Iterator<string>,
+    values(): Iterator<T>,
+    entries(): Iterator<[string, T]>
+  }
+
+  declare class Map<T> extends ReadonlyMap<T> {
+    set(key: string, value: T): this,
     delete(key: string): boolean,
     clear(): void
-  } & ReadonlyMap<T>;
+  }
 
-  /**
-   * ES6 Iterator type.
-   */
-  declare export interface Iterator<T> {
+  declare type Iterator<T> = {
     next():
       | {
           value: T,
@@ -59,23 +46,22 @@ since `Object.prototype` may be modified by outside code.
       | {
           value: empty,
           done: true
-        };
-  }
+        }
+  };
 
-  /**
-   * Array that is only intended to be pushed to, never read.
-   */
-  declare export interface Push<T> {
-    push(...values: T[]): void;
-  }
-  declare export type Path = string & {
+  declare type Push<T> = {
+    push(...values: T[]): void
+  };
+
+  declare type Path = string & {
     __pathBrand: any
   };
-  declare export interface TextRange {
-    pos: number;
-    end: number;
-  }
-  declare export type JsDocSyntaxKind =
+  declare type TextRange = {
+    pos: number,
+    end: number
+  };
+
+  declare type JsDocSyntaxKind =
     | SyntaxKind.EndOfFileToken
     | SyntaxKind.WhitespaceTrivia
     | SyntaxKind.AtToken
@@ -93,7 +79,7 @@ since `Object.prototype` may be modified by outside code.
     | SyntaxKind.NoSubstitutionTemplateLiteral
     | SyntaxKind.Unknown
     | KeywordSyntaxKind;
-  declare export type KeywordSyntaxKind =
+  declare type KeywordSyntaxKind =
     | SyntaxKind.AbstractKeyword
     | SyntaxKind.AnyKeyword
     | SyntaxKind.AsKeyword
@@ -169,7 +155,7 @@ since `Object.prototype` may be modified by outside code.
     | SyntaxKind.AsyncKeyword
     | SyntaxKind.AwaitKeyword
     | SyntaxKind.OfKeyword;
-  declare export type JsxTokenSyntaxKind =
+  declare type JsxTokenSyntaxKind =
     | SyntaxKind.LessThanSlashToken
     | SyntaxKind.EndOfFileToken
     | SyntaxKind.ConflictMarkerTrivia
@@ -177,6 +163,1013 @@ since `Object.prototype` may be modified by outside code.
     | SyntaxKind.JsxTextAllWhiteSpaces
     | SyntaxKind.OpenBraceToken
     | SyntaxKind.LessThanToken;
+  declare class SyntaxKind {
+    static +Unknown: Class<SyntaxKind__Unknown> & SyntaxKind__Unknown & 0; // 0
+    static +EndOfFileToken: Class<SyntaxKind__EndOfFileToken> &
+      SyntaxKind__EndOfFileToken &
+      1; // 1
+    static +SingleLineCommentTrivia: Class<SyntaxKind__SingleLineCommentTrivia> &
+      SyntaxKind__SingleLineCommentTrivia &
+      2; // 2
+    static +MultiLineCommentTrivia: Class<SyntaxKind__MultiLineCommentTrivia> &
+      SyntaxKind__MultiLineCommentTrivia &
+      3; // 3
+    static +NewLineTrivia: Class<SyntaxKind__NewLineTrivia> &
+      SyntaxKind__NewLineTrivia &
+      4; // 4
+    static +WhitespaceTrivia: Class<SyntaxKind__WhitespaceTrivia> &
+      SyntaxKind__WhitespaceTrivia &
+      5; // 5
+    static +ShebangTrivia: Class<SyntaxKind__ShebangTrivia> &
+      SyntaxKind__ShebangTrivia &
+      6; // 6
+    static +ConflictMarkerTrivia: Class<SyntaxKind__ConflictMarkerTrivia> &
+      SyntaxKind__ConflictMarkerTrivia &
+      7; // 7
+    static +NumericLiteral: Class<SyntaxKind__NumericLiteral> &
+      SyntaxKind__NumericLiteral &
+      8; // 8
+    static +BigIntLiteral: Class<SyntaxKind__BigIntLiteral> &
+      SyntaxKind__BigIntLiteral &
+      9; // 9
+    static +StringLiteral: Class<SyntaxKind__StringLiteral> &
+      SyntaxKind__StringLiteral &
+      10; // 10
+    static +JsxText: Class<SyntaxKind__JsxText> & SyntaxKind__JsxText & 11; // 11
+    static +JsxTextAllWhiteSpaces: Class<SyntaxKind__JsxTextAllWhiteSpaces> &
+      SyntaxKind__JsxTextAllWhiteSpaces &
+      12; // 12
+    static +RegularExpressionLiteral: Class<SyntaxKind__RegularExpressionLiteral> &
+      SyntaxKind__RegularExpressionLiteral &
+      13; // 13
+    static +NoSubstitutionTemplateLiteral: Class<SyntaxKind__NoSubstitutionTemplateLiteral> &
+      SyntaxKind__NoSubstitutionTemplateLiteral &
+      14; // 14
+    static +TemplateHead: Class<SyntaxKind__TemplateHead> &
+      SyntaxKind__TemplateHead &
+      15; // 15
+    static +TemplateMiddle: Class<SyntaxKind__TemplateMiddle> &
+      SyntaxKind__TemplateMiddle &
+      16; // 16
+    static +TemplateTail: Class<SyntaxKind__TemplateTail> &
+      SyntaxKind__TemplateTail &
+      17; // 17
+    static +OpenBraceToken: Class<SyntaxKind__OpenBraceToken> &
+      SyntaxKind__OpenBraceToken &
+      18; // 18
+    static +CloseBraceToken: Class<SyntaxKind__CloseBraceToken> &
+      SyntaxKind__CloseBraceToken &
+      19; // 19
+    static +OpenParenToken: Class<SyntaxKind__OpenParenToken> &
+      SyntaxKind__OpenParenToken &
+      20; // 20
+    static +CloseParenToken: Class<SyntaxKind__CloseParenToken> &
+      SyntaxKind__CloseParenToken &
+      21; // 21
+    static +OpenBracketToken: Class<SyntaxKind__OpenBracketToken> &
+      SyntaxKind__OpenBracketToken &
+      22; // 22
+    static +CloseBracketToken: Class<SyntaxKind__CloseBracketToken> &
+      SyntaxKind__CloseBracketToken &
+      23; // 23
+    static +DotToken: Class<SyntaxKind__DotToken> & SyntaxKind__DotToken & 24; // 24
+    static +DotDotDotToken: Class<SyntaxKind__DotDotDotToken> &
+      SyntaxKind__DotDotDotToken &
+      25; // 25
+    static +SemicolonToken: Class<SyntaxKind__SemicolonToken> &
+      SyntaxKind__SemicolonToken &
+      26; // 26
+    static +CommaToken: Class<SyntaxKind__CommaToken> &
+      SyntaxKind__CommaToken &
+      27; // 27
+    static +LessThanToken: Class<SyntaxKind__LessThanToken> &
+      SyntaxKind__LessThanToken &
+      28; // 28
+    static +LessThanSlashToken: Class<SyntaxKind__LessThanSlashToken> &
+      SyntaxKind__LessThanSlashToken &
+      29; // 29
+    static +GreaterThanToken: Class<SyntaxKind__GreaterThanToken> &
+      SyntaxKind__GreaterThanToken &
+      30; // 30
+    static +LessThanEqualsToken: Class<SyntaxKind__LessThanEqualsToken> &
+      SyntaxKind__LessThanEqualsToken &
+      31; // 31
+    static +GreaterThanEqualsToken: Class<SyntaxKind__GreaterThanEqualsToken> &
+      SyntaxKind__GreaterThanEqualsToken &
+      32; // 32
+    static +EqualsEqualsToken: Class<SyntaxKind__EqualsEqualsToken> &
+      SyntaxKind__EqualsEqualsToken &
+      33; // 33
+    static +ExclamationEqualsToken: Class<SyntaxKind__ExclamationEqualsToken> &
+      SyntaxKind__ExclamationEqualsToken &
+      34; // 34
+    static +EqualsEqualsEqualsToken: Class<SyntaxKind__EqualsEqualsEqualsToken> &
+      SyntaxKind__EqualsEqualsEqualsToken &
+      35; // 35
+    static +ExclamationEqualsEqualsToken: Class<SyntaxKind__ExclamationEqualsEqualsToken> &
+      SyntaxKind__ExclamationEqualsEqualsToken &
+      36; // 36
+    static +EqualsGreaterThanToken: Class<SyntaxKind__EqualsGreaterThanToken> &
+      SyntaxKind__EqualsGreaterThanToken &
+      37; // 37
+    static +PlusToken: Class<SyntaxKind__PlusToken> &
+      SyntaxKind__PlusToken &
+      38; // 38
+    static +MinusToken: Class<SyntaxKind__MinusToken> &
+      SyntaxKind__MinusToken &
+      39; // 39
+    static +AsteriskToken: Class<SyntaxKind__AsteriskToken> &
+      SyntaxKind__AsteriskToken &
+      40; // 40
+    static +AsteriskAsteriskToken: Class<SyntaxKind__AsteriskAsteriskToken> &
+      SyntaxKind__AsteriskAsteriskToken &
+      41; // 41
+    static +SlashToken: Class<SyntaxKind__SlashToken> &
+      SyntaxKind__SlashToken &
+      42; // 42
+    static +PercentToken: Class<SyntaxKind__PercentToken> &
+      SyntaxKind__PercentToken &
+      43; // 43
+    static +PlusPlusToken: Class<SyntaxKind__PlusPlusToken> &
+      SyntaxKind__PlusPlusToken &
+      44; // 44
+    static +MinusMinusToken: Class<SyntaxKind__MinusMinusToken> &
+      SyntaxKind__MinusMinusToken &
+      45; // 45
+    static +LessThanLessThanToken: Class<SyntaxKind__LessThanLessThanToken> &
+      SyntaxKind__LessThanLessThanToken &
+      46; // 46
+    static +GreaterThanGreaterThanToken: Class<SyntaxKind__GreaterThanGreaterThanToken> &
+      SyntaxKind__GreaterThanGreaterThanToken &
+      47; // 47
+    static +GreaterThanGreaterThanGreaterThanToken: Class<SyntaxKind__GreaterThanGreaterThanGreaterThanToken> &
+      SyntaxKind__GreaterThanGreaterThanGreaterThanToken &
+      48; // 48
+    static +AmpersandToken: Class<SyntaxKind__AmpersandToken> &
+      SyntaxKind__AmpersandToken &
+      49; // 49
+    static +BarToken: Class<SyntaxKind__BarToken> & SyntaxKind__BarToken & 50; // 50
+    static +CaretToken: Class<SyntaxKind__CaretToken> &
+      SyntaxKind__CaretToken &
+      51; // 51
+    static +ExclamationToken: Class<SyntaxKind__ExclamationToken> &
+      SyntaxKind__ExclamationToken &
+      52; // 52
+    static +TildeToken: Class<SyntaxKind__TildeToken> &
+      SyntaxKind__TildeToken &
+      53; // 53
+    static +AmpersandAmpersandToken: Class<SyntaxKind__AmpersandAmpersandToken> &
+      SyntaxKind__AmpersandAmpersandToken &
+      54; // 54
+    static +BarBarToken: Class<SyntaxKind__BarBarToken> &
+      SyntaxKind__BarBarToken &
+      55; // 55
+    static +QuestionToken: Class<SyntaxKind__QuestionToken> &
+      SyntaxKind__QuestionToken &
+      56; // 56
+    static +ColonToken: Class<SyntaxKind__ColonToken> &
+      SyntaxKind__ColonToken &
+      57; // 57
+    static +AtToken: Class<SyntaxKind__AtToken> & SyntaxKind__AtToken & 58; // 58
+    static +EqualsToken: Class<SyntaxKind__EqualsToken> &
+      SyntaxKind__EqualsToken &
+      59; // 59
+    static +PlusEqualsToken: Class<SyntaxKind__PlusEqualsToken> &
+      SyntaxKind__PlusEqualsToken &
+      60; // 60
+    static +MinusEqualsToken: Class<SyntaxKind__MinusEqualsToken> &
+      SyntaxKind__MinusEqualsToken &
+      61; // 61
+    static +AsteriskEqualsToken: Class<SyntaxKind__AsteriskEqualsToken> &
+      SyntaxKind__AsteriskEqualsToken &
+      62; // 62
+    static +AsteriskAsteriskEqualsToken: Class<SyntaxKind__AsteriskAsteriskEqualsToken> &
+      SyntaxKind__AsteriskAsteriskEqualsToken &
+      63; // 63
+    static +SlashEqualsToken: Class<SyntaxKind__SlashEqualsToken> &
+      SyntaxKind__SlashEqualsToken &
+      64; // 64
+    static +PercentEqualsToken: Class<SyntaxKind__PercentEqualsToken> &
+      SyntaxKind__PercentEqualsToken &
+      65; // 65
+    static +LessThanLessThanEqualsToken: Class<SyntaxKind__LessThanLessThanEqualsToken> &
+      SyntaxKind__LessThanLessThanEqualsToken &
+      66; // 66
+    static +GreaterThanGreaterThanEqualsToken: Class<SyntaxKind__GreaterThanGreaterThanEqualsToken> &
+      SyntaxKind__GreaterThanGreaterThanEqualsToken &
+      67; // 67
+    static +GreaterThanGreaterThanGreaterThanEqualsToken: Class<SyntaxKind__GreaterThanGreaterThanGreaterThanEqualsToken> &
+      SyntaxKind__GreaterThanGreaterThanGreaterThanEqualsToken &
+      68; // 68
+    static +AmpersandEqualsToken: Class<SyntaxKind__AmpersandEqualsToken> &
+      SyntaxKind__AmpersandEqualsToken &
+      69; // 69
+    static +BarEqualsToken: Class<SyntaxKind__BarEqualsToken> &
+      SyntaxKind__BarEqualsToken &
+      70; // 70
+    static +CaretEqualsToken: Class<SyntaxKind__CaretEqualsToken> &
+      SyntaxKind__CaretEqualsToken &
+      71; // 71
+    static +Identifier: Class<SyntaxKind__Identifier> &
+      SyntaxKind__Identifier &
+      72; // 72
+    static +BreakKeyword: Class<SyntaxKind__BreakKeyword> &
+      SyntaxKind__BreakKeyword &
+      73; // 73
+    static +CaseKeyword: Class<SyntaxKind__CaseKeyword> &
+      SyntaxKind__CaseKeyword &
+      74; // 74
+    static +CatchKeyword: Class<SyntaxKind__CatchKeyword> &
+      SyntaxKind__CatchKeyword &
+      75; // 75
+    static +ClassKeyword: Class<SyntaxKind__ClassKeyword> &
+      SyntaxKind__ClassKeyword &
+      76; // 76
+    static +ConstKeyword: Class<SyntaxKind__ConstKeyword> &
+      SyntaxKind__ConstKeyword &
+      77; // 77
+    static +ContinueKeyword: Class<SyntaxKind__ContinueKeyword> &
+      SyntaxKind__ContinueKeyword &
+      78; // 78
+    static +DebuggerKeyword: Class<SyntaxKind__DebuggerKeyword> &
+      SyntaxKind__DebuggerKeyword &
+      79; // 79
+    static +DefaultKeyword: Class<SyntaxKind__DefaultKeyword> &
+      SyntaxKind__DefaultKeyword &
+      80; // 80
+    static +DeleteKeyword: Class<SyntaxKind__DeleteKeyword> &
+      SyntaxKind__DeleteKeyword &
+      81; // 81
+    static +DoKeyword: Class<SyntaxKind__DoKeyword> &
+      SyntaxKind__DoKeyword &
+      82; // 82
+    static +ElseKeyword: Class<SyntaxKind__ElseKeyword> &
+      SyntaxKind__ElseKeyword &
+      83; // 83
+    static +EnumKeyword: Class<SyntaxKind__EnumKeyword> &
+      SyntaxKind__EnumKeyword &
+      84; // 84
+    static +ExportKeyword: Class<SyntaxKind__ExportKeyword> &
+      SyntaxKind__ExportKeyword &
+      85; // 85
+    static +ExtendsKeyword: Class<SyntaxKind__ExtendsKeyword> &
+      SyntaxKind__ExtendsKeyword &
+      86; // 86
+    static +FalseKeyword: Class<SyntaxKind__FalseKeyword> &
+      SyntaxKind__FalseKeyword &
+      87; // 87
+    static +FinallyKeyword: Class<SyntaxKind__FinallyKeyword> &
+      SyntaxKind__FinallyKeyword &
+      88; // 88
+    static +ForKeyword: Class<SyntaxKind__ForKeyword> &
+      SyntaxKind__ForKeyword &
+      89; // 89
+    static +FunctionKeyword: Class<SyntaxKind__FunctionKeyword> &
+      SyntaxKind__FunctionKeyword &
+      90; // 90
+    static +IfKeyword: Class<SyntaxKind__IfKeyword> &
+      SyntaxKind__IfKeyword &
+      91; // 91
+    static +ImportKeyword: Class<SyntaxKind__ImportKeyword> &
+      SyntaxKind__ImportKeyword &
+      92; // 92
+    static +InKeyword: Class<SyntaxKind__InKeyword> &
+      SyntaxKind__InKeyword &
+      93; // 93
+    static +InstanceOfKeyword: Class<SyntaxKind__InstanceOfKeyword> &
+      SyntaxKind__InstanceOfKeyword &
+      94; // 94
+    static +NewKeyword: Class<SyntaxKind__NewKeyword> &
+      SyntaxKind__NewKeyword &
+      95; // 95
+    static +NullKeyword: Class<SyntaxKind__NullKeyword> &
+      SyntaxKind__NullKeyword &
+      96; // 96
+    static +ReturnKeyword: Class<SyntaxKind__ReturnKeyword> &
+      SyntaxKind__ReturnKeyword &
+      97; // 97
+    static +SuperKeyword: Class<SyntaxKind__SuperKeyword> &
+      SyntaxKind__SuperKeyword &
+      98; // 98
+    static +SwitchKeyword: Class<SyntaxKind__SwitchKeyword> &
+      SyntaxKind__SwitchKeyword &
+      99; // 99
+    static +ThisKeyword: Class<SyntaxKind__ThisKeyword> &
+      SyntaxKind__ThisKeyword &
+      100; // 100
+    static +ThrowKeyword: Class<SyntaxKind__ThrowKeyword> &
+      SyntaxKind__ThrowKeyword &
+      101; // 101
+    static +TrueKeyword: Class<SyntaxKind__TrueKeyword> &
+      SyntaxKind__TrueKeyword &
+      102; // 102
+    static +TryKeyword: Class<SyntaxKind__TryKeyword> &
+      SyntaxKind__TryKeyword &
+      103; // 103
+    static +TypeOfKeyword: Class<SyntaxKind__TypeOfKeyword> &
+      SyntaxKind__TypeOfKeyword &
+      104; // 104
+    static +VarKeyword: Class<SyntaxKind__VarKeyword> &
+      SyntaxKind__VarKeyword &
+      105; // 105
+    static +VoidKeyword: Class<SyntaxKind__VoidKeyword> &
+      SyntaxKind__VoidKeyword &
+      106; // 106
+    static +WhileKeyword: Class<SyntaxKind__WhileKeyword> &
+      SyntaxKind__WhileKeyword &
+      107; // 107
+    static +WithKeyword: Class<SyntaxKind__WithKeyword> &
+      SyntaxKind__WithKeyword &
+      108; // 108
+    static +ImplementsKeyword: Class<SyntaxKind__ImplementsKeyword> &
+      SyntaxKind__ImplementsKeyword &
+      109; // 109
+    static +InterfaceKeyword: Class<SyntaxKind__InterfaceKeyword> &
+      SyntaxKind__InterfaceKeyword &
+      110; // 110
+    static +LetKeyword: Class<SyntaxKind__LetKeyword> &
+      SyntaxKind__LetKeyword &
+      111; // 111
+    static +PackageKeyword: Class<SyntaxKind__PackageKeyword> &
+      SyntaxKind__PackageKeyword &
+      112; // 112
+    static +PrivateKeyword: Class<SyntaxKind__PrivateKeyword> &
+      SyntaxKind__PrivateKeyword &
+      113; // 113
+    static +ProtectedKeyword: Class<SyntaxKind__ProtectedKeyword> &
+      SyntaxKind__ProtectedKeyword &
+      114; // 114
+    static +PublicKeyword: Class<SyntaxKind__PublicKeyword> &
+      SyntaxKind__PublicKeyword &
+      115; // 115
+    static +StaticKeyword: Class<SyntaxKind__StaticKeyword> &
+      SyntaxKind__StaticKeyword &
+      116; // 116
+    static +YieldKeyword: Class<SyntaxKind__YieldKeyword> &
+      SyntaxKind__YieldKeyword &
+      117; // 117
+    static +AbstractKeyword: Class<SyntaxKind__AbstractKeyword> &
+      SyntaxKind__AbstractKeyword &
+      118; // 118
+    static +AsKeyword: Class<SyntaxKind__AsKeyword> &
+      SyntaxKind__AsKeyword &
+      119; // 119
+    static +AnyKeyword: Class<SyntaxKind__AnyKeyword> &
+      SyntaxKind__AnyKeyword &
+      120; // 120
+    static +AsyncKeyword: Class<SyntaxKind__AsyncKeyword> &
+      SyntaxKind__AsyncKeyword &
+      121; // 121
+    static +AwaitKeyword: Class<SyntaxKind__AwaitKeyword> &
+      SyntaxKind__AwaitKeyword &
+      122; // 122
+    static +BooleanKeyword: Class<SyntaxKind__BooleanKeyword> &
+      SyntaxKind__BooleanKeyword &
+      123; // 123
+    static +ConstructorKeyword: Class<SyntaxKind__ConstructorKeyword> &
+      SyntaxKind__ConstructorKeyword &
+      124; // 124
+    static +DeclareKeyword: Class<SyntaxKind__DeclareKeyword> &
+      SyntaxKind__DeclareKeyword &
+      125; // 125
+    static +GetKeyword: Class<SyntaxKind__GetKeyword> &
+      SyntaxKind__GetKeyword &
+      126; // 126
+    static +InferKeyword: Class<SyntaxKind__InferKeyword> &
+      SyntaxKind__InferKeyword &
+      127; // 127
+    static +IsKeyword: Class<SyntaxKind__IsKeyword> &
+      SyntaxKind__IsKeyword &
+      128; // 128
+    static +KeyOfKeyword: Class<SyntaxKind__KeyOfKeyword> &
+      SyntaxKind__KeyOfKeyword &
+      129; // 129
+    static +ModuleKeyword: Class<SyntaxKind__ModuleKeyword> &
+      SyntaxKind__ModuleKeyword &
+      130; // 130
+    static +NamespaceKeyword: Class<SyntaxKind__NamespaceKeyword> &
+      SyntaxKind__NamespaceKeyword &
+      131; // 131
+    static +NeverKeyword: Class<SyntaxKind__NeverKeyword> &
+      SyntaxKind__NeverKeyword &
+      132; // 132
+    static +ReadonlyKeyword: Class<SyntaxKind__ReadonlyKeyword> &
+      SyntaxKind__ReadonlyKeyword &
+      133; // 133
+    static +RequireKeyword: Class<SyntaxKind__RequireKeyword> &
+      SyntaxKind__RequireKeyword &
+      134; // 134
+    static +NumberKeyword: Class<SyntaxKind__NumberKeyword> &
+      SyntaxKind__NumberKeyword &
+      135; // 135
+    static +ObjectKeyword: Class<SyntaxKind__ObjectKeyword> &
+      SyntaxKind__ObjectKeyword &
+      136; // 136
+    static +SetKeyword: Class<SyntaxKind__SetKeyword> &
+      SyntaxKind__SetKeyword &
+      137; // 137
+    static +StringKeyword: Class<SyntaxKind__StringKeyword> &
+      SyntaxKind__StringKeyword &
+      138; // 138
+    static +SymbolKeyword: Class<SyntaxKind__SymbolKeyword> &
+      SyntaxKind__SymbolKeyword &
+      139; // 139
+    static +TypeKeyword: Class<SyntaxKind__TypeKeyword> &
+      SyntaxKind__TypeKeyword &
+      140; // 140
+    static +UndefinedKeyword: Class<SyntaxKind__UndefinedKeyword> &
+      SyntaxKind__UndefinedKeyword &
+      141; // 141
+    static +UniqueKeyword: Class<SyntaxKind__UniqueKeyword> &
+      SyntaxKind__UniqueKeyword &
+      142; // 142
+    static +UnknownKeyword: Class<SyntaxKind__UnknownKeyword> &
+      SyntaxKind__UnknownKeyword &
+      143; // 143
+    static +FromKeyword: Class<SyntaxKind__FromKeyword> &
+      SyntaxKind__FromKeyword &
+      144; // 144
+    static +GlobalKeyword: Class<SyntaxKind__GlobalKeyword> &
+      SyntaxKind__GlobalKeyword &
+      145; // 145
+    static +BigIntKeyword: Class<SyntaxKind__BigIntKeyword> &
+      SyntaxKind__BigIntKeyword &
+      146; // 146
+    static +OfKeyword: Class<SyntaxKind__OfKeyword> &
+      SyntaxKind__OfKeyword &
+      147; // 147
+    static +QualifiedName: Class<SyntaxKind__QualifiedName> &
+      SyntaxKind__QualifiedName &
+      148; // 148
+    static +ComputedPropertyName: Class<SyntaxKind__ComputedPropertyName> &
+      SyntaxKind__ComputedPropertyName &
+      149; // 149
+    static +TypeParameter: Class<SyntaxKind__TypeParameter> &
+      SyntaxKind__TypeParameter &
+      150; // 150
+    static +Parameter: Class<SyntaxKind__Parameter> &
+      SyntaxKind__Parameter &
+      151; // 151
+    static +Decorator: Class<SyntaxKind__Decorator> &
+      SyntaxKind__Decorator &
+      152; // 152
+    static +PropertySignature: Class<SyntaxKind__PropertySignature> &
+      SyntaxKind__PropertySignature &
+      153; // 153
+    static +PropertyDeclaration: Class<SyntaxKind__PropertyDeclaration> &
+      SyntaxKind__PropertyDeclaration &
+      154; // 154
+    static +MethodSignature: Class<SyntaxKind__MethodSignature> &
+      SyntaxKind__MethodSignature &
+      155; // 155
+    static +MethodDeclaration: Class<SyntaxKind__MethodDeclaration> &
+      SyntaxKind__MethodDeclaration &
+      156; // 156
+    static +Constructor: Class<SyntaxKind__Constructor> &
+      SyntaxKind__Constructor &
+      157; // 157
+    static +GetAccessor: Class<SyntaxKind__GetAccessor> &
+      SyntaxKind__GetAccessor &
+      158; // 158
+    static +SetAccessor: Class<SyntaxKind__SetAccessor> &
+      SyntaxKind__SetAccessor &
+      159; // 159
+    static +CallSignature: Class<SyntaxKind__CallSignature> &
+      SyntaxKind__CallSignature &
+      160; // 160
+    static +ConstructSignature: Class<SyntaxKind__ConstructSignature> &
+      SyntaxKind__ConstructSignature &
+      161; // 161
+    static +IndexSignature: Class<SyntaxKind__IndexSignature> &
+      SyntaxKind__IndexSignature &
+      162; // 162
+    static +TypePredicate: Class<SyntaxKind__TypePredicate> &
+      SyntaxKind__TypePredicate &
+      163; // 163
+    static +TypeReference: Class<SyntaxKind__TypeReference> &
+      SyntaxKind__TypeReference &
+      164; // 164
+    static +FunctionType: Class<SyntaxKind__FunctionType> &
+      SyntaxKind__FunctionType &
+      165; // 165
+    static +ConstructorType: Class<SyntaxKind__ConstructorType> &
+      SyntaxKind__ConstructorType &
+      166; // 166
+    static +TypeQuery: Class<SyntaxKind__TypeQuery> &
+      SyntaxKind__TypeQuery &
+      167; // 167
+    static +TypeLiteral: Class<SyntaxKind__TypeLiteral> &
+      SyntaxKind__TypeLiteral &
+      168; // 168
+    static +ArrayType: Class<SyntaxKind__ArrayType> &
+      SyntaxKind__ArrayType &
+      169; // 169
+    static +TupleType: Class<SyntaxKind__TupleType> &
+      SyntaxKind__TupleType &
+      170; // 170
+    static +OptionalType: Class<SyntaxKind__OptionalType> &
+      SyntaxKind__OptionalType &
+      171; // 171
+    static +RestType: Class<SyntaxKind__RestType> & SyntaxKind__RestType & 172; // 172
+    static +UnionType: Class<SyntaxKind__UnionType> &
+      SyntaxKind__UnionType &
+      173; // 173
+    static +IntersectionType: Class<SyntaxKind__IntersectionType> &
+      SyntaxKind__IntersectionType &
+      174; // 174
+    static +ConditionalType: Class<SyntaxKind__ConditionalType> &
+      SyntaxKind__ConditionalType &
+      175; // 175
+    static +InferType: Class<SyntaxKind__InferType> &
+      SyntaxKind__InferType &
+      176; // 176
+    static +ParenthesizedType: Class<SyntaxKind__ParenthesizedType> &
+      SyntaxKind__ParenthesizedType &
+      177; // 177
+    static +ThisType: Class<SyntaxKind__ThisType> & SyntaxKind__ThisType & 178; // 178
+    static +TypeOperator: Class<SyntaxKind__TypeOperator> &
+      SyntaxKind__TypeOperator &
+      179; // 179
+    static +IndexedAccessType: Class<SyntaxKind__IndexedAccessType> &
+      SyntaxKind__IndexedAccessType &
+      180; // 180
+    static +MappedType: Class<SyntaxKind__MappedType> &
+      SyntaxKind__MappedType &
+      181; // 181
+    static +LiteralType: Class<SyntaxKind__LiteralType> &
+      SyntaxKind__LiteralType &
+      182; // 182
+    static +ImportType: Class<SyntaxKind__ImportType> &
+      SyntaxKind__ImportType &
+      183; // 183
+    static +ObjectBindingPattern: Class<SyntaxKind__ObjectBindingPattern> &
+      SyntaxKind__ObjectBindingPattern &
+      184; // 184
+    static +ArrayBindingPattern: Class<SyntaxKind__ArrayBindingPattern> &
+      SyntaxKind__ArrayBindingPattern &
+      185; // 185
+    static +BindingElement: Class<SyntaxKind__BindingElement> &
+      SyntaxKind__BindingElement &
+      186; // 186
+    static +ArrayLiteralExpression: Class<SyntaxKind__ArrayLiteralExpression> &
+      SyntaxKind__ArrayLiteralExpression &
+      187; // 187
+    static +ObjectLiteralExpression: Class<SyntaxKind__ObjectLiteralExpression> &
+      SyntaxKind__ObjectLiteralExpression &
+      188; // 188
+    static +PropertyAccessExpression: Class<SyntaxKind__PropertyAccessExpression> &
+      SyntaxKind__PropertyAccessExpression &
+      189; // 189
+    static +ElementAccessExpression: Class<SyntaxKind__ElementAccessExpression> &
+      SyntaxKind__ElementAccessExpression &
+      190; // 190
+    static +CallExpression: Class<SyntaxKind__CallExpression> &
+      SyntaxKind__CallExpression &
+      191; // 191
+    static +NewExpression: Class<SyntaxKind__NewExpression> &
+      SyntaxKind__NewExpression &
+      192; // 192
+    static +TaggedTemplateExpression: Class<SyntaxKind__TaggedTemplateExpression> &
+      SyntaxKind__TaggedTemplateExpression &
+      193; // 193
+    static +TypeAssertionExpression: Class<SyntaxKind__TypeAssertionExpression> &
+      SyntaxKind__TypeAssertionExpression &
+      194; // 194
+    static +ParenthesizedExpression: Class<SyntaxKind__ParenthesizedExpression> &
+      SyntaxKind__ParenthesizedExpression &
+      195; // 195
+    static +FunctionExpression: Class<SyntaxKind__FunctionExpression> &
+      SyntaxKind__FunctionExpression &
+      196; // 196
+    static +ArrowFunction: Class<SyntaxKind__ArrowFunction> &
+      SyntaxKind__ArrowFunction &
+      197; // 197
+    static +DeleteExpression: Class<SyntaxKind__DeleteExpression> &
+      SyntaxKind__DeleteExpression &
+      198; // 198
+    static +TypeOfExpression: Class<SyntaxKind__TypeOfExpression> &
+      SyntaxKind__TypeOfExpression &
+      199; // 199
+    static +VoidExpression: Class<SyntaxKind__VoidExpression> &
+      SyntaxKind__VoidExpression &
+      200; // 200
+    static +AwaitExpression: Class<SyntaxKind__AwaitExpression> &
+      SyntaxKind__AwaitExpression &
+      201; // 201
+    static +PrefixUnaryExpression: Class<SyntaxKind__PrefixUnaryExpression> &
+      SyntaxKind__PrefixUnaryExpression &
+      202; // 202
+    static +PostfixUnaryExpression: Class<SyntaxKind__PostfixUnaryExpression> &
+      SyntaxKind__PostfixUnaryExpression &
+      203; // 203
+    static +BinaryExpression: Class<SyntaxKind__BinaryExpression> &
+      SyntaxKind__BinaryExpression &
+      204; // 204
+    static +ConditionalExpression: Class<SyntaxKind__ConditionalExpression> &
+      SyntaxKind__ConditionalExpression &
+      205; // 205
+    static +TemplateExpression: Class<SyntaxKind__TemplateExpression> &
+      SyntaxKind__TemplateExpression &
+      206; // 206
+    static +YieldExpression: Class<SyntaxKind__YieldExpression> &
+      SyntaxKind__YieldExpression &
+      207; // 207
+    static +SpreadElement: Class<SyntaxKind__SpreadElement> &
+      SyntaxKind__SpreadElement &
+      208; // 208
+    static +ClassExpression: Class<SyntaxKind__ClassExpression> &
+      SyntaxKind__ClassExpression &
+      209; // 209
+    static +OmittedExpression: Class<SyntaxKind__OmittedExpression> &
+      SyntaxKind__OmittedExpression &
+      210; // 210
+    static +ExpressionWithTypeArguments: Class<SyntaxKind__ExpressionWithTypeArguments> &
+      SyntaxKind__ExpressionWithTypeArguments &
+      211; // 211
+    static +AsExpression: Class<SyntaxKind__AsExpression> &
+      SyntaxKind__AsExpression &
+      212; // 212
+    static +NonNullExpression: Class<SyntaxKind__NonNullExpression> &
+      SyntaxKind__NonNullExpression &
+      213; // 213
+    static +MetaProperty: Class<SyntaxKind__MetaProperty> &
+      SyntaxKind__MetaProperty &
+      214; // 214
+    static +SyntheticExpression: Class<SyntaxKind__SyntheticExpression> &
+      SyntaxKind__SyntheticExpression &
+      215; // 215
+    static +TemplateSpan: Class<SyntaxKind__TemplateSpan> &
+      SyntaxKind__TemplateSpan &
+      216; // 216
+    static +SemicolonClassElement: Class<SyntaxKind__SemicolonClassElement> &
+      SyntaxKind__SemicolonClassElement &
+      217; // 217
+    static +Block: Class<SyntaxKind__Block> & SyntaxKind__Block & 218; // 218
+    static +VariableStatement: Class<SyntaxKind__VariableStatement> &
+      SyntaxKind__VariableStatement &
+      219; // 219
+    static +EmptyStatement: Class<SyntaxKind__EmptyStatement> &
+      SyntaxKind__EmptyStatement &
+      220; // 220
+    static +ExpressionStatement: Class<SyntaxKind__ExpressionStatement> &
+      SyntaxKind__ExpressionStatement &
+      221; // 221
+    static +IfStatement: Class<SyntaxKind__IfStatement> &
+      SyntaxKind__IfStatement &
+      222; // 222
+    static +DoStatement: Class<SyntaxKind__DoStatement> &
+      SyntaxKind__DoStatement &
+      223; // 223
+    static +WhileStatement: Class<SyntaxKind__WhileStatement> &
+      SyntaxKind__WhileStatement &
+      224; // 224
+    static +ForStatement: Class<SyntaxKind__ForStatement> &
+      SyntaxKind__ForStatement &
+      225; // 225
+    static +ForInStatement: Class<SyntaxKind__ForInStatement> &
+      SyntaxKind__ForInStatement &
+      226; // 226
+    static +ForOfStatement: Class<SyntaxKind__ForOfStatement> &
+      SyntaxKind__ForOfStatement &
+      227; // 227
+    static +ContinueStatement: Class<SyntaxKind__ContinueStatement> &
+      SyntaxKind__ContinueStatement &
+      228; // 228
+    static +BreakStatement: Class<SyntaxKind__BreakStatement> &
+      SyntaxKind__BreakStatement &
+      229; // 229
+    static +ReturnStatement: Class<SyntaxKind__ReturnStatement> &
+      SyntaxKind__ReturnStatement &
+      230; // 230
+    static +WithStatement: Class<SyntaxKind__WithStatement> &
+      SyntaxKind__WithStatement &
+      231; // 231
+    static +SwitchStatement: Class<SyntaxKind__SwitchStatement> &
+      SyntaxKind__SwitchStatement &
+      232; // 232
+    static +LabeledStatement: Class<SyntaxKind__LabeledStatement> &
+      SyntaxKind__LabeledStatement &
+      233; // 233
+    static +ThrowStatement: Class<SyntaxKind__ThrowStatement> &
+      SyntaxKind__ThrowStatement &
+      234; // 234
+    static +TryStatement: Class<SyntaxKind__TryStatement> &
+      SyntaxKind__TryStatement &
+      235; // 235
+    static +DebuggerStatement: Class<SyntaxKind__DebuggerStatement> &
+      SyntaxKind__DebuggerStatement &
+      236; // 236
+    static +VariableDeclaration: Class<SyntaxKind__VariableDeclaration> &
+      SyntaxKind__VariableDeclaration &
+      237; // 237
+    static +VariableDeclarationList: Class<SyntaxKind__VariableDeclarationList> &
+      SyntaxKind__VariableDeclarationList &
+      238; // 238
+    static +FunctionDeclaration: Class<SyntaxKind__FunctionDeclaration> &
+      SyntaxKind__FunctionDeclaration &
+      239; // 239
+    static +ClassDeclaration: Class<SyntaxKind__ClassDeclaration> &
+      SyntaxKind__ClassDeclaration &
+      240; // 240
+    static +InterfaceDeclaration: Class<SyntaxKind__InterfaceDeclaration> &
+      SyntaxKind__InterfaceDeclaration &
+      241; // 241
+    static +TypeAliasDeclaration: Class<SyntaxKind__TypeAliasDeclaration> &
+      SyntaxKind__TypeAliasDeclaration &
+      242; // 242
+    static +EnumDeclaration: Class<SyntaxKind__EnumDeclaration> &
+      SyntaxKind__EnumDeclaration &
+      243; // 243
+    static +ModuleDeclaration: Class<SyntaxKind__ModuleDeclaration> &
+      SyntaxKind__ModuleDeclaration &
+      244; // 244
+    static +ModuleBlock: Class<SyntaxKind__ModuleBlock> &
+      SyntaxKind__ModuleBlock &
+      245; // 245
+    static +CaseBlock: Class<SyntaxKind__CaseBlock> &
+      SyntaxKind__CaseBlock &
+      246; // 246
+    static +NamespaceExportDeclaration: Class<SyntaxKind__NamespaceExportDeclaration> &
+      SyntaxKind__NamespaceExportDeclaration &
+      247; // 247
+    static +ImportEqualsDeclaration: Class<SyntaxKind__ImportEqualsDeclaration> &
+      SyntaxKind__ImportEqualsDeclaration &
+      248; // 248
+    static +ImportDeclaration: Class<SyntaxKind__ImportDeclaration> &
+      SyntaxKind__ImportDeclaration &
+      249; // 249
+    static +ImportClause: Class<SyntaxKind__ImportClause> &
+      SyntaxKind__ImportClause &
+      250; // 250
+    static +NamespaceImport: Class<SyntaxKind__NamespaceImport> &
+      SyntaxKind__NamespaceImport &
+      251; // 251
+    static +NamedImports: Class<SyntaxKind__NamedImports> &
+      SyntaxKind__NamedImports &
+      252; // 252
+    static +ImportSpecifier: Class<SyntaxKind__ImportSpecifier> &
+      SyntaxKind__ImportSpecifier &
+      253; // 253
+    static +ExportAssignment: Class<SyntaxKind__ExportAssignment> &
+      SyntaxKind__ExportAssignment &
+      254; // 254
+    static +ExportDeclaration: Class<SyntaxKind__ExportDeclaration> &
+      SyntaxKind__ExportDeclaration &
+      255; // 255
+    static +NamedExports: Class<SyntaxKind__NamedExports> &
+      SyntaxKind__NamedExports &
+      256; // 256
+    static +ExportSpecifier: Class<SyntaxKind__ExportSpecifier> &
+      SyntaxKind__ExportSpecifier &
+      257; // 257
+    static +MissingDeclaration: Class<SyntaxKind__MissingDeclaration> &
+      SyntaxKind__MissingDeclaration &
+      258; // 258
+    static +ExternalModuleReference: Class<SyntaxKind__ExternalModuleReference> &
+      SyntaxKind__ExternalModuleReference &
+      259; // 259
+    static +JsxElement: Class<SyntaxKind__JsxElement> &
+      SyntaxKind__JsxElement &
+      260; // 260
+    static +JsxSelfClosingElement: Class<SyntaxKind__JsxSelfClosingElement> &
+      SyntaxKind__JsxSelfClosingElement &
+      261; // 261
+    static +JsxOpeningElement: Class<SyntaxKind__JsxOpeningElement> &
+      SyntaxKind__JsxOpeningElement &
+      262; // 262
+    static +JsxClosingElement: Class<SyntaxKind__JsxClosingElement> &
+      SyntaxKind__JsxClosingElement &
+      263; // 263
+    static +JsxFragment: Class<SyntaxKind__JsxFragment> &
+      SyntaxKind__JsxFragment &
+      264; // 264
+    static +JsxOpeningFragment: Class<SyntaxKind__JsxOpeningFragment> &
+      SyntaxKind__JsxOpeningFragment &
+      265; // 265
+    static +JsxClosingFragment: Class<SyntaxKind__JsxClosingFragment> &
+      SyntaxKind__JsxClosingFragment &
+      266; // 266
+    static +JsxAttribute: Class<SyntaxKind__JsxAttribute> &
+      SyntaxKind__JsxAttribute &
+      267; // 267
+    static +JsxAttributes: Class<SyntaxKind__JsxAttributes> &
+      SyntaxKind__JsxAttributes &
+      268; // 268
+    static +JsxSpreadAttribute: Class<SyntaxKind__JsxSpreadAttribute> &
+      SyntaxKind__JsxSpreadAttribute &
+      269; // 269
+    static +JsxExpression: Class<SyntaxKind__JsxExpression> &
+      SyntaxKind__JsxExpression &
+      270; // 270
+    static +CaseClause: Class<SyntaxKind__CaseClause> &
+      SyntaxKind__CaseClause &
+      271; // 271
+    static +DefaultClause: Class<SyntaxKind__DefaultClause> &
+      SyntaxKind__DefaultClause &
+      272; // 272
+    static +HeritageClause: Class<SyntaxKind__HeritageClause> &
+      SyntaxKind__HeritageClause &
+      273; // 273
+    static +CatchClause: Class<SyntaxKind__CatchClause> &
+      SyntaxKind__CatchClause &
+      274; // 274
+    static +PropertyAssignment: Class<SyntaxKind__PropertyAssignment> &
+      SyntaxKind__PropertyAssignment &
+      275; // 275
+    static +ShorthandPropertyAssignment: Class<SyntaxKind__ShorthandPropertyAssignment> &
+      SyntaxKind__ShorthandPropertyAssignment &
+      276; // 276
+    static +SpreadAssignment: Class<SyntaxKind__SpreadAssignment> &
+      SyntaxKind__SpreadAssignment &
+      277; // 277
+    static +EnumMember: Class<SyntaxKind__EnumMember> &
+      SyntaxKind__EnumMember &
+      278; // 278
+    static +SourceFile: Class<SyntaxKind__SourceFile> &
+      SyntaxKind__SourceFile &
+      279; // 279
+    static +Bundle: Class<SyntaxKind__Bundle> & SyntaxKind__Bundle & 280; // 280
+    static +UnparsedSource: Class<SyntaxKind__UnparsedSource> &
+      SyntaxKind__UnparsedSource &
+      281; // 281
+    static +InputFiles: Class<SyntaxKind__InputFiles> &
+      SyntaxKind__InputFiles &
+      282; // 282
+    static +JSDocTypeExpression: Class<SyntaxKind__JSDocTypeExpression> &
+      SyntaxKind__JSDocTypeExpression &
+      283; // 283
+    static +JSDocAllType: Class<SyntaxKind__JSDocAllType> &
+      SyntaxKind__JSDocAllType &
+      284; // 284
+    static +JSDocUnknownType: Class<SyntaxKind__JSDocUnknownType> &
+      SyntaxKind__JSDocUnknownType &
+      285; // 285
+    static +JSDocNullableType: Class<SyntaxKind__JSDocNullableType> &
+      SyntaxKind__JSDocNullableType &
+      286; // 286
+    static +JSDocNonNullableType: Class<SyntaxKind__JSDocNonNullableType> &
+      SyntaxKind__JSDocNonNullableType &
+      287; // 287
+    static +JSDocOptionalType: Class<SyntaxKind__JSDocOptionalType> &
+      SyntaxKind__JSDocOptionalType &
+      288; // 288
+    static +JSDocFunctionType: Class<SyntaxKind__JSDocFunctionType> &
+      SyntaxKind__JSDocFunctionType &
+      289; // 289
+    static +JSDocVariadicType: Class<SyntaxKind__JSDocVariadicType> &
+      SyntaxKind__JSDocVariadicType &
+      290; // 290
+    static +JSDocComment: Class<SyntaxKind__JSDocComment> &
+      SyntaxKind__JSDocComment &
+      291; // 291
+    static +JSDocTypeLiteral: Class<SyntaxKind__JSDocTypeLiteral> &
+      SyntaxKind__JSDocTypeLiteral &
+      292; // 292
+    static +JSDocSignature: Class<SyntaxKind__JSDocSignature> &
+      SyntaxKind__JSDocSignature &
+      293; // 293
+    static +JSDocTag: Class<SyntaxKind__JSDocTag> & SyntaxKind__JSDocTag & 294; // 294
+    static +JSDocAugmentsTag: Class<SyntaxKind__JSDocAugmentsTag> &
+      SyntaxKind__JSDocAugmentsTag &
+      295; // 295
+    static +JSDocClassTag: Class<SyntaxKind__JSDocClassTag> &
+      SyntaxKind__JSDocClassTag &
+      296; // 296
+    static +JSDocCallbackTag: Class<SyntaxKind__JSDocCallbackTag> &
+      SyntaxKind__JSDocCallbackTag &
+      297; // 297
+    static +JSDocEnumTag: Class<SyntaxKind__JSDocEnumTag> &
+      SyntaxKind__JSDocEnumTag &
+      298; // 298
+    static +JSDocParameterTag: Class<SyntaxKind__JSDocParameterTag> &
+      SyntaxKind__JSDocParameterTag &
+      299; // 299
+    static +JSDocReturnTag: Class<SyntaxKind__JSDocReturnTag> &
+      SyntaxKind__JSDocReturnTag &
+      300; // 300
+    static +JSDocThisTag: Class<SyntaxKind__JSDocThisTag> &
+      SyntaxKind__JSDocThisTag &
+      301; // 301
+    static +JSDocTypeTag: Class<SyntaxKind__JSDocTypeTag> &
+      SyntaxKind__JSDocTypeTag &
+      302; // 302
+    static +JSDocTemplateTag: Class<SyntaxKind__JSDocTemplateTag> &
+      SyntaxKind__JSDocTemplateTag &
+      303; // 303
+    static +JSDocTypedefTag: Class<SyntaxKind__JSDocTypedefTag> &
+      SyntaxKind__JSDocTypedefTag &
+      304; // 304
+    static +JSDocPropertyTag: Class<SyntaxKind__JSDocPropertyTag> &
+      SyntaxKind__JSDocPropertyTag &
+      305; // 305
+    static +SyntaxList: Class<SyntaxKind__SyntaxList> &
+      SyntaxKind__SyntaxList &
+      306; // 306
+    static +NotEmittedStatement: Class<SyntaxKind__NotEmittedStatement> &
+      SyntaxKind__NotEmittedStatement &
+      307; // 307
+    static +PartiallyEmittedExpression: Class<SyntaxKind__PartiallyEmittedExpression> &
+      SyntaxKind__PartiallyEmittedExpression &
+      308; // 308
+    static +CommaListExpression: Class<SyntaxKind__CommaListExpression> &
+      SyntaxKind__CommaListExpression &
+      309; // 309
+    static +MergeDeclarationMarker: Class<SyntaxKind__MergeDeclarationMarker> &
+      SyntaxKind__MergeDeclarationMarker &
+      310; // 310
+    static +EndOfDeclarationMarker: Class<SyntaxKind__EndOfDeclarationMarker> &
+      SyntaxKind__EndOfDeclarationMarker &
+      311; // 311
+    static +Count: Class<SyntaxKind__Count> & SyntaxKind__Count & 312; // 312
+    static +FirstAssignment: Class<SyntaxKind__FirstAssignment> &
+      SyntaxKind__FirstAssignment &
+      59; // 59
+    static +LastAssignment: Class<SyntaxKind__LastAssignment> &
+      SyntaxKind__LastAssignment &
+      71; // 71
+    static +FirstCompoundAssignment: Class<SyntaxKind__FirstCompoundAssignment> &
+      SyntaxKind__FirstCompoundAssignment &
+      60; // 60
+    static +LastCompoundAssignment: Class<SyntaxKind__LastCompoundAssignment> &
+      SyntaxKind__LastCompoundAssignment &
+      71; // 71
+    static +FirstReservedWord: Class<SyntaxKind__FirstReservedWord> &
+      SyntaxKind__FirstReservedWord &
+      73; // 73
+    static +LastReservedWord: Class<SyntaxKind__LastReservedWord> &
+      SyntaxKind__LastReservedWord &
+      108; // 108
+    static +FirstKeyword: Class<SyntaxKind__FirstKeyword> &
+      SyntaxKind__FirstKeyword &
+      73; // 73
+    static +LastKeyword: Class<SyntaxKind__LastKeyword> &
+      SyntaxKind__LastKeyword &
+      147; // 147
+    static +FirstFutureReservedWord: Class<SyntaxKind__FirstFutureReservedWord> &
+      SyntaxKind__FirstFutureReservedWord &
+      109; // 109
+    static +LastFutureReservedWord: Class<SyntaxKind__LastFutureReservedWord> &
+      SyntaxKind__LastFutureReservedWord &
+      117; // 117
+    static +FirstTypeNode: Class<SyntaxKind__FirstTypeNode> &
+      SyntaxKind__FirstTypeNode &
+      163; // 163
+    static +LastTypeNode: Class<SyntaxKind__LastTypeNode> &
+      SyntaxKind__LastTypeNode &
+      183; // 183
+    static +FirstPunctuation: Class<SyntaxKind__FirstPunctuation> &
+      SyntaxKind__FirstPunctuation &
+      18; // 18
+    static +LastPunctuation: Class<SyntaxKind__LastPunctuation> &
+      SyntaxKind__LastPunctuation &
+      71; // 71
+    static +FirstToken: Class<SyntaxKind__FirstToken> &
+      SyntaxKind__FirstToken &
+      0; // 0
+    static +LastToken: Class<SyntaxKind__LastToken> &
+      SyntaxKind__LastToken &
+      147; // 147
+    static +FirstTriviaToken: Class<SyntaxKind__FirstTriviaToken> &
+      SyntaxKind__FirstTriviaToken &
+      2; // 2
+    static +LastTriviaToken: Class<SyntaxKind__LastTriviaToken> &
+      SyntaxKind__LastTriviaToken &
+      7; // 7
+    static +FirstLiteralToken: Class<SyntaxKind__FirstLiteralToken> &
+      SyntaxKind__FirstLiteralToken &
+      8; // 8
+    static +LastLiteralToken: Class<SyntaxKind__LastLiteralToken> &
+      SyntaxKind__LastLiteralToken &
+      14; // 14
+    static +FirstTemplateToken: Class<SyntaxKind__FirstTemplateToken> &
+      SyntaxKind__FirstTemplateToken &
+      14; // 14
+    static +LastTemplateToken: Class<SyntaxKind__LastTemplateToken> &
+      SyntaxKind__LastTemplateToken &
+      17; // 17
+    static +FirstBinaryOperator: Class<SyntaxKind__FirstBinaryOperator> &
+      SyntaxKind__FirstBinaryOperator &
+      28; // 28
+    static +LastBinaryOperator: Class<SyntaxKind__LastBinaryOperator> &
+      SyntaxKind__LastBinaryOperator &
+      71; // 71
+    static +FirstNode: Class<SyntaxKind__FirstNode> &
+      SyntaxKind__FirstNode &
+      148; // 148
+    static +FirstJSDocNode: Class<SyntaxKind__FirstJSDocNode> &
+      SyntaxKind__FirstJSDocNode &
+      283; // 283
+    static +LastJSDocNode: Class<SyntaxKind__LastJSDocNode> &
+      SyntaxKind__LastJSDocNode &
+      305; // 305
+    static +FirstJSDocTagNode: Class<SyntaxKind__FirstJSDocTagNode> &
+      SyntaxKind__FirstJSDocTagNode &
+      294; // 294
+    static +LastJSDocTagNode: Class<SyntaxKind__LastJSDocTagNode> &
+      SyntaxKind__LastJSDocTagNode &
+      305; // 305
+  }
+
   declare class SyntaxKind__Unknown mixins SyntaxKind {}
   declare class SyntaxKind__EndOfFileToken mixins SyntaxKind {}
   declare class SyntaxKind__SingleLineCommentTrivia mixins SyntaxKind {}
@@ -523,1004 +1516,78 @@ since `Object.prototype` may be modified by outside code.
   declare class SyntaxKind__FirstJSDocTagNode mixins SyntaxKind {}
   declare class SyntaxKind__LastJSDocTagNode mixins SyntaxKind {}
 
-  declare export class SyntaxKind {
-    constructor(...args: empty): mixed;
-    static Unknown: Class<SyntaxKind__Unknown> & SyntaxKind__Unknown & 0; // 0
-    static EndOfFileToken: Class<SyntaxKind__EndOfFileToken> &
-      SyntaxKind__EndOfFileToken &
-      1; // 1
-    static SingleLineCommentTrivia: Class<SyntaxKind__SingleLineCommentTrivia> &
-      SyntaxKind__SingleLineCommentTrivia &
-      2; // 2
-    static MultiLineCommentTrivia: Class<SyntaxKind__MultiLineCommentTrivia> &
-      SyntaxKind__MultiLineCommentTrivia &
-      3; // 3
-    static NewLineTrivia: Class<SyntaxKind__NewLineTrivia> &
-      SyntaxKind__NewLineTrivia &
+  declare class NodeFlags {
+    static +None: Class<NodeFlags__None> & NodeFlags__None & 0; // 0
+    static +Let: Class<NodeFlags__Let> & NodeFlags__Let & 1; // 1
+    static +Const: Class<NodeFlags__Const> & NodeFlags__Const & 2; // 2
+    static +NestedNamespace: Class<NodeFlags__NestedNamespace> &
+      NodeFlags__NestedNamespace &
       4; // 4
-    static WhitespaceTrivia: Class<SyntaxKind__WhitespaceTrivia> &
-      SyntaxKind__WhitespaceTrivia &
-      5; // 5
-    static ShebangTrivia: Class<SyntaxKind__ShebangTrivia> &
-      SyntaxKind__ShebangTrivia &
-      6; // 6
-    static ConflictMarkerTrivia: Class<SyntaxKind__ConflictMarkerTrivia> &
-      SyntaxKind__ConflictMarkerTrivia &
-      7; // 7
-    static NumericLiteral: Class<SyntaxKind__NumericLiteral> &
-      SyntaxKind__NumericLiteral &
+    static +Synthesized: Class<NodeFlags__Synthesized> &
+      NodeFlags__Synthesized &
       8; // 8
-    static BigIntLiteral: Class<SyntaxKind__BigIntLiteral> &
-      SyntaxKind__BigIntLiteral &
-      9; // 9
-    static StringLiteral: Class<SyntaxKind__StringLiteral> &
-      SyntaxKind__StringLiteral &
-      10; // 10
-    static JsxText: Class<SyntaxKind__JsxText> & SyntaxKind__JsxText & 11; // 11
-    static JsxTextAllWhiteSpaces: Class<SyntaxKind__JsxTextAllWhiteSpaces> &
-      SyntaxKind__JsxTextAllWhiteSpaces &
-      12; // 12
-    static RegularExpressionLiteral: Class<SyntaxKind__RegularExpressionLiteral> &
-      SyntaxKind__RegularExpressionLiteral &
-      13; // 13
-    static NoSubstitutionTemplateLiteral: Class<SyntaxKind__NoSubstitutionTemplateLiteral> &
-      SyntaxKind__NoSubstitutionTemplateLiteral &
-      14; // 14
-    static TemplateHead: Class<SyntaxKind__TemplateHead> &
-      SyntaxKind__TemplateHead &
-      15; // 15
-    static TemplateMiddle: Class<SyntaxKind__TemplateMiddle> &
-      SyntaxKind__TemplateMiddle &
-      16; // 16
-    static TemplateTail: Class<SyntaxKind__TemplateTail> &
-      SyntaxKind__TemplateTail &
-      17; // 17
-    static OpenBraceToken: Class<SyntaxKind__OpenBraceToken> &
-      SyntaxKind__OpenBraceToken &
-      18; // 18
-    static CloseBraceToken: Class<SyntaxKind__CloseBraceToken> &
-      SyntaxKind__CloseBraceToken &
-      19; // 19
-    static OpenParenToken: Class<SyntaxKind__OpenParenToken> &
-      SyntaxKind__OpenParenToken &
-      20; // 20
-    static CloseParenToken: Class<SyntaxKind__CloseParenToken> &
-      SyntaxKind__CloseParenToken &
-      21; // 21
-    static OpenBracketToken: Class<SyntaxKind__OpenBracketToken> &
-      SyntaxKind__OpenBracketToken &
-      22; // 22
-    static CloseBracketToken: Class<SyntaxKind__CloseBracketToken> &
-      SyntaxKind__CloseBracketToken &
-      23; // 23
-    static DotToken: Class<SyntaxKind__DotToken> & SyntaxKind__DotToken & 24; // 24
-    static DotDotDotToken: Class<SyntaxKind__DotDotDotToken> &
-      SyntaxKind__DotDotDotToken &
-      25; // 25
-    static SemicolonToken: Class<SyntaxKind__SemicolonToken> &
-      SyntaxKind__SemicolonToken &
-      26; // 26
-    static CommaToken: Class<SyntaxKind__CommaToken> &
-      SyntaxKind__CommaToken &
-      27; // 27
-    static LessThanToken: Class<SyntaxKind__LessThanToken> &
-      SyntaxKind__LessThanToken &
-      28; // 28
-    static LessThanSlashToken: Class<SyntaxKind__LessThanSlashToken> &
-      SyntaxKind__LessThanSlashToken &
-      29; // 29
-    static GreaterThanToken: Class<SyntaxKind__GreaterThanToken> &
-      SyntaxKind__GreaterThanToken &
-      30; // 30
-    static LessThanEqualsToken: Class<SyntaxKind__LessThanEqualsToken> &
-      SyntaxKind__LessThanEqualsToken &
-      31; // 31
-    static GreaterThanEqualsToken: Class<SyntaxKind__GreaterThanEqualsToken> &
-      SyntaxKind__GreaterThanEqualsToken &
+    static +Namespace: Class<NodeFlags__Namespace> & NodeFlags__Namespace & 16; // 16
+    static +ExportContext: Class<NodeFlags__ExportContext> &
+      NodeFlags__ExportContext &
       32; // 32
-    static EqualsEqualsToken: Class<SyntaxKind__EqualsEqualsToken> &
-      SyntaxKind__EqualsEqualsToken &
-      33; // 33
-    static ExclamationEqualsToken: Class<SyntaxKind__ExclamationEqualsToken> &
-      SyntaxKind__ExclamationEqualsToken &
-      34; // 34
-    static EqualsEqualsEqualsToken: Class<SyntaxKind__EqualsEqualsEqualsToken> &
-      SyntaxKind__EqualsEqualsEqualsToken &
-      35; // 35
-    static ExclamationEqualsEqualsToken: Class<SyntaxKind__ExclamationEqualsEqualsToken> &
-      SyntaxKind__ExclamationEqualsEqualsToken &
-      36; // 36
-    static EqualsGreaterThanToken: Class<SyntaxKind__EqualsGreaterThanToken> &
-      SyntaxKind__EqualsGreaterThanToken &
-      37; // 37
-    static PlusToken: Class<SyntaxKind__PlusToken> & SyntaxKind__PlusToken & 38; // 38
-    static MinusToken: Class<SyntaxKind__MinusToken> &
-      SyntaxKind__MinusToken &
-      39; // 39
-    static AsteriskToken: Class<SyntaxKind__AsteriskToken> &
-      SyntaxKind__AsteriskToken &
-      40; // 40
-    static AsteriskAsteriskToken: Class<SyntaxKind__AsteriskAsteriskToken> &
-      SyntaxKind__AsteriskAsteriskToken &
-      41; // 41
-    static SlashToken: Class<SyntaxKind__SlashToken> &
-      SyntaxKind__SlashToken &
-      42; // 42
-    static PercentToken: Class<SyntaxKind__PercentToken> &
-      SyntaxKind__PercentToken &
-      43; // 43
-    static PlusPlusToken: Class<SyntaxKind__PlusPlusToken> &
-      SyntaxKind__PlusPlusToken &
-      44; // 44
-    static MinusMinusToken: Class<SyntaxKind__MinusMinusToken> &
-      SyntaxKind__MinusMinusToken &
-      45; // 45
-    static LessThanLessThanToken: Class<SyntaxKind__LessThanLessThanToken> &
-      SyntaxKind__LessThanLessThanToken &
-      46; // 46
-    static GreaterThanGreaterThanToken: Class<SyntaxKind__GreaterThanGreaterThanToken> &
-      SyntaxKind__GreaterThanGreaterThanToken &
-      47; // 47
-    static GreaterThanGreaterThanGreaterThanToken: Class<SyntaxKind__GreaterThanGreaterThanGreaterThanToken> &
-      SyntaxKind__GreaterThanGreaterThanGreaterThanToken &
-      48; // 48
-    static AmpersandToken: Class<SyntaxKind__AmpersandToken> &
-      SyntaxKind__AmpersandToken &
-      49; // 49
-    static BarToken: Class<SyntaxKind__BarToken> & SyntaxKind__BarToken & 50; // 50
-    static CaretToken: Class<SyntaxKind__CaretToken> &
-      SyntaxKind__CaretToken &
-      51; // 51
-    static ExclamationToken: Class<SyntaxKind__ExclamationToken> &
-      SyntaxKind__ExclamationToken &
-      52; // 52
-    static TildeToken: Class<SyntaxKind__TildeToken> &
-      SyntaxKind__TildeToken &
-      53; // 53
-    static AmpersandAmpersandToken: Class<SyntaxKind__AmpersandAmpersandToken> &
-      SyntaxKind__AmpersandAmpersandToken &
-      54; // 54
-    static BarBarToken: Class<SyntaxKind__BarBarToken> &
-      SyntaxKind__BarBarToken &
-      55; // 55
-    static QuestionToken: Class<SyntaxKind__QuestionToken> &
-      SyntaxKind__QuestionToken &
-      56; // 56
-    static ColonToken: Class<SyntaxKind__ColonToken> &
-      SyntaxKind__ColonToken &
-      57; // 57
-    static AtToken: Class<SyntaxKind__AtToken> & SyntaxKind__AtToken & 58; // 58
-    static EqualsToken: Class<SyntaxKind__EqualsToken> &
-      SyntaxKind__EqualsToken &
-      59; // 59
-    static PlusEqualsToken: Class<SyntaxKind__PlusEqualsToken> &
-      SyntaxKind__PlusEqualsToken &
-      60; // 60
-    static MinusEqualsToken: Class<SyntaxKind__MinusEqualsToken> &
-      SyntaxKind__MinusEqualsToken &
-      61; // 61
-    static AsteriskEqualsToken: Class<SyntaxKind__AsteriskEqualsToken> &
-      SyntaxKind__AsteriskEqualsToken &
-      62; // 62
-    static AsteriskAsteriskEqualsToken: Class<SyntaxKind__AsteriskAsteriskEqualsToken> &
-      SyntaxKind__AsteriskAsteriskEqualsToken &
-      63; // 63
-    static SlashEqualsToken: Class<SyntaxKind__SlashEqualsToken> &
-      SyntaxKind__SlashEqualsToken &
+    static +ContainsThis: Class<NodeFlags__ContainsThis> &
+      NodeFlags__ContainsThis &
       64; // 64
-    static PercentEqualsToken: Class<SyntaxKind__PercentEqualsToken> &
-      SyntaxKind__PercentEqualsToken &
-      65; // 65
-    static LessThanLessThanEqualsToken: Class<SyntaxKind__LessThanLessThanEqualsToken> &
-      SyntaxKind__LessThanLessThanEqualsToken &
-      66; // 66
-    static GreaterThanGreaterThanEqualsToken: Class<SyntaxKind__GreaterThanGreaterThanEqualsToken> &
-      SyntaxKind__GreaterThanGreaterThanEqualsToken &
-      67; // 67
-    static GreaterThanGreaterThanGreaterThanEqualsToken: Class<SyntaxKind__GreaterThanGreaterThanGreaterThanEqualsToken> &
-      SyntaxKind__GreaterThanGreaterThanGreaterThanEqualsToken &
-      68; // 68
-    static AmpersandEqualsToken: Class<SyntaxKind__AmpersandEqualsToken> &
-      SyntaxKind__AmpersandEqualsToken &
-      69; // 69
-    static BarEqualsToken: Class<SyntaxKind__BarEqualsToken> &
-      SyntaxKind__BarEqualsToken &
-      70; // 70
-    static CaretEqualsToken: Class<SyntaxKind__CaretEqualsToken> &
-      SyntaxKind__CaretEqualsToken &
-      71; // 71
-    static Identifier: Class<SyntaxKind__Identifier> &
-      SyntaxKind__Identifier &
-      72; // 72
-    static BreakKeyword: Class<SyntaxKind__BreakKeyword> &
-      SyntaxKind__BreakKeyword &
-      73; // 73
-    static CaseKeyword: Class<SyntaxKind__CaseKeyword> &
-      SyntaxKind__CaseKeyword &
-      74; // 74
-    static CatchKeyword: Class<SyntaxKind__CatchKeyword> &
-      SyntaxKind__CatchKeyword &
-      75; // 75
-    static ClassKeyword: Class<SyntaxKind__ClassKeyword> &
-      SyntaxKind__ClassKeyword &
-      76; // 76
-    static ConstKeyword: Class<SyntaxKind__ConstKeyword> &
-      SyntaxKind__ConstKeyword &
-      77; // 77
-    static ContinueKeyword: Class<SyntaxKind__ContinueKeyword> &
-      SyntaxKind__ContinueKeyword &
-      78; // 78
-    static DebuggerKeyword: Class<SyntaxKind__DebuggerKeyword> &
-      SyntaxKind__DebuggerKeyword &
-      79; // 79
-    static DefaultKeyword: Class<SyntaxKind__DefaultKeyword> &
-      SyntaxKind__DefaultKeyword &
-      80; // 80
-    static DeleteKeyword: Class<SyntaxKind__DeleteKeyword> &
-      SyntaxKind__DeleteKeyword &
-      81; // 81
-    static DoKeyword: Class<SyntaxKind__DoKeyword> & SyntaxKind__DoKeyword & 82; // 82
-    static ElseKeyword: Class<SyntaxKind__ElseKeyword> &
-      SyntaxKind__ElseKeyword &
-      83; // 83
-    static EnumKeyword: Class<SyntaxKind__EnumKeyword> &
-      SyntaxKind__EnumKeyword &
-      84; // 84
-    static ExportKeyword: Class<SyntaxKind__ExportKeyword> &
-      SyntaxKind__ExportKeyword &
-      85; // 85
-    static ExtendsKeyword: Class<SyntaxKind__ExtendsKeyword> &
-      SyntaxKind__ExtendsKeyword &
-      86; // 86
-    static FalseKeyword: Class<SyntaxKind__FalseKeyword> &
-      SyntaxKind__FalseKeyword &
-      87; // 87
-    static FinallyKeyword: Class<SyntaxKind__FinallyKeyword> &
-      SyntaxKind__FinallyKeyword &
-      88; // 88
-    static ForKeyword: Class<SyntaxKind__ForKeyword> &
-      SyntaxKind__ForKeyword &
-      89; // 89
-    static FunctionKeyword: Class<SyntaxKind__FunctionKeyword> &
-      SyntaxKind__FunctionKeyword &
-      90; // 90
-    static IfKeyword: Class<SyntaxKind__IfKeyword> & SyntaxKind__IfKeyword & 91; // 91
-    static ImportKeyword: Class<SyntaxKind__ImportKeyword> &
-      SyntaxKind__ImportKeyword &
-      92; // 92
-    static InKeyword: Class<SyntaxKind__InKeyword> & SyntaxKind__InKeyword & 93; // 93
-    static InstanceOfKeyword: Class<SyntaxKind__InstanceOfKeyword> &
-      SyntaxKind__InstanceOfKeyword &
-      94; // 94
-    static NewKeyword: Class<SyntaxKind__NewKeyword> &
-      SyntaxKind__NewKeyword &
-      95; // 95
-    static NullKeyword: Class<SyntaxKind__NullKeyword> &
-      SyntaxKind__NullKeyword &
-      96; // 96
-    static ReturnKeyword: Class<SyntaxKind__ReturnKeyword> &
-      SyntaxKind__ReturnKeyword &
-      97; // 97
-    static SuperKeyword: Class<SyntaxKind__SuperKeyword> &
-      SyntaxKind__SuperKeyword &
-      98; // 98
-    static SwitchKeyword: Class<SyntaxKind__SwitchKeyword> &
-      SyntaxKind__SwitchKeyword &
-      99; // 99
-    static ThisKeyword: Class<SyntaxKind__ThisKeyword> &
-      SyntaxKind__ThisKeyword &
-      100; // 100
-    static ThrowKeyword: Class<SyntaxKind__ThrowKeyword> &
-      SyntaxKind__ThrowKeyword &
-      101; // 101
-    static TrueKeyword: Class<SyntaxKind__TrueKeyword> &
-      SyntaxKind__TrueKeyword &
-      102; // 102
-    static TryKeyword: Class<SyntaxKind__TryKeyword> &
-      SyntaxKind__TryKeyword &
-      103; // 103
-    static TypeOfKeyword: Class<SyntaxKind__TypeOfKeyword> &
-      SyntaxKind__TypeOfKeyword &
-      104; // 104
-    static VarKeyword: Class<SyntaxKind__VarKeyword> &
-      SyntaxKind__VarKeyword &
-      105; // 105
-    static VoidKeyword: Class<SyntaxKind__VoidKeyword> &
-      SyntaxKind__VoidKeyword &
-      106; // 106
-    static WhileKeyword: Class<SyntaxKind__WhileKeyword> &
-      SyntaxKind__WhileKeyword &
-      107; // 107
-    static WithKeyword: Class<SyntaxKind__WithKeyword> &
-      SyntaxKind__WithKeyword &
-      108; // 108
-    static ImplementsKeyword: Class<SyntaxKind__ImplementsKeyword> &
-      SyntaxKind__ImplementsKeyword &
-      109; // 109
-    static InterfaceKeyword: Class<SyntaxKind__InterfaceKeyword> &
-      SyntaxKind__InterfaceKeyword &
-      110; // 110
-    static LetKeyword: Class<SyntaxKind__LetKeyword> &
-      SyntaxKind__LetKeyword &
-      111; // 111
-    static PackageKeyword: Class<SyntaxKind__PackageKeyword> &
-      SyntaxKind__PackageKeyword &
-      112; // 112
-    static PrivateKeyword: Class<SyntaxKind__PrivateKeyword> &
-      SyntaxKind__PrivateKeyword &
-      113; // 113
-    static ProtectedKeyword: Class<SyntaxKind__ProtectedKeyword> &
-      SyntaxKind__ProtectedKeyword &
-      114; // 114
-    static PublicKeyword: Class<SyntaxKind__PublicKeyword> &
-      SyntaxKind__PublicKeyword &
-      115; // 115
-    static StaticKeyword: Class<SyntaxKind__StaticKeyword> &
-      SyntaxKind__StaticKeyword &
-      116; // 116
-    static YieldKeyword: Class<SyntaxKind__YieldKeyword> &
-      SyntaxKind__YieldKeyword &
-      117; // 117
-    static AbstractKeyword: Class<SyntaxKind__AbstractKeyword> &
-      SyntaxKind__AbstractKeyword &
-      118; // 118
-    static AsKeyword: Class<SyntaxKind__AsKeyword> &
-      SyntaxKind__AsKeyword &
-      119; // 119
-    static AnyKeyword: Class<SyntaxKind__AnyKeyword> &
-      SyntaxKind__AnyKeyword &
-      120; // 120
-    static AsyncKeyword: Class<SyntaxKind__AsyncKeyword> &
-      SyntaxKind__AsyncKeyword &
-      121; // 121
-    static AwaitKeyword: Class<SyntaxKind__AwaitKeyword> &
-      SyntaxKind__AwaitKeyword &
-      122; // 122
-    static BooleanKeyword: Class<SyntaxKind__BooleanKeyword> &
-      SyntaxKind__BooleanKeyword &
-      123; // 123
-    static ConstructorKeyword: Class<SyntaxKind__ConstructorKeyword> &
-      SyntaxKind__ConstructorKeyword &
-      124; // 124
-    static DeclareKeyword: Class<SyntaxKind__DeclareKeyword> &
-      SyntaxKind__DeclareKeyword &
-      125; // 125
-    static GetKeyword: Class<SyntaxKind__GetKeyword> &
-      SyntaxKind__GetKeyword &
-      126; // 126
-    static InferKeyword: Class<SyntaxKind__InferKeyword> &
-      SyntaxKind__InferKeyword &
-      127; // 127
-    static IsKeyword: Class<SyntaxKind__IsKeyword> &
-      SyntaxKind__IsKeyword &
+    static +HasImplicitReturn: Class<NodeFlags__HasImplicitReturn> &
+      NodeFlags__HasImplicitReturn &
       128; // 128
-    static KeyOfKeyword: Class<SyntaxKind__KeyOfKeyword> &
-      SyntaxKind__KeyOfKeyword &
-      129; // 129
-    static ModuleKeyword: Class<SyntaxKind__ModuleKeyword> &
-      SyntaxKind__ModuleKeyword &
-      130; // 130
-    static NamespaceKeyword: Class<SyntaxKind__NamespaceKeyword> &
-      SyntaxKind__NamespaceKeyword &
-      131; // 131
-    static NeverKeyword: Class<SyntaxKind__NeverKeyword> &
-      SyntaxKind__NeverKeyword &
-      132; // 132
-    static ReadonlyKeyword: Class<SyntaxKind__ReadonlyKeyword> &
-      SyntaxKind__ReadonlyKeyword &
-      133; // 133
-    static RequireKeyword: Class<SyntaxKind__RequireKeyword> &
-      SyntaxKind__RequireKeyword &
-      134; // 134
-    static NumberKeyword: Class<SyntaxKind__NumberKeyword> &
-      SyntaxKind__NumberKeyword &
-      135; // 135
-    static ObjectKeyword: Class<SyntaxKind__ObjectKeyword> &
-      SyntaxKind__ObjectKeyword &
-      136; // 136
-    static SetKeyword: Class<SyntaxKind__SetKeyword> &
-      SyntaxKind__SetKeyword &
-      137; // 137
-    static StringKeyword: Class<SyntaxKind__StringKeyword> &
-      SyntaxKind__StringKeyword &
-      138; // 138
-    static SymbolKeyword: Class<SyntaxKind__SymbolKeyword> &
-      SyntaxKind__SymbolKeyword &
-      139; // 139
-    static TypeKeyword: Class<SyntaxKind__TypeKeyword> &
-      SyntaxKind__TypeKeyword &
-      140; // 140
-    static UndefinedKeyword: Class<SyntaxKind__UndefinedKeyword> &
-      SyntaxKind__UndefinedKeyword &
-      141; // 141
-    static UniqueKeyword: Class<SyntaxKind__UniqueKeyword> &
-      SyntaxKind__UniqueKeyword &
-      142; // 142
-    static UnknownKeyword: Class<SyntaxKind__UnknownKeyword> &
-      SyntaxKind__UnknownKeyword &
-      143; // 143
-    static FromKeyword: Class<SyntaxKind__FromKeyword> &
-      SyntaxKind__FromKeyword &
-      144; // 144
-    static GlobalKeyword: Class<SyntaxKind__GlobalKeyword> &
-      SyntaxKind__GlobalKeyword &
-      145; // 145
-    static BigIntKeyword: Class<SyntaxKind__BigIntKeyword> &
-      SyntaxKind__BigIntKeyword &
-      146; // 146
-    static OfKeyword: Class<SyntaxKind__OfKeyword> &
-      SyntaxKind__OfKeyword &
-      147; // 147
-    static QualifiedName: Class<SyntaxKind__QualifiedName> &
-      SyntaxKind__QualifiedName &
-      148; // 148
-    static ComputedPropertyName: Class<SyntaxKind__ComputedPropertyName> &
-      SyntaxKind__ComputedPropertyName &
-      149; // 149
-    static TypeParameter: Class<SyntaxKind__TypeParameter> &
-      SyntaxKind__TypeParameter &
-      150; // 150
-    static Parameter: Class<SyntaxKind__Parameter> &
-      SyntaxKind__Parameter &
-      151; // 151
-    static Decorator: Class<SyntaxKind__Decorator> &
-      SyntaxKind__Decorator &
-      152; // 152
-    static PropertySignature: Class<SyntaxKind__PropertySignature> &
-      SyntaxKind__PropertySignature &
-      153; // 153
-    static PropertyDeclaration: Class<SyntaxKind__PropertyDeclaration> &
-      SyntaxKind__PropertyDeclaration &
-      154; // 154
-    static MethodSignature: Class<SyntaxKind__MethodSignature> &
-      SyntaxKind__MethodSignature &
-      155; // 155
-    static MethodDeclaration: Class<SyntaxKind__MethodDeclaration> &
-      SyntaxKind__MethodDeclaration &
-      156; // 156
-    static Constructor: Class<SyntaxKind__Constructor> &
-      SyntaxKind__Constructor &
-      157; // 157
-    static GetAccessor: Class<SyntaxKind__GetAccessor> &
-      SyntaxKind__GetAccessor &
-      158; // 158
-    static SetAccessor: Class<SyntaxKind__SetAccessor> &
-      SyntaxKind__SetAccessor &
-      159; // 159
-    static CallSignature: Class<SyntaxKind__CallSignature> &
-      SyntaxKind__CallSignature &
-      160; // 160
-    static ConstructSignature: Class<SyntaxKind__ConstructSignature> &
-      SyntaxKind__ConstructSignature &
-      161; // 161
-    static IndexSignature: Class<SyntaxKind__IndexSignature> &
-      SyntaxKind__IndexSignature &
-      162; // 162
-    static TypePredicate: Class<SyntaxKind__TypePredicate> &
-      SyntaxKind__TypePredicate &
-      163; // 163
-    static TypeReference: Class<SyntaxKind__TypeReference> &
-      SyntaxKind__TypeReference &
-      164; // 164
-    static FunctionType: Class<SyntaxKind__FunctionType> &
-      SyntaxKind__FunctionType &
-      165; // 165
-    static ConstructorType: Class<SyntaxKind__ConstructorType> &
-      SyntaxKind__ConstructorType &
-      166; // 166
-    static TypeQuery: Class<SyntaxKind__TypeQuery> &
-      SyntaxKind__TypeQuery &
-      167; // 167
-    static TypeLiteral: Class<SyntaxKind__TypeLiteral> &
-      SyntaxKind__TypeLiteral &
-      168; // 168
-    static ArrayType: Class<SyntaxKind__ArrayType> &
-      SyntaxKind__ArrayType &
-      169; // 169
-    static TupleType: Class<SyntaxKind__TupleType> &
-      SyntaxKind__TupleType &
-      170; // 170
-    static OptionalType: Class<SyntaxKind__OptionalType> &
-      SyntaxKind__OptionalType &
-      171; // 171
-    static RestType: Class<SyntaxKind__RestType> & SyntaxKind__RestType & 172; // 172
-    static UnionType: Class<SyntaxKind__UnionType> &
-      SyntaxKind__UnionType &
-      173; // 173
-    static IntersectionType: Class<SyntaxKind__IntersectionType> &
-      SyntaxKind__IntersectionType &
-      174; // 174
-    static ConditionalType: Class<SyntaxKind__ConditionalType> &
-      SyntaxKind__ConditionalType &
-      175; // 175
-    static InferType: Class<SyntaxKind__InferType> &
-      SyntaxKind__InferType &
-      176; // 176
-    static ParenthesizedType: Class<SyntaxKind__ParenthesizedType> &
-      SyntaxKind__ParenthesizedType &
-      177; // 177
-    static ThisType: Class<SyntaxKind__ThisType> & SyntaxKind__ThisType & 178; // 178
-    static TypeOperator: Class<SyntaxKind__TypeOperator> &
-      SyntaxKind__TypeOperator &
-      179; // 179
-    static IndexedAccessType: Class<SyntaxKind__IndexedAccessType> &
-      SyntaxKind__IndexedAccessType &
-      180; // 180
-    static MappedType: Class<SyntaxKind__MappedType> &
-      SyntaxKind__MappedType &
-      181; // 181
-    static LiteralType: Class<SyntaxKind__LiteralType> &
-      SyntaxKind__LiteralType &
-      182; // 182
-    static ImportType: Class<SyntaxKind__ImportType> &
-      SyntaxKind__ImportType &
-      183; // 183
-    static ObjectBindingPattern: Class<SyntaxKind__ObjectBindingPattern> &
-      SyntaxKind__ObjectBindingPattern &
-      184; // 184
-    static ArrayBindingPattern: Class<SyntaxKind__ArrayBindingPattern> &
-      SyntaxKind__ArrayBindingPattern &
-      185; // 185
-    static BindingElement: Class<SyntaxKind__BindingElement> &
-      SyntaxKind__BindingElement &
-      186; // 186
-    static ArrayLiteralExpression: Class<SyntaxKind__ArrayLiteralExpression> &
-      SyntaxKind__ArrayLiteralExpression &
-      187; // 187
-    static ObjectLiteralExpression: Class<SyntaxKind__ObjectLiteralExpression> &
-      SyntaxKind__ObjectLiteralExpression &
-      188; // 188
-    static PropertyAccessExpression: Class<SyntaxKind__PropertyAccessExpression> &
-      SyntaxKind__PropertyAccessExpression &
-      189; // 189
-    static ElementAccessExpression: Class<SyntaxKind__ElementAccessExpression> &
-      SyntaxKind__ElementAccessExpression &
-      190; // 190
-    static CallExpression: Class<SyntaxKind__CallExpression> &
-      SyntaxKind__CallExpression &
-      191; // 191
-    static NewExpression: Class<SyntaxKind__NewExpression> &
-      SyntaxKind__NewExpression &
-      192; // 192
-    static TaggedTemplateExpression: Class<SyntaxKind__TaggedTemplateExpression> &
-      SyntaxKind__TaggedTemplateExpression &
-      193; // 193
-    static TypeAssertionExpression: Class<SyntaxKind__TypeAssertionExpression> &
-      SyntaxKind__TypeAssertionExpression &
-      194; // 194
-    static ParenthesizedExpression: Class<SyntaxKind__ParenthesizedExpression> &
-      SyntaxKind__ParenthesizedExpression &
-      195; // 195
-    static FunctionExpression: Class<SyntaxKind__FunctionExpression> &
-      SyntaxKind__FunctionExpression &
-      196; // 196
-    static ArrowFunction: Class<SyntaxKind__ArrowFunction> &
-      SyntaxKind__ArrowFunction &
-      197; // 197
-    static DeleteExpression: Class<SyntaxKind__DeleteExpression> &
-      SyntaxKind__DeleteExpression &
-      198; // 198
-    static TypeOfExpression: Class<SyntaxKind__TypeOfExpression> &
-      SyntaxKind__TypeOfExpression &
-      199; // 199
-    static VoidExpression: Class<SyntaxKind__VoidExpression> &
-      SyntaxKind__VoidExpression &
-      200; // 200
-    static AwaitExpression: Class<SyntaxKind__AwaitExpression> &
-      SyntaxKind__AwaitExpression &
-      201; // 201
-    static PrefixUnaryExpression: Class<SyntaxKind__PrefixUnaryExpression> &
-      SyntaxKind__PrefixUnaryExpression &
-      202; // 202
-    static PostfixUnaryExpression: Class<SyntaxKind__PostfixUnaryExpression> &
-      SyntaxKind__PostfixUnaryExpression &
-      203; // 203
-    static BinaryExpression: Class<SyntaxKind__BinaryExpression> &
-      SyntaxKind__BinaryExpression &
-      204; // 204
-    static ConditionalExpression: Class<SyntaxKind__ConditionalExpression> &
-      SyntaxKind__ConditionalExpression &
-      205; // 205
-    static TemplateExpression: Class<SyntaxKind__TemplateExpression> &
-      SyntaxKind__TemplateExpression &
-      206; // 206
-    static YieldExpression: Class<SyntaxKind__YieldExpression> &
-      SyntaxKind__YieldExpression &
-      207; // 207
-    static SpreadElement: Class<SyntaxKind__SpreadElement> &
-      SyntaxKind__SpreadElement &
-      208; // 208
-    static ClassExpression: Class<SyntaxKind__ClassExpression> &
-      SyntaxKind__ClassExpression &
-      209; // 209
-    static OmittedExpression: Class<SyntaxKind__OmittedExpression> &
-      SyntaxKind__OmittedExpression &
-      210; // 210
-    static ExpressionWithTypeArguments: Class<SyntaxKind__ExpressionWithTypeArguments> &
-      SyntaxKind__ExpressionWithTypeArguments &
-      211; // 211
-    static AsExpression: Class<SyntaxKind__AsExpression> &
-      SyntaxKind__AsExpression &
-      212; // 212
-    static NonNullExpression: Class<SyntaxKind__NonNullExpression> &
-      SyntaxKind__NonNullExpression &
-      213; // 213
-    static MetaProperty: Class<SyntaxKind__MetaProperty> &
-      SyntaxKind__MetaProperty &
-      214; // 214
-    static SyntheticExpression: Class<SyntaxKind__SyntheticExpression> &
-      SyntaxKind__SyntheticExpression &
-      215; // 215
-    static TemplateSpan: Class<SyntaxKind__TemplateSpan> &
-      SyntaxKind__TemplateSpan &
-      216; // 216
-    static SemicolonClassElement: Class<SyntaxKind__SemicolonClassElement> &
-      SyntaxKind__SemicolonClassElement &
-      217; // 217
-    static Block: Class<SyntaxKind__Block> & SyntaxKind__Block & 218; // 218
-    static VariableStatement: Class<SyntaxKind__VariableStatement> &
-      SyntaxKind__VariableStatement &
-      219; // 219
-    static EmptyStatement: Class<SyntaxKind__EmptyStatement> &
-      SyntaxKind__EmptyStatement &
-      220; // 220
-    static ExpressionStatement: Class<SyntaxKind__ExpressionStatement> &
-      SyntaxKind__ExpressionStatement &
-      221; // 221
-    static IfStatement: Class<SyntaxKind__IfStatement> &
-      SyntaxKind__IfStatement &
-      222; // 222
-    static DoStatement: Class<SyntaxKind__DoStatement> &
-      SyntaxKind__DoStatement &
-      223; // 223
-    static WhileStatement: Class<SyntaxKind__WhileStatement> &
-      SyntaxKind__WhileStatement &
-      224; // 224
-    static ForStatement: Class<SyntaxKind__ForStatement> &
-      SyntaxKind__ForStatement &
-      225; // 225
-    static ForInStatement: Class<SyntaxKind__ForInStatement> &
-      SyntaxKind__ForInStatement &
-      226; // 226
-    static ForOfStatement: Class<SyntaxKind__ForOfStatement> &
-      SyntaxKind__ForOfStatement &
-      227; // 227
-    static ContinueStatement: Class<SyntaxKind__ContinueStatement> &
-      SyntaxKind__ContinueStatement &
-      228; // 228
-    static BreakStatement: Class<SyntaxKind__BreakStatement> &
-      SyntaxKind__BreakStatement &
-      229; // 229
-    static ReturnStatement: Class<SyntaxKind__ReturnStatement> &
-      SyntaxKind__ReturnStatement &
-      230; // 230
-    static WithStatement: Class<SyntaxKind__WithStatement> &
-      SyntaxKind__WithStatement &
-      231; // 231
-    static SwitchStatement: Class<SyntaxKind__SwitchStatement> &
-      SyntaxKind__SwitchStatement &
-      232; // 232
-    static LabeledStatement: Class<SyntaxKind__LabeledStatement> &
-      SyntaxKind__LabeledStatement &
-      233; // 233
-    static ThrowStatement: Class<SyntaxKind__ThrowStatement> &
-      SyntaxKind__ThrowStatement &
-      234; // 234
-    static TryStatement: Class<SyntaxKind__TryStatement> &
-      SyntaxKind__TryStatement &
-      235; // 235
-    static DebuggerStatement: Class<SyntaxKind__DebuggerStatement> &
-      SyntaxKind__DebuggerStatement &
-      236; // 236
-    static VariableDeclaration: Class<SyntaxKind__VariableDeclaration> &
-      SyntaxKind__VariableDeclaration &
-      237; // 237
-    static VariableDeclarationList: Class<SyntaxKind__VariableDeclarationList> &
-      SyntaxKind__VariableDeclarationList &
-      238; // 238
-    static FunctionDeclaration: Class<SyntaxKind__FunctionDeclaration> &
-      SyntaxKind__FunctionDeclaration &
-      239; // 239
-    static ClassDeclaration: Class<SyntaxKind__ClassDeclaration> &
-      SyntaxKind__ClassDeclaration &
-      240; // 240
-    static InterfaceDeclaration: Class<SyntaxKind__InterfaceDeclaration> &
-      SyntaxKind__InterfaceDeclaration &
-      241; // 241
-    static TypeAliasDeclaration: Class<SyntaxKind__TypeAliasDeclaration> &
-      SyntaxKind__TypeAliasDeclaration &
-      242; // 242
-    static EnumDeclaration: Class<SyntaxKind__EnumDeclaration> &
-      SyntaxKind__EnumDeclaration &
-      243; // 243
-    static ModuleDeclaration: Class<SyntaxKind__ModuleDeclaration> &
-      SyntaxKind__ModuleDeclaration &
-      244; // 244
-    static ModuleBlock: Class<SyntaxKind__ModuleBlock> &
-      SyntaxKind__ModuleBlock &
-      245; // 245
-    static CaseBlock: Class<SyntaxKind__CaseBlock> &
-      SyntaxKind__CaseBlock &
-      246; // 246
-    static NamespaceExportDeclaration: Class<SyntaxKind__NamespaceExportDeclaration> &
-      SyntaxKind__NamespaceExportDeclaration &
-      247; // 247
-    static ImportEqualsDeclaration: Class<SyntaxKind__ImportEqualsDeclaration> &
-      SyntaxKind__ImportEqualsDeclaration &
-      248; // 248
-    static ImportDeclaration: Class<SyntaxKind__ImportDeclaration> &
-      SyntaxKind__ImportDeclaration &
-      249; // 249
-    static ImportClause: Class<SyntaxKind__ImportClause> &
-      SyntaxKind__ImportClause &
-      250; // 250
-    static NamespaceImport: Class<SyntaxKind__NamespaceImport> &
-      SyntaxKind__NamespaceImport &
-      251; // 251
-    static NamedImports: Class<SyntaxKind__NamedImports> &
-      SyntaxKind__NamedImports &
-      252; // 252
-    static ImportSpecifier: Class<SyntaxKind__ImportSpecifier> &
-      SyntaxKind__ImportSpecifier &
-      253; // 253
-    static ExportAssignment: Class<SyntaxKind__ExportAssignment> &
-      SyntaxKind__ExportAssignment &
-      254; // 254
-    static ExportDeclaration: Class<SyntaxKind__ExportDeclaration> &
-      SyntaxKind__ExportDeclaration &
-      255; // 255
-    static NamedExports: Class<SyntaxKind__NamedExports> &
-      SyntaxKind__NamedExports &
+    static +HasExplicitReturn: Class<NodeFlags__HasExplicitReturn> &
+      NodeFlags__HasExplicitReturn &
       256; // 256
-    static ExportSpecifier: Class<SyntaxKind__ExportSpecifier> &
-      SyntaxKind__ExportSpecifier &
-      257; // 257
-    static MissingDeclaration: Class<SyntaxKind__MissingDeclaration> &
-      SyntaxKind__MissingDeclaration &
-      258; // 258
-    static ExternalModuleReference: Class<SyntaxKind__ExternalModuleReference> &
-      SyntaxKind__ExternalModuleReference &
-      259; // 259
-    static JsxElement: Class<SyntaxKind__JsxElement> &
-      SyntaxKind__JsxElement &
-      260; // 260
-    static JsxSelfClosingElement: Class<SyntaxKind__JsxSelfClosingElement> &
-      SyntaxKind__JsxSelfClosingElement &
-      261; // 261
-    static JsxOpeningElement: Class<SyntaxKind__JsxOpeningElement> &
-      SyntaxKind__JsxOpeningElement &
-      262; // 262
-    static JsxClosingElement: Class<SyntaxKind__JsxClosingElement> &
-      SyntaxKind__JsxClosingElement &
-      263; // 263
-    static JsxFragment: Class<SyntaxKind__JsxFragment> &
-      SyntaxKind__JsxFragment &
-      264; // 264
-    static JsxOpeningFragment: Class<SyntaxKind__JsxOpeningFragment> &
-      SyntaxKind__JsxOpeningFragment &
-      265; // 265
-    static JsxClosingFragment: Class<SyntaxKind__JsxClosingFragment> &
-      SyntaxKind__JsxClosingFragment &
-      266; // 266
-    static JsxAttribute: Class<SyntaxKind__JsxAttribute> &
-      SyntaxKind__JsxAttribute &
-      267; // 267
-    static JsxAttributes: Class<SyntaxKind__JsxAttributes> &
-      SyntaxKind__JsxAttributes &
-      268; // 268
-    static JsxSpreadAttribute: Class<SyntaxKind__JsxSpreadAttribute> &
-      SyntaxKind__JsxSpreadAttribute &
-      269; // 269
-    static JsxExpression: Class<SyntaxKind__JsxExpression> &
-      SyntaxKind__JsxExpression &
-      270; // 270
-    static CaseClause: Class<SyntaxKind__CaseClause> &
-      SyntaxKind__CaseClause &
-      271; // 271
-    static DefaultClause: Class<SyntaxKind__DefaultClause> &
-      SyntaxKind__DefaultClause &
-      272; // 272
-    static HeritageClause: Class<SyntaxKind__HeritageClause> &
-      SyntaxKind__HeritageClause &
-      273; // 273
-    static CatchClause: Class<SyntaxKind__CatchClause> &
-      SyntaxKind__CatchClause &
-      274; // 274
-    static PropertyAssignment: Class<SyntaxKind__PropertyAssignment> &
-      SyntaxKind__PropertyAssignment &
-      275; // 275
-    static ShorthandPropertyAssignment: Class<SyntaxKind__ShorthandPropertyAssignment> &
-      SyntaxKind__ShorthandPropertyAssignment &
-      276; // 276
-    static SpreadAssignment: Class<SyntaxKind__SpreadAssignment> &
-      SyntaxKind__SpreadAssignment &
-      277; // 277
-    static EnumMember: Class<SyntaxKind__EnumMember> &
-      SyntaxKind__EnumMember &
-      278; // 278
-    static SourceFile: Class<SyntaxKind__SourceFile> &
-      SyntaxKind__SourceFile &
-      279; // 279
-    static Bundle: Class<SyntaxKind__Bundle> & SyntaxKind__Bundle & 280; // 280
-    static UnparsedSource: Class<SyntaxKind__UnparsedSource> &
-      SyntaxKind__UnparsedSource &
-      281; // 281
-    static InputFiles: Class<SyntaxKind__InputFiles> &
-      SyntaxKind__InputFiles &
-      282; // 282
-    static JSDocTypeExpression: Class<SyntaxKind__JSDocTypeExpression> &
-      SyntaxKind__JSDocTypeExpression &
-      283; // 283
-    static JSDocAllType: Class<SyntaxKind__JSDocAllType> &
-      SyntaxKind__JSDocAllType &
-      284; // 284
-    static JSDocUnknownType: Class<SyntaxKind__JSDocUnknownType> &
-      SyntaxKind__JSDocUnknownType &
-      285; // 285
-    static JSDocNullableType: Class<SyntaxKind__JSDocNullableType> &
-      SyntaxKind__JSDocNullableType &
-      286; // 286
-    static JSDocNonNullableType: Class<SyntaxKind__JSDocNonNullableType> &
-      SyntaxKind__JSDocNonNullableType &
-      287; // 287
-    static JSDocOptionalType: Class<SyntaxKind__JSDocOptionalType> &
-      SyntaxKind__JSDocOptionalType &
-      288; // 288
-    static JSDocFunctionType: Class<SyntaxKind__JSDocFunctionType> &
-      SyntaxKind__JSDocFunctionType &
-      289; // 289
-    static JSDocVariadicType: Class<SyntaxKind__JSDocVariadicType> &
-      SyntaxKind__JSDocVariadicType &
-      290; // 290
-    static JSDocComment: Class<SyntaxKind__JSDocComment> &
-      SyntaxKind__JSDocComment &
-      291; // 291
-    static JSDocTypeLiteral: Class<SyntaxKind__JSDocTypeLiteral> &
-      SyntaxKind__JSDocTypeLiteral &
-      292; // 292
-    static JSDocSignature: Class<SyntaxKind__JSDocSignature> &
-      SyntaxKind__JSDocSignature &
-      293; // 293
-    static JSDocTag: Class<SyntaxKind__JSDocTag> & SyntaxKind__JSDocTag & 294; // 294
-    static JSDocAugmentsTag: Class<SyntaxKind__JSDocAugmentsTag> &
-      SyntaxKind__JSDocAugmentsTag &
-      295; // 295
-    static JSDocClassTag: Class<SyntaxKind__JSDocClassTag> &
-      SyntaxKind__JSDocClassTag &
-      296; // 296
-    static JSDocCallbackTag: Class<SyntaxKind__JSDocCallbackTag> &
-      SyntaxKind__JSDocCallbackTag &
-      297; // 297
-    static JSDocEnumTag: Class<SyntaxKind__JSDocEnumTag> &
-      SyntaxKind__JSDocEnumTag &
-      298; // 298
-    static JSDocParameterTag: Class<SyntaxKind__JSDocParameterTag> &
-      SyntaxKind__JSDocParameterTag &
-      299; // 299
-    static JSDocReturnTag: Class<SyntaxKind__JSDocReturnTag> &
-      SyntaxKind__JSDocReturnTag &
-      300; // 300
-    static JSDocThisTag: Class<SyntaxKind__JSDocThisTag> &
-      SyntaxKind__JSDocThisTag &
-      301; // 301
-    static JSDocTypeTag: Class<SyntaxKind__JSDocTypeTag> &
-      SyntaxKind__JSDocTypeTag &
-      302; // 302
-    static JSDocTemplateTag: Class<SyntaxKind__JSDocTemplateTag> &
-      SyntaxKind__JSDocTemplateTag &
-      303; // 303
-    static JSDocTypedefTag: Class<SyntaxKind__JSDocTypedefTag> &
-      SyntaxKind__JSDocTypedefTag &
-      304; // 304
-    static JSDocPropertyTag: Class<SyntaxKind__JSDocPropertyTag> &
-      SyntaxKind__JSDocPropertyTag &
-      305; // 305
-    static SyntaxList: Class<SyntaxKind__SyntaxList> &
-      SyntaxKind__SyntaxList &
-      306; // 306
-    static NotEmittedStatement: Class<SyntaxKind__NotEmittedStatement> &
-      SyntaxKind__NotEmittedStatement &
-      307; // 307
-    static PartiallyEmittedExpression: Class<SyntaxKind__PartiallyEmittedExpression> &
-      SyntaxKind__PartiallyEmittedExpression &
-      308; // 308
-    static CommaListExpression: Class<SyntaxKind__CommaListExpression> &
-      SyntaxKind__CommaListExpression &
-      309; // 309
-    static MergeDeclarationMarker: Class<SyntaxKind__MergeDeclarationMarker> &
-      SyntaxKind__MergeDeclarationMarker &
-      310; // 310
-    static EndOfDeclarationMarker: Class<SyntaxKind__EndOfDeclarationMarker> &
-      SyntaxKind__EndOfDeclarationMarker &
-      311; // 311
-    static Count: Class<SyntaxKind__Count> & SyntaxKind__Count & 312; // 312
-    static FirstAssignment: Class<SyntaxKind__FirstAssignment> &
-      SyntaxKind__FirstAssignment &
-      59; // 59
-    static LastAssignment: Class<SyntaxKind__LastAssignment> &
-      SyntaxKind__LastAssignment &
-      71; // 71
-    static FirstCompoundAssignment: Class<SyntaxKind__FirstCompoundAssignment> &
-      SyntaxKind__FirstCompoundAssignment &
-      60; // 60
-    static LastCompoundAssignment: Class<SyntaxKind__LastCompoundAssignment> &
-      SyntaxKind__LastCompoundAssignment &
-      71; // 71
-    static FirstReservedWord: Class<SyntaxKind__FirstReservedWord> &
-      SyntaxKind__FirstReservedWord &
-      73; // 73
-    static LastReservedWord: Class<SyntaxKind__LastReservedWord> &
-      SyntaxKind__LastReservedWord &
-      108; // 108
-    static FirstKeyword: Class<SyntaxKind__FirstKeyword> &
-      SyntaxKind__FirstKeyword &
-      73; // 73
-    static LastKeyword: Class<SyntaxKind__LastKeyword> &
-      SyntaxKind__LastKeyword &
-      147; // 147
-    static FirstFutureReservedWord: Class<SyntaxKind__FirstFutureReservedWord> &
-      SyntaxKind__FirstFutureReservedWord &
-      109; // 109
-    static LastFutureReservedWord: Class<SyntaxKind__LastFutureReservedWord> &
-      SyntaxKind__LastFutureReservedWord &
-      117; // 117
-    static FirstTypeNode: Class<SyntaxKind__FirstTypeNode> &
-      SyntaxKind__FirstTypeNode &
-      163; // 163
-    static LastTypeNode: Class<SyntaxKind__LastTypeNode> &
-      SyntaxKind__LastTypeNode &
-      183; // 183
-    static FirstPunctuation: Class<SyntaxKind__FirstPunctuation> &
-      SyntaxKind__FirstPunctuation &
-      18; // 18
-    static LastPunctuation: Class<SyntaxKind__LastPunctuation> &
-      SyntaxKind__LastPunctuation &
-      71; // 71
-    static FirstToken: Class<SyntaxKind__FirstToken> &
-      SyntaxKind__FirstToken &
-      0; // 0
-    static LastToken: Class<SyntaxKind__LastToken> &
-      SyntaxKind__LastToken &
-      147; // 147
-    static FirstTriviaToken: Class<SyntaxKind__FirstTriviaToken> &
-      SyntaxKind__FirstTriviaToken &
-      2; // 2
-    static LastTriviaToken: Class<SyntaxKind__LastTriviaToken> &
-      SyntaxKind__LastTriviaToken &
-      7; // 7
-    static FirstLiteralToken: Class<SyntaxKind__FirstLiteralToken> &
-      SyntaxKind__FirstLiteralToken &
-      8; // 8
-    static LastLiteralToken: Class<SyntaxKind__LastLiteralToken> &
-      SyntaxKind__LastLiteralToken &
-      14; // 14
-    static FirstTemplateToken: Class<SyntaxKind__FirstTemplateToken> &
-      SyntaxKind__FirstTemplateToken &
-      14; // 14
-    static LastTemplateToken: Class<SyntaxKind__LastTemplateToken> &
-      SyntaxKind__LastTemplateToken &
-      17; // 17
-    static FirstBinaryOperator: Class<SyntaxKind__FirstBinaryOperator> &
-      SyntaxKind__FirstBinaryOperator &
-      28; // 28
-    static LastBinaryOperator: Class<SyntaxKind__LastBinaryOperator> &
-      SyntaxKind__LastBinaryOperator &
-      71; // 71
-    static FirstNode: Class<SyntaxKind__FirstNode> &
-      SyntaxKind__FirstNode &
-      148; // 148
-    static FirstJSDocNode: Class<SyntaxKind__FirstJSDocNode> &
-      SyntaxKind__FirstJSDocNode &
-      283; // 283
-    static LastJSDocNode: Class<SyntaxKind__LastJSDocNode> &
-      SyntaxKind__LastJSDocNode &
-      305; // 305
-    static FirstJSDocTagNode: Class<SyntaxKind__FirstJSDocTagNode> &
-      SyntaxKind__FirstJSDocTagNode &
-      294; // 294
-    static LastJSDocTagNode: Class<SyntaxKind__LastJSDocTagNode> &
-      SyntaxKind__LastJSDocTagNode &
-      305; // 305
+    static +GlobalAugmentation: Class<NodeFlags__GlobalAugmentation> &
+      NodeFlags__GlobalAugmentation &
+      512; // 512
+    static +HasAsyncFunctions: Class<NodeFlags__HasAsyncFunctions> &
+      NodeFlags__HasAsyncFunctions &
+      1024; // 1024
+    static +DisallowInContext: Class<NodeFlags__DisallowInContext> &
+      NodeFlags__DisallowInContext &
+      2048; // 2048
+    static +YieldContext: Class<NodeFlags__YieldContext> &
+      NodeFlags__YieldContext &
+      4096; // 4096
+    static +DecoratorContext: Class<NodeFlags__DecoratorContext> &
+      NodeFlags__DecoratorContext &
+      8192; // 8192
+    static +AwaitContext: Class<NodeFlags__AwaitContext> &
+      NodeFlags__AwaitContext &
+      16384; // 16384
+    static +ThisNodeHasError: Class<NodeFlags__ThisNodeHasError> &
+      NodeFlags__ThisNodeHasError &
+      32768; // 32768
+    static +JavaScriptFile: Class<NodeFlags__JavaScriptFile> &
+      NodeFlags__JavaScriptFile &
+      65536; // 65536
+    static +ThisNodeOrAnySubNodesHasError: Class<NodeFlags__ThisNodeOrAnySubNodesHasError> &
+      NodeFlags__ThisNodeOrAnySubNodesHasError &
+      131072; // 131072
+    static +HasAggregatedChildData: Class<NodeFlags__HasAggregatedChildData> &
+      NodeFlags__HasAggregatedChildData &
+      262144; // 262144
+    static +JSDoc: Class<NodeFlags__JSDoc> & NodeFlags__JSDoc & 2097152; // 2097152
+    static +JsonFile: Class<NodeFlags__JsonFile> &
+      NodeFlags__JsonFile &
+      16777216; // 16777216
+    static +BlockScoped: Class<NodeFlags__BlockScoped> &
+      NodeFlags__BlockScoped &
+      3; // 3
+    static +ReachabilityCheckFlags: Class<NodeFlags__ReachabilityCheckFlags> &
+      NodeFlags__ReachabilityCheckFlags &
+      384; // 384
+    static +ReachabilityAndEmitFlags: Class<NodeFlags__ReachabilityAndEmitFlags> &
+      NodeFlags__ReachabilityAndEmitFlags &
+      1408; // 1408
+    static +ContextFlags: Class<NodeFlags__ContextFlags> &
+      NodeFlags__ContextFlags &
+      12679168; // 12679168
+    static +TypeExcludesFlags: Class<NodeFlags__TypeExcludesFlags> &
+      NodeFlags__TypeExcludesFlags &
+      20480; // 20480
   }
 
   declare class NodeFlags__None mixins NodeFlags {}
@@ -1551,79 +1618,46 @@ since `Object.prototype` may be modified by outside code.
   declare class NodeFlags__ContextFlags mixins NodeFlags {}
   declare class NodeFlags__TypeExcludesFlags mixins NodeFlags {}
 
-  declare export class NodeFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<NodeFlags__None> & NodeFlags__None & 0; // 0
-    static Let: Class<NodeFlags__Let> & NodeFlags__Let & 1; // 1
-    static Const: Class<NodeFlags__Const> & NodeFlags__Const & 2; // 2
-    static NestedNamespace: Class<NodeFlags__NestedNamespace> &
-      NodeFlags__NestedNamespace &
-      4; // 4
-    static Synthesized: Class<NodeFlags__Synthesized> &
-      NodeFlags__Synthesized &
-      8; // 8
-    static Namespace: Class<NodeFlags__Namespace> & NodeFlags__Namespace & 16; // 16
-    static ExportContext: Class<NodeFlags__ExportContext> &
-      NodeFlags__ExportContext &
-      32; // 32
-    static ContainsThis: Class<NodeFlags__ContainsThis> &
-      NodeFlags__ContainsThis &
+  declare class ModifierFlags {
+    static +None: Class<ModifierFlags__None> & ModifierFlags__None & 0; // 0
+    static +Export: Class<ModifierFlags__Export> & ModifierFlags__Export & 1; // 1
+    static +Ambient: Class<ModifierFlags__Ambient> & ModifierFlags__Ambient & 2; // 2
+    static +Public: Class<ModifierFlags__Public> & ModifierFlags__Public & 4; // 4
+    static +Private: Class<ModifierFlags__Private> & ModifierFlags__Private & 8; // 8
+    static +Protected: Class<ModifierFlags__Protected> &
+      ModifierFlags__Protected &
+      16; // 16
+    static +Static: Class<ModifierFlags__Static> & ModifierFlags__Static & 32; // 32
+    static +Readonly: Class<ModifierFlags__Readonly> &
+      ModifierFlags__Readonly &
       64; // 64
-    static HasImplicitReturn: Class<NodeFlags__HasImplicitReturn> &
-      NodeFlags__HasImplicitReturn &
+    static +Abstract: Class<ModifierFlags__Abstract> &
+      ModifierFlags__Abstract &
       128; // 128
-    static HasExplicitReturn: Class<NodeFlags__HasExplicitReturn> &
-      NodeFlags__HasExplicitReturn &
-      256; // 256
-    static GlobalAugmentation: Class<NodeFlags__GlobalAugmentation> &
-      NodeFlags__GlobalAugmentation &
+    static +Async: Class<ModifierFlags__Async> & ModifierFlags__Async & 256; // 256
+    static +Default: Class<ModifierFlags__Default> &
+      ModifierFlags__Default &
       512; // 512
-    static HasAsyncFunctions: Class<NodeFlags__HasAsyncFunctions> &
-      NodeFlags__HasAsyncFunctions &
-      1024; // 1024
-    static DisallowInContext: Class<NodeFlags__DisallowInContext> &
-      NodeFlags__DisallowInContext &
-      2048; // 2048
-    static YieldContext: Class<NodeFlags__YieldContext> &
-      NodeFlags__YieldContext &
-      4096; // 4096
-    static DecoratorContext: Class<NodeFlags__DecoratorContext> &
-      NodeFlags__DecoratorContext &
-      8192; // 8192
-    static AwaitContext: Class<NodeFlags__AwaitContext> &
-      NodeFlags__AwaitContext &
-      16384; // 16384
-    static ThisNodeHasError: Class<NodeFlags__ThisNodeHasError> &
-      NodeFlags__ThisNodeHasError &
-      32768; // 32768
-    static JavaScriptFile: Class<NodeFlags__JavaScriptFile> &
-      NodeFlags__JavaScriptFile &
-      65536; // 65536
-    static ThisNodeOrAnySubNodesHasError: Class<NodeFlags__ThisNodeOrAnySubNodesHasError> &
-      NodeFlags__ThisNodeOrAnySubNodesHasError &
-      131072; // 131072
-    static HasAggregatedChildData: Class<NodeFlags__HasAggregatedChildData> &
-      NodeFlags__HasAggregatedChildData &
-      262144; // 262144
-    static JSDoc: Class<NodeFlags__JSDoc> & NodeFlags__JSDoc & 2097152; // 2097152
-    static JsonFile: Class<NodeFlags__JsonFile> &
-      NodeFlags__JsonFile &
-      16777216; // 16777216
-    static BlockScoped: Class<NodeFlags__BlockScoped> &
-      NodeFlags__BlockScoped &
-      3; // 3
-    static ReachabilityCheckFlags: Class<NodeFlags__ReachabilityCheckFlags> &
-      NodeFlags__ReachabilityCheckFlags &
-      384; // 384
-    static ReachabilityAndEmitFlags: Class<NodeFlags__ReachabilityAndEmitFlags> &
-      NodeFlags__ReachabilityAndEmitFlags &
-      1408; // 1408
-    static ContextFlags: Class<NodeFlags__ContextFlags> &
-      NodeFlags__ContextFlags &
-      12679168; // 12679168
-    static TypeExcludesFlags: Class<NodeFlags__TypeExcludesFlags> &
-      NodeFlags__TypeExcludesFlags &
-      20480; // 20480
+    static +Const: Class<ModifierFlags__Const> & ModifierFlags__Const & 2048; // 2048
+    static +HasComputedFlags: Class<ModifierFlags__HasComputedFlags> &
+      ModifierFlags__HasComputedFlags &
+      536870912; // 536870912
+    static +AccessibilityModifier: Class<ModifierFlags__AccessibilityModifier> &
+      ModifierFlags__AccessibilityModifier &
+      28; // 28
+    static +ParameterPropertyModifier: Class<ModifierFlags__ParameterPropertyModifier> &
+      ModifierFlags__ParameterPropertyModifier &
+      92; // 92
+    static +NonPublicAccessibilityModifier: Class<ModifierFlags__NonPublicAccessibilityModifier> &
+      ModifierFlags__NonPublicAccessibilityModifier &
+      24; // 24
+    static +TypeScriptModifier: Class<ModifierFlags__TypeScriptModifier> &
+      ModifierFlags__TypeScriptModifier &
+      2270; // 2270
+    static +ExportDefault: Class<ModifierFlags__ExportDefault> &
+      ModifierFlags__ExportDefault &
+      513; // 513
+    static +All: Class<ModifierFlags__All> & ModifierFlags__All & 3071; // 3071
   }
 
   declare class ModifierFlags__None mixins ModifierFlags {}
@@ -1647,47 +1681,17 @@ since `Object.prototype` may be modified by outside code.
   declare class ModifierFlags__ExportDefault mixins ModifierFlags {}
   declare class ModifierFlags__All mixins ModifierFlags {}
 
-  declare export class ModifierFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<ModifierFlags__None> & ModifierFlags__None & 0; // 0
-    static Export: Class<ModifierFlags__Export> & ModifierFlags__Export & 1; // 1
-    static Ambient: Class<ModifierFlags__Ambient> & ModifierFlags__Ambient & 2; // 2
-    static Public: Class<ModifierFlags__Public> & ModifierFlags__Public & 4; // 4
-    static Private: Class<ModifierFlags__Private> & ModifierFlags__Private & 8; // 8
-    static Protected: Class<ModifierFlags__Protected> &
-      ModifierFlags__Protected &
-      16; // 16
-    static Static: Class<ModifierFlags__Static> & ModifierFlags__Static & 32; // 32
-    static Readonly: Class<ModifierFlags__Readonly> &
-      ModifierFlags__Readonly &
-      64; // 64
-    static Abstract: Class<ModifierFlags__Abstract> &
-      ModifierFlags__Abstract &
-      128; // 128
-    static Async: Class<ModifierFlags__Async> & ModifierFlags__Async & 256; // 256
-    static Default: Class<ModifierFlags__Default> &
-      ModifierFlags__Default &
-      512; // 512
-    static Const: Class<ModifierFlags__Const> & ModifierFlags__Const & 2048; // 2048
-    static HasComputedFlags: Class<ModifierFlags__HasComputedFlags> &
-      ModifierFlags__HasComputedFlags &
-      536870912; // 536870912
-    static AccessibilityModifier: Class<ModifierFlags__AccessibilityModifier> &
-      ModifierFlags__AccessibilityModifier &
-      28; // 28
-    static ParameterPropertyModifier: Class<ModifierFlags__ParameterPropertyModifier> &
-      ModifierFlags__ParameterPropertyModifier &
-      92; // 92
-    static NonPublicAccessibilityModifier: Class<ModifierFlags__NonPublicAccessibilityModifier> &
-      ModifierFlags__NonPublicAccessibilityModifier &
-      24; // 24
-    static TypeScriptModifier: Class<ModifierFlags__TypeScriptModifier> &
-      ModifierFlags__TypeScriptModifier &
-      2270; // 2270
-    static ExportDefault: Class<ModifierFlags__ExportDefault> &
-      ModifierFlags__ExportDefault &
-      513; // 513
-    static All: Class<ModifierFlags__All> & ModifierFlags__All & 3071; // 3071
+  declare class JsxFlags {
+    static +None: Class<JsxFlags__None> & JsxFlags__None & 0; // 0
+    static +IntrinsicNamedElement: Class<JsxFlags__IntrinsicNamedElement> &
+      JsxFlags__IntrinsicNamedElement &
+      1; // 1
+    static +IntrinsicIndexedElement: Class<JsxFlags__IntrinsicIndexedElement> &
+      JsxFlags__IntrinsicIndexedElement &
+      2; // 2
+    static +IntrinsicElement: Class<JsxFlags__IntrinsicElement> &
+      JsxFlags__IntrinsicElement &
+      3; // 3
   }
 
   declare class JsxFlags__None mixins JsxFlags {}
@@ -1695,26 +1699,14 @@ since `Object.prototype` may be modified by outside code.
   declare class JsxFlags__IntrinsicIndexedElement mixins JsxFlags {}
   declare class JsxFlags__IntrinsicElement mixins JsxFlags {}
 
-  declare export class JsxFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<JsxFlags__None> & JsxFlags__None & 0; // 0
-    static IntrinsicNamedElement: Class<JsxFlags__IntrinsicNamedElement> &
-      JsxFlags__IntrinsicNamedElement &
-      1; // 1
-    static IntrinsicIndexedElement: Class<JsxFlags__IntrinsicIndexedElement> &
-      JsxFlags__IntrinsicIndexedElement &
-      2; // 2
-    static IntrinsicElement: Class<JsxFlags__IntrinsicElement> &
-      JsxFlags__IntrinsicElement &
-      3; // 3
-  }
+  declare type Node = {
+    ...$Exact<TextRange>,
 
-  declare export type Node = {
     kind: SyntaxKind,
     flags: NodeFlags,
     decorators?: NodeArray<Decorator>,
     modifiers?: ModifiersArray,
-    parent: Node,
+    parent: any,
     getSourceFile(): SourceFile,
     getChildCount(sourceFile?: SourceFile): number,
     getChildAt(index: number, sourceFile?: SourceFile): Node,
@@ -1733,10 +1725,11 @@ since `Object.prototype` may be modified by outside code.
       cbNode: (node: Node) => T | void,
       cbNodeArray?: (nodes: NodeArray<Node>) => T | void
     ): T | void
-  } & TextRange;
+  };
 
-  declare export interface JSDocContainer {}
-  declare export type HasJSDoc =
+  declare type JSDocContainer = {};
+
+  declare type HasJSDoc =
     | ParameterDeclaration
     | CallSignatureDeclaration
     | ConstructSignatureDeclaration
@@ -1769,7 +1762,7 @@ since `Object.prototype` may be modified by outside code.
     | JSDocFunctionType
     | ExportDeclaration
     | EndOfFileToken;
-  declare export type HasType =
+  declare type HasType =
     | SignatureDeclaration
     | VariableDeclaration
     | ParameterDeclaration
@@ -1786,13 +1779,13 @@ since `Object.prototype` may be modified by outside code.
     | JSDocNullableType
     | JSDocOptionalType
     | JSDocVariadicType;
-  declare export type HasInitializer =
+  declare type HasInitializer =
     | HasExpressionInitializer
     | ForStatement
     | ForInStatement
     | ForOfStatement
     | JsxAttribute;
-  declare export type HasExpressionInitializer =
+  declare type HasExpressionInitializer =
     | VariableDeclaration
     | ParameterDeclaration
     | BindingElement
@@ -1800,29 +1793,32 @@ since `Object.prototype` may be modified by outside code.
     | PropertyDeclaration
     | PropertyAssignment
     | EnumMember;
-  declare export type NodeArray<T: Node> = {
+  declare type NodeArray<T: Node> = {
+    ...$Exact<TextRange>,
+
     hasTrailingComma?: boolean
-  } & $ReadOnlyArray<T> &
-    TextRange;
+  } & $ReadOnlyArray<T>;
 
-  declare export type Token<TKind: SyntaxKind> = {
+  declare type Token<TKind: SyntaxKind> = {
+    ...$Exact<Node>,
+
     kind: TKind
-  } & Node;
+  };
 
-  declare export type DotDotDotToken = Token<SyntaxKind.DotDotDotToken>;
-  declare export type QuestionToken = Token<SyntaxKind.QuestionToken>;
-  declare export type ExclamationToken = Token<SyntaxKind.ExclamationToken>;
-  declare export type ColonToken = Token<SyntaxKind.ColonToken>;
-  declare export type EqualsToken = Token<SyntaxKind.EqualsToken>;
-  declare export type AsteriskToken = Token<SyntaxKind.AsteriskToken>;
-  declare export type EqualsGreaterThanToken = Token<SyntaxKind.EqualsGreaterThanToken>;
-  declare export type EndOfFileToken = Token<SyntaxKind.EndOfFileToken> &
+  declare type DotDotDotToken = Token<SyntaxKind.DotDotDotToken>;
+  declare type QuestionToken = Token<SyntaxKind.QuestionToken>;
+  declare type ExclamationToken = Token<SyntaxKind.ExclamationToken>;
+  declare type ColonToken = Token<SyntaxKind.ColonToken>;
+  declare type EqualsToken = Token<SyntaxKind.EqualsToken>;
+  declare type AsteriskToken = Token<SyntaxKind.AsteriskToken>;
+  declare type EqualsGreaterThanToken = Token<SyntaxKind.EqualsGreaterThanToken>;
+  declare type EndOfFileToken = Token<SyntaxKind.EndOfFileToken> &
     JSDocContainer;
-  declare export type ReadonlyToken = Token<SyntaxKind.ReadonlyKeyword>;
-  declare export type AwaitKeywordToken = Token<SyntaxKind.AwaitKeyword>;
-  declare export type PlusToken = Token<SyntaxKind.PlusToken>;
-  declare export type MinusToken = Token<SyntaxKind.MinusToken>;
-  declare export type Modifier =
+  declare type ReadonlyToken = Token<SyntaxKind.ReadonlyKeyword>;
+  declare type AwaitKeywordToken = Token<SyntaxKind.AwaitKeyword>;
+  declare type PlusToken = Token<SyntaxKind.PlusToken>;
+  declare type MinusToken = Token<SyntaxKind.MinusToken>;
+  declare type Modifier =
     | Token<SyntaxKind.AbstractKeyword>
     | Token<SyntaxKind.AsyncKeyword>
     | Token<SyntaxKind.ConstKeyword>
@@ -1834,91 +1830,102 @@ since `Object.prototype` may be modified by outside code.
     | Token<SyntaxKind.ProtectedKeyword>
     | Token<SyntaxKind.ReadonlyKeyword>
     | Token<SyntaxKind.StaticKeyword>;
-  declare export type ModifiersArray = NodeArray<Modifier>;
-  declare export type Identifier = {
-    kind: SyntaxKind.Identifier,
+  declare type ModifiersArray = NodeArray<Modifier>;
+  declare type Identifier = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<Declaration>,
 
-    /**
-     * Prefer to use `id.unescapedText`. (Note: This is available only in services, not internally to the TypeScript compiler.)
-     * Text of identifier, but if the identifier begins with two underscores, this will begin with three.
-     */
+    kind: SyntaxKind.Identifier,
     escapedText: __String,
     originalKeywordKind?: SyntaxKind,
     isInJSDocNamespace?: boolean,
     text: string
-  } & PrimaryExpression &
-    Declaration;
+  };
 
-  declare export type TransientIdentifier = {
+  declare type TransientIdentifier = {
+    ...$Exact<Identifier>,
+
     resolvedSymbol: Symbol
-  } & Identifier;
+  };
 
-  declare export type QualifiedName = {
+  declare type QualifiedName = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.QualifiedName,
     left: EntityName,
     right: Identifier
-  } & Node;
+  };
 
-  declare export type EntityName = Identifier | QualifiedName;
-  declare export type PropertyName =
+  declare type EntityName = Identifier | QualifiedName;
+  declare type PropertyName =
     | Identifier
     | StringLiteral
     | NumericLiteral
     | ComputedPropertyName;
-  declare export type DeclarationName =
+  declare type DeclarationName =
     | Identifier
     | StringLiteralLike
     | NumericLiteral
     | ComputedPropertyName
     | BindingPattern;
-  declare export type Declaration = {
+  declare type Declaration = {
+    ...$Exact<Node>,
+
     _declarationBrand: any
-  } & Node;
+  };
 
-  declare export type NamedDeclaration = {
+  declare type NamedDeclaration = {
+    ...$Exact<Declaration>,
+
     name?: DeclarationName
-  } & Declaration;
+  };
 
-  declare export type DeclarationStatement = {
+  declare type DeclarationStatement = {
+    ...$Exact<NamedDeclaration>,
+    ...$Exact<Statement>,
+
     name?: Identifier | StringLiteral | NumericLiteral
-  } & NamedDeclaration &
-    Statement;
+  };
 
-  declare export type ComputedPropertyName = {
+  declare type ComputedPropertyName = {
+    ...$Exact<Node>,
+
     parent: Declaration,
     kind: SyntaxKind.ComputedPropertyName,
     expression: Expression
-  } & Node;
+  };
 
-  declare export type Decorator = {
+  declare type Decorator = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.Decorator,
     parent: NamedDeclaration,
     expression: LeftHandSideExpression
-  } & Node;
+  };
 
-  declare export type TypeParameterDeclaration = {
+  declare type TypeParameterDeclaration = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.TypeParameter,
     parent: DeclarationWithTypeParameterChildren | InferTypeNode,
     name: Identifier,
-
-    /**
-     * Note: Consider calling `getEffectiveConstraintOfTypeParameter`
-     */
     constraint?: TypeNode,
     default?: TypeNode,
     expression?: Expression
-  } & NamedDeclaration;
+  };
 
-  declare export type SignatureDeclarationBase = {
+  declare type SignatureDeclarationBase = {
+    ...$Exact<NamedDeclaration>,
+    ...$Exact<JSDocContainer>,
+
     kind: $ElementType<SignatureDeclaration, "kind">,
     name?: PropertyName,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     parameters: NodeArray<ParameterDeclaration>,
     type?: TypeNode
-  } & NamedDeclaration &
-    JSDocContainer;
+  };
 
-  declare export type SignatureDeclaration =
+  declare type SignatureDeclaration =
     | CallSignatureDeclaration
     | ConstructSignatureDeclaration
     | MethodSignature
@@ -1932,33 +1939,44 @@ since `Object.prototype` may be modified by outside code.
     | AccessorDeclaration
     | FunctionExpression
     | ArrowFunction;
-  declare export type CallSignatureDeclaration = {
+  declare type CallSignatureDeclaration = {
+    ...$Exact<SignatureDeclarationBase>,
+    ...$Exact<TypeElement>,
+
     kind: SyntaxKind.CallSignature
-  } & SignatureDeclarationBase &
-    TypeElement;
+  };
 
-  declare export type ConstructSignatureDeclaration = {
+  declare type ConstructSignatureDeclaration = {
+    ...$Exact<SignatureDeclarationBase>,
+    ...$Exact<TypeElement>,
+
     kind: SyntaxKind.ConstructSignature
-  } & SignatureDeclarationBase &
-    TypeElement;
+  };
 
-  declare export type BindingName = Identifier | BindingPattern;
-  declare export type VariableDeclaration = {
+  declare type BindingName = Identifier | BindingPattern;
+  declare type VariableDeclaration = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.VariableDeclaration,
     parent: VariableDeclarationList | CatchClause,
     name: BindingName,
     exclamationToken?: ExclamationToken,
     type?: TypeNode,
     initializer?: Expression
-  } & NamedDeclaration;
+  };
 
-  declare export type VariableDeclarationList = {
+  declare type VariableDeclarationList = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.VariableDeclarationList,
     parent: VariableStatement | ForStatement | ForOfStatement | ForInStatement,
     declarations: NodeArray<VariableDeclaration>
-  } & Node;
+  };
 
-  declare export type ParameterDeclaration = {
+  declare type ParameterDeclaration = {
+    ...$Exact<NamedDeclaration>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.Parameter,
     parent: SignatureDeclaration,
     dotDotDotToken?: DotDotDotToken,
@@ -1966,28 +1984,34 @@ since `Object.prototype` may be modified by outside code.
     questionToken?: QuestionToken,
     type?: TypeNode,
     initializer?: Expression
-  } & NamedDeclaration &
-    JSDocContainer;
+  };
 
-  declare export type BindingElement = {
+  declare type BindingElement = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.BindingElement,
     parent: BindingPattern,
     propertyName?: PropertyName,
     dotDotDotToken?: DotDotDotToken,
     name: BindingName,
     initializer?: Expression
-  } & NamedDeclaration;
+  };
 
-  declare export type PropertySignature = {
+  declare type PropertySignature = {
+    ...$Exact<TypeElement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.PropertySignature,
     name: PropertyName,
     questionToken?: QuestionToken,
     type?: TypeNode,
     initializer?: Expression
-  } & TypeElement &
-    JSDocContainer;
+  };
 
-  declare export type PropertyDeclaration = {
+  declare type PropertyDeclaration = {
+    ...$Exact<ClassElement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.PropertyDeclaration,
     parent: ClassLikeDeclaration,
     name: PropertyName,
@@ -1995,33 +2019,36 @@ since `Object.prototype` may be modified by outside code.
     exclamationToken?: ExclamationToken,
     type?: TypeNode,
     initializer?: Expression
-  } & ClassElement &
-    JSDocContainer;
+  };
 
-  declare export type ObjectLiteralElement = {
+  declare type ObjectLiteralElement = {
+    ...$Exact<NamedDeclaration>,
+
     _objectLiteralBrandBrand: any,
     name?: PropertyName
-  } & NamedDeclaration;
+  };
 
-  /**
-   * Unlike ObjectLiteralElement, excludes JSXAttribute and JSXSpreadAttribute.
-   */
-  declare export type ObjectLiteralElementLike =
+  declare type ObjectLiteralElementLike =
     | PropertyAssignment
     | ShorthandPropertyAssignment
     | SpreadAssignment
     | MethodDeclaration
     | AccessorDeclaration;
-  declare export type PropertyAssignment = {
+  declare type PropertyAssignment = {
+    ...$Exact<ObjectLiteralElement>,
+    ...$Exact<JSDocContainer>,
+
     parent: ObjectLiteralExpression,
     kind: SyntaxKind.PropertyAssignment,
     name: PropertyName,
     questionToken?: QuestionToken,
     initializer: Expression
-  } & ObjectLiteralElement &
-    JSDocContainer;
+  };
 
-  declare export type ShorthandPropertyAssignment = {
+  declare type ShorthandPropertyAssignment = {
+    ...$Exact<ObjectLiteralElement>,
+    ...$Exact<JSDocContainer>,
+
     parent: ObjectLiteralExpression,
     kind: SyntaxKind.ShorthandPropertyAssignment,
     name: Identifier,
@@ -2029,17 +2056,18 @@ since `Object.prototype` may be modified by outside code.
     exclamationToken?: ExclamationToken,
     equalsToken?: Token<SyntaxKind.EqualsToken>,
     objectAssignmentInitializer?: Expression
-  } & ObjectLiteralElement &
-    JSDocContainer;
+  };
 
-  declare export type SpreadAssignment = {
+  declare type SpreadAssignment = {
+    ...$Exact<ObjectLiteralElement>,
+    ...$Exact<JSDocContainer>,
+
     parent: ObjectLiteralExpression,
     kind: SyntaxKind.SpreadAssignment,
     expression: Expression
-  } & ObjectLiteralElement &
-    JSDocContainer;
+  };
 
-  declare export type VariableLikeDeclaration =
+  declare type VariableLikeDeclaration =
     | VariableDeclaration
     | ParameterDeclaration
     | BindingElement
@@ -2051,42 +2079,41 @@ since `Object.prototype` may be modified by outside code.
     | EnumMember
     | JSDocPropertyTag
     | JSDocParameterTag;
-  declare export type PropertyLikeDeclaration = {
-    name: PropertyName
-  } & NamedDeclaration;
+  declare type PropertyLikeDeclaration = {
+    ...$Exact<NamedDeclaration>,
 
-  declare export type ObjectBindingPattern = {
+    name: PropertyName
+  };
+
+  declare type ObjectBindingPattern = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.ObjectBindingPattern,
     parent: VariableDeclaration | ParameterDeclaration | BindingElement,
     elements: NodeArray<BindingElement>
-  } & Node;
+  };
 
-  declare export type ArrayBindingPattern = {
+  declare type ArrayBindingPattern = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.ArrayBindingPattern,
     parent: VariableDeclaration | ParameterDeclaration | BindingElement,
     elements: NodeArray<ArrayBindingElement>
-  } & Node;
+  };
 
-  declare export type BindingPattern = ObjectBindingPattern | ArrayBindingPattern;
-  declare export type ArrayBindingElement = BindingElement | OmittedExpression;
+  declare type BindingPattern = ObjectBindingPattern | ArrayBindingPattern;
+  declare type ArrayBindingElement = BindingElement | OmittedExpression;
+  declare type FunctionLikeDeclarationBase = {
+    ...$Exact<SignatureDeclarationBase>,
 
-  /**
- * Several node kinds share function-like features such as a signature,
- * a name, and a body. These nodes should extend FunctionLikeDeclarationBase.
-Examples:
-- FunctionDeclaration
-- MethodDeclaration
-- AccessorDeclaration
-*/
-  declare export type FunctionLikeDeclarationBase = {
     _functionLikeDeclarationBrand: any,
     asteriskToken?: AsteriskToken,
     questionToken?: QuestionToken,
     exclamationToken?: ExclamationToken,
     body?: Block | Expression
-  } & SignatureDeclarationBase;
+  };
 
-  declare export type FunctionLikeDeclaration =
+  declare type FunctionLikeDeclaration =
     | FunctionDeclaration
     | MethodDeclaration
     | GetAccessorDeclaration
@@ -2094,87 +2121,99 @@ Examples:
     | ConstructorDeclaration
     | FunctionExpression
     | ArrowFunction;
+  declare type FunctionLike = SignatureDeclaration;
+  declare type FunctionDeclaration = {
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<DeclarationStatement>,
 
-  /**
-   *
-   * @deprecated Use SignatureDeclaration
-   */
-  declare export type FunctionLike = SignatureDeclaration;
-  declare export type FunctionDeclaration = {
     kind: SyntaxKind.FunctionDeclaration,
     name?: Identifier,
     body?: FunctionBody
-  } & FunctionLikeDeclarationBase &
-    DeclarationStatement;
+  };
 
-  declare export type MethodSignature = {
+  declare type MethodSignature = {
+    ...$Exact<SignatureDeclarationBase>,
+    ...$Exact<TypeElement>,
+
     kind: SyntaxKind.MethodSignature,
     parent: ObjectTypeDeclaration,
     name: PropertyName
-  } & SignatureDeclarationBase &
-    TypeElement;
+  };
 
-  declare export type MethodDeclaration = {
+  declare type MethodDeclaration = {
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<ClassElement>,
+    ...$Exact<ObjectLiteralElement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.MethodDeclaration,
     parent: ClassLikeDeclaration | ObjectLiteralExpression,
     name: PropertyName,
     body?: FunctionBody
-  } & FunctionLikeDeclarationBase &
-    ClassElement &
-    ObjectLiteralElement &
-    JSDocContainer;
+  };
 
-  declare export type ConstructorDeclaration = {
+  declare type ConstructorDeclaration = {
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<ClassElement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.Constructor,
     parent: ClassLikeDeclaration,
     body?: FunctionBody
-  } & FunctionLikeDeclarationBase &
-    ClassElement &
-    JSDocContainer;
+  };
 
-  /**
-   * For when we encounter a semicolon in a class declaration. ES6 allows these as class elements.
-   */
-  declare export type SemicolonClassElement = {
+  declare type SemicolonClassElement = {
+    ...$Exact<ClassElement>,
+
     kind: SyntaxKind.SemicolonClassElement,
     parent: ClassLikeDeclaration
-  } & ClassElement;
+  };
 
-  declare export type GetAccessorDeclaration = {
+  declare type GetAccessorDeclaration = {
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<ClassElement>,
+    ...$Exact<ObjectLiteralElement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.GetAccessor,
     parent: ClassLikeDeclaration | ObjectLiteralExpression,
     name: PropertyName,
     body?: FunctionBody
-  } & FunctionLikeDeclarationBase &
-    ClassElement &
-    ObjectLiteralElement &
-    JSDocContainer;
+  };
 
-  declare export type SetAccessorDeclaration = {
+  declare type SetAccessorDeclaration = {
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<ClassElement>,
+    ...$Exact<ObjectLiteralElement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.SetAccessor,
     parent: ClassLikeDeclaration | ObjectLiteralExpression,
     name: PropertyName,
     body?: FunctionBody
-  } & FunctionLikeDeclarationBase &
-    ClassElement &
-    ObjectLiteralElement &
-    JSDocContainer;
+  };
 
-  declare export type AccessorDeclaration =
+  declare type AccessorDeclaration =
     | GetAccessorDeclaration
     | SetAccessorDeclaration;
-  declare export type IndexSignatureDeclaration = {
+  declare type IndexSignatureDeclaration = {
+    ...$Exact<SignatureDeclarationBase>,
+    ...$Exact<ClassElement>,
+    ...$Exact<TypeElement>,
+
     kind: SyntaxKind.IndexSignature,
     parent: ObjectTypeDeclaration
-  } & SignatureDeclarationBase &
-    ClassElement &
-    TypeElement;
+  };
 
-  declare export type TypeNode = {
+  declare type TypeNode = {
+    ...$Exact<Node>,
+
     _typeNodeBrand: any
-  } & Node;
+  };
 
-  declare export type KeywordTypeNode = {
+  declare type KeywordTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind:
       | SyntaxKind.AnyKeyword
       | SyntaxKind.UnknownKeyword
@@ -2189,313 +2228,400 @@ Examples:
       | SyntaxKind.UndefinedKeyword
       | SyntaxKind.NullKeyword
       | SyntaxKind.NeverKeyword
-  } & TypeNode;
+  };
 
-  declare export type ImportTypeNode = {
+  declare type ImportTypeNode = {
+    ...$Exact<NodeWithTypeArguments>,
+
     kind: SyntaxKind.ImportType,
     isTypeOf?: boolean,
     argument: TypeNode,
     qualifier?: EntityName
-  } & NodeWithTypeArguments;
+  };
 
-  declare export type ThisTypeNode = {
+  declare type ThisTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.ThisType
-  } & TypeNode;
+  };
 
-  declare export type FunctionOrConstructorTypeNode =
+  declare type FunctionOrConstructorTypeNode =
     | FunctionTypeNode
     | ConstructorTypeNode;
-  declare export type FunctionOrConstructorTypeNodeBase = {
+  declare type FunctionOrConstructorTypeNodeBase = {
+    ...$Exact<TypeNode>,
+    ...$Exact<SignatureDeclarationBase>,
+
     kind: SyntaxKind.FunctionType | SyntaxKind.ConstructorType,
     type: TypeNode
-  } & TypeNode &
-    SignatureDeclarationBase;
+  };
 
-  declare export type FunctionTypeNode = {
+  declare type FunctionTypeNode = {
+    ...$Exact<FunctionOrConstructorTypeNodeBase>,
+
     kind: SyntaxKind.FunctionType
-  } & FunctionOrConstructorTypeNodeBase;
+  };
 
-  declare export type ConstructorTypeNode = {
+  declare type ConstructorTypeNode = {
+    ...$Exact<FunctionOrConstructorTypeNodeBase>,
+
     kind: SyntaxKind.ConstructorType
-  } & FunctionOrConstructorTypeNodeBase;
+  };
 
-  declare export type NodeWithTypeArguments = {
+  declare type NodeWithTypeArguments = {
+    ...$Exact<TypeNode>,
+
     typeArguments?: NodeArray<TypeNode>
-  } & TypeNode;
+  };
 
-  declare export type TypeReferenceType =
+  declare type TypeReferenceType =
     | TypeReferenceNode
     | ExpressionWithTypeArguments;
-  declare export type TypeReferenceNode = {
+  declare type TypeReferenceNode = {
+    ...$Exact<NodeWithTypeArguments>,
+
     kind: SyntaxKind.TypeReference,
     typeName: EntityName
-  } & NodeWithTypeArguments;
+  };
 
-  declare export type TypePredicateNode = {
+  declare type TypePredicateNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.TypePredicate,
     parent: SignatureDeclaration | JSDocTypeExpression,
     parameterName: Identifier | ThisTypeNode,
     type: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type TypeQueryNode = {
+  declare type TypeQueryNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.TypeQuery,
     exprName: EntityName
-  } & TypeNode;
+  };
 
-  declare export type TypeLiteralNode = {
+  declare type TypeLiteralNode = {
+    ...$Exact<TypeNode>,
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.TypeLiteral,
     members: NodeArray<TypeElement>
-  } & TypeNode &
-    Declaration;
+  };
 
-  declare export type ArrayTypeNode = {
+  declare type ArrayTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.ArrayType,
     elementType: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type TupleTypeNode = {
+  declare type TupleTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.TupleType,
     elementTypes: NodeArray<TypeNode>
-  } & TypeNode;
+  };
 
-  declare export type OptionalTypeNode = {
+  declare type OptionalTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.OptionalType,
     type: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type RestTypeNode = {
+  declare type RestTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.RestType,
     type: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type UnionOrIntersectionTypeNode =
+  declare type UnionOrIntersectionTypeNode =
     | UnionTypeNode
     | IntersectionTypeNode;
-  declare export type UnionTypeNode = {
+  declare type UnionTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.UnionType,
     types: NodeArray<TypeNode>
-  } & TypeNode;
+  };
 
-  declare export type IntersectionTypeNode = {
+  declare type IntersectionTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.IntersectionType,
     types: NodeArray<TypeNode>
-  } & TypeNode;
+  };
 
-  declare export type ConditionalTypeNode = {
+  declare type ConditionalTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.ConditionalType,
     checkType: TypeNode,
     extendsType: TypeNode,
     trueType: TypeNode,
     falseType: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type InferTypeNode = {
+  declare type InferTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.InferType,
     typeParameter: TypeParameterDeclaration
-  } & TypeNode;
+  };
 
-  declare export type ParenthesizedTypeNode = {
+  declare type ParenthesizedTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.ParenthesizedType,
     type: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type TypeOperatorNode = {
+  declare type TypeOperatorNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.TypeOperator,
     operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword,
     type: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type IndexedAccessTypeNode = {
+  declare type IndexedAccessTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.IndexedAccessType,
     objectType: TypeNode,
     indexType: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type MappedTypeNode = {
+  declare type MappedTypeNode = {
+    ...$Exact<TypeNode>,
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.MappedType,
     readonlyToken?: ReadonlyToken | PlusToken | MinusToken,
     typeParameter: TypeParameterDeclaration,
     questionToken?: QuestionToken | PlusToken | MinusToken,
     type?: TypeNode
-  } & TypeNode &
-    Declaration;
+  };
 
-  declare export type LiteralTypeNode = {
+  declare type LiteralTypeNode = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.LiteralType,
     literal: BooleanLiteral | LiteralExpression | PrefixUnaryExpression
-  } & TypeNode;
+  };
 
-  declare export type StringLiteral = {
+  declare type StringLiteral = {
+    ...$Exact<LiteralExpression>,
+
     kind: SyntaxKind.StringLiteral
-  } & LiteralExpression;
+  };
 
-  declare export type StringLiteralLike =
+  declare type StringLiteralLike =
     | StringLiteral
     | NoSubstitutionTemplateLiteral;
-  declare export type Expression = {
+  declare type Expression = {
+    ...$Exact<Node>,
+
     _expressionBrand: any
-  } & Node;
+  };
 
-  declare export type OmittedExpression = {
+  declare type OmittedExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.OmittedExpression
-  } & Expression;
+  };
 
-  declare export type PartiallyEmittedExpression = {
+  declare type PartiallyEmittedExpression = {
+    ...$Exact<LeftHandSideExpression>,
+
     kind: SyntaxKind.PartiallyEmittedExpression,
     expression: Expression
-  } & LeftHandSideExpression;
+  };
 
-  declare export type UnaryExpression = {
+  declare type UnaryExpression = {
+    ...$Exact<Expression>,
+
     _unaryExpressionBrand: any
-  } & Expression;
+  };
 
-  /**
-   * Deprecated, please use UpdateExpression
-   */
-  declare export type IncrementExpression = UpdateExpression;
-  declare export type UpdateExpression = {
+  declare type IncrementExpression = UpdateExpression;
+  declare type UpdateExpression = {
+    ...$Exact<UnaryExpression>,
+
     _updateExpressionBrand: any
-  } & UnaryExpression;
+  };
 
-  declare export type PrefixUnaryOperator =
+  declare type PrefixUnaryOperator =
     | SyntaxKind.PlusPlusToken
     | SyntaxKind.MinusMinusToken
     | SyntaxKind.PlusToken
     | SyntaxKind.MinusToken
     | SyntaxKind.TildeToken
     | SyntaxKind.ExclamationToken;
-  declare export type PrefixUnaryExpression = {
+  declare type PrefixUnaryExpression = {
+    ...$Exact<UpdateExpression>,
+
     kind: SyntaxKind.PrefixUnaryExpression,
     operator: PrefixUnaryOperator,
     operand: UnaryExpression
-  } & UpdateExpression;
+  };
 
-  declare export type PostfixUnaryOperator =
+  declare type PostfixUnaryOperator =
     | SyntaxKind.PlusPlusToken
     | SyntaxKind.MinusMinusToken;
-  declare export type PostfixUnaryExpression = {
+  declare type PostfixUnaryExpression = {
+    ...$Exact<UpdateExpression>,
+
     kind: SyntaxKind.PostfixUnaryExpression,
     operand: LeftHandSideExpression,
     operator: PostfixUnaryOperator
-  } & UpdateExpression;
+  };
 
-  declare export type LeftHandSideExpression = {
+  declare type LeftHandSideExpression = {
+    ...$Exact<UpdateExpression>,
+
     _leftHandSideExpressionBrand: any
-  } & UpdateExpression;
+  };
 
-  declare export type MemberExpression = {
+  declare type MemberExpression = {
+    ...$Exact<LeftHandSideExpression>,
+
     _memberExpressionBrand: any
-  } & LeftHandSideExpression;
+  };
 
-  declare export type PrimaryExpression = {
+  declare type PrimaryExpression = {
+    ...$Exact<MemberExpression>,
+
     _primaryExpressionBrand: any
-  } & MemberExpression;
+  };
 
-  declare export type NullLiteral = {
+  declare type NullLiteral = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.NullKeyword
-  } & PrimaryExpression &
-    TypeNode;
+  };
 
-  declare export type BooleanLiteral = {
+  declare type BooleanLiteral = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.TrueKeyword | SyntaxKind.FalseKeyword
-  } & PrimaryExpression &
-    TypeNode;
+  };
 
-  declare export type ThisExpression = {
+  declare type ThisExpression = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<KeywordTypeNode>,
+
     kind: SyntaxKind.ThisKeyword
-  } & PrimaryExpression &
-    KeywordTypeNode;
+  };
 
-  declare export type SuperExpression = {
+  declare type SuperExpression = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.SuperKeyword
-  } & PrimaryExpression;
+  };
 
-  declare export type ImportExpression = {
+  declare type ImportExpression = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.ImportKeyword
-  } & PrimaryExpression;
+  };
 
-  declare export type DeleteExpression = {
+  declare type DeleteExpression = {
+    ...$Exact<UnaryExpression>,
+
     kind: SyntaxKind.DeleteExpression,
     expression: UnaryExpression
-  } & UnaryExpression;
+  };
 
-  declare export type TypeOfExpression = {
+  declare type TypeOfExpression = {
+    ...$Exact<UnaryExpression>,
+
     kind: SyntaxKind.TypeOfExpression,
     expression: UnaryExpression
-  } & UnaryExpression;
+  };
 
-  declare export type VoidExpression = {
+  declare type VoidExpression = {
+    ...$Exact<UnaryExpression>,
+
     kind: SyntaxKind.VoidExpression,
     expression: UnaryExpression
-  } & UnaryExpression;
+  };
 
-  declare export type AwaitExpression = {
+  declare type AwaitExpression = {
+    ...$Exact<UnaryExpression>,
+
     kind: SyntaxKind.AwaitExpression,
     expression: UnaryExpression
-  } & UnaryExpression;
+  };
 
-  declare export type YieldExpression = {
+  declare type YieldExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.YieldExpression,
     asteriskToken?: AsteriskToken,
     expression?: Expression
-  } & Expression;
+  };
 
-  declare export type SyntheticExpression = {
+  declare type SyntheticExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.SyntheticExpression,
     isSpread: boolean,
     type: Type
-  } & Expression;
+  };
 
-  declare export type ExponentiationOperator = SyntaxKind.AsteriskAsteriskToken;
-  declare export type MultiplicativeOperator =
+  declare type ExponentiationOperator = SyntaxKind.AsteriskAsteriskToken;
+  declare type MultiplicativeOperator =
     | SyntaxKind.AsteriskToken
     | SyntaxKind.SlashToken
     | SyntaxKind.PercentToken;
-  declare export type MultiplicativeOperatorOrHigher =
+  declare type MultiplicativeOperatorOrHigher =
     | ExponentiationOperator
     | MultiplicativeOperator;
-  declare export type AdditiveOperator = SyntaxKind.PlusToken | SyntaxKind.MinusToken;
-  declare export type AdditiveOperatorOrHigher =
+  declare type AdditiveOperator = SyntaxKind.PlusToken | SyntaxKind.MinusToken;
+  declare type AdditiveOperatorOrHigher =
     | MultiplicativeOperatorOrHigher
     | AdditiveOperator;
-  declare export type ShiftOperator =
+  declare type ShiftOperator =
     | SyntaxKind.LessThanLessThanToken
     | SyntaxKind.GreaterThanGreaterThanToken
     | SyntaxKind.GreaterThanGreaterThanGreaterThanToken;
-  declare export type ShiftOperatorOrHigher = AdditiveOperatorOrHigher | ShiftOperator;
-  declare export type RelationalOperator =
+  declare type ShiftOperatorOrHigher = AdditiveOperatorOrHigher | ShiftOperator;
+  declare type RelationalOperator =
     | SyntaxKind.LessThanToken
     | SyntaxKind.LessThanEqualsToken
     | SyntaxKind.GreaterThanToken
     | SyntaxKind.GreaterThanEqualsToken
     | SyntaxKind.InstanceOfKeyword
     | SyntaxKind.InKeyword;
-  declare export type RelationalOperatorOrHigher =
+  declare type RelationalOperatorOrHigher =
     | ShiftOperatorOrHigher
     | RelationalOperator;
-  declare export type EqualityOperator =
+  declare type EqualityOperator =
     | SyntaxKind.EqualsEqualsToken
     | SyntaxKind.EqualsEqualsEqualsToken
     | SyntaxKind.ExclamationEqualsEqualsToken
     | SyntaxKind.ExclamationEqualsToken;
-  declare export type EqualityOperatorOrHigher =
+  declare type EqualityOperatorOrHigher =
     | RelationalOperatorOrHigher
     | EqualityOperator;
-  declare export type BitwiseOperator =
+  declare type BitwiseOperator =
     | SyntaxKind.AmpersandToken
     | SyntaxKind.BarToken
     | SyntaxKind.CaretToken;
-  declare export type BitwiseOperatorOrHigher =
+  declare type BitwiseOperatorOrHigher =
     | EqualityOperatorOrHigher
     | BitwiseOperator;
-  declare export type LogicalOperator =
+  declare type LogicalOperator =
     | SyntaxKind.AmpersandAmpersandToken
     | SyntaxKind.BarBarToken;
-  declare export type LogicalOperatorOrHigher =
+  declare type LogicalOperatorOrHigher =
     | BitwiseOperatorOrHigher
     | LogicalOperator;
-  declare export type CompoundAssignmentOperator =
+  declare type CompoundAssignmentOperator =
     | SyntaxKind.PlusEqualsToken
     | SyntaxKind.MinusEqualsToken
     | SyntaxKind.AsteriskAsteriskEqualsToken
@@ -2508,42 +2634,50 @@ Examples:
     | SyntaxKind.LessThanLessThanEqualsToken
     | SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken
     | SyntaxKind.GreaterThanGreaterThanEqualsToken;
-  declare export type AssignmentOperator =
+  declare type AssignmentOperator =
     | SyntaxKind.EqualsToken
     | CompoundAssignmentOperator;
-  declare export type AssignmentOperatorOrHigher =
+  declare type AssignmentOperatorOrHigher =
     | LogicalOperatorOrHigher
     | AssignmentOperator;
-  declare export type BinaryOperator =
+  declare type BinaryOperator =
     | AssignmentOperatorOrHigher
     | SyntaxKind.CommaToken;
-  declare export type BinaryOperatorToken = Token<BinaryOperator>;
-  declare export type BinaryExpression = {
+  declare type BinaryOperatorToken = Token<BinaryOperator>;
+  declare type BinaryExpression = {
+    ...$Exact<Expression>,
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.BinaryExpression,
     left: Expression,
     operatorToken: BinaryOperatorToken,
     right: Expression
-  } & Expression &
-    Declaration;
+  };
 
-  declare export type AssignmentOperatorToken = Token<AssignmentOperator>;
-  declare export type AssignmentExpression<TOperator: AssignmentOperatorToken> = {
+  declare type AssignmentOperatorToken = Token<AssignmentOperator>;
+  declare type AssignmentExpression<TOperator: AssignmentOperatorToken> = {
+    ...$Exact<BinaryExpression>,
+
     left: LeftHandSideExpression,
     operatorToken: TOperator
-  } & BinaryExpression;
+  };
 
-  declare export type ObjectDestructuringAssignment = {
+  declare type ObjectDestructuringAssignment = {
+    ...$Exact<AssignmentExpression<EqualsToken>>,
+
     left: ObjectLiteralExpression
-  } & AssignmentExpression<EqualsToken>;
+  };
 
-  declare export type ArrayDestructuringAssignment = {
+  declare type ArrayDestructuringAssignment = {
+    ...$Exact<AssignmentExpression<EqualsToken>>,
+
     left: ArrayLiteralExpression
-  } & AssignmentExpression<EqualsToken>;
+  };
 
-  declare export type DestructuringAssignment =
+  declare type DestructuringAssignment =
     | ObjectDestructuringAssignment
     | ArrayDestructuringAssignment;
-  declare export type BindingOrAssignmentElement =
+  declare type BindingOrAssignmentElement =
     | VariableDeclaration
     | ParameterDeclaration
     | BindingElement
@@ -2558,922 +2692,1171 @@ Examples:
     | Identifier
     | PropertyAccessExpression
     | ElementAccessExpression;
-  declare export type BindingOrAssignmentElementRestIndicator =
+  declare type BindingOrAssignmentElementRestIndicator =
     | DotDotDotToken
     | SpreadElement
     | SpreadAssignment;
-  declare export type BindingOrAssignmentElementTarget =
+  declare type BindingOrAssignmentElementTarget =
     | BindingOrAssignmentPattern
     | Identifier
     | PropertyAccessExpression
     | ElementAccessExpression
     | OmittedExpression;
-  declare export type ObjectBindingOrAssignmentPattern =
+  declare type ObjectBindingOrAssignmentPattern =
     | ObjectBindingPattern
     | ObjectLiteralExpression;
-  declare export type ArrayBindingOrAssignmentPattern =
+  declare type ArrayBindingOrAssignmentPattern =
     | ArrayBindingPattern
     | ArrayLiteralExpression;
-  declare export type AssignmentPattern =
+  declare type AssignmentPattern =
     | ObjectLiteralExpression
     | ArrayLiteralExpression;
-  declare export type BindingOrAssignmentPattern =
+  declare type BindingOrAssignmentPattern =
     | ObjectBindingOrAssignmentPattern
     | ArrayBindingOrAssignmentPattern;
-  declare export type ConditionalExpression = {
+  declare type ConditionalExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.ConditionalExpression,
     condition: Expression,
     questionToken: QuestionToken,
     whenTrue: Expression,
     colonToken: ColonToken,
     whenFalse: Expression
-  } & Expression;
+  };
 
-  declare export type FunctionBody = Block;
-  declare export type ConciseBody = FunctionBody | Expression;
-  declare export type FunctionExpression = {
+  declare type FunctionBody = Block;
+  declare type ConciseBody = FunctionBody | Expression;
+  declare type FunctionExpression = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.FunctionExpression,
     name?: Identifier,
     body: FunctionBody
-  } & PrimaryExpression &
-    FunctionLikeDeclarationBase &
-    JSDocContainer;
+  };
 
-  declare export type ArrowFunction = {
+  declare type ArrowFunction = {
+    ...$Exact<Expression>,
+    ...$Exact<FunctionLikeDeclarationBase>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.ArrowFunction,
     equalsGreaterThanToken: EqualsGreaterThanToken,
     body: ConciseBody,
     name: empty
-  } & Expression &
-    FunctionLikeDeclarationBase &
-    JSDocContainer;
+  };
 
-  declare export type LiteralLikeNode = {
+  declare type LiteralLikeNode = {
+    ...$Exact<Node>,
+
     text: string,
     isUnterminated?: boolean,
     hasExtendedUnicodeEscape?: boolean
-  } & Node;
+  };
 
-  declare export type LiteralExpression = {
+  declare type LiteralExpression = {
+    ...$Exact<LiteralLikeNode>,
+    ...$Exact<PrimaryExpression>,
+
     _literalExpressionBrand: any
-  } & LiteralLikeNode &
-    PrimaryExpression;
+  };
 
-  declare export type RegularExpressionLiteral = {
+  declare type RegularExpressionLiteral = {
+    ...$Exact<LiteralExpression>,
+
     kind: SyntaxKind.RegularExpressionLiteral
-  } & LiteralExpression;
+  };
 
-  declare export type NoSubstitutionTemplateLiteral = {
+  declare type NoSubstitutionTemplateLiteral = {
+    ...$Exact<LiteralExpression>,
+
     kind: SyntaxKind.NoSubstitutionTemplateLiteral
-  } & LiteralExpression;
+  };
 
-  declare export type NumericLiteral = {
+  declare type NumericLiteral = {
+    ...$Exact<LiteralExpression>,
+
     kind: SyntaxKind.NumericLiteral
-  } & LiteralExpression;
+  };
 
-  declare export type BigIntLiteral = {
+  declare type BigIntLiteral = {
+    ...$Exact<LiteralExpression>,
+
     kind: SyntaxKind.BigIntLiteral
-  } & LiteralExpression;
+  };
 
-  declare export type TemplateHead = {
+  declare type TemplateHead = {
+    ...$Exact<LiteralLikeNode>,
+
     kind: SyntaxKind.TemplateHead,
     parent: TemplateExpression
-  } & LiteralLikeNode;
+  };
 
-  declare export type TemplateMiddle = {
+  declare type TemplateMiddle = {
+    ...$Exact<LiteralLikeNode>,
+
     kind: SyntaxKind.TemplateMiddle,
     parent: TemplateSpan
-  } & LiteralLikeNode;
+  };
 
-  declare export type TemplateTail = {
+  declare type TemplateTail = {
+    ...$Exact<LiteralLikeNode>,
+
     kind: SyntaxKind.TemplateTail,
     parent: TemplateSpan
-  } & LiteralLikeNode;
+  };
 
-  declare export type TemplateLiteral =
+  declare type TemplateLiteral =
     | TemplateExpression
     | NoSubstitutionTemplateLiteral;
-  declare export type TemplateExpression = {
+  declare type TemplateExpression = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.TemplateExpression,
     head: TemplateHead,
     templateSpans: NodeArray<TemplateSpan>
-  } & PrimaryExpression;
+  };
 
-  declare export type TemplateSpan = {
+  declare type TemplateSpan = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.TemplateSpan,
     parent: TemplateExpression,
     expression: Expression,
     literal: TemplateMiddle | TemplateTail
-  } & Node;
+  };
 
-  declare export type ParenthesizedExpression = {
+  declare type ParenthesizedExpression = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.ParenthesizedExpression,
     expression: Expression
-  } & PrimaryExpression &
-    JSDocContainer;
+  };
 
-  declare export type ArrayLiteralExpression = {
+  declare type ArrayLiteralExpression = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.ArrayLiteralExpression,
     elements: NodeArray<Expression>
-  } & PrimaryExpression;
+  };
 
-  declare export type SpreadElement = {
+  declare type SpreadElement = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.SpreadElement,
     parent: ArrayLiteralExpression | CallExpression | NewExpression,
     expression: Expression
-  } & Expression;
+  };
 
-  /**
- * This interface is a base interface for ObjectLiteralExpression and JSXAttributes to extend from. JSXAttributes is similar to
- * ObjectLiteralExpression in that it contains array of properties; however, JSXAttributes' properties can only be
-JSXAttribute or JSXSpreadAttribute. ObjectLiteralExpression, on the other hand, can only have properties of type
-ObjectLiteralElement (e.g. PropertyAssignment, ShorthandPropertyAssignment etc.)
-*/
-  declare export type ObjectLiteralExpressionBase<T: ObjectLiteralElement> = {
+  declare type ObjectLiteralExpressionBase<T: ObjectLiteralElement> = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<Declaration>,
+
     properties: NodeArray<T>
-  } & PrimaryExpression &
-    Declaration;
+  };
 
-  declare export type ObjectLiteralExpression = {
+  declare type ObjectLiteralExpression = {
+    ...$Exact<ObjectLiteralExpressionBase<ObjectLiteralElementLike>>,
+
     kind: SyntaxKind.ObjectLiteralExpression
-  } & ObjectLiteralExpressionBase<ObjectLiteralElementLike>;
+  };
 
-  declare export type EntityNameExpression =
+  declare type EntityNameExpression =
     | Identifier
     | PropertyAccessEntityNameExpression;
-  declare export type EntityNameOrEntityNameExpression =
+  declare type EntityNameOrEntityNameExpression =
     | EntityName
     | EntityNameExpression;
-  declare export type PropertyAccessExpression = {
+  declare type PropertyAccessExpression = {
+    ...$Exact<MemberExpression>,
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.PropertyAccessExpression,
     expression: LeftHandSideExpression,
     name: Identifier
-  } & MemberExpression &
-    NamedDeclaration;
+  };
 
-  declare export type SuperPropertyAccessExpression = {
+  declare type SuperPropertyAccessExpression = {
+    ...$Exact<PropertyAccessExpression>,
+
     expression: SuperExpression
-  } & PropertyAccessExpression;
+  };
 
-  /**
-   * Brand for a PropertyAccessExpression which, like a QualifiedName, consists of a sequence of identifiers separated by dots.
-   */
-  declare export type PropertyAccessEntityNameExpression = {
+  declare type PropertyAccessEntityNameExpression = {
+    ...$Exact<PropertyAccessExpression>,
+
     _propertyAccessExpressionLikeQualifiedNameBrand?: any,
     expression: EntityNameExpression
-  } & PropertyAccessExpression;
+  };
 
-  declare export type ElementAccessExpression = {
+  declare type ElementAccessExpression = {
+    ...$Exact<MemberExpression>,
+
     kind: SyntaxKind.ElementAccessExpression,
     expression: LeftHandSideExpression,
     argumentExpression: Expression
-  } & MemberExpression;
+  };
 
-  declare export type SuperElementAccessExpression = {
+  declare type SuperElementAccessExpression = {
+    ...$Exact<ElementAccessExpression>,
+
     expression: SuperExpression
-  } & ElementAccessExpression;
+  };
 
-  declare export type SuperProperty =
+  declare type SuperProperty =
     | SuperPropertyAccessExpression
     | SuperElementAccessExpression;
-  declare export type CallExpression = {
+  declare type CallExpression = {
+    ...$Exact<LeftHandSideExpression>,
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.CallExpression,
     expression: LeftHandSideExpression,
     typeArguments?: NodeArray<TypeNode>,
     arguments: NodeArray<Expression>
-  } & LeftHandSideExpression &
-    Declaration;
+  };
 
-  declare export type SuperCall = {
+  declare type SuperCall = {
+    ...$Exact<CallExpression>,
+
     expression: SuperExpression
-  } & CallExpression;
+  };
 
-  declare export type ImportCall = {
+  declare type ImportCall = {
+    ...$Exact<CallExpression>,
+
     expression: ImportExpression
-  } & CallExpression;
+  };
 
-  declare export type ExpressionWithTypeArguments = {
+  declare type ExpressionWithTypeArguments = {
+    ...$Exact<NodeWithTypeArguments>,
+
     kind: SyntaxKind.ExpressionWithTypeArguments,
     parent: HeritageClause | JSDocAugmentsTag,
     expression: LeftHandSideExpression
-  } & NodeWithTypeArguments;
+  };
 
-  declare export type NewExpression = {
+  declare type NewExpression = {
+    ...$Exact<PrimaryExpression>,
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.NewExpression,
     expression: LeftHandSideExpression,
     typeArguments?: NodeArray<TypeNode>,
     arguments?: NodeArray<Expression>
-  } & PrimaryExpression &
-    Declaration;
+  };
 
-  declare export type TaggedTemplateExpression = {
+  declare type TaggedTemplateExpression = {
+    ...$Exact<MemberExpression>,
+
     kind: SyntaxKind.TaggedTemplateExpression,
     tag: LeftHandSideExpression,
     typeArguments?: NodeArray<TypeNode>,
     template: TemplateLiteral
-  } & MemberExpression;
+  };
 
-  declare export type CallLikeExpression =
+  declare type CallLikeExpression =
     | CallExpression
     | NewExpression
     | TaggedTemplateExpression
     | Decorator
     | JsxOpeningLikeElement;
-  declare export type AsExpression = {
+  declare type AsExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.AsExpression,
     expression: Expression,
     type: TypeNode
-  } & Expression;
+  };
 
-  declare export type TypeAssertion = {
+  declare type TypeAssertion = {
+    ...$Exact<UnaryExpression>,
+
     kind: SyntaxKind.TypeAssertionExpression,
     type: TypeNode,
     expression: UnaryExpression
-  } & UnaryExpression;
+  };
 
-  declare export type AssertionExpression = TypeAssertion | AsExpression;
-  declare export type NonNullExpression = {
+  declare type AssertionExpression = TypeAssertion | AsExpression;
+  declare type NonNullExpression = {
+    ...$Exact<LeftHandSideExpression>,
+
     kind: SyntaxKind.NonNullExpression,
     expression: Expression
-  } & LeftHandSideExpression;
+  };
 
-  declare export type MetaProperty = {
+  declare type MetaProperty = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.MetaProperty,
     keywordToken: SyntaxKind.NewKeyword | SyntaxKind.ImportKeyword,
     name: Identifier
-  } & PrimaryExpression;
+  };
 
-  declare export type JsxElement = {
+  declare type JsxElement = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.JsxElement,
     openingElement: JsxOpeningElement,
     children: NodeArray<JsxChild>,
     closingElement: JsxClosingElement
-  } & PrimaryExpression;
+  };
 
-  declare export type JsxOpeningLikeElement =
+  declare type JsxOpeningLikeElement =
     | JsxSelfClosingElement
     | JsxOpeningElement;
-  declare export type JsxAttributeLike = JsxAttribute | JsxSpreadAttribute;
-  declare export type JsxTagNameExpression =
+  declare type JsxAttributeLike = JsxAttribute | JsxSpreadAttribute;
+  declare type JsxTagNameExpression =
     | Identifier
     | ThisExpression
     | JsxTagNamePropertyAccess;
-  declare export type JsxTagNamePropertyAccess = {
+  declare type JsxTagNamePropertyAccess = {
+    ...$Exact<PropertyAccessExpression>,
+
     expression: JsxTagNameExpression
-  } & PropertyAccessExpression;
+  };
 
-  declare export type JsxAttributes = {
+  declare type JsxAttributes = {
+    ...$Exact<ObjectLiteralExpressionBase<JsxAttributeLike>>,
+
     parent: JsxOpeningLikeElement
-  } & ObjectLiteralExpressionBase<JsxAttributeLike>;
+  };
 
-  declare export type JsxOpeningElement = {
+  declare type JsxOpeningElement = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.JsxOpeningElement,
     parent: JsxElement,
     tagName: JsxTagNameExpression,
     typeArguments?: NodeArray<TypeNode>,
     attributes: JsxAttributes
-  } & Expression;
+  };
 
-  declare export type JsxSelfClosingElement = {
+  declare type JsxSelfClosingElement = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.JsxSelfClosingElement,
     tagName: JsxTagNameExpression,
     typeArguments?: NodeArray<TypeNode>,
     attributes: JsxAttributes
-  } & PrimaryExpression;
+  };
 
-  declare export type JsxFragment = {
+  declare type JsxFragment = {
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.JsxFragment,
     openingFragment: JsxOpeningFragment,
     children: NodeArray<JsxChild>,
     closingFragment: JsxClosingFragment
-  } & PrimaryExpression;
+  };
 
-  declare export type JsxOpeningFragment = {
+  declare type JsxOpeningFragment = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.JsxOpeningFragment,
     parent: JsxFragment
-  } & Expression;
+  };
 
-  declare export type JsxClosingFragment = {
+  declare type JsxClosingFragment = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.JsxClosingFragment,
     parent: JsxFragment
-  } & Expression;
+  };
 
-  declare export type JsxAttribute = {
+  declare type JsxAttribute = {
+    ...$Exact<ObjectLiteralElement>,
+
     kind: SyntaxKind.JsxAttribute,
     parent: JsxAttributes,
     name: Identifier,
     initializer?: StringLiteral | JsxExpression
-  } & ObjectLiteralElement;
+  };
 
-  declare export type JsxSpreadAttribute = {
+  declare type JsxSpreadAttribute = {
+    ...$Exact<ObjectLiteralElement>,
+
     kind: SyntaxKind.JsxSpreadAttribute,
     parent: JsxAttributes,
     expression: Expression
-  } & ObjectLiteralElement;
+  };
 
-  declare export type JsxClosingElement = {
+  declare type JsxClosingElement = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.JsxClosingElement,
     parent: JsxElement,
     tagName: JsxTagNameExpression
-  } & Node;
+  };
 
-  declare export type JsxExpression = {
+  declare type JsxExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.JsxExpression,
     parent: JsxElement | JsxAttributeLike,
     dotDotDotToken?: Token<SyntaxKind.DotDotDotToken>,
     expression?: Expression
-  } & Expression;
+  };
 
-  declare export type JsxText = {
+  declare type JsxText = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.JsxText,
     containsOnlyWhiteSpaces: boolean,
     parent: JsxElement
-  } & Node;
+  };
 
-  declare export type JsxChild =
+  declare type JsxChild =
     | JsxText
     | JsxExpression
     | JsxElement
     | JsxSelfClosingElement
     | JsxFragment;
-  declare export type Statement = {
+  declare type Statement = {
+    ...$Exact<Node>,
+
     _statementBrand: any
-  } & Node;
+  };
 
-  declare export type NotEmittedStatement = {
+  declare type NotEmittedStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.NotEmittedStatement
-  } & Statement;
+  };
 
-  /**
-   * A list of comma-separated expressions. This node is only created by transformations.
-   */
-  declare export type CommaListExpression = {
+  declare type CommaListExpression = {
+    ...$Exact<Expression>,
+
     kind: SyntaxKind.CommaListExpression,
     elements: NodeArray<Expression>
-  } & Expression;
+  };
 
-  declare export type EmptyStatement = {
+  declare type EmptyStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.EmptyStatement
-  } & Statement;
+  };
 
-  declare export type DebuggerStatement = {
+  declare type DebuggerStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.DebuggerStatement
-  } & Statement;
+  };
 
-  declare export type MissingDeclaration = {
+  declare type MissingDeclaration = {
+    ...$Exact<DeclarationStatement>,
+
     kind: SyntaxKind.MissingDeclaration,
     name?: Identifier
-  } & DeclarationStatement;
+  };
 
-  declare export type BlockLike =
+  declare type BlockLike =
     | SourceFile
     | Block
     | ModuleBlock
     | CaseOrDefaultClause;
-  declare export type Block = {
+  declare type Block = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.Block,
     statements: NodeArray<Statement>
-  } & Statement;
+  };
 
-  declare export type VariableStatement = {
+  declare type VariableStatement = {
+    ...$Exact<Statement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.VariableStatement,
     declarationList: VariableDeclarationList
-  } & Statement &
-    JSDocContainer;
+  };
 
-  declare export type ExpressionStatement = {
+  declare type ExpressionStatement = {
+    ...$Exact<Statement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.ExpressionStatement,
     expression: Expression
-  } & Statement &
-    JSDocContainer;
+  };
 
-  declare export type IfStatement = {
+  declare type IfStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.IfStatement,
     expression: Expression,
     thenStatement: Statement,
     elseStatement?: Statement
-  } & Statement;
+  };
 
-  declare export type IterationStatement = {
+  declare type IterationStatement = {
+    ...$Exact<Statement>,
+
     statement: Statement
-  } & Statement;
+  };
 
-  declare export type DoStatement = {
+  declare type DoStatement = {
+    ...$Exact<IterationStatement>,
+
     kind: SyntaxKind.DoStatement,
     expression: Expression
-  } & IterationStatement;
+  };
 
-  declare export type WhileStatement = {
+  declare type WhileStatement = {
+    ...$Exact<IterationStatement>,
+
     kind: SyntaxKind.WhileStatement,
     expression: Expression
-  } & IterationStatement;
+  };
 
-  declare export type ForInitializer = VariableDeclarationList | Expression;
-  declare export type ForStatement = {
+  declare type ForInitializer = VariableDeclarationList | Expression;
+  declare type ForStatement = {
+    ...$Exact<IterationStatement>,
+
     kind: SyntaxKind.ForStatement,
     initializer?: ForInitializer,
     condition?: Expression,
     incrementor?: Expression
-  } & IterationStatement;
+  };
 
-  declare export type ForInOrOfStatement = ForInStatement | ForOfStatement;
-  declare export type ForInStatement = {
+  declare type ForInOrOfStatement = ForInStatement | ForOfStatement;
+  declare type ForInStatement = {
+    ...$Exact<IterationStatement>,
+
     kind: SyntaxKind.ForInStatement,
     initializer: ForInitializer,
     expression: Expression
-  } & IterationStatement;
+  };
 
-  declare export type ForOfStatement = {
+  declare type ForOfStatement = {
+    ...$Exact<IterationStatement>,
+
     kind: SyntaxKind.ForOfStatement,
     awaitModifier?: AwaitKeywordToken,
     initializer: ForInitializer,
     expression: Expression
-  } & IterationStatement;
+  };
 
-  declare export type BreakStatement = {
+  declare type BreakStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.BreakStatement,
     label?: Identifier
-  } & Statement;
+  };
 
-  declare export type ContinueStatement = {
+  declare type ContinueStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.ContinueStatement,
     label?: Identifier
-  } & Statement;
+  };
 
-  declare export type BreakOrContinueStatement = BreakStatement | ContinueStatement;
-  declare export type ReturnStatement = {
+  declare type BreakOrContinueStatement = BreakStatement | ContinueStatement;
+  declare type ReturnStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.ReturnStatement,
     expression?: Expression
-  } & Statement;
+  };
 
-  declare export type WithStatement = {
+  declare type WithStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.WithStatement,
     expression: Expression,
     statement: Statement
-  } & Statement;
+  };
 
-  declare export type SwitchStatement = {
+  declare type SwitchStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.SwitchStatement,
     expression: Expression,
     caseBlock: CaseBlock,
     possiblyExhaustive?: boolean
-  } & Statement;
+  };
 
-  declare export type CaseBlock = {
+  declare type CaseBlock = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.CaseBlock,
     parent: SwitchStatement,
     clauses: NodeArray<CaseOrDefaultClause>
-  } & Node;
+  };
 
-  declare export type CaseClause = {
+  declare type CaseClause = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.CaseClause,
     parent: CaseBlock,
     expression: Expression,
     statements: NodeArray<Statement>
-  } & Node;
+  };
 
-  declare export type DefaultClause = {
+  declare type DefaultClause = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.DefaultClause,
     parent: CaseBlock,
     statements: NodeArray<Statement>
-  } & Node;
+  };
 
-  declare export type CaseOrDefaultClause = CaseClause | DefaultClause;
-  declare export type LabeledStatement = {
+  declare type CaseOrDefaultClause = CaseClause | DefaultClause;
+  declare type LabeledStatement = {
+    ...$Exact<Statement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.LabeledStatement,
     label: Identifier,
     statement: Statement
-  } & Statement &
-    JSDocContainer;
+  };
 
-  declare export type ThrowStatement = {
+  declare type ThrowStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.ThrowStatement,
     expression?: Expression
-  } & Statement;
+  };
 
-  declare export type TryStatement = {
+  declare type TryStatement = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.TryStatement,
     tryBlock: Block,
     catchClause?: CatchClause,
     finallyBlock?: Block
-  } & Statement;
+  };
 
-  declare export type CatchClause = {
+  declare type CatchClause = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.CatchClause,
     parent: TryStatement,
     variableDeclaration?: VariableDeclaration,
     block: Block
-  } & Node;
+  };
 
-  declare export type ObjectTypeDeclaration =
+  declare type ObjectTypeDeclaration =
     | ClassLikeDeclaration
     | InterfaceDeclaration
     | TypeLiteralNode;
-  declare export type DeclarationWithTypeParameters =
+  declare type DeclarationWithTypeParameters =
     | DeclarationWithTypeParameterChildren
     | JSDocTypedefTag
     | JSDocCallbackTag
     | JSDocSignature;
-  declare export type DeclarationWithTypeParameterChildren =
+  declare type DeclarationWithTypeParameterChildren =
     | SignatureDeclaration
     | ClassLikeDeclaration
     | InterfaceDeclaration
     | TypeAliasDeclaration
     | JSDocTemplateTag;
-  declare export type ClassLikeDeclarationBase = {
+  declare type ClassLikeDeclarationBase = {
+    ...$Exact<NamedDeclaration>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.ClassDeclaration | SyntaxKind.ClassExpression,
     name?: Identifier,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     heritageClauses?: NodeArray<HeritageClause>,
     members: NodeArray<ClassElement>
-  } & NamedDeclaration &
-    JSDocContainer;
+  };
 
-  declare export type ClassDeclaration = {
+  declare type ClassDeclaration = {
+    ...$Exact<ClassLikeDeclarationBase>,
+    ...$Exact<DeclarationStatement>,
+
     kind: SyntaxKind.ClassDeclaration,
-
-    /**
-     * May be undefined in `export default class { ... }`.
-     */
     name?: Identifier
-  } & ClassLikeDeclarationBase &
-    DeclarationStatement;
+  };
 
-  declare export type ClassExpression = {
+  declare type ClassExpression = {
+    ...$Exact<ClassLikeDeclarationBase>,
+    ...$Exact<PrimaryExpression>,
+
     kind: SyntaxKind.ClassExpression
-  } & ClassLikeDeclarationBase &
-    PrimaryExpression;
+  };
 
-  declare export type ClassLikeDeclaration = ClassDeclaration | ClassExpression;
-  declare export type ClassElement = {
+  declare type ClassLikeDeclaration = ClassDeclaration | ClassExpression;
+  declare type ClassElement = {
+    ...$Exact<NamedDeclaration>,
+
     _classElementBrand: any,
     name?: PropertyName
-  } & NamedDeclaration;
+  };
 
-  declare export type TypeElement = {
+  declare type TypeElement = {
+    ...$Exact<NamedDeclaration>,
+
     _typeElementBrand: any,
     name?: PropertyName,
     questionToken?: QuestionToken
-  } & NamedDeclaration;
+  };
 
-  declare export type InterfaceDeclaration = {
+  declare type InterfaceDeclaration = {
+    ...$Exact<DeclarationStatement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.InterfaceDeclaration,
     name: Identifier,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     heritageClauses?: NodeArray<HeritageClause>,
     members: NodeArray<TypeElement>
-  } & DeclarationStatement &
-    JSDocContainer;
+  };
 
-  declare export type HeritageClause = {
+  declare type HeritageClause = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.HeritageClause,
     parent: InterfaceDeclaration | ClassLikeDeclaration,
     token: SyntaxKind.ExtendsKeyword | SyntaxKind.ImplementsKeyword,
     types: NodeArray<ExpressionWithTypeArguments>
-  } & Node;
+  };
 
-  declare export type TypeAliasDeclaration = {
+  declare type TypeAliasDeclaration = {
+    ...$Exact<DeclarationStatement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.TypeAliasDeclaration,
     name: Identifier,
     typeParameters?: NodeArray<TypeParameterDeclaration>,
     type: TypeNode
-  } & DeclarationStatement &
-    JSDocContainer;
+  };
 
-  declare export type EnumMember = {
+  declare type EnumMember = {
+    ...$Exact<NamedDeclaration>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.EnumMember,
     parent: EnumDeclaration,
     name: PropertyName,
     initializer?: Expression
-  } & NamedDeclaration &
-    JSDocContainer;
+  };
 
-  declare export type EnumDeclaration = {
+  declare type EnumDeclaration = {
+    ...$Exact<DeclarationStatement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.EnumDeclaration,
     name: Identifier,
     members: NodeArray<EnumMember>
-  } & DeclarationStatement &
-    JSDocContainer;
+  };
 
-  declare export type ModuleName = Identifier | StringLiteral;
-  declare export type ModuleBody = NamespaceBody | JSDocNamespaceBody;
-  declare export type ModuleDeclaration = {
+  declare type ModuleName = Identifier | StringLiteral;
+  declare type ModuleBody = NamespaceBody | JSDocNamespaceBody;
+  declare type ModuleDeclaration = {
+    ...$Exact<DeclarationStatement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.ModuleDeclaration,
     parent: ModuleBody | SourceFile,
     name: ModuleName,
     body?: ModuleBody | JSDocNamespaceDeclaration
-  } & DeclarationStatement &
-    JSDocContainer;
+  };
 
-  declare export type NamespaceBody = ModuleBlock | NamespaceDeclaration;
-  declare export type NamespaceDeclaration = {
+  declare type NamespaceBody = ModuleBlock | NamespaceDeclaration;
+  declare type NamespaceDeclaration = {
+    ...$Exact<ModuleDeclaration>,
+
     name: Identifier,
     body: NamespaceBody
-  } & ModuleDeclaration;
+  };
 
-  declare export type JSDocNamespaceBody = Identifier | JSDocNamespaceDeclaration;
-  declare export type JSDocNamespaceDeclaration = {
+  declare type JSDocNamespaceBody = Identifier | JSDocNamespaceDeclaration;
+  declare type JSDocNamespaceDeclaration = {
+    ...$Exact<ModuleDeclaration>,
+
     name: Identifier,
     body?: JSDocNamespaceBody
-  } & ModuleDeclaration;
+  };
 
-  declare export type ModuleBlock = {
+  declare type ModuleBlock = {
+    ...$Exact<Node>,
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.ModuleBlock,
     parent: ModuleDeclaration,
     statements: NodeArray<Statement>
-  } & Node &
-    Statement;
+  };
 
-  declare export type ModuleReference = EntityName | ExternalModuleReference;
+  declare type ModuleReference = EntityName | ExternalModuleReference;
+  declare type ImportEqualsDeclaration = {
+    ...$Exact<DeclarationStatement>,
+    ...$Exact<JSDocContainer>,
 
-  /**
- * One of:
- * - import x = require("mod");
-- import x = M.x;
-*/
-  declare export type ImportEqualsDeclaration = {
     kind: SyntaxKind.ImportEqualsDeclaration,
     parent: SourceFile | ModuleBlock,
     name: Identifier,
     moduleReference: ModuleReference
-  } & DeclarationStatement &
-    JSDocContainer;
+  };
 
-  declare export type ExternalModuleReference = {
+  declare type ExternalModuleReference = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.ExternalModuleReference,
     parent: ImportEqualsDeclaration,
     expression: Expression
-  } & Node;
+  };
 
-  declare export type ImportDeclaration = {
+  declare type ImportDeclaration = {
+    ...$Exact<Statement>,
+
     kind: SyntaxKind.ImportDeclaration,
     parent: SourceFile | ModuleBlock,
     importClause?: ImportClause,
-
-    /**
-     * If this is not a StringLiteral it will be a grammar error.
-     */
     moduleSpecifier: Expression
-  } & Statement;
+  };
 
-  declare export type NamedImportBindings = NamespaceImport | NamedImports;
-  declare export type ImportClause = {
+  declare type NamedImportBindings = NamespaceImport | NamedImports;
+  declare type ImportClause = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.ImportClause,
     parent: ImportDeclaration,
     name?: Identifier,
     namedBindings?: NamedImportBindings
-  } & NamedDeclaration;
+  };
 
-  declare export type NamespaceImport = {
+  declare type NamespaceImport = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.NamespaceImport,
     parent: ImportClause,
     name: Identifier
-  } & NamedDeclaration;
+  };
 
-  declare export type NamespaceExportDeclaration = {
+  declare type NamespaceExportDeclaration = {
+    ...$Exact<DeclarationStatement>,
+
     kind: SyntaxKind.NamespaceExportDeclaration,
     name: Identifier
-  } & DeclarationStatement;
+  };
 
-  declare export type ExportDeclaration = {
+  declare type ExportDeclaration = {
+    ...$Exact<DeclarationStatement>,
+    ...$Exact<JSDocContainer>,
+
     kind: SyntaxKind.ExportDeclaration,
     parent: SourceFile | ModuleBlock,
-
-    /**
-     * Will not be assigned in the case of `export * from "foo";`
-     */
     exportClause?: NamedExports,
-
-    /**
-     * If this is not a StringLiteral it will be a grammar error.
-     */
     moduleSpecifier?: Expression
-  } & DeclarationStatement &
-    JSDocContainer;
+  };
 
-  declare export type NamedImports = {
+  declare type NamedImports = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.NamedImports,
     parent: ImportClause,
     elements: NodeArray<ImportSpecifier>
-  } & Node;
+  };
 
-  declare export type NamedExports = {
+  declare type NamedExports = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.NamedExports,
     parent: ExportDeclaration,
     elements: NodeArray<ExportSpecifier>
-  } & Node;
+  };
 
-  declare export type NamedImportsOrExports = NamedImports | NamedExports;
-  declare export type ImportSpecifier = {
+  declare type NamedImportsOrExports = NamedImports | NamedExports;
+  declare type ImportSpecifier = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.ImportSpecifier,
     parent: NamedImports,
     propertyName?: Identifier,
     name: Identifier
-  } & NamedDeclaration;
+  };
 
-  declare export type ExportSpecifier = {
+  declare type ExportSpecifier = {
+    ...$Exact<NamedDeclaration>,
+
     kind: SyntaxKind.ExportSpecifier,
     parent: NamedExports,
     propertyName?: Identifier,
     name: Identifier
-  } & NamedDeclaration;
+  };
 
-  declare export type ImportOrExportSpecifier = ImportSpecifier | ExportSpecifier;
+  declare type ImportOrExportSpecifier = ImportSpecifier | ExportSpecifier;
+  declare type ExportAssignment = {
+    ...$Exact<DeclarationStatement>,
 
-  /**
-   * This is either an `export =` or an `export default` declaration.
-   * Unless `isExportEquals` is set, this node was parsed as an `export default`.
-   */
-  declare export type ExportAssignment = {
     kind: SyntaxKind.ExportAssignment,
     parent: SourceFile,
     isExportEquals?: boolean,
     expression: Expression
-  } & DeclarationStatement;
+  };
 
-  declare export type FileReference = {
+  declare type FileReference = {
+    ...$Exact<TextRange>,
+
     fileName: string
-  } & TextRange;
+  };
 
-  declare export type CheckJsDirective = {
+  declare type CheckJsDirective = {
+    ...$Exact<TextRange>,
+
     enabled: boolean
-  } & TextRange;
+  };
 
-  declare export type CommentKind =
+  declare type CommentKind =
     | SyntaxKind.SingleLineCommentTrivia
     | SyntaxKind.MultiLineCommentTrivia;
-  declare export type CommentRange = {
+  declare type CommentRange = {
+    ...$Exact<TextRange>,
+
     hasTrailingNewLine?: boolean,
     kind: CommentKind
-  } & TextRange;
+  };
 
-  declare export type SynthesizedComment = {
+  declare type SynthesizedComment = {
+    ...$Exact<CommentRange>,
+
     text: string,
     pos: -1,
     end: -1
-  } & CommentRange;
+  };
 
-  declare export type JSDocTypeExpression = {
+  declare type JSDocTypeExpression = {
+    ...$Exact<TypeNode>,
+
     kind: SyntaxKind.JSDocTypeExpression,
     type: TypeNode
-  } & TypeNode;
+  };
 
-  declare export type JSDocType = {
+  declare type JSDocType = {
+    ...$Exact<TypeNode>,
+
     _jsDocTypeBrand: any
-  } & TypeNode;
+  };
 
-  declare export type JSDocAllType = {
+  declare type JSDocAllType = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocAllType
-  } & JSDocType;
+  };
 
-  declare export type JSDocUnknownType = {
+  declare type JSDocUnknownType = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocUnknownType
-  } & JSDocType;
+  };
 
-  declare export type JSDocNonNullableType = {
+  declare type JSDocNonNullableType = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocNonNullableType,
     type: TypeNode
-  } & JSDocType;
+  };
 
-  declare export type JSDocNullableType = {
+  declare type JSDocNullableType = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocNullableType,
     type: TypeNode
-  } & JSDocType;
+  };
 
-  declare export type JSDocOptionalType = {
+  declare type JSDocOptionalType = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocOptionalType,
     type: TypeNode
-  } & JSDocType;
+  };
 
-  declare export type JSDocFunctionType = {
+  declare type JSDocFunctionType = {
+    ...$Exact<JSDocType>,
+    ...$Exact<SignatureDeclarationBase>,
+
     kind: SyntaxKind.JSDocFunctionType
-  } & JSDocType &
-    SignatureDeclarationBase;
+  };
 
-  declare export type JSDocVariadicType = {
+  declare type JSDocVariadicType = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocVariadicType,
     type: TypeNode
-  } & JSDocType;
+  };
 
-  declare export type JSDocTypeReferencingNode =
+  declare type JSDocTypeReferencingNode =
     | JSDocVariadicType
     | JSDocOptionalType
     | JSDocNullableType
     | JSDocNonNullableType;
-  declare export type JSDoc = {
+  declare type JSDoc = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.JSDocComment,
     parent: HasJSDoc,
     tags?: NodeArray<JSDocTag>,
     comment?: string
-  } & Node;
+  };
 
-  declare export type JSDocTag = {
+  declare type JSDocTag = {
+    ...$Exact<Node>,
+
     parent: JSDoc | JSDocTypeLiteral,
     tagName: Identifier,
     comment?: string
-  } & Node;
+  };
 
-  declare export type JSDocUnknownTag = {
+  declare type JSDocUnknownTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocTag
-  } & JSDocTag;
+  };
 
-  /**
-   * Note that `@extends` is a synonym of `@augments`.
-   * Both tags are represented by this interface.
-   */
-  declare export type JSDocAugmentsTag = {
+  declare type JSDocAugmentsTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocAugmentsTag,
     class: ExpressionWithTypeArguments & {
       expression: Identifier | PropertyAccessEntityNameExpression
     }
-  } & JSDocTag;
+  };
 
-  declare export type JSDocClassTag = {
+  declare type JSDocClassTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocClassTag
-  } & JSDocTag;
+  };
 
-  declare export type JSDocEnumTag = {
+  declare type JSDocEnumTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocEnumTag,
     typeExpression?: JSDocTypeExpression
-  } & JSDocTag;
+  };
 
-  declare export type JSDocThisTag = {
+  declare type JSDocThisTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocThisTag,
     typeExpression?: JSDocTypeExpression
-  } & JSDocTag;
+  };
 
-  declare export type JSDocTemplateTag = {
+  declare type JSDocTemplateTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocTemplateTag,
     constraint: JSDocTypeExpression | void,
     typeParameters: NodeArray<TypeParameterDeclaration>
-  } & JSDocTag;
+  };
 
-  declare export type JSDocReturnTag = {
+  declare type JSDocReturnTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocReturnTag,
     typeExpression?: JSDocTypeExpression
-  } & JSDocTag;
+  };
 
-  declare export type JSDocTypeTag = {
+  declare type JSDocTypeTag = {
+    ...$Exact<JSDocTag>,
+
     kind: SyntaxKind.JSDocTypeTag,
     typeExpression?: JSDocTypeExpression
-  } & JSDocTag;
+  };
 
-  declare export type JSDocTypedefTag = {
+  declare type JSDocTypedefTag = {
+    ...$Exact<JSDocTag>,
+    ...$Exact<NamedDeclaration>,
+
     parent: JSDoc,
     kind: SyntaxKind.JSDocTypedefTag,
     fullName?: JSDocNamespaceDeclaration | Identifier,
     name?: Identifier,
     typeExpression?: JSDocTypeExpression | JSDocTypeLiteral
-  } & JSDocTag &
-    NamedDeclaration;
+  };
 
-  declare export type JSDocCallbackTag = {
+  declare type JSDocCallbackTag = {
+    ...$Exact<JSDocTag>,
+    ...$Exact<NamedDeclaration>,
+
     parent: JSDoc,
     kind: SyntaxKind.JSDocCallbackTag,
     fullName?: JSDocNamespaceDeclaration | Identifier,
     name?: Identifier,
     typeExpression: JSDocSignature
-  } & JSDocTag &
-    NamedDeclaration;
+  };
 
-  declare export type JSDocSignature = {
+  declare type JSDocSignature = {
+    ...$Exact<JSDocType>,
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.JSDocSignature,
     typeParameters?: $ReadOnlyArray<JSDocTemplateTag>,
     parameters: $ReadOnlyArray<JSDocParameterTag>,
     type: JSDocReturnTag | void
-  } & JSDocType &
-    Declaration;
+  };
 
-  declare export type JSDocPropertyLikeTag = {
+  declare type JSDocPropertyLikeTag = {
+    ...$Exact<JSDocTag>,
+    ...$Exact<Declaration>,
+
     parent: JSDoc,
     name: EntityName,
     typeExpression?: JSDocTypeExpression,
-
-    /**
-     * Whether the property name came before the type -- non-standard for JSDoc, but Typescript-like
-     */
     isNameFirst: boolean,
     isBracketed: boolean
-  } & JSDocTag &
-    Declaration;
+  };
 
-  declare export type JSDocPropertyTag = {
+  declare type JSDocPropertyTag = {
+    ...$Exact<JSDocPropertyLikeTag>,
+
     kind: SyntaxKind.JSDocPropertyTag
-  } & JSDocPropertyLikeTag;
+  };
 
-  declare export type JSDocParameterTag = {
+  declare type JSDocParameterTag = {
+    ...$Exact<JSDocPropertyLikeTag>,
+
     kind: SyntaxKind.JSDocParameterTag
-  } & JSDocPropertyLikeTag;
+  };
 
-  declare export type JSDocTypeLiteral = {
+  declare type JSDocTypeLiteral = {
+    ...$Exact<JSDocType>,
+
     kind: SyntaxKind.JSDocTypeLiteral,
     jsDocPropertyTags?: $ReadOnlyArray<JSDocPropertyLikeTag>,
-
-    /**
-     * If true, then this type literal represents an *array* of its type.
-     */
     isArrayType?: boolean
-  } & JSDocType;
+  };
+
+  declare class FlowFlags {
+    static +Unreachable: Class<FlowFlags__Unreachable> &
+      FlowFlags__Unreachable &
+      1; // 1
+    static +Start: Class<FlowFlags__Start> & FlowFlags__Start & 2; // 2
+    static +BranchLabel: Class<FlowFlags__BranchLabel> &
+      FlowFlags__BranchLabel &
+      4; // 4
+    static +LoopLabel: Class<FlowFlags__LoopLabel> & FlowFlags__LoopLabel & 8; // 8
+    static +Assignment: Class<FlowFlags__Assignment> &
+      FlowFlags__Assignment &
+      16; // 16
+    static +TrueCondition: Class<FlowFlags__TrueCondition> &
+      FlowFlags__TrueCondition &
+      32; // 32
+    static +FalseCondition: Class<FlowFlags__FalseCondition> &
+      FlowFlags__FalseCondition &
+      64; // 64
+    static +SwitchClause: Class<FlowFlags__SwitchClause> &
+      FlowFlags__SwitchClause &
+      128; // 128
+    static +ArrayMutation: Class<FlowFlags__ArrayMutation> &
+      FlowFlags__ArrayMutation &
+      256; // 256
+    static +Referenced: Class<FlowFlags__Referenced> &
+      FlowFlags__Referenced &
+      512; // 512
+    static +Shared: Class<FlowFlags__Shared> & FlowFlags__Shared & 1024; // 1024
+    static +PreFinally: Class<FlowFlags__PreFinally> &
+      FlowFlags__PreFinally &
+      2048; // 2048
+    static +AfterFinally: Class<FlowFlags__AfterFinally> &
+      FlowFlags__AfterFinally &
+      4096; // 4096
+    static +Label: Class<FlowFlags__Label> & FlowFlags__Label & 12; // 12
+    static +Condition: Class<FlowFlags__Condition> & FlowFlags__Condition & 96; // 96
+  }
 
   declare class FlowFlags__Unreachable mixins FlowFlags {}
   declare class FlowFlags__Start mixins FlowFlags {}
@@ -3491,59 +3874,25 @@ ObjectLiteralElement (e.g. PropertyAssignment, ShorthandPropertyAssignment etc.)
   declare class FlowFlags__Label mixins FlowFlags {}
   declare class FlowFlags__Condition mixins FlowFlags {}
 
-  declare export class FlowFlags {
-    constructor(...args: empty): mixed;
-    static Unreachable: Class<FlowFlags__Unreachable> &
-      FlowFlags__Unreachable &
-      1; // 1
-    static Start: Class<FlowFlags__Start> & FlowFlags__Start & 2; // 2
-    static BranchLabel: Class<FlowFlags__BranchLabel> &
-      FlowFlags__BranchLabel &
-      4; // 4
-    static LoopLabel: Class<FlowFlags__LoopLabel> & FlowFlags__LoopLabel & 8; // 8
-    static Assignment: Class<FlowFlags__Assignment> &
-      FlowFlags__Assignment &
-      16; // 16
-    static TrueCondition: Class<FlowFlags__TrueCondition> &
-      FlowFlags__TrueCondition &
-      32; // 32
-    static FalseCondition: Class<FlowFlags__FalseCondition> &
-      FlowFlags__FalseCondition &
-      64; // 64
-    static SwitchClause: Class<FlowFlags__SwitchClause> &
-      FlowFlags__SwitchClause &
-      128; // 128
-    static ArrayMutation: Class<FlowFlags__ArrayMutation> &
-      FlowFlags__ArrayMutation &
-      256; // 256
-    static Referenced: Class<FlowFlags__Referenced> &
-      FlowFlags__Referenced &
-      512; // 512
-    static Shared: Class<FlowFlags__Shared> & FlowFlags__Shared & 1024; // 1024
-    static PreFinally: Class<FlowFlags__PreFinally> &
-      FlowFlags__PreFinally &
-      2048; // 2048
-    static AfterFinally: Class<FlowFlags__AfterFinally> &
-      FlowFlags__AfterFinally &
-      4096; // 4096
-    static Label: Class<FlowFlags__Label> & FlowFlags__Label & 12; // 12
-    static Condition: Class<FlowFlags__Condition> & FlowFlags__Condition & 96; // 96
-  }
+  declare type FlowLock = {
+    locked?: boolean
+  };
 
-  declare export interface FlowLock {
-    locked?: boolean;
-  }
-  declare export type AfterFinallyFlow = {
+  declare type AfterFinallyFlow = {
+    ...$Exact<FlowNodeBase>,
+    ...$Exact<FlowLock>,
+
     antecedent: FlowNode
-  } & FlowNodeBase &
-    FlowLock;
+  };
 
-  declare export type PreFinallyFlow = {
+  declare type PreFinallyFlow = {
+    ...$Exact<FlowNodeBase>,
+
     antecedent: FlowNode,
     lock: FlowLock
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowNode =
+  declare type FlowNode =
     | AfterFinallyFlow
     | PreFinallyFlow
     | FlowStart
@@ -3552,50 +3901,67 @@ ObjectLiteralElement (e.g. PropertyAssignment, ShorthandPropertyAssignment etc.)
     | FlowCondition
     | FlowSwitchClause
     | FlowArrayMutation;
-  declare export interface FlowNodeBase {
-    flags: FlowFlags;
-    id?: number;
-  }
-  declare export type FlowStart = {
+  declare type FlowNodeBase = {
+    flags: FlowFlags,
+    id?: number
+  };
+
+  declare type FlowStart = {
+    ...$Exact<FlowNodeBase>,
+
     container?: FunctionExpression | ArrowFunction | MethodDeclaration
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowLabel = {
+  declare type FlowLabel = {
+    ...$Exact<FlowNodeBase>,
+
     antecedents: FlowNode[] | void
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowAssignment = {
+  declare type FlowAssignment = {
+    ...$Exact<FlowNodeBase>,
+
     node: Expression | VariableDeclaration | BindingElement,
     antecedent: FlowNode
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowCondition = {
+  declare type FlowCondition = {
+    ...$Exact<FlowNodeBase>,
+
     expression: Expression,
     antecedent: FlowNode
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowSwitchClause = {
+  declare type FlowSwitchClause = {
+    ...$Exact<FlowNodeBase>,
+
     switchStatement: SwitchStatement,
     clauseStart: number,
     clauseEnd: number,
     antecedent: FlowNode
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowArrayMutation = {
+  declare type FlowArrayMutation = {
+    ...$Exact<FlowNodeBase>,
+
     node: CallExpression | BinaryExpression,
     antecedent: FlowNode
-  } & FlowNodeBase;
+  };
 
-  declare export type FlowType = Type | IncompleteType;
-  declare export interface IncompleteType {
-    flags: TypeFlags;
-    type: Type;
-  }
-  declare export interface AmdDependency {
-    path: string;
-    name?: string;
-  }
-  declare export type SourceFile = {
+  declare type FlowType = Type | IncompleteType;
+  declare type IncompleteType = {
+    flags: TypeFlags,
+    type: Type
+  };
+
+  declare type AmdDependency = {
+    path: string,
+    name?: string
+  };
+
+  declare type SourceFile = {
+    ...$Exact<Declaration>,
+
     kind: SyntaxKind.SourceFile,
     statements: NodeArray<Statement>,
     endOfFileToken: Token<SyntaxKind.EndOfFileToken>,
@@ -3608,15 +3974,6 @@ ObjectLiteralElement (e.g. PropertyAssignment, ShorthandPropertyAssignment etc.)
     libReferenceDirectives: $ReadOnlyArray<FileReference>,
     languageVariant: LanguageVariant,
     isDeclarationFile: boolean,
-
-    /**
- * lib.d.ts should have a reference comment like
- * 
-  /// <reference no-default-lib="true"/>
-
-If any other file has this comment, it signals not to include lib.d.ts
-because this containing file is intended to act as a default library.
-*/
     hasNoDefaultLib: boolean,
     languageVersion: ScriptTarget,
     getLineAndCharacterOfPosition(pos: number): LineAndCharacter,
@@ -3624,15 +3981,19 @@ because this containing file is intended to act as a default library.
     getLineStarts(): $ReadOnlyArray<number>,
     getPositionOfLineAndCharacter(line: number, character: number): number,
     update(newText: string, textChangeRange: TextChangeRange): SourceFile
-  } & Declaration;
+  };
 
-  declare export type Bundle = {
+  declare type Bundle = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.Bundle,
     prepends: $ReadOnlyArray<InputFiles | UnparsedSource>,
     sourceFiles: $ReadOnlyArray<SourceFile>
-  } & Node;
+  };
 
-  declare export type InputFiles = {
+  declare type InputFiles = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.InputFiles,
     javascriptPath?: string,
     javascriptText: string,
@@ -3642,31 +4003,41 @@ because this containing file is intended to act as a default library.
     declarationText: string,
     declarationMapPath?: string,
     declarationMapText?: string
-  } & Node;
+  };
 
-  declare export type UnparsedSource = {
+  declare type UnparsedSource = {
+    ...$Exact<Node>,
+
     kind: SyntaxKind.UnparsedSource,
     fileName?: string,
     text: string,
     sourceMapPath?: string,
     sourceMapText?: string
-  } & Node;
+  };
 
-  declare export type JsonSourceFile = {
+  declare type JsonSourceFile = {
+    ...$Exact<SourceFile>,
+
     statements: NodeArray<JsonObjectExpressionStatement>
-  } & SourceFile;
+  };
 
-  declare export type TsConfigSourceFile = {
+  declare type TsConfigSourceFile = {
+    ...$Exact<JsonSourceFile>,
+
     extendedSourceFiles?: string[]
-  } & JsonSourceFile;
+  };
 
-  declare export type JsonMinusNumericLiteral = {
+  declare type JsonMinusNumericLiteral = {
+    ...$Exact<PrefixUnaryExpression>,
+
     kind: SyntaxKind.PrefixUnaryExpression,
     operator: SyntaxKind.MinusToken,
     operand: NumericLiteral
-  } & PrefixUnaryExpression;
+  };
 
-  declare export type JsonObjectExpressionStatement = {
+  declare type JsonObjectExpressionStatement = {
+    ...$Exact<ExpressionStatement>,
+
     expression:
       | ObjectLiteralExpression
       | ArrayLiteralExpression
@@ -3675,79 +4046,50 @@ because this containing file is intended to act as a default library.
       | StringLiteral
       | BooleanLiteral
       | NullLiteral
-  } & ExpressionStatement;
+  };
 
-  declare export interface ScriptReferenceHost {
-    getCompilerOptions(): CompilerOptions;
-    getSourceFile(fileName: string): SourceFile | void;
-    getSourceFileByPath(path: Path): SourceFile | void;
-    getCurrentDirectory(): string;
-  }
-  declare export interface ParseConfigHost {
-    useCaseSensitiveFileNames: boolean;
+  declare type ScriptReferenceHost = {
+    getCompilerOptions(): CompilerOptions,
+    getSourceFile(fileName: string): SourceFile | void,
+    getSourceFileByPath(path: Path): SourceFile | void,
+    getCurrentDirectory(): string
+  };
+
+  declare type ParseConfigHost = {
+    useCaseSensitiveFileNames: boolean,
     readDirectory(
       rootDir: string,
       extensions: $ReadOnlyArray<string>,
       excludes: $ReadOnlyArray<string> | void,
       includes: $ReadOnlyArray<string>,
       depth?: number
-    ): $ReadOnlyArray<string>;
+    ): $ReadOnlyArray<string>,
+    fileExists(path: string): boolean,
+    readFile(path: string): string | void,
+    trace(s: string): void
+  };
 
-    /**
-     * Gets a value indicating whether the specified path exists and is a file.
-     * @param path The path to test.
-     */
-    fileExists(path: string): boolean;
-    readFile(path: string): string | void;
-    trace(s: string): void;
-  }
-
-  /**
- * Branded string for keeping track of when we've turned an ambiguous path
- * specified like "./blah" to an absolute path to an actual
-tsconfig file, e.g. "/root/blah/tsconfig.json"
-*/
-  declare export type ResolvedConfigFileName = string & {
+  declare type ResolvedConfigFileName = string & {
     _isResolvedConfigFileName: empty
   };
-  declare export type WriteFileCallback = (
+  declare type WriteFileCallback = (
     fileName: string,
     data: string,
     writeByteOrderMark: boolean,
     onError?: (message: string) => void,
     sourceFiles?: $ReadOnlyArray<SourceFile>
   ) => void;
-  declare export class OperationCanceledException {}
-  declare export interface CancellationToken {
-    isCancellationRequested(): boolean;
+  declare class OperationCanceledException {}
+  declare type CancellationToken = {
+    isCancellationRequested(): boolean,
+    throwIfCancellationRequested(): void
+  };
 
-    /**
-     *
-     * @throws OperationCanceledException if isCancellationRequested is true
-     */
-    throwIfCancellationRequested(): void;
-  }
-  declare export type Program = {
-    /**
-     * Get a list of root file names that were passed to a 'createProgram'
-     */
+  declare type Program = {
+    ...$Exact<ScriptReferenceHost>,
+
     getRootFileNames(): $ReadOnlyArray<string>,
-
-    /**
-     * Get a list of files in the program
-     */
     getSourceFiles(): $ReadOnlyArray<SourceFile>,
-
-    /**
- * Emits the JavaScript and declaration files.  If targetSourceFile is not specified, then
- * the JavaScript and declaration files will be produced for all the files in this program.
-If targetSourceFile is specified, then only the JavaScript and declaration for that
-specific file will be generated.
-
-If writeFile is not specified then the writeFile callback from the compiler host will be
-used for writing the JavaScript and declaration files.  Otherwise, the writeFile parameter
-will be invoked when writing the JavaScript and declaration files.
-*/
     emit(
       targetSourceFile?: SourceFile,
       writeFile?: WriteFileCallback,
@@ -3765,10 +4107,6 @@ will be invoked when writing the JavaScript and declaration files.
       sourceFile?: SourceFile,
       cancellationToken?: CancellationToken
     ): $ReadOnlyArray<DiagnosticWithLocation>,
-
-    /**
-     * The first time this is called, it will return global diagnostics (no location).
-     */
     getSemanticDiagnostics(
       sourceFile?: SourceFile,
       cancellationToken?: CancellationToken
@@ -3778,129 +4116,78 @@ will be invoked when writing the JavaScript and declaration files.
       cancellationToken?: CancellationToken
     ): $ReadOnlyArray<DiagnosticWithLocation>,
     getConfigFileParsingDiagnostics(): $ReadOnlyArray<Diagnostic>,
-
-    /**
-     * Gets a type checker that can be used to semantically analyze source files in the program.
-     */
     getTypeChecker(): TypeChecker,
     isSourceFileFromExternalLibrary(file: SourceFile): boolean,
     isSourceFileDefaultLibrary(file: SourceFile): boolean,
     getProjectReferences(): $ReadOnlyArray<ProjectReference> | void,
     getResolvedProjectReferences(): $ReadOnlyArray<ResolvedProjectReference | void> | void
-  } & ScriptReferenceHost;
+  };
 
-  declare export interface ResolvedProjectReference {
-    commandLine: ParsedCommandLine;
-    sourceFile: SourceFile;
-    references?: $ReadOnlyArray<ResolvedProjectReference | void>;
-  }
-  declare export interface CustomTransformers {
-    /**
-     * Custom transformers to evaluate before built-in .js transformations.
-     */
-    before?: TransformerFactory<SourceFile>[];
+  declare type ResolvedProjectReference = {
+    commandLine: ParsedCommandLine,
+    sourceFile: SourceFile,
+    references?: $ReadOnlyArray<ResolvedProjectReference | void>
+  };
 
-    /**
-     * Custom transformers to evaluate after built-in .js transformations.
-     */
-    after?: TransformerFactory<SourceFile>[];
+  declare type CustomTransformers = {
+    before?: TransformerFactory<SourceFile>[],
+    after?: TransformerFactory<SourceFile>[],
+    afterDeclarations?: TransformerFactory<Bundle | SourceFile>[]
+  };
 
-    /**
-     * Custom transformers to evaluate after built-in .d.ts transformations.
-     */
-    afterDeclarations?: TransformerFactory<Bundle | SourceFile>[];
-  }
-  declare export interface SourceMapSpan {
-    /**
-     * Line number in the .js file.
-     */
-    emittedLine: number;
+  declare type SourceMapSpan = {
+    emittedLine: number,
+    emittedColumn: number,
+    sourceLine: number,
+    sourceColumn: number,
+    nameIndex?: number,
+    sourceIndex: number
+  };
 
-    /**
-     * Column number in the .js file.
-     */
-    emittedColumn: number;
-
-    /**
-     * Line number in the .ts file.
-     */
-    sourceLine: number;
-
-    /**
-     * Column number in the .ts file.
-     */
-    sourceColumn: number;
-
-    /**
-     * Optional name (index into names array) associated with this span.
-     */
-    nameIndex?: number;
-
-    /**
-     * .ts file (index into sources array) associated with this span
-     */
-    sourceIndex: number;
+  declare class ExitStatus {
+    static +Success: Class<ExitStatus__Success> & ExitStatus__Success & 0; // 0
+    static +DiagnosticsPresent_OutputsSkipped: Class<ExitStatus__DiagnosticsPresent_OutputsSkipped> &
+      ExitStatus__DiagnosticsPresent_OutputsSkipped &
+      1; // 1
+    static +DiagnosticsPresent_OutputsGenerated: Class<ExitStatus__DiagnosticsPresent_OutputsGenerated> &
+      ExitStatus__DiagnosticsPresent_OutputsGenerated &
+      2; // 2
   }
 
-  /**
-   * Return code used by getEmitOutput function to indicate status of the function
-   */
   declare class ExitStatus__Success mixins ExitStatus {}
   declare class ExitStatus__DiagnosticsPresent_OutputsSkipped
     mixins ExitStatus {}
   declare class ExitStatus__DiagnosticsPresent_OutputsGenerated
     mixins ExitStatus {}
 
-  declare export class ExitStatus {
-    constructor(...args: empty): mixed;
-    static Success: Class<ExitStatus__Success> & ExitStatus__Success & 0; // 0
-    static DiagnosticsPresent_OutputsSkipped: Class<ExitStatus__DiagnosticsPresent_OutputsSkipped> &
-      ExitStatus__DiagnosticsPresent_OutputsSkipped &
-      1; // 1
-    static DiagnosticsPresent_OutputsGenerated: Class<ExitStatus__DiagnosticsPresent_OutputsGenerated> &
-      ExitStatus__DiagnosticsPresent_OutputsGenerated &
-      2; // 2
-  }
+  declare type EmitResult = {
+    emitSkipped: boolean,
+    diagnostics: $ReadOnlyArray<Diagnostic>,
+    emittedFiles?: string[]
+  };
 
-  declare export interface EmitResult {
-    emitSkipped: boolean;
-
-    /**
-     * Contains declaration emit diagnostics
-     */
-    diagnostics: $ReadOnlyArray<Diagnostic>;
-    emittedFiles?: string[];
-  }
-  declare export interface TypeChecker {
-    getTypeOfSymbolAtLocation(symbol: Symbol, node: Node): Type;
-    getDeclaredTypeOfSymbol(symbol: Symbol): Type;
-    getPropertiesOfType(type: Type): Symbol[];
-    getPropertyOfType(type: Type, propertyName: string): Symbol | void;
-    getIndexInfoOfType(type: Type, kind: IndexKind): IndexInfo | void;
+  declare type TypeChecker = {
+    getTypeOfSymbolAtLocation(symbol: Symbol, node: Node): Type,
+    getDeclaredTypeOfSymbol(symbol: Symbol): Type,
+    getPropertiesOfType(type: Type): Symbol[],
+    getPropertyOfType(type: Type, propertyName: string): Symbol | void,
+    getIndexInfoOfType(type: Type, kind: IndexKind): IndexInfo | void,
     getSignaturesOfType(
       type: Type,
       kind: SignatureKind
-    ): $ReadOnlyArray<Signature>;
-    getIndexTypeOfType(type: Type, kind: IndexKind): Type | void;
-    getBaseTypes(type: InterfaceType): BaseType[];
-    getBaseTypeOfLiteralType(type: Type): Type;
-    getWidenedType(type: Type): Type;
-    getReturnTypeOfSignature(signature: Signature): Type;
-    getNullableType(type: Type, flags: TypeFlags): Type;
-    getNonNullableType(type: Type): Type;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): $ReadOnlyArray<Signature>,
+    getIndexTypeOfType(type: Type, kind: IndexKind): Type | void,
+    getBaseTypes(type: InterfaceType): BaseType[],
+    getBaseTypeOfLiteralType(type: Type): Type,
+    getWidenedType(type: Type): Type,
+    getReturnTypeOfSignature(signature: Signature): Type,
+    getNullableType(type: Type, flags: TypeFlags): Type,
+    getNonNullableType(type: Type): Type,
     typeToTypeNode(
       type: Type,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): TypeNode | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): TypeNode | void,
     signatureToSignatureDeclaration(
       signature: Signature,
       kind: SyntaxKind,
@@ -3910,172 +4197,207 @@ will be invoked when writing the JavaScript and declaration files.
       | (SignatureDeclaration & {
           typeArguments?: NodeArray<TypeNode>
         })
-      | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+      | void,
     indexInfoToIndexSignatureDeclaration(
       indexInfo: IndexInfo,
       kind: IndexKind,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): IndexSignatureDeclaration | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): IndexSignatureDeclaration | void,
     symbolToEntityName(
       symbol: Symbol,
       meaning: SymbolFlags,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): EntityName | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): EntityName | void,
     symbolToExpression(
       symbol: Symbol,
       meaning: SymbolFlags,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): Expression | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): Expression | void,
     symbolToTypeParameterDeclarations(
       symbol: Symbol,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): NodeArray<TypeParameterDeclaration> | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): NodeArray<TypeParameterDeclaration> | void,
     symbolToParameterDeclaration(
       symbol: Symbol,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): ParameterDeclaration | void;
-
-    /**
-     * Note that the resulting nodes cannot be checked.
-     */
+    ): ParameterDeclaration | void,
     typeParameterToDeclaration(
       parameter: TypeParameter,
       enclosingDeclaration?: Node,
       flags?: NodeBuilderFlags
-    ): TypeParameterDeclaration | void;
-    getSymbolsInScope(location: Node, meaning: SymbolFlags): Symbol[];
-    getSymbolAtLocation(node: Node): Symbol | void;
+    ): TypeParameterDeclaration | void,
+    getSymbolsInScope(location: Node, meaning: SymbolFlags): Symbol[],
+    getSymbolAtLocation(node: Node): Symbol | void,
     getSymbolsOfParameterPropertyDeclaration(
       parameter: ParameterDeclaration,
       parameterName: string
-    ): Symbol[];
-
-    /**
-     * The function returns the value (local variable) symbol of an identifier in the short-hand property assignment.
-     * This is necessary as an identifier in short-hand property assignment can contains two meaning: property name and property value.
-     */
-    getShorthandAssignmentValueSymbol(location: Node): Symbol | void;
+    ): Symbol[],
+    getShorthandAssignmentValueSymbol(location: Node): Symbol | void,
     getExportSpecifierLocalTargetSymbol(
       location: ExportSpecifier
-    ): Symbol | void;
-
-    /**
- * If a symbol is a local symbol with an associated exported symbol, returns the exported symbol.
- * Otherwise returns its input.
-For example, at `export type T = number;`:
-     - `getSymbolAtLocation` at the location `T` will return the exported symbol for `T`.
-     - But the result of `getSymbolsInScope` will contain the *local* symbol for `T`, not the exported symbol.
-     - Calling `getExportSymbolOfSymbol` on that local symbol will return the exported symbol.
-*/
-    getExportSymbolOfSymbol(symbol: Symbol): Symbol;
+    ): Symbol | void,
+    getExportSymbolOfSymbol(symbol: Symbol): Symbol,
     getPropertySymbolOfDestructuringAssignment(
       location: Identifier
-    ): Symbol | void;
-    getTypeAtLocation(node: Node): Type;
-    getTypeFromTypeNode(node: TypeNode): Type;
+    ): Symbol | void,
+    getTypeAtLocation(node: Node): Type,
+    getTypeFromTypeNode(node: TypeNode): Type,
     signatureToString(
       signature: Signature,
       enclosingDeclaration?: Node,
       flags?: TypeFormatFlags,
       kind?: SignatureKind
-    ): string;
+    ): string,
     typeToString(
       type: Type,
       enclosingDeclaration?: Node,
       flags?: TypeFormatFlags
-    ): string;
+    ): string,
     symbolToString(
       symbol: Symbol,
       enclosingDeclaration?: Node,
       meaning?: SymbolFlags,
       flags?: SymbolFormatFlags
-    ): string;
+    ): string,
     typePredicateToString(
       predicate: TypePredicate,
       enclosingDeclaration?: Node,
       flags?: TypeFormatFlags
-    ): string;
-    getFullyQualifiedName(symbol: Symbol): string;
-    getAugmentedPropertiesOfType(type: Type): Symbol[];
-    getRootSymbols(symbol: Symbol): $ReadOnlyArray<Symbol>;
-    getContextualType(node: Expression): Type | void;
-
-    /**
-     * returns unknownSignature in the case of an error.
-     * returns undefined if the node is not valid.
-     * @param argumentCount Apparent number of arguments, passed in case of a possibly incomplete call. This should come from an ArgumentListInfo. See `signatureHelp.ts`.
-     */
+    ): string,
+    getFullyQualifiedName(symbol: Symbol): string,
+    getAugmentedPropertiesOfType(type: Type): Symbol[],
+    getRootSymbols(symbol: Symbol): $ReadOnlyArray<Symbol>,
+    getContextualType(node: Expression): Type | void,
     getResolvedSignature(
       node: CallLikeExpression,
       candidatesOutArray?: Signature[],
       argumentCount?: number
-    ): Signature | void;
+    ): Signature | void,
     getSignatureFromDeclaration(
       declaration: SignatureDeclaration
-    ): Signature | void;
-    isImplementationOfOverload(node: SignatureDeclaration): boolean | void;
-    isUndefinedSymbol(symbol: Symbol): boolean;
-    isArgumentsSymbol(symbol: Symbol): boolean;
-    isUnknownSymbol(symbol: Symbol): boolean;
+    ): Signature | void,
+    isImplementationOfOverload(node: SignatureDeclaration): boolean | void,
+    isUndefinedSymbol(symbol: Symbol): boolean,
+    isArgumentsSymbol(symbol: Symbol): boolean,
+    isUnknownSymbol(symbol: Symbol): boolean,
     getConstantValue(
       node: EnumMember | PropertyAccessExpression | ElementAccessExpression
-    ): string | number | void;
+    ): string | number | void,
     isValidPropertyAccess(
       node: PropertyAccessExpression | QualifiedName | ImportTypeNode,
       propertyName: string
-    ): boolean;
-
-    /**
-     * Follow all aliases to get the original symbol.
-     */
-    getAliasedSymbol(symbol: Symbol): Symbol;
-    getExportsOfModule(moduleSymbol: Symbol): Symbol[];
-    getJsxIntrinsicTagNamesAt(location: Node): Symbol[];
-    isOptionalParameter(node: ParameterDeclaration): boolean;
-    getAmbientModules(): Symbol[];
+    ): boolean,
+    getAliasedSymbol(symbol: Symbol): Symbol,
+    getExportsOfModule(moduleSymbol: Symbol): Symbol[],
+    getJsxIntrinsicTagNamesAt(location: Node): Symbol[],
+    isOptionalParameter(node: ParameterDeclaration): boolean,
+    getAmbientModules(): Symbol[],
     tryGetMemberInModuleExports(
       memberName: string,
       moduleSymbol: Symbol
-    ): Symbol | void;
-    getApparentType(type: Type): Type;
-    getBaseConstraintOfType(type: Type): Type | void;
-    getDefaultFromTypeParameter(type: Type): Type | void;
-
-    /**
- * Depending on the operation performed, it may be appropriate to throw away the checker
- * if the cancellation token is triggered. Typically, if it is used for error checking
-and the operation is cancelled, then it should be discarded, otherwise it is safe to keep.
-*/
+    ): Symbol | void,
+    getApparentType(type: Type): Type,
+    getBaseConstraintOfType(type: Type): Type | void,
+    getDefaultFromTypeParameter(type: Type): Type | void,
     runWithCancellationToken<T>(
       token: CancellationToken,
       cb: (checker: TypeChecker) => T
-    ): T;
+    ): T
+  };
+
+  declare class NodeBuilderFlags {
+    static +None: Class<NodeBuilderFlags__None> & NodeBuilderFlags__None & 0; // 0
+    static +NoTruncation: Class<NodeBuilderFlags__NoTruncation> &
+      NodeBuilderFlags__NoTruncation &
+      1; // 1
+    static +WriteArrayAsGenericType: Class<NodeBuilderFlags__WriteArrayAsGenericType> &
+      NodeBuilderFlags__WriteArrayAsGenericType &
+      2; // 2
+    static +GenerateNamesForShadowedTypeParams: Class<NodeBuilderFlags__GenerateNamesForShadowedTypeParams> &
+      NodeBuilderFlags__GenerateNamesForShadowedTypeParams &
+      4; // 4
+    static +UseStructuralFallback: Class<NodeBuilderFlags__UseStructuralFallback> &
+      NodeBuilderFlags__UseStructuralFallback &
+      8; // 8
+    static +ForbidIndexedAccessSymbolReferences: Class<NodeBuilderFlags__ForbidIndexedAccessSymbolReferences> &
+      NodeBuilderFlags__ForbidIndexedAccessSymbolReferences &
+      16; // 16
+    static +WriteTypeArgumentsOfSignature: Class<NodeBuilderFlags__WriteTypeArgumentsOfSignature> &
+      NodeBuilderFlags__WriteTypeArgumentsOfSignature &
+      32; // 32
+    static +UseFullyQualifiedType: Class<NodeBuilderFlags__UseFullyQualifiedType> &
+      NodeBuilderFlags__UseFullyQualifiedType &
+      64; // 64
+    static +UseOnlyExternalAliasing: Class<NodeBuilderFlags__UseOnlyExternalAliasing> &
+      NodeBuilderFlags__UseOnlyExternalAliasing &
+      128; // 128
+    static +SuppressAnyReturnType: Class<NodeBuilderFlags__SuppressAnyReturnType> &
+      NodeBuilderFlags__SuppressAnyReturnType &
+      256; // 256
+    static +WriteTypeParametersInQualifiedName: Class<NodeBuilderFlags__WriteTypeParametersInQualifiedName> &
+      NodeBuilderFlags__WriteTypeParametersInQualifiedName &
+      512; // 512
+    static +MultilineObjectLiterals: Class<NodeBuilderFlags__MultilineObjectLiterals> &
+      NodeBuilderFlags__MultilineObjectLiterals &
+      1024; // 1024
+    static +WriteClassExpressionAsTypeLiteral: Class<NodeBuilderFlags__WriteClassExpressionAsTypeLiteral> &
+      NodeBuilderFlags__WriteClassExpressionAsTypeLiteral &
+      2048; // 2048
+    static +UseTypeOfFunction: Class<NodeBuilderFlags__UseTypeOfFunction> &
+      NodeBuilderFlags__UseTypeOfFunction &
+      4096; // 4096
+    static +OmitParameterModifiers: Class<NodeBuilderFlags__OmitParameterModifiers> &
+      NodeBuilderFlags__OmitParameterModifiers &
+      8192; // 8192
+    static +UseAliasDefinedOutsideCurrentScope: Class<NodeBuilderFlags__UseAliasDefinedOutsideCurrentScope> &
+      NodeBuilderFlags__UseAliasDefinedOutsideCurrentScope &
+      16384; // 16384
+    static +AllowThisInObjectLiteral: Class<NodeBuilderFlags__AllowThisInObjectLiteral> &
+      NodeBuilderFlags__AllowThisInObjectLiteral &
+      32768; // 32768
+    static +AllowQualifedNameInPlaceOfIdentifier: Class<NodeBuilderFlags__AllowQualifedNameInPlaceOfIdentifier> &
+      NodeBuilderFlags__AllowQualifedNameInPlaceOfIdentifier &
+      65536; // 65536
+    static +AllowAnonymousIdentifier: Class<NodeBuilderFlags__AllowAnonymousIdentifier> &
+      NodeBuilderFlags__AllowAnonymousIdentifier &
+      131072; // 131072
+    static +AllowEmptyUnionOrIntersection: Class<NodeBuilderFlags__AllowEmptyUnionOrIntersection> &
+      NodeBuilderFlags__AllowEmptyUnionOrIntersection &
+      262144; // 262144
+    static +AllowEmptyTuple: Class<NodeBuilderFlags__AllowEmptyTuple> &
+      NodeBuilderFlags__AllowEmptyTuple &
+      524288; // 524288
+    static +AllowUniqueESSymbolType: Class<NodeBuilderFlags__AllowUniqueESSymbolType> &
+      NodeBuilderFlags__AllowUniqueESSymbolType &
+      1048576; // 1048576
+    static +AllowEmptyIndexInfoType: Class<NodeBuilderFlags__AllowEmptyIndexInfoType> &
+      NodeBuilderFlags__AllowEmptyIndexInfoType &
+      2097152; // 2097152
+    static +AllowNodeModulesRelativePaths: Class<NodeBuilderFlags__AllowNodeModulesRelativePaths> &
+      NodeBuilderFlags__AllowNodeModulesRelativePaths &
+      67108864; // 67108864
+    static +IgnoreErrors: Class<NodeBuilderFlags__IgnoreErrors> &
+      NodeBuilderFlags__IgnoreErrors &
+      70221824; // 70221824
+    static +InObjectTypeLiteral: Class<NodeBuilderFlags__InObjectTypeLiteral> &
+      NodeBuilderFlags__InObjectTypeLiteral &
+      4194304; // 4194304
+    static +InTypeAlias: Class<NodeBuilderFlags__InTypeAlias> &
+      NodeBuilderFlags__InTypeAlias &
+      8388608; // 8388608
+    static +InInitialEntityName: Class<NodeBuilderFlags__InInitialEntityName> &
+      NodeBuilderFlags__InInitialEntityName &
+      16777216; // 16777216
+    static +InReverseMappedType: Class<NodeBuilderFlags__InReverseMappedType> &
+      NodeBuilderFlags__InReverseMappedType &
+      33554432; // 33554432
   }
+
   declare class NodeBuilderFlags__None mixins NodeBuilderFlags {}
   declare class NodeBuilderFlags__NoTruncation mixins NodeBuilderFlags {}
   declare class NodeBuilderFlags__WriteArrayAsGenericType
@@ -4126,93 +4448,68 @@ and the operation is cancelled, then it should be discarded, otherwise it is saf
   declare class NodeBuilderFlags__InInitialEntityName mixins NodeBuilderFlags {}
   declare class NodeBuilderFlags__InReverseMappedType mixins NodeBuilderFlags {}
 
-  declare export class NodeBuilderFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<NodeBuilderFlags__None> & NodeBuilderFlags__None & 0; // 0
-    static NoTruncation: Class<NodeBuilderFlags__NoTruncation> &
-      NodeBuilderFlags__NoTruncation &
+  declare class TypeFormatFlags {
+    static +None: Class<TypeFormatFlags__None> & TypeFormatFlags__None & 0; // 0
+    static +NoTruncation: Class<TypeFormatFlags__NoTruncation> &
+      TypeFormatFlags__NoTruncation &
       1; // 1
-    static WriteArrayAsGenericType: Class<NodeBuilderFlags__WriteArrayAsGenericType> &
-      NodeBuilderFlags__WriteArrayAsGenericType &
+    static +WriteArrayAsGenericType: Class<TypeFormatFlags__WriteArrayAsGenericType> &
+      TypeFormatFlags__WriteArrayAsGenericType &
       2; // 2
-    static GenerateNamesForShadowedTypeParams: Class<NodeBuilderFlags__GenerateNamesForShadowedTypeParams> &
-      NodeBuilderFlags__GenerateNamesForShadowedTypeParams &
-      4; // 4
-    static UseStructuralFallback: Class<NodeBuilderFlags__UseStructuralFallback> &
-      NodeBuilderFlags__UseStructuralFallback &
+    static +UseStructuralFallback: Class<TypeFormatFlags__UseStructuralFallback> &
+      TypeFormatFlags__UseStructuralFallback &
       8; // 8
-    static ForbidIndexedAccessSymbolReferences: Class<NodeBuilderFlags__ForbidIndexedAccessSymbolReferences> &
-      NodeBuilderFlags__ForbidIndexedAccessSymbolReferences &
-      16; // 16
-    static WriteTypeArgumentsOfSignature: Class<NodeBuilderFlags__WriteTypeArgumentsOfSignature> &
-      NodeBuilderFlags__WriteTypeArgumentsOfSignature &
+    static +WriteTypeArgumentsOfSignature: Class<TypeFormatFlags__WriteTypeArgumentsOfSignature> &
+      TypeFormatFlags__WriteTypeArgumentsOfSignature &
       32; // 32
-    static UseFullyQualifiedType: Class<NodeBuilderFlags__UseFullyQualifiedType> &
-      NodeBuilderFlags__UseFullyQualifiedType &
+    static +UseFullyQualifiedType: Class<TypeFormatFlags__UseFullyQualifiedType> &
+      TypeFormatFlags__UseFullyQualifiedType &
       64; // 64
-    static UseOnlyExternalAliasing: Class<NodeBuilderFlags__UseOnlyExternalAliasing> &
-      NodeBuilderFlags__UseOnlyExternalAliasing &
-      128; // 128
-    static SuppressAnyReturnType: Class<NodeBuilderFlags__SuppressAnyReturnType> &
-      NodeBuilderFlags__SuppressAnyReturnType &
+    static +SuppressAnyReturnType: Class<TypeFormatFlags__SuppressAnyReturnType> &
+      TypeFormatFlags__SuppressAnyReturnType &
       256; // 256
-    static WriteTypeParametersInQualifiedName: Class<NodeBuilderFlags__WriteTypeParametersInQualifiedName> &
-      NodeBuilderFlags__WriteTypeParametersInQualifiedName &
-      512; // 512
-    static MultilineObjectLiterals: Class<NodeBuilderFlags__MultilineObjectLiterals> &
-      NodeBuilderFlags__MultilineObjectLiterals &
+    static +MultilineObjectLiterals: Class<TypeFormatFlags__MultilineObjectLiterals> &
+      TypeFormatFlags__MultilineObjectLiterals &
       1024; // 1024
-    static WriteClassExpressionAsTypeLiteral: Class<NodeBuilderFlags__WriteClassExpressionAsTypeLiteral> &
-      NodeBuilderFlags__WriteClassExpressionAsTypeLiteral &
+    static +WriteClassExpressionAsTypeLiteral: Class<TypeFormatFlags__WriteClassExpressionAsTypeLiteral> &
+      TypeFormatFlags__WriteClassExpressionAsTypeLiteral &
       2048; // 2048
-    static UseTypeOfFunction: Class<NodeBuilderFlags__UseTypeOfFunction> &
-      NodeBuilderFlags__UseTypeOfFunction &
+    static +UseTypeOfFunction: Class<TypeFormatFlags__UseTypeOfFunction> &
+      TypeFormatFlags__UseTypeOfFunction &
       4096; // 4096
-    static OmitParameterModifiers: Class<NodeBuilderFlags__OmitParameterModifiers> &
-      NodeBuilderFlags__OmitParameterModifiers &
+    static +OmitParameterModifiers: Class<TypeFormatFlags__OmitParameterModifiers> &
+      TypeFormatFlags__OmitParameterModifiers &
       8192; // 8192
-    static UseAliasDefinedOutsideCurrentScope: Class<NodeBuilderFlags__UseAliasDefinedOutsideCurrentScope> &
-      NodeBuilderFlags__UseAliasDefinedOutsideCurrentScope &
+    static +UseAliasDefinedOutsideCurrentScope: Class<TypeFormatFlags__UseAliasDefinedOutsideCurrentScope> &
+      TypeFormatFlags__UseAliasDefinedOutsideCurrentScope &
       16384; // 16384
-    static AllowThisInObjectLiteral: Class<NodeBuilderFlags__AllowThisInObjectLiteral> &
-      NodeBuilderFlags__AllowThisInObjectLiteral &
-      32768; // 32768
-    static AllowQualifedNameInPlaceOfIdentifier: Class<NodeBuilderFlags__AllowQualifedNameInPlaceOfIdentifier> &
-      NodeBuilderFlags__AllowQualifedNameInPlaceOfIdentifier &
-      65536; // 65536
-    static AllowAnonymousIdentifier: Class<NodeBuilderFlags__AllowAnonymousIdentifier> &
-      NodeBuilderFlags__AllowAnonymousIdentifier &
-      131072; // 131072
-    static AllowEmptyUnionOrIntersection: Class<NodeBuilderFlags__AllowEmptyUnionOrIntersection> &
-      NodeBuilderFlags__AllowEmptyUnionOrIntersection &
-      262144; // 262144
-    static AllowEmptyTuple: Class<NodeBuilderFlags__AllowEmptyTuple> &
-      NodeBuilderFlags__AllowEmptyTuple &
-      524288; // 524288
-    static AllowUniqueESSymbolType: Class<NodeBuilderFlags__AllowUniqueESSymbolType> &
-      NodeBuilderFlags__AllowUniqueESSymbolType &
+    static +AllowUniqueESSymbolType: Class<TypeFormatFlags__AllowUniqueESSymbolType> &
+      TypeFormatFlags__AllowUniqueESSymbolType &
       1048576; // 1048576
-    static AllowEmptyIndexInfoType: Class<NodeBuilderFlags__AllowEmptyIndexInfoType> &
-      NodeBuilderFlags__AllowEmptyIndexInfoType &
+    static +AddUndefined: Class<TypeFormatFlags__AddUndefined> &
+      TypeFormatFlags__AddUndefined &
+      131072; // 131072
+    static +WriteArrowStyleSignature: Class<TypeFormatFlags__WriteArrowStyleSignature> &
+      TypeFormatFlags__WriteArrowStyleSignature &
+      262144; // 262144
+    static +InArrayType: Class<TypeFormatFlags__InArrayType> &
+      TypeFormatFlags__InArrayType &
+      524288; // 524288
+    static +InElementType: Class<TypeFormatFlags__InElementType> &
+      TypeFormatFlags__InElementType &
       2097152; // 2097152
-    static AllowNodeModulesRelativePaths: Class<NodeBuilderFlags__AllowNodeModulesRelativePaths> &
-      NodeBuilderFlags__AllowNodeModulesRelativePaths &
-      67108864; // 67108864
-    static IgnoreErrors: Class<NodeBuilderFlags__IgnoreErrors> &
-      NodeBuilderFlags__IgnoreErrors &
-      70221824; // 70221824
-    static InObjectTypeLiteral: Class<NodeBuilderFlags__InObjectTypeLiteral> &
-      NodeBuilderFlags__InObjectTypeLiteral &
+    static +InFirstTypeArgument: Class<TypeFormatFlags__InFirstTypeArgument> &
+      TypeFormatFlags__InFirstTypeArgument &
       4194304; // 4194304
-    static InTypeAlias: Class<NodeBuilderFlags__InTypeAlias> &
-      NodeBuilderFlags__InTypeAlias &
+    static +InTypeAlias: Class<TypeFormatFlags__InTypeAlias> &
+      TypeFormatFlags__InTypeAlias &
       8388608; // 8388608
-    static InInitialEntityName: Class<NodeBuilderFlags__InInitialEntityName> &
-      NodeBuilderFlags__InInitialEntityName &
-      16777216; // 16777216
-    static InReverseMappedType: Class<NodeBuilderFlags__InReverseMappedType> &
-      NodeBuilderFlags__InReverseMappedType &
-      33554432; // 33554432
+    static +WriteOwnNameForAnyLike: Class<TypeFormatFlags__WriteOwnNameForAnyLike> &
+      TypeFormatFlags__WriteOwnNameForAnyLike &
+      0; // 0
+    static +NodeBuilderFlagsMask: Class<TypeFormatFlags__NodeBuilderFlagsMask> &
+      TypeFormatFlags__NodeBuilderFlagsMask &
+      9469291; // 9469291
   }
 
   declare class TypeFormatFlags__None mixins TypeFormatFlags {}
@@ -4246,69 +4543,20 @@ and the operation is cancelled, then it should be discarded, otherwise it is saf
     mixins TypeFormatFlags {}
   declare class TypeFormatFlags__NodeBuilderFlagsMask mixins TypeFormatFlags {}
 
-  declare export class TypeFormatFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<TypeFormatFlags__None> & TypeFormatFlags__None & 0; // 0
-    static NoTruncation: Class<TypeFormatFlags__NoTruncation> &
-      TypeFormatFlags__NoTruncation &
+  declare class SymbolFormatFlags {
+    static +None: Class<SymbolFormatFlags__None> & SymbolFormatFlags__None & 0; // 0
+    static +WriteTypeParametersOrArguments: Class<SymbolFormatFlags__WriteTypeParametersOrArguments> &
+      SymbolFormatFlags__WriteTypeParametersOrArguments &
       1; // 1
-    static WriteArrayAsGenericType: Class<TypeFormatFlags__WriteArrayAsGenericType> &
-      TypeFormatFlags__WriteArrayAsGenericType &
+    static +UseOnlyExternalAliasing: Class<SymbolFormatFlags__UseOnlyExternalAliasing> &
+      SymbolFormatFlags__UseOnlyExternalAliasing &
       2; // 2
-    static UseStructuralFallback: Class<TypeFormatFlags__UseStructuralFallback> &
-      TypeFormatFlags__UseStructuralFallback &
+    static +AllowAnyNodeKind: Class<SymbolFormatFlags__AllowAnyNodeKind> &
+      SymbolFormatFlags__AllowAnyNodeKind &
+      4; // 4
+    static +UseAliasDefinedOutsideCurrentScope: Class<SymbolFormatFlags__UseAliasDefinedOutsideCurrentScope> &
+      SymbolFormatFlags__UseAliasDefinedOutsideCurrentScope &
       8; // 8
-    static WriteTypeArgumentsOfSignature: Class<TypeFormatFlags__WriteTypeArgumentsOfSignature> &
-      TypeFormatFlags__WriteTypeArgumentsOfSignature &
-      32; // 32
-    static UseFullyQualifiedType: Class<TypeFormatFlags__UseFullyQualifiedType> &
-      TypeFormatFlags__UseFullyQualifiedType &
-      64; // 64
-    static SuppressAnyReturnType: Class<TypeFormatFlags__SuppressAnyReturnType> &
-      TypeFormatFlags__SuppressAnyReturnType &
-      256; // 256
-    static MultilineObjectLiterals: Class<TypeFormatFlags__MultilineObjectLiterals> &
-      TypeFormatFlags__MultilineObjectLiterals &
-      1024; // 1024
-    static WriteClassExpressionAsTypeLiteral: Class<TypeFormatFlags__WriteClassExpressionAsTypeLiteral> &
-      TypeFormatFlags__WriteClassExpressionAsTypeLiteral &
-      2048; // 2048
-    static UseTypeOfFunction: Class<TypeFormatFlags__UseTypeOfFunction> &
-      TypeFormatFlags__UseTypeOfFunction &
-      4096; // 4096
-    static OmitParameterModifiers: Class<TypeFormatFlags__OmitParameterModifiers> &
-      TypeFormatFlags__OmitParameterModifiers &
-      8192; // 8192
-    static UseAliasDefinedOutsideCurrentScope: Class<TypeFormatFlags__UseAliasDefinedOutsideCurrentScope> &
-      TypeFormatFlags__UseAliasDefinedOutsideCurrentScope &
-      16384; // 16384
-    static AllowUniqueESSymbolType: Class<TypeFormatFlags__AllowUniqueESSymbolType> &
-      TypeFormatFlags__AllowUniqueESSymbolType &
-      1048576; // 1048576
-    static AddUndefined: Class<TypeFormatFlags__AddUndefined> &
-      TypeFormatFlags__AddUndefined &
-      131072; // 131072
-    static WriteArrowStyleSignature: Class<TypeFormatFlags__WriteArrowStyleSignature> &
-      TypeFormatFlags__WriteArrowStyleSignature &
-      262144; // 262144
-    static InArrayType: Class<TypeFormatFlags__InArrayType> &
-      TypeFormatFlags__InArrayType &
-      524288; // 524288
-    static InElementType: Class<TypeFormatFlags__InElementType> &
-      TypeFormatFlags__InElementType &
-      2097152; // 2097152
-    static InFirstTypeArgument: Class<TypeFormatFlags__InFirstTypeArgument> &
-      TypeFormatFlags__InFirstTypeArgument &
-      4194304; // 4194304
-    static InTypeAlias: Class<TypeFormatFlags__InTypeAlias> &
-      TypeFormatFlags__InTypeAlias &
-      8388608; // 8388608
-    static WriteOwnNameForAnyLike: Class<TypeFormatFlags__WriteOwnNameForAnyLike> &
-      TypeFormatFlags__WriteOwnNameForAnyLike &
-      0; // 0
-    static NodeBuilderFlagsMask: Class<TypeFormatFlags__NodeBuilderFlagsMask> &
-      TypeFormatFlags__NodeBuilderFlagsMask &
-      9469291; // 9469291
   }
 
   declare class SymbolFormatFlags__None mixins SymbolFormatFlags {}
@@ -4320,49 +4568,194 @@ and the operation is cancelled, then it should be discarded, otherwise it is saf
   declare class SymbolFormatFlags__UseAliasDefinedOutsideCurrentScope
     mixins SymbolFormatFlags {}
 
-  declare export class SymbolFormatFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<SymbolFormatFlags__None> & SymbolFormatFlags__None & 0; // 0
-    static WriteTypeParametersOrArguments: Class<SymbolFormatFlags__WriteTypeParametersOrArguments> &
-      SymbolFormatFlags__WriteTypeParametersOrArguments &
+  declare class TypePredicateKind {
+    static +This: Class<TypePredicateKind__This> & TypePredicateKind__This & 0; // 0
+    static +Identifier: Class<TypePredicateKind__Identifier> &
+      TypePredicateKind__Identifier &
       1; // 1
-    static UseOnlyExternalAliasing: Class<SymbolFormatFlags__UseOnlyExternalAliasing> &
-      SymbolFormatFlags__UseOnlyExternalAliasing &
-      2; // 2
-    static AllowAnyNodeKind: Class<SymbolFormatFlags__AllowAnyNodeKind> &
-      SymbolFormatFlags__AllowAnyNodeKind &
-      4; // 4
-    static UseAliasDefinedOutsideCurrentScope: Class<SymbolFormatFlags__UseAliasDefinedOutsideCurrentScope> &
-      SymbolFormatFlags__UseAliasDefinedOutsideCurrentScope &
-      8; // 8
   }
 
   declare class TypePredicateKind__This mixins TypePredicateKind {}
   declare class TypePredicateKind__Identifier mixins TypePredicateKind {}
 
-  declare export class TypePredicateKind {
-    constructor(...args: empty): mixed;
-    static This: Class<TypePredicateKind__This> & TypePredicateKind__This & 0; // 0
-    static Identifier: Class<TypePredicateKind__Identifier> &
-      TypePredicateKind__Identifier &
-      1; // 1
-  }
+  declare type TypePredicateBase = {
+    kind: TypePredicateKind,
+    type: Type
+  };
 
-  declare export interface TypePredicateBase {
-    kind: TypePredicateKind;
-    type: Type;
-  }
-  declare export type ThisTypePredicate = {
+  declare type ThisTypePredicate = {
+    ...$Exact<TypePredicateBase>,
+
     kind: TypePredicateKind.This
-  } & TypePredicateBase;
+  };
 
-  declare export type IdentifierTypePredicate = {
+  declare type IdentifierTypePredicate = {
+    ...$Exact<TypePredicateBase>,
+
     kind: TypePredicateKind.Identifier,
     parameterName: string,
     parameterIndex: number
-  } & TypePredicateBase;
+  };
 
-  declare export type TypePredicate = IdentifierTypePredicate | ThisTypePredicate;
+  declare type TypePredicate = IdentifierTypePredicate | ThisTypePredicate;
+  declare class SymbolFlags {
+    static +None: Class<SymbolFlags__None> & SymbolFlags__None & 0; // 0
+    static +FunctionScopedVariable: Class<SymbolFlags__FunctionScopedVariable> &
+      SymbolFlags__FunctionScopedVariable &
+      1; // 1
+    static +BlockScopedVariable: Class<SymbolFlags__BlockScopedVariable> &
+      SymbolFlags__BlockScopedVariable &
+      2; // 2
+    static +Property: Class<SymbolFlags__Property> & SymbolFlags__Property & 4; // 4
+    static +EnumMember: Class<SymbolFlags__EnumMember> &
+      SymbolFlags__EnumMember &
+      8; // 8
+    static +Function: Class<SymbolFlags__Function> & SymbolFlags__Function & 16; // 16
+    static +Class: Class<SymbolFlags__Class> & SymbolFlags__Class & 32; // 32
+    static +Interface: Class<SymbolFlags__Interface> &
+      SymbolFlags__Interface &
+      64; // 64
+    static +ConstEnum: Class<SymbolFlags__ConstEnum> &
+      SymbolFlags__ConstEnum &
+      128; // 128
+    static +RegularEnum: Class<SymbolFlags__RegularEnum> &
+      SymbolFlags__RegularEnum &
+      256; // 256
+    static +ValueModule: Class<SymbolFlags__ValueModule> &
+      SymbolFlags__ValueModule &
+      512; // 512
+    static +NamespaceModule: Class<SymbolFlags__NamespaceModule> &
+      SymbolFlags__NamespaceModule &
+      1024; // 1024
+    static +TypeLiteral: Class<SymbolFlags__TypeLiteral> &
+      SymbolFlags__TypeLiteral &
+      2048; // 2048
+    static +ObjectLiteral: Class<SymbolFlags__ObjectLiteral> &
+      SymbolFlags__ObjectLiteral &
+      4096; // 4096
+    static +Method: Class<SymbolFlags__Method> & SymbolFlags__Method & 8192; // 8192
+    static +Constructor: Class<SymbolFlags__Constructor> &
+      SymbolFlags__Constructor &
+      16384; // 16384
+    static +GetAccessor: Class<SymbolFlags__GetAccessor> &
+      SymbolFlags__GetAccessor &
+      32768; // 32768
+    static +SetAccessor: Class<SymbolFlags__SetAccessor> &
+      SymbolFlags__SetAccessor &
+      65536; // 65536
+    static +Signature: Class<SymbolFlags__Signature> &
+      SymbolFlags__Signature &
+      131072; // 131072
+    static +TypeParameter: Class<SymbolFlags__TypeParameter> &
+      SymbolFlags__TypeParameter &
+      262144; // 262144
+    static +TypeAlias: Class<SymbolFlags__TypeAlias> &
+      SymbolFlags__TypeAlias &
+      524288; // 524288
+    static +ExportValue: Class<SymbolFlags__ExportValue> &
+      SymbolFlags__ExportValue &
+      1048576; // 1048576
+    static +Alias: Class<SymbolFlags__Alias> & SymbolFlags__Alias & 2097152; // 2097152
+    static +Prototype: Class<SymbolFlags__Prototype> &
+      SymbolFlags__Prototype &
+      4194304; // 4194304
+    static +ExportStar: Class<SymbolFlags__ExportStar> &
+      SymbolFlags__ExportStar &
+      8388608; // 8388608
+    static +Optional: Class<SymbolFlags__Optional> &
+      SymbolFlags__Optional &
+      16777216; // 16777216
+    static +Transient: Class<SymbolFlags__Transient> &
+      SymbolFlags__Transient &
+      33554432; // 33554432
+    static +Assignment: Class<SymbolFlags__Assignment> &
+      SymbolFlags__Assignment &
+      67108864; // 67108864
+    static +ModuleExports: Class<SymbolFlags__ModuleExports> &
+      SymbolFlags__ModuleExports &
+      134217728; // 134217728
+    static +Enum: Class<SymbolFlags__Enum> & SymbolFlags__Enum & 384; // 384
+    static +Variable: Class<SymbolFlags__Variable> & SymbolFlags__Variable & 3; // 3
+    static +Value: Class<SymbolFlags__Value> & SymbolFlags__Value & 67220415; // 67220415
+    static +Type: Class<SymbolFlags__Type> & SymbolFlags__Type & 67897832; // 67897832
+    static +Namespace: Class<SymbolFlags__Namespace> &
+      SymbolFlags__Namespace &
+      1920; // 1920
+    static +Module: Class<SymbolFlags__Module> & SymbolFlags__Module & 1536; // 1536
+    static +Accessor: Class<SymbolFlags__Accessor> &
+      SymbolFlags__Accessor &
+      98304; // 98304
+    static +FunctionScopedVariableExcludes: Class<SymbolFlags__FunctionScopedVariableExcludes> &
+      SymbolFlags__FunctionScopedVariableExcludes &
+      67220414; // 67220414
+    static +BlockScopedVariableExcludes: Class<SymbolFlags__BlockScopedVariableExcludes> &
+      SymbolFlags__BlockScopedVariableExcludes &
+      67220415; // 67220415
+    static +ParameterExcludes: Class<SymbolFlags__ParameterExcludes> &
+      SymbolFlags__ParameterExcludes &
+      67220415; // 67220415
+    static +PropertyExcludes: Class<SymbolFlags__PropertyExcludes> &
+      SymbolFlags__PropertyExcludes &
+      0; // 0
+    static +EnumMemberExcludes: Class<SymbolFlags__EnumMemberExcludes> &
+      SymbolFlags__EnumMemberExcludes &
+      68008959; // 68008959
+    static +FunctionExcludes: Class<SymbolFlags__FunctionExcludes> &
+      SymbolFlags__FunctionExcludes &
+      67219887; // 67219887
+    static +ClassExcludes: Class<SymbolFlags__ClassExcludes> &
+      SymbolFlags__ClassExcludes &
+      68008383; // 68008383
+    static +InterfaceExcludes: Class<SymbolFlags__InterfaceExcludes> &
+      SymbolFlags__InterfaceExcludes &
+      67897736; // 67897736
+    static +RegularEnumExcludes: Class<SymbolFlags__RegularEnumExcludes> &
+      SymbolFlags__RegularEnumExcludes &
+      68008191; // 68008191
+    static +ConstEnumExcludes: Class<SymbolFlags__ConstEnumExcludes> &
+      SymbolFlags__ConstEnumExcludes &
+      68008831; // 68008831
+    static +ValueModuleExcludes: Class<SymbolFlags__ValueModuleExcludes> &
+      SymbolFlags__ValueModuleExcludes &
+      110735; // 110735
+    static +NamespaceModuleExcludes: Class<SymbolFlags__NamespaceModuleExcludes> &
+      SymbolFlags__NamespaceModuleExcludes &
+      0; // 0
+    static +MethodExcludes: Class<SymbolFlags__MethodExcludes> &
+      SymbolFlags__MethodExcludes &
+      67212223; // 67212223
+    static +GetAccessorExcludes: Class<SymbolFlags__GetAccessorExcludes> &
+      SymbolFlags__GetAccessorExcludes &
+      67154879; // 67154879
+    static +SetAccessorExcludes: Class<SymbolFlags__SetAccessorExcludes> &
+      SymbolFlags__SetAccessorExcludes &
+      67187647; // 67187647
+    static +TypeParameterExcludes: Class<SymbolFlags__TypeParameterExcludes> &
+      SymbolFlags__TypeParameterExcludes &
+      67635688; // 67635688
+    static +TypeAliasExcludes: Class<SymbolFlags__TypeAliasExcludes> &
+      SymbolFlags__TypeAliasExcludes &
+      67897832; // 67897832
+    static +AliasExcludes: Class<SymbolFlags__AliasExcludes> &
+      SymbolFlags__AliasExcludes &
+      2097152; // 2097152
+    static +ModuleMember: Class<SymbolFlags__ModuleMember> &
+      SymbolFlags__ModuleMember &
+      2623475; // 2623475
+    static +ExportHasLocal: Class<SymbolFlags__ExportHasLocal> &
+      SymbolFlags__ExportHasLocal &
+      944; // 944
+    static +BlockScoped: Class<SymbolFlags__BlockScoped> &
+      SymbolFlags__BlockScoped &
+      418; // 418
+    static +PropertyOrAccessor: Class<SymbolFlags__PropertyOrAccessor> &
+      SymbolFlags__PropertyOrAccessor &
+      98308; // 98308
+    static +ClassMember: Class<SymbolFlags__ClassMember> &
+      SymbolFlags__ClassMember &
+      106500; // 106500
+  }
+
   declare class SymbolFlags__None mixins SymbolFlags {}
   declare class SymbolFlags__FunctionScopedVariable mixins SymbolFlags {}
   declare class SymbolFlags__BlockScopedVariable mixins SymbolFlags {}
@@ -4424,183 +4817,79 @@ and the operation is cancelled, then it should be discarded, otherwise it is saf
   declare class SymbolFlags__PropertyOrAccessor mixins SymbolFlags {}
   declare class SymbolFlags__ClassMember mixins SymbolFlags {}
 
-  declare export class SymbolFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<SymbolFlags__None> & SymbolFlags__None & 0; // 0
-    static FunctionScopedVariable: Class<SymbolFlags__FunctionScopedVariable> &
-      SymbolFlags__FunctionScopedVariable &
-      1; // 1
-    static BlockScopedVariable: Class<SymbolFlags__BlockScopedVariable> &
-      SymbolFlags__BlockScopedVariable &
-      2; // 2
-    static Property: Class<SymbolFlags__Property> & SymbolFlags__Property & 4; // 4
-    static EnumMember: Class<SymbolFlags__EnumMember> &
-      SymbolFlags__EnumMember &
-      8; // 8
-    static Function: Class<SymbolFlags__Function> & SymbolFlags__Function & 16; // 16
-    static Class: Class<SymbolFlags__Class> & SymbolFlags__Class & 32; // 32
-    static Interface: Class<SymbolFlags__Interface> &
-      SymbolFlags__Interface &
-      64; // 64
-    static ConstEnum: Class<SymbolFlags__ConstEnum> &
-      SymbolFlags__ConstEnum &
-      128; // 128
-    static RegularEnum: Class<SymbolFlags__RegularEnum> &
-      SymbolFlags__RegularEnum &
-      256; // 256
-    static ValueModule: Class<SymbolFlags__ValueModule> &
-      SymbolFlags__ValueModule &
-      512; // 512
-    static NamespaceModule: Class<SymbolFlags__NamespaceModule> &
-      SymbolFlags__NamespaceModule &
-      1024; // 1024
-    static TypeLiteral: Class<SymbolFlags__TypeLiteral> &
-      SymbolFlags__TypeLiteral &
-      2048; // 2048
-    static ObjectLiteral: Class<SymbolFlags__ObjectLiteral> &
-      SymbolFlags__ObjectLiteral &
-      4096; // 4096
-    static Method: Class<SymbolFlags__Method> & SymbolFlags__Method & 8192; // 8192
-    static Constructor: Class<SymbolFlags__Constructor> &
-      SymbolFlags__Constructor &
-      16384; // 16384
-    static GetAccessor: Class<SymbolFlags__GetAccessor> &
-      SymbolFlags__GetAccessor &
-      32768; // 32768
-    static SetAccessor: Class<SymbolFlags__SetAccessor> &
-      SymbolFlags__SetAccessor &
-      65536; // 65536
-    static Signature: Class<SymbolFlags__Signature> &
-      SymbolFlags__Signature &
-      131072; // 131072
-    static TypeParameter: Class<SymbolFlags__TypeParameter> &
-      SymbolFlags__TypeParameter &
-      262144; // 262144
-    static TypeAlias: Class<SymbolFlags__TypeAlias> &
-      SymbolFlags__TypeAlias &
-      524288; // 524288
-    static ExportValue: Class<SymbolFlags__ExportValue> &
-      SymbolFlags__ExportValue &
-      1048576; // 1048576
-    static Alias: Class<SymbolFlags__Alias> & SymbolFlags__Alias & 2097152; // 2097152
-    static Prototype: Class<SymbolFlags__Prototype> &
-      SymbolFlags__Prototype &
-      4194304; // 4194304
-    static ExportStar: Class<SymbolFlags__ExportStar> &
-      SymbolFlags__ExportStar &
-      8388608; // 8388608
-    static Optional: Class<SymbolFlags__Optional> &
-      SymbolFlags__Optional &
-      16777216; // 16777216
-    static Transient: Class<SymbolFlags__Transient> &
-      SymbolFlags__Transient &
-      33554432; // 33554432
-    static Assignment: Class<SymbolFlags__Assignment> &
-      SymbolFlags__Assignment &
-      67108864; // 67108864
-    static ModuleExports: Class<SymbolFlags__ModuleExports> &
-      SymbolFlags__ModuleExports &
-      134217728; // 134217728
-    static Enum: Class<SymbolFlags__Enum> & SymbolFlags__Enum & 384; // 384
-    static Variable: Class<SymbolFlags__Variable> & SymbolFlags__Variable & 3; // 3
-    static Value: Class<SymbolFlags__Value> & SymbolFlags__Value & 67220415; // 67220415
-    static Type: Class<SymbolFlags__Type> & SymbolFlags__Type & 67897832; // 67897832
-    static Namespace: Class<SymbolFlags__Namespace> &
-      SymbolFlags__Namespace &
-      1920; // 1920
-    static Module: Class<SymbolFlags__Module> & SymbolFlags__Module & 1536; // 1536
-    static Accessor: Class<SymbolFlags__Accessor> &
-      SymbolFlags__Accessor &
-      98304; // 98304
-    static FunctionScopedVariableExcludes: Class<SymbolFlags__FunctionScopedVariableExcludes> &
-      SymbolFlags__FunctionScopedVariableExcludes &
-      67220414; // 67220414
-    static BlockScopedVariableExcludes: Class<SymbolFlags__BlockScopedVariableExcludes> &
-      SymbolFlags__BlockScopedVariableExcludes &
-      67220415; // 67220415
-    static ParameterExcludes: Class<SymbolFlags__ParameterExcludes> &
-      SymbolFlags__ParameterExcludes &
-      67220415; // 67220415
-    static PropertyExcludes: Class<SymbolFlags__PropertyExcludes> &
-      SymbolFlags__PropertyExcludes &
-      0; // 0
-    static EnumMemberExcludes: Class<SymbolFlags__EnumMemberExcludes> &
-      SymbolFlags__EnumMemberExcludes &
-      68008959; // 68008959
-    static FunctionExcludes: Class<SymbolFlags__FunctionExcludes> &
-      SymbolFlags__FunctionExcludes &
-      67219887; // 67219887
-    static ClassExcludes: Class<SymbolFlags__ClassExcludes> &
-      SymbolFlags__ClassExcludes &
-      68008383; // 68008383
-    static InterfaceExcludes: Class<SymbolFlags__InterfaceExcludes> &
-      SymbolFlags__InterfaceExcludes &
-      67897736; // 67897736
-    static RegularEnumExcludes: Class<SymbolFlags__RegularEnumExcludes> &
-      SymbolFlags__RegularEnumExcludes &
-      68008191; // 68008191
-    static ConstEnumExcludes: Class<SymbolFlags__ConstEnumExcludes> &
-      SymbolFlags__ConstEnumExcludes &
-      68008831; // 68008831
-    static ValueModuleExcludes: Class<SymbolFlags__ValueModuleExcludes> &
-      SymbolFlags__ValueModuleExcludes &
-      110735; // 110735
-    static NamespaceModuleExcludes: Class<SymbolFlags__NamespaceModuleExcludes> &
-      SymbolFlags__NamespaceModuleExcludes &
-      0; // 0
-    static MethodExcludes: Class<SymbolFlags__MethodExcludes> &
-      SymbolFlags__MethodExcludes &
-      67212223; // 67212223
-    static GetAccessorExcludes: Class<SymbolFlags__GetAccessorExcludes> &
-      SymbolFlags__GetAccessorExcludes &
-      67154879; // 67154879
-    static SetAccessorExcludes: Class<SymbolFlags__SetAccessorExcludes> &
-      SymbolFlags__SetAccessorExcludes &
-      67187647; // 67187647
-    static TypeParameterExcludes: Class<SymbolFlags__TypeParameterExcludes> &
-      SymbolFlags__TypeParameterExcludes &
-      67635688; // 67635688
-    static TypeAliasExcludes: Class<SymbolFlags__TypeAliasExcludes> &
-      SymbolFlags__TypeAliasExcludes &
-      67897832; // 67897832
-    static AliasExcludes: Class<SymbolFlags__AliasExcludes> &
-      SymbolFlags__AliasExcludes &
-      2097152; // 2097152
-    static ModuleMember: Class<SymbolFlags__ModuleMember> &
-      SymbolFlags__ModuleMember &
-      2623475; // 2623475
-    static ExportHasLocal: Class<SymbolFlags__ExportHasLocal> &
-      SymbolFlags__ExportHasLocal &
-      944; // 944
-    static BlockScoped: Class<SymbolFlags__BlockScoped> &
-      SymbolFlags__BlockScoped &
-      418; // 418
-    static PropertyOrAccessor: Class<SymbolFlags__PropertyOrAccessor> &
-      SymbolFlags__PropertyOrAccessor &
-      98308; // 98308
-    static ClassMember: Class<SymbolFlags__ClassMember> &
-      SymbolFlags__ClassMember &
-      106500; // 106500
-  }
-
-  declare export interface Symbol {
-    flags: SymbolFlags;
-    escapedName: __String;
-    declarations: Declaration[];
-    valueDeclaration: Declaration;
-    members?: SymbolTable;
-    exports?: SymbolTable;
-    globalExports?: SymbolTable;
-    name: string;
-    getFlags(): SymbolFlags;
-    getEscapedName(): __String;
-    getName(): string;
-    getDeclarations(): Declaration[] | void;
+  declare type Symbol = {
+    flags: SymbolFlags,
+    escapedName: __String,
+    declarations: Declaration[],
+    valueDeclaration: Declaration,
+    members?: SymbolTable,
+    exports?: SymbolTable,
+    globalExports?: SymbolTable,
+    name: string,
+    getFlags(): SymbolFlags,
+    getEscapedName(): __String,
+    getName(): string,
+    getDeclarations(): Declaration[] | void,
     getDocumentationComment(
       typeChecker: TypeChecker | void
-    ): SymbolDisplayPart[];
-    getJsDocTags(): JSDocTagInfo[];
+    ): SymbolDisplayPart[],
+    getJsDocTags(): JSDocTagInfo[]
+  };
+
+  declare class InternalSymbolName {
+    static +Call: Class<InternalSymbolName__Call> &
+      InternalSymbolName__Call &
+      "__call"; // "__call"
+    static +Constructor: Class<InternalSymbolName__Constructor> &
+      InternalSymbolName__Constructor &
+      "__constructor"; // "__constructor"
+    static +New: Class<InternalSymbolName__New> &
+      InternalSymbolName__New &
+      "__new"; // "__new"
+    static +Index: Class<InternalSymbolName__Index> &
+      InternalSymbolName__Index &
+      "__index"; // "__index"
+    static +ExportStar: Class<InternalSymbolName__ExportStar> &
+      InternalSymbolName__ExportStar &
+      "__export"; // "__export"
+    static +Global: Class<InternalSymbolName__Global> &
+      InternalSymbolName__Global &
+      "__global"; // "__global"
+    static +Missing: Class<InternalSymbolName__Missing> &
+      InternalSymbolName__Missing &
+      "__missing"; // "__missing"
+    static +Type: Class<InternalSymbolName__Type> &
+      InternalSymbolName__Type &
+      "__type"; // "__type"
+    static +Object: Class<InternalSymbolName__Object> &
+      InternalSymbolName__Object &
+      "__object"; // "__object"
+    static +JSXAttributes: Class<InternalSymbolName__JSXAttributes> &
+      InternalSymbolName__JSXAttributes &
+      "__jsxAttributes"; // "__jsxAttributes"
+    static +Class: Class<InternalSymbolName__Class> &
+      InternalSymbolName__Class &
+      "__class"; // "__class"
+    static +Function: Class<InternalSymbolName__Function> &
+      InternalSymbolName__Function &
+      "__function"; // "__function"
+    static +Computed: Class<InternalSymbolName__Computed> &
+      InternalSymbolName__Computed &
+      "__computed"; // "__computed"
+    static +Resolving: Class<InternalSymbolName__Resolving> &
+      InternalSymbolName__Resolving &
+      "__resolving__"; // "__resolving__"
+    static +ExportEquals: Class<InternalSymbolName__ExportEquals> &
+      InternalSymbolName__ExportEquals &
+      "export="; // "export="
+    static +Default: Class<InternalSymbolName__Default> &
+      InternalSymbolName__Default &
+      "default"; // "default"
+    static +This: Class<InternalSymbolName__This> &
+      InternalSymbolName__This &
+      "this"; // "this"
   }
+
   declare class InternalSymbolName__Call mixins InternalSymbolName {}
   declare class InternalSymbolName__Constructor mixins InternalSymbolName {}
   declare class InternalSymbolName__New mixins InternalSymbolName {}
@@ -4619,70 +4908,7 @@ and the operation is cancelled, then it should be discarded, otherwise it is saf
   declare class InternalSymbolName__Default mixins InternalSymbolName {}
   declare class InternalSymbolName__This mixins InternalSymbolName {}
 
-  declare export class InternalSymbolName {
-    constructor(...args: empty): mixed;
-    static Call: Class<InternalSymbolName__Call> &
-      InternalSymbolName__Call &
-      "__call"; // "__call"
-    static Constructor: Class<InternalSymbolName__Constructor> &
-      InternalSymbolName__Constructor &
-      "__constructor"; // "__constructor"
-    static New: Class<InternalSymbolName__New> &
-      InternalSymbolName__New &
-      "__new"; // "__new"
-    static Index: Class<InternalSymbolName__Index> &
-      InternalSymbolName__Index &
-      "__index"; // "__index"
-    static ExportStar: Class<InternalSymbolName__ExportStar> &
-      InternalSymbolName__ExportStar &
-      "__export"; // "__export"
-    static Global: Class<InternalSymbolName__Global> &
-      InternalSymbolName__Global &
-      "__global"; // "__global"
-    static Missing: Class<InternalSymbolName__Missing> &
-      InternalSymbolName__Missing &
-      "__missing"; // "__missing"
-    static Type: Class<InternalSymbolName__Type> &
-      InternalSymbolName__Type &
-      "__type"; // "__type"
-    static Object: Class<InternalSymbolName__Object> &
-      InternalSymbolName__Object &
-      "__object"; // "__object"
-    static JSXAttributes: Class<InternalSymbolName__JSXAttributes> &
-      InternalSymbolName__JSXAttributes &
-      "__jsxAttributes"; // "__jsxAttributes"
-    static Class: Class<InternalSymbolName__Class> &
-      InternalSymbolName__Class &
-      "__class"; // "__class"
-    static Function: Class<InternalSymbolName__Function> &
-      InternalSymbolName__Function &
-      "__function"; // "__function"
-    static Computed: Class<InternalSymbolName__Computed> &
-      InternalSymbolName__Computed &
-      "__computed"; // "__computed"
-    static Resolving: Class<InternalSymbolName__Resolving> &
-      InternalSymbolName__Resolving &
-      "__resolving__"; // "__resolving__"
-    static ExportEquals: Class<InternalSymbolName__ExportEquals> &
-      InternalSymbolName__ExportEquals &
-      "export="; // "export="
-    static Default: Class<InternalSymbolName__Default> &
-      InternalSymbolName__Default &
-      "default"; // "default"
-    static This: Class<InternalSymbolName__This> &
-      InternalSymbolName__This &
-      "this"; // "this"
-  }
-
-  /**
- * This represents a string whose leading underscore have been escaped by adding extra leading underscores.
- * The shape of this brand is rather unique compared to others we've used.
-Instead of just an intersection of a string and an object, it is that union-ed
-with an intersection of void and an object. This makes it wholly incompatible
-with a normal string (which is good, it cannot be misused on assignment or on usage),
-while still being comparable with a normal string via === (also good) and castable from a string.
-*/
-  declare export type __String =
+  declare type __String =
     | (string & {
         __escapedIdentifier: void
       })
@@ -4690,33 +4916,131 @@ while still being comparable with a normal string via === (also good) and castab
         __escapedIdentifier: void
       })
     | InternalSymbolName;
-
-  /**
-   * ReadonlyMap where keys are `__String`s.
-   */
-  declare export interface ReadonlyUnderscoreEscapedMap<T> {
-    get(key: __String): T | void;
-    has(key: __String): boolean;
-    forEach(action: (value: T, key: __String) => void): void;
-    size: number;
-    keys(): Iterator<__String>;
-    values(): Iterator<T>;
-    entries(): Iterator<[__String, T]>;
+  declare class ReadonlyUnderscoreEscapedMap<T> {
+    get(key: __String): T | void,
+    has(key: __String): boolean,
+    forEach(action: (value: T, key: __String) => void): void,
+    size: number,
+    keys(): Iterator<__String>,
+    values(): Iterator<T>,
+    entries(): Iterator<[__String, T]>
   }
 
-  /**
-   * Map where keys are `__String`s.
-   */
-  declare export type UnderscoreEscapedMap<T> = {
-    set(key: __String, value: T): UnderscoreEscapedMap<T>,
+  declare class UnderscoreEscapedMap<T> extends ReadonlyUnderscoreEscapedMap<T> {
+    set(key: __String, value: T): this,
     delete(key: __String): boolean,
     clear(): void
-  } & ReadonlyUnderscoreEscapedMap<T>;
+  }
 
-  /**
-   * SymbolTable based on ES6 Map interface.
-   */
-  declare export type SymbolTable = UnderscoreEscapedMap<Symbol>;
+  declare type SymbolTable = UnderscoreEscapedMap<Symbol>;
+  declare class TypeFlags {
+    static +Any: Class<TypeFlags__Any> & TypeFlags__Any & 1; // 1
+    static +Unknown: Class<TypeFlags__Unknown> & TypeFlags__Unknown & 2; // 2
+    static +String: Class<TypeFlags__String> & TypeFlags__String & 4; // 4
+    static +Number: Class<TypeFlags__Number> & TypeFlags__Number & 8; // 8
+    static +Boolean: Class<TypeFlags__Boolean> & TypeFlags__Boolean & 16; // 16
+    static +Enum: Class<TypeFlags__Enum> & TypeFlags__Enum & 32; // 32
+    static +BigInt: Class<TypeFlags__BigInt> & TypeFlags__BigInt & 64; // 64
+    static +StringLiteral: Class<TypeFlags__StringLiteral> &
+      TypeFlags__StringLiteral &
+      128; // 128
+    static +NumberLiteral: Class<TypeFlags__NumberLiteral> &
+      TypeFlags__NumberLiteral &
+      256; // 256
+    static +BooleanLiteral: Class<TypeFlags__BooleanLiteral> &
+      TypeFlags__BooleanLiteral &
+      512; // 512
+    static +EnumLiteral: Class<TypeFlags__EnumLiteral> &
+      TypeFlags__EnumLiteral &
+      1024; // 1024
+    static +BigIntLiteral: Class<TypeFlags__BigIntLiteral> &
+      TypeFlags__BigIntLiteral &
+      2048; // 2048
+    static +ESSymbol: Class<TypeFlags__ESSymbol> & TypeFlags__ESSymbol & 4096; // 4096
+    static +UniqueESSymbol: Class<TypeFlags__UniqueESSymbol> &
+      TypeFlags__UniqueESSymbol &
+      8192; // 8192
+    static +Void: Class<TypeFlags__Void> & TypeFlags__Void & 16384; // 16384
+    static +Undefined: Class<TypeFlags__Undefined> &
+      TypeFlags__Undefined &
+      32768; // 32768
+    static +Null: Class<TypeFlags__Null> & TypeFlags__Null & 65536; // 65536
+    static +Never: Class<TypeFlags__Never> & TypeFlags__Never & 131072; // 131072
+    static +TypeParameter: Class<TypeFlags__TypeParameter> &
+      TypeFlags__TypeParameter &
+      262144; // 262144
+    static +Object: Class<TypeFlags__Object> & TypeFlags__Object & 524288; // 524288
+    static +Union: Class<TypeFlags__Union> & TypeFlags__Union & 1048576; // 1048576
+    static +Intersection: Class<TypeFlags__Intersection> &
+      TypeFlags__Intersection &
+      2097152; // 2097152
+    static +Index: Class<TypeFlags__Index> & TypeFlags__Index & 4194304; // 4194304
+    static +IndexedAccess: Class<TypeFlags__IndexedAccess> &
+      TypeFlags__IndexedAccess &
+      8388608; // 8388608
+    static +Conditional: Class<TypeFlags__Conditional> &
+      TypeFlags__Conditional &
+      16777216; // 16777216
+    static +Substitution: Class<TypeFlags__Substitution> &
+      TypeFlags__Substitution &
+      33554432; // 33554432
+    static +NonPrimitive: Class<TypeFlags__NonPrimitive> &
+      TypeFlags__NonPrimitive &
+      67108864; // 67108864
+    static +Literal: Class<TypeFlags__Literal> & TypeFlags__Literal & 2944; // 2944
+    static +Unit: Class<TypeFlags__Unit> & TypeFlags__Unit & 109440; // 109440
+    static +StringOrNumberLiteral: Class<TypeFlags__StringOrNumberLiteral> &
+      TypeFlags__StringOrNumberLiteral &
+      384; // 384
+    static +PossiblyFalsy: Class<TypeFlags__PossiblyFalsy> &
+      TypeFlags__PossiblyFalsy &
+      117724; // 117724
+    static +StringLike: Class<TypeFlags__StringLike> &
+      TypeFlags__StringLike &
+      132; // 132
+    static +NumberLike: Class<TypeFlags__NumberLike> &
+      TypeFlags__NumberLike &
+      296; // 296
+    static +BigIntLike: Class<TypeFlags__BigIntLike> &
+      TypeFlags__BigIntLike &
+      2112; // 2112
+    static +BooleanLike: Class<TypeFlags__BooleanLike> &
+      TypeFlags__BooleanLike &
+      528; // 528
+    static +EnumLike: Class<TypeFlags__EnumLike> & TypeFlags__EnumLike & 1056; // 1056
+    static +ESSymbolLike: Class<TypeFlags__ESSymbolLike> &
+      TypeFlags__ESSymbolLike &
+      12288; // 12288
+    static +VoidLike: Class<TypeFlags__VoidLike> & TypeFlags__VoidLike & 49152; // 49152
+    static +UnionOrIntersection: Class<TypeFlags__UnionOrIntersection> &
+      TypeFlags__UnionOrIntersection &
+      3145728; // 3145728
+    static +StructuredType: Class<TypeFlags__StructuredType> &
+      TypeFlags__StructuredType &
+      3670016; // 3670016
+    static +TypeVariable: Class<TypeFlags__TypeVariable> &
+      TypeFlags__TypeVariable &
+      8650752; // 8650752
+    static +InstantiableNonPrimitive: Class<TypeFlags__InstantiableNonPrimitive> &
+      TypeFlags__InstantiableNonPrimitive &
+      58982400; // 58982400
+    static +InstantiablePrimitive: Class<TypeFlags__InstantiablePrimitive> &
+      TypeFlags__InstantiablePrimitive &
+      4194304; // 4194304
+    static +Instantiable: Class<TypeFlags__Instantiable> &
+      TypeFlags__Instantiable &
+      63176704; // 63176704
+    static +StructuredOrInstantiable: Class<TypeFlags__StructuredOrInstantiable> &
+      TypeFlags__StructuredOrInstantiable &
+      66846720; // 66846720
+    static +Narrowable: Class<TypeFlags__Narrowable> &
+      TypeFlags__Narrowable &
+      133970943; // 133970943
+    static +NotUnionOrUnit: Class<TypeFlags__NotUnionOrUnit> &
+      TypeFlags__NotUnionOrUnit &
+      67637251; // 67637251
+  }
+
   declare class TypeFlags__Any mixins TypeFlags {}
   declare class TypeFlags__Unknown mixins TypeFlags {}
   declare class TypeFlags__String mixins TypeFlags {}
@@ -4765,172 +5089,122 @@ while still being comparable with a normal string via === (also good) and castab
   declare class TypeFlags__Narrowable mixins TypeFlags {}
   declare class TypeFlags__NotUnionOrUnit mixins TypeFlags {}
 
-  declare export class TypeFlags {
-    constructor(...args: empty): mixed;
-    static Any: Class<TypeFlags__Any> & TypeFlags__Any & 1; // 1
-    static Unknown: Class<TypeFlags__Unknown> & TypeFlags__Unknown & 2; // 2
-    static String: Class<TypeFlags__String> & TypeFlags__String & 4; // 4
-    static Number: Class<TypeFlags__Number> & TypeFlags__Number & 8; // 8
-    static Boolean: Class<TypeFlags__Boolean> & TypeFlags__Boolean & 16; // 16
-    static Enum: Class<TypeFlags__Enum> & TypeFlags__Enum & 32; // 32
-    static BigInt: Class<TypeFlags__BigInt> & TypeFlags__BigInt & 64; // 64
-    static StringLiteral: Class<TypeFlags__StringLiteral> &
-      TypeFlags__StringLiteral &
-      128; // 128
-    static NumberLiteral: Class<TypeFlags__NumberLiteral> &
-      TypeFlags__NumberLiteral &
-      256; // 256
-    static BooleanLiteral: Class<TypeFlags__BooleanLiteral> &
-      TypeFlags__BooleanLiteral &
-      512; // 512
-    static EnumLiteral: Class<TypeFlags__EnumLiteral> &
-      TypeFlags__EnumLiteral &
-      1024; // 1024
-    static BigIntLiteral: Class<TypeFlags__BigIntLiteral> &
-      TypeFlags__BigIntLiteral &
-      2048; // 2048
-    static ESSymbol: Class<TypeFlags__ESSymbol> & TypeFlags__ESSymbol & 4096; // 4096
-    static UniqueESSymbol: Class<TypeFlags__UniqueESSymbol> &
-      TypeFlags__UniqueESSymbol &
-      8192; // 8192
-    static Void: Class<TypeFlags__Void> & TypeFlags__Void & 16384; // 16384
-    static Undefined: Class<TypeFlags__Undefined> &
-      TypeFlags__Undefined &
-      32768; // 32768
-    static Null: Class<TypeFlags__Null> & TypeFlags__Null & 65536; // 65536
-    static Never: Class<TypeFlags__Never> & TypeFlags__Never & 131072; // 131072
-    static TypeParameter: Class<TypeFlags__TypeParameter> &
-      TypeFlags__TypeParameter &
-      262144; // 262144
-    static Object: Class<TypeFlags__Object> & TypeFlags__Object & 524288; // 524288
-    static Union: Class<TypeFlags__Union> & TypeFlags__Union & 1048576; // 1048576
-    static Intersection: Class<TypeFlags__Intersection> &
-      TypeFlags__Intersection &
-      2097152; // 2097152
-    static Index: Class<TypeFlags__Index> & TypeFlags__Index & 4194304; // 4194304
-    static IndexedAccess: Class<TypeFlags__IndexedAccess> &
-      TypeFlags__IndexedAccess &
-      8388608; // 8388608
-    static Conditional: Class<TypeFlags__Conditional> &
-      TypeFlags__Conditional &
-      16777216; // 16777216
-    static Substitution: Class<TypeFlags__Substitution> &
-      TypeFlags__Substitution &
-      33554432; // 33554432
-    static NonPrimitive: Class<TypeFlags__NonPrimitive> &
-      TypeFlags__NonPrimitive &
-      67108864; // 67108864
-    static Literal: Class<TypeFlags__Literal> & TypeFlags__Literal & 2944; // 2944
-    static Unit: Class<TypeFlags__Unit> & TypeFlags__Unit & 109440; // 109440
-    static StringOrNumberLiteral: Class<TypeFlags__StringOrNumberLiteral> &
-      TypeFlags__StringOrNumberLiteral &
-      384; // 384
-    static PossiblyFalsy: Class<TypeFlags__PossiblyFalsy> &
-      TypeFlags__PossiblyFalsy &
-      117724; // 117724
-    static StringLike: Class<TypeFlags__StringLike> &
-      TypeFlags__StringLike &
-      132; // 132
-    static NumberLike: Class<TypeFlags__NumberLike> &
-      TypeFlags__NumberLike &
-      296; // 296
-    static BigIntLike: Class<TypeFlags__BigIntLike> &
-      TypeFlags__BigIntLike &
-      2112; // 2112
-    static BooleanLike: Class<TypeFlags__BooleanLike> &
-      TypeFlags__BooleanLike &
-      528; // 528
-    static EnumLike: Class<TypeFlags__EnumLike> & TypeFlags__EnumLike & 1056; // 1056
-    static ESSymbolLike: Class<TypeFlags__ESSymbolLike> &
-      TypeFlags__ESSymbolLike &
-      12288; // 12288
-    static VoidLike: Class<TypeFlags__VoidLike> & TypeFlags__VoidLike & 49152; // 49152
-    static UnionOrIntersection: Class<TypeFlags__UnionOrIntersection> &
-      TypeFlags__UnionOrIntersection &
-      3145728; // 3145728
-    static StructuredType: Class<TypeFlags__StructuredType> &
-      TypeFlags__StructuredType &
-      3670016; // 3670016
-    static TypeVariable: Class<TypeFlags__TypeVariable> &
-      TypeFlags__TypeVariable &
-      8650752; // 8650752
-    static InstantiableNonPrimitive: Class<TypeFlags__InstantiableNonPrimitive> &
-      TypeFlags__InstantiableNonPrimitive &
-      58982400; // 58982400
-    static InstantiablePrimitive: Class<TypeFlags__InstantiablePrimitive> &
-      TypeFlags__InstantiablePrimitive &
-      4194304; // 4194304
-    static Instantiable: Class<TypeFlags__Instantiable> &
-      TypeFlags__Instantiable &
-      63176704; // 63176704
-    static StructuredOrInstantiable: Class<TypeFlags__StructuredOrInstantiable> &
-      TypeFlags__StructuredOrInstantiable &
-      66846720; // 66846720
-    static Narrowable: Class<TypeFlags__Narrowable> &
-      TypeFlags__Narrowable &
-      133970943; // 133970943
-    static NotUnionOrUnit: Class<TypeFlags__NotUnionOrUnit> &
-      TypeFlags__NotUnionOrUnit &
-      67637251; // 67637251
-  }
-
-  declare export type DestructuringPattern =
+  declare type DestructuringPattern =
     | BindingPattern
     | ObjectLiteralExpression
     | ArrayLiteralExpression;
-  declare export interface Type {
-    flags: TypeFlags;
-    symbol: Symbol;
-    pattern?: DestructuringPattern;
-    aliasSymbol?: Symbol;
-    aliasTypeArguments?: $ReadOnlyArray<Type>;
-    getFlags(): TypeFlags;
-    getSymbol(): Symbol | void;
-    getProperties(): Symbol[];
-    getProperty(propertyName: string): Symbol | void;
-    getApparentProperties(): Symbol[];
-    getCallSignatures(): $ReadOnlyArray<Signature>;
-    getConstructSignatures(): $ReadOnlyArray<Signature>;
-    getStringIndexType(): Type | void;
-    getNumberIndexType(): Type | void;
-    getBaseTypes(): BaseType[] | void;
-    getNonNullableType(): Type;
-    getConstraint(): Type | void;
-    getDefault(): Type | void;
-    isUnion(): boolean;
-    isIntersection(): boolean;
-    isUnionOrIntersection(): boolean;
-    isLiteral(): boolean;
-    isStringLiteral(): boolean;
-    isNumberLiteral(): boolean;
-    isTypeParameter(): boolean;
-    isClassOrInterface(): boolean;
-    isClass(): boolean;
-  }
-  declare export type LiteralType = {
+  declare type Type = {
+    flags: TypeFlags,
+    symbol: Symbol,
+    pattern?: DestructuringPattern,
+    aliasSymbol?: Symbol,
+    aliasTypeArguments?: $ReadOnlyArray<Type>,
+    getFlags(): TypeFlags,
+    getSymbol(): Symbol | void,
+    getProperties(): Symbol[],
+    getProperty(propertyName: string): Symbol | void,
+    getApparentProperties(): Symbol[],
+    getCallSignatures(): $ReadOnlyArray<Signature>,
+    getConstructSignatures(): $ReadOnlyArray<Signature>,
+    getStringIndexType(): Type | void,
+    getNumberIndexType(): Type | void,
+    getBaseTypes(): BaseType[] | void,
+    getNonNullableType(): Type,
+    getConstraint(): Type | void,
+    getDefault(): Type | void,
+    isUnion(): boolean,
+    isIntersection(): boolean,
+    isUnionOrIntersection(): boolean,
+    isLiteral(): boolean,
+    isStringLiteral(): boolean,
+    isNumberLiteral(): boolean,
+    isTypeParameter(): boolean,
+    isClassOrInterface(): boolean,
+    isClass(): boolean
+  };
+
+  declare type LiteralType = {
+    ...$Exact<Type>,
+
     value: string | number | PseudoBigInt,
     freshType: LiteralType,
     regularType: LiteralType
-  } & Type;
+  };
 
-  declare export type UniqueESSymbolType = {
+  declare type UniqueESSymbolType = {
+    ...$Exact<Type>,
+
     symbol: Symbol,
     escapedName: __String
-  } & Type;
+  };
 
-  declare export type StringLiteralType = {
+  declare type StringLiteralType = {
+    ...$Exact<LiteralType>,
+
     value: string
-  } & LiteralType;
+  };
 
-  declare export type NumberLiteralType = {
+  declare type NumberLiteralType = {
+    ...$Exact<LiteralType>,
+
     value: number
-  } & LiteralType;
+  };
 
-  declare export type BigIntLiteralType = {
+  declare type BigIntLiteralType = {
+    ...$Exact<LiteralType>,
+
     value: PseudoBigInt
-  } & LiteralType;
+  };
 
-  declare export type EnumType = {} & Type;
+  declare type EnumType = { ...$Exact<Type> };
+
+  declare class ObjectFlags {
+    static +Class: Class<ObjectFlags__Class> & ObjectFlags__Class & 1; // 1
+    static +Interface: Class<ObjectFlags__Interface> &
+      ObjectFlags__Interface &
+      2; // 2
+    static +Reference: Class<ObjectFlags__Reference> &
+      ObjectFlags__Reference &
+      4; // 4
+    static +Tuple: Class<ObjectFlags__Tuple> & ObjectFlags__Tuple & 8; // 8
+    static +Anonymous: Class<ObjectFlags__Anonymous> &
+      ObjectFlags__Anonymous &
+      16; // 16
+    static +Mapped: Class<ObjectFlags__Mapped> & ObjectFlags__Mapped & 32; // 32
+    static +Instantiated: Class<ObjectFlags__Instantiated> &
+      ObjectFlags__Instantiated &
+      64; // 64
+    static +ObjectLiteral: Class<ObjectFlags__ObjectLiteral> &
+      ObjectFlags__ObjectLiteral &
+      128; // 128
+    static +EvolvingArray: Class<ObjectFlags__EvolvingArray> &
+      ObjectFlags__EvolvingArray &
+      256; // 256
+    static +ObjectLiteralPatternWithComputedProperties: Class<ObjectFlags__ObjectLiteralPatternWithComputedProperties> &
+      ObjectFlags__ObjectLiteralPatternWithComputedProperties &
+      512; // 512
+    static +ContainsSpread: Class<ObjectFlags__ContainsSpread> &
+      ObjectFlags__ContainsSpread &
+      1024; // 1024
+    static +ReverseMapped: Class<ObjectFlags__ReverseMapped> &
+      ObjectFlags__ReverseMapped &
+      2048; // 2048
+    static +JsxAttributes: Class<ObjectFlags__JsxAttributes> &
+      ObjectFlags__JsxAttributes &
+      4096; // 4096
+    static +MarkerType: Class<ObjectFlags__MarkerType> &
+      ObjectFlags__MarkerType &
+      8192; // 8192
+    static +JSLiteral: Class<ObjectFlags__JSLiteral> &
+      ObjectFlags__JSLiteral &
+      16384; // 16384
+    static +FreshLiteral: Class<ObjectFlags__FreshLiteral> &
+      ObjectFlags__FreshLiteral &
+      32768; // 32768
+    static +ClassOrInterface: Class<ObjectFlags__ClassOrInterface> &
+      ObjectFlags__ClassOrInterface &
+      3; // 3
+  }
 
   declare class ObjectFlags__Class mixins ObjectFlags {}
   declare class ObjectFlags__Interface mixins ObjectFlags {}
@@ -4951,199 +5225,192 @@ while still being comparable with a normal string via === (also good) and castab
   declare class ObjectFlags__FreshLiteral mixins ObjectFlags {}
   declare class ObjectFlags__ClassOrInterface mixins ObjectFlags {}
 
-  declare export class ObjectFlags {
-    constructor(...args: empty): mixed;
-    static Class: Class<ObjectFlags__Class> & ObjectFlags__Class & 1; // 1
-    static Interface: Class<ObjectFlags__Interface> &
-      ObjectFlags__Interface &
-      2; // 2
-    static Reference: Class<ObjectFlags__Reference> &
-      ObjectFlags__Reference &
-      4; // 4
-    static Tuple: Class<ObjectFlags__Tuple> & ObjectFlags__Tuple & 8; // 8
-    static Anonymous: Class<ObjectFlags__Anonymous> &
-      ObjectFlags__Anonymous &
-      16; // 16
-    static Mapped: Class<ObjectFlags__Mapped> & ObjectFlags__Mapped & 32; // 32
-    static Instantiated: Class<ObjectFlags__Instantiated> &
-      ObjectFlags__Instantiated &
-      64; // 64
-    static ObjectLiteral: Class<ObjectFlags__ObjectLiteral> &
-      ObjectFlags__ObjectLiteral &
-      128; // 128
-    static EvolvingArray: Class<ObjectFlags__EvolvingArray> &
-      ObjectFlags__EvolvingArray &
-      256; // 256
-    static ObjectLiteralPatternWithComputedProperties: Class<ObjectFlags__ObjectLiteralPatternWithComputedProperties> &
-      ObjectFlags__ObjectLiteralPatternWithComputedProperties &
-      512; // 512
-    static ContainsSpread: Class<ObjectFlags__ContainsSpread> &
-      ObjectFlags__ContainsSpread &
-      1024; // 1024
-    static ReverseMapped: Class<ObjectFlags__ReverseMapped> &
-      ObjectFlags__ReverseMapped &
-      2048; // 2048
-    static JsxAttributes: Class<ObjectFlags__JsxAttributes> &
-      ObjectFlags__JsxAttributes &
-      4096; // 4096
-    static MarkerType: Class<ObjectFlags__MarkerType> &
-      ObjectFlags__MarkerType &
-      8192; // 8192
-    static JSLiteral: Class<ObjectFlags__JSLiteral> &
-      ObjectFlags__JSLiteral &
-      16384; // 16384
-    static FreshLiteral: Class<ObjectFlags__FreshLiteral> &
-      ObjectFlags__FreshLiteral &
-      32768; // 32768
-    static ClassOrInterface: Class<ObjectFlags__ClassOrInterface> &
-      ObjectFlags__ClassOrInterface &
-      3; // 3
-  }
+  declare type ObjectType = {
+    ...$Exact<Type>,
 
-  declare export type ObjectType = {
     objectFlags: ObjectFlags
-  } & Type;
+  };
 
-  /**
-   * Class and interface types (ObjectFlags.Class and ObjectFlags.Interface).
-   */
-  declare export type InterfaceType = {
+  declare type InterfaceType = {
+    ...$Exact<ObjectType>,
+
     typeParameters: TypeParameter[] | void,
     outerTypeParameters: TypeParameter[] | void,
     localTypeParameters: TypeParameter[] | void,
     thisType: TypeParameter | void
-  } & ObjectType;
+  };
 
-  declare export type BaseType = ObjectType | IntersectionType;
-  declare export type InterfaceTypeWithDeclaredMembers = {
+  declare type BaseType = ObjectType | IntersectionType;
+  declare type InterfaceTypeWithDeclaredMembers = {
+    ...$Exact<InterfaceType>,
+
     declaredProperties: Symbol[],
     declaredCallSignatures: Signature[],
     declaredConstructSignatures: Signature[],
     declaredStringIndexInfo?: IndexInfo,
     declaredNumberIndexInfo?: IndexInfo
-  } & InterfaceType;
+  };
 
-  /**
- * Type references (ObjectFlags.Reference). When a class or interface has type parameters or
- * a "this" type, references to the class or interface are made using type references. The
-typeArguments property specifies the types to substitute for the type parameters of the
-class or interface and optionally includes an extra element that specifies the type to
-substitute for "this" in the resulting instantiation. When no extra argument is present,
-the type reference itself is substituted for "this". The typeArguments property is undefined
-if the class or interface has no type parameters and the reference isn't specifying an
-explicit "this" argument.
-*/
-  declare export type TypeReference = {
+  declare type TypeReference = {
+    ...$Exact<ObjectType>,
+
     target: GenericType,
     typeArguments?: $ReadOnlyArray<Type>
-  } & ObjectType;
+  };
 
-  declare export type GenericType = {} & InterfaceType & TypeReference;
+  declare type GenericType = {
+    ...$Exact<InterfaceType>,
+    ...$Exact<TypeReference>
+  };
 
-  declare export type TupleType = {
+  declare type TupleType = {
+    ...$Exact<GenericType>,
+
     minLength: number,
     hasRestElement: boolean,
     associatedNames?: __String[]
-  } & GenericType;
+  };
 
-  declare export type TupleTypeReference = {
+  declare type TupleTypeReference = {
+    ...$Exact<TypeReference>,
+
     target: TupleType
-  } & TypeReference;
+  };
 
-  declare export type UnionOrIntersectionType = {
+  declare type UnionOrIntersectionType = {
+    ...$Exact<Type>,
+
     types: Type[]
-  } & Type;
+  };
 
-  declare export type UnionType = {} & UnionOrIntersectionType;
+  declare type UnionType = { ...$Exact<UnionOrIntersectionType> };
 
-  declare export type IntersectionType = {} & UnionOrIntersectionType;
+  declare type IntersectionType = { ...$Exact<UnionOrIntersectionType> };
 
-  declare export type StructuredType = ObjectType | UnionType | IntersectionType;
-  declare export type EvolvingArrayType = {
+  declare type StructuredType = ObjectType | UnionType | IntersectionType;
+  declare type EvolvingArrayType = {
+    ...$Exact<ObjectType>,
+
     elementType: Type,
     finalArrayType?: Type
-  } & ObjectType;
+  };
 
-  declare export type InstantiableType = {} & Type;
+  declare type InstantiableType = { ...$Exact<Type> };
 
-  declare export type TypeParameter = {} & InstantiableType;
+  declare type TypeParameter = { ...$Exact<InstantiableType> };
 
-  declare export type IndexedAccessType = {
+  declare type IndexedAccessType = {
+    ...$Exact<InstantiableType>,
+
     objectType: Type,
     indexType: Type,
     constraint?: Type,
     simplified?: Type
-  } & InstantiableType;
+  };
 
-  declare export type TypeVariable = TypeParameter | IndexedAccessType;
-  declare export type IndexType = {
+  declare type TypeVariable = TypeParameter | IndexedAccessType;
+  declare type IndexType = {
+    ...$Exact<InstantiableType>,
+
     type: InstantiableType | UnionOrIntersectionType
-  } & InstantiableType;
+  };
 
-  declare export interface ConditionalRoot {
-    node: ConditionalTypeNode;
-    checkType: Type;
-    extendsType: Type;
-    trueType: Type;
-    falseType: Type;
-    isDistributive: boolean;
-    inferTypeParameters?: TypeParameter[];
-    outerTypeParameters?: TypeParameter[];
-    instantiations?: Map<Type>;
-    aliasSymbol?: Symbol;
-    aliasTypeArguments?: Type[];
-  }
-  declare export type ConditionalType = {
+  declare type ConditionalRoot = {
+    node: ConditionalTypeNode,
+    checkType: Type,
+    extendsType: Type,
+    trueType: Type,
+    falseType: Type,
+    isDistributive: boolean,
+    inferTypeParameters?: TypeParameter[],
+    outerTypeParameters?: TypeParameter[],
+    instantiations?: Map<Type>,
+    aliasSymbol?: Symbol,
+    aliasTypeArguments?: Type[]
+  };
+
+  declare type ConditionalType = {
+    ...$Exact<InstantiableType>,
+
     root: ConditionalRoot,
     checkType: Type,
     extendsType: Type,
     resolvedTrueType?: Type,
     resolvedFalseType?: Type
-  } & InstantiableType;
+  };
 
-  declare export type SubstitutionType = {
+  declare type SubstitutionType = {
+    ...$Exact<InstantiableType>,
+
     typeVariable: TypeVariable,
     substitute: Type
-  } & InstantiableType;
+  };
 
-  declare class SignatureKind__Call mixins SignatureKind {}
-  declare class SignatureKind__Construct mixins SignatureKind {}
-
-  declare export class SignatureKind {
-    constructor(...args: empty): mixed;
-    static Call: Class<SignatureKind__Call> & SignatureKind__Call & 0; // 0
-    static Construct: Class<SignatureKind__Construct> &
+  declare class SignatureKind {
+    static +Call: Class<SignatureKind__Call> & SignatureKind__Call & 0; // 0
+    static +Construct: Class<SignatureKind__Construct> &
       SignatureKind__Construct &
       1; // 1
   }
 
-  declare export interface Signature {
-    declaration?: SignatureDeclaration | JSDocSignature;
-    typeParameters?: $ReadOnlyArray<TypeParameter>;
-    parameters: $ReadOnlyArray<Symbol>;
-    getDeclaration(): SignatureDeclaration;
-    getTypeParameters(): TypeParameter[] | void;
-    getParameters(): Symbol[];
-    getReturnType(): Type;
+  declare class SignatureKind__Call mixins SignatureKind {}
+  declare class SignatureKind__Construct mixins SignatureKind {}
+
+  declare type Signature = {
+    declaration?: SignatureDeclaration | JSDocSignature,
+    typeParameters?: $ReadOnlyArray<TypeParameter>,
+    parameters: $ReadOnlyArray<Symbol>,
+    getDeclaration(): SignatureDeclaration,
+    getTypeParameters(): TypeParameter[] | void,
+    getParameters(): Symbol[],
+    getReturnType(): Type,
     getDocumentationComment(
       typeChecker: TypeChecker | void
-    ): SymbolDisplayPart[];
-    getJsDocTags(): JSDocTagInfo[];
+    ): SymbolDisplayPart[],
+    getJsDocTags(): JSDocTagInfo[]
+  };
+
+  declare class IndexKind {
+    static +String: Class<IndexKind__String> & IndexKind__String & 0; // 0
+    static +Number: Class<IndexKind__Number> & IndexKind__Number & 1; // 1
   }
+
   declare class IndexKind__String mixins IndexKind {}
   declare class IndexKind__Number mixins IndexKind {}
 
-  declare export class IndexKind {
-    constructor(...args: empty): mixed;
-    static String: Class<IndexKind__String> & IndexKind__String & 0; // 0
-    static Number: Class<IndexKind__Number> & IndexKind__Number & 1; // 1
+  declare type IndexInfo = {
+    type: Type,
+    isReadonly: boolean,
+    declaration?: IndexSignatureDeclaration
+  };
+
+  declare class InferencePriority {
+    static +NakedTypeVariable: Class<InferencePriority__NakedTypeVariable> &
+      InferencePriority__NakedTypeVariable &
+      1; // 1
+    static +HomomorphicMappedType: Class<InferencePriority__HomomorphicMappedType> &
+      InferencePriority__HomomorphicMappedType &
+      2; // 2
+    static +MappedTypeConstraint: Class<InferencePriority__MappedTypeConstraint> &
+      InferencePriority__MappedTypeConstraint &
+      4; // 4
+    static +ReturnType: Class<InferencePriority__ReturnType> &
+      InferencePriority__ReturnType &
+      8; // 8
+    static +LiteralKeyof: Class<InferencePriority__LiteralKeyof> &
+      InferencePriority__LiteralKeyof &
+      16; // 16
+    static +NoConstraints: Class<InferencePriority__NoConstraints> &
+      InferencePriority__NoConstraints &
+      32; // 32
+    static +AlwaysStrict: Class<InferencePriority__AlwaysStrict> &
+      InferencePriority__AlwaysStrict &
+      64; // 64
+    static +PriorityImpliesCombination: Class<InferencePriority__PriorityImpliesCombination> &
+      InferencePriority__PriorityImpliesCombination &
+      28; // 28
   }
 
-  declare export interface IndexInfo {
-    type: Type;
-    isReadonly: boolean;
-    declaration?: IndexSignatureDeclaration;
-  }
   declare class InferencePriority__NakedTypeVariable mixins InferencePriority {}
   declare class InferencePriority__HomomorphicMappedType
     mixins InferencePriority {}
@@ -5156,146 +5423,97 @@ explicit "this" argument.
   declare class InferencePriority__PriorityImpliesCombination
     mixins InferencePriority {}
 
-  declare export class InferencePriority {
-    constructor(...args: empty): mixed;
-    static NakedTypeVariable: Class<InferencePriority__NakedTypeVariable> &
-      InferencePriority__NakedTypeVariable &
-      1; // 1
-    static HomomorphicMappedType: Class<InferencePriority__HomomorphicMappedType> &
-      InferencePriority__HomomorphicMappedType &
-      2; // 2
-    static MappedTypeConstraint: Class<InferencePriority__MappedTypeConstraint> &
-      InferencePriority__MappedTypeConstraint &
-      4; // 4
-    static ReturnType: Class<InferencePriority__ReturnType> &
-      InferencePriority__ReturnType &
-      8; // 8
-    static LiteralKeyof: Class<InferencePriority__LiteralKeyof> &
-      InferencePriority__LiteralKeyof &
-      16; // 16
-    static NoConstraints: Class<InferencePriority__NoConstraints> &
-      InferencePriority__NoConstraints &
-      32; // 32
-    static AlwaysStrict: Class<InferencePriority__AlwaysStrict> &
-      InferencePriority__AlwaysStrict &
-      64; // 64
-    static PriorityImpliesCombination: Class<InferencePriority__PriorityImpliesCombination> &
-      InferencePriority__PriorityImpliesCombination &
-      28; // 28
-  }
+  declare type JsFileExtensionInfo = FileExtensionInfo;
+  declare type FileExtensionInfo = {
+    extension: string,
+    isMixedContent: boolean,
+    scriptKind?: ScriptKind
+  };
 
-  /**
-   *
-   * @deprecated Use FileExtensionInfo instead.
-   */
-  declare export type JsFileExtensionInfo = FileExtensionInfo;
-  declare export interface FileExtensionInfo {
-    extension: string;
-    isMixedContent: boolean;
-    scriptKind?: ScriptKind;
-  }
-  declare export interface DiagnosticMessage {
-    key: string;
-    category: DiagnosticCategory;
-    code: number;
-    message: string;
-    reportsUnnecessary?: {};
-  }
+  declare type DiagnosticMessage = {
+    key: string,
+    category: DiagnosticCategory,
+    code: number,
+    message: string,
+    reportsUnnecessary?: {}
+  };
 
-  /**
- * A linked list of formatted diagnostic messages to be used as part of a multiline message.
- * It is built from the bottom up, leaving the head to be the "main" diagnostic.
-While it seems that DiagnosticMessageChain is structurally similar to DiagnosticMessage,
-the difference is that messages are all preformatted in DMC.
-*/
-  declare export interface DiagnosticMessageChain {
-    messageText: string;
-    category: DiagnosticCategory;
-    code: number;
-    next?: DiagnosticMessageChain;
-  }
-  declare export type Diagnostic = {
-    /**
-     * May store more in future. For now, this will simply be `true` to indicate when a diagnostic is an unused-identifier diagnostic.
-     */
+  declare type DiagnosticMessageChain = {
+    messageText: string,
+    category: DiagnosticCategory,
+    code: number,
+    next?: DiagnosticMessageChain
+  };
+
+  declare type Diagnostic = {
+    ...$Exact<DiagnosticRelatedInformation>,
+
     reportsUnnecessary?: {},
     source?: string,
     relatedInformation?: DiagnosticRelatedInformation[]
-  } & DiagnosticRelatedInformation;
+  };
 
-  declare export interface DiagnosticRelatedInformation {
-    category: DiagnosticCategory;
-    code: number;
-    file: SourceFile | void;
-    start: number | void;
-    length: number | void;
-    messageText: string | DiagnosticMessageChain;
-  }
-  declare export type DiagnosticWithLocation = {
+  declare type DiagnosticRelatedInformation = {
+    category: DiagnosticCategory,
+    code: number,
+    file: SourceFile | void,
+    start: number | void,
+    length: number | void,
+    messageText: string | DiagnosticMessageChain
+  };
+
+  declare type DiagnosticWithLocation = {
+    ...$Exact<Diagnostic>,
+
     file: SourceFile,
     start: number,
     length: number
-  } & Diagnostic;
+  };
+
+  declare class DiagnosticCategory {
+    static +Warning: Class<DiagnosticCategory__Warning> &
+      DiagnosticCategory__Warning &
+      0; // 0
+    static +Error: Class<DiagnosticCategory__Error> &
+      DiagnosticCategory__Error &
+      1; // 1
+    static +Suggestion: Class<DiagnosticCategory__Suggestion> &
+      DiagnosticCategory__Suggestion &
+      2; // 2
+    static +Message: Class<DiagnosticCategory__Message> &
+      DiagnosticCategory__Message &
+      3; // 3
+  }
 
   declare class DiagnosticCategory__Warning mixins DiagnosticCategory {}
   declare class DiagnosticCategory__Error mixins DiagnosticCategory {}
   declare class DiagnosticCategory__Suggestion mixins DiagnosticCategory {}
   declare class DiagnosticCategory__Message mixins DiagnosticCategory {}
 
-  declare export class DiagnosticCategory {
-    constructor(...args: empty): mixed;
-    static Warning: Class<DiagnosticCategory__Warning> &
-      DiagnosticCategory__Warning &
-      0; // 0
-    static Error: Class<DiagnosticCategory__Error> &
-      DiagnosticCategory__Error &
+  declare class ModuleResolutionKind {
+    static +Classic: Class<ModuleResolutionKind__Classic> &
+      ModuleResolutionKind__Classic &
       1; // 1
-    static Suggestion: Class<DiagnosticCategory__Suggestion> &
-      DiagnosticCategory__Suggestion &
+    static +NodeJs: Class<ModuleResolutionKind__NodeJs> &
+      ModuleResolutionKind__NodeJs &
       2; // 2
-    static Message: Class<DiagnosticCategory__Message> &
-      DiagnosticCategory__Message &
-      3; // 3
   }
 
   declare class ModuleResolutionKind__Classic mixins ModuleResolutionKind {}
   declare class ModuleResolutionKind__NodeJs mixins ModuleResolutionKind {}
 
-  declare export class ModuleResolutionKind {
-    constructor(...args: empty): mixed;
-    static Classic: Class<ModuleResolutionKind__Classic> &
-      ModuleResolutionKind__Classic &
-      1; // 1
-    static NodeJs: Class<ModuleResolutionKind__NodeJs> &
-      ModuleResolutionKind__NodeJs &
-      2; // 2
-  }
+  declare type PluginImport = {
+    name: string
+  };
 
-  declare export interface PluginImport {
-    name: string;
-  }
-  declare export interface ProjectReference {
-    /**
-     * A normalized path on disk
-     */
-    path: string;
+  declare type ProjectReference = {
+    path: string,
+    originalPath?: string,
+    prepend?: boolean,
+    circular?: boolean
+  };
 
-    /**
-     * The path as the user originally wrote it
-     */
-    originalPath?: string;
-
-    /**
-     * True if the output of this reference should be prepended to the output of this project. Only valid for --outFile compilations
-     */
-    prepend?: boolean;
-
-    /**
-     * True if it is intended that this reference form a circularity
-     */
-    circular?: boolean;
-  }
-  declare export type CompilerOptionsValue =
+  declare type CompilerOptionsValue =
     | string
     | number
     | boolean
@@ -5306,96 +5524,104 @@ the difference is that messages are all preformatted in DMC.
     | ProjectReference[]
     | null
     | void;
-  declare export interface CompilerOptions {
-    allowJs?: boolean;
-    allowSyntheticDefaultImports?: boolean;
-    allowUnreachableCode?: boolean;
-    allowUnusedLabels?: boolean;
-    alwaysStrict?: boolean;
-    baseUrl?: string;
-    charset?: string;
-    checkJs?: boolean;
-    declaration?: boolean;
-    declarationMap?: boolean;
-    emitDeclarationOnly?: boolean;
-    declarationDir?: string;
-    disableSizeLimit?: boolean;
-    downlevelIteration?: boolean;
-    emitBOM?: boolean;
-    emitDecoratorMetadata?: boolean;
-    experimentalDecorators?: boolean;
-    forceConsistentCasingInFileNames?: boolean;
-    importHelpers?: boolean;
-    inlineSourceMap?: boolean;
-    inlineSources?: boolean;
-    isolatedModules?: boolean;
-    jsx?: JsxEmit;
-    keyofStringsOnly?: boolean;
-    lib?: string[];
-    locale?: string;
-    mapRoot?: string;
-    maxNodeModuleJsDepth?: number;
-    module?: ModuleKind;
-    moduleResolution?: ModuleResolutionKind;
-    newLine?: NewLineKind;
-    noEmit?: boolean;
-    noEmitHelpers?: boolean;
-    noEmitOnError?: boolean;
-    noErrorTruncation?: boolean;
-    noFallthroughCasesInSwitch?: boolean;
-    noImplicitAny?: boolean;
-    noImplicitReturns?: boolean;
-    noImplicitThis?: boolean;
-    noStrictGenericChecks?: boolean;
-    noUnusedLocals?: boolean;
-    noUnusedParameters?: boolean;
-    noImplicitUseStrict?: boolean;
-    noLib?: boolean;
-    noResolve?: boolean;
-    out?: string;
-    outDir?: string;
-    outFile?: string;
-    paths?: MapLike<string[]>;
-    preserveConstEnums?: boolean;
-    preserveSymlinks?: boolean;
-    project?: string;
-    reactNamespace?: string;
-    jsxFactory?: string;
-    composite?: boolean;
-    removeComments?: boolean;
-    rootDir?: string;
-    rootDirs?: string[];
-    skipLibCheck?: boolean;
-    skipDefaultLibCheck?: boolean;
-    sourceMap?: boolean;
-    sourceRoot?: string;
-    strict?: boolean;
-    strictFunctionTypes?: boolean;
-    strictBindCallApply?: boolean;
-    strictNullChecks?: boolean;
-    strictPropertyInitialization?: boolean;
-    stripInternal?: boolean;
-    suppressExcessPropertyErrors?: boolean;
-    suppressImplicitAnyIndexErrors?: boolean;
-    target?: ScriptTarget;
-    traceResolution?: boolean;
-    resolveJsonModule?: boolean;
-    types?: string[];
+  declare type CompilerOptions = {
+    allowJs?: boolean,
+    allowSyntheticDefaultImports?: boolean,
+    allowUnreachableCode?: boolean,
+    allowUnusedLabels?: boolean,
+    alwaysStrict?: boolean,
+    baseUrl?: string,
+    charset?: string,
+    checkJs?: boolean,
+    declaration?: boolean,
+    declarationMap?: boolean,
+    emitDeclarationOnly?: boolean,
+    declarationDir?: string,
+    disableSizeLimit?: boolean,
+    downlevelIteration?: boolean,
+    emitBOM?: boolean,
+    emitDecoratorMetadata?: boolean,
+    experimentalDecorators?: boolean,
+    forceConsistentCasingInFileNames?: boolean,
+    importHelpers?: boolean,
+    inlineSourceMap?: boolean,
+    inlineSources?: boolean,
+    isolatedModules?: boolean,
+    jsx?: JsxEmit,
+    keyofStringsOnly?: boolean,
+    lib?: string[],
+    locale?: string,
+    mapRoot?: string,
+    maxNodeModuleJsDepth?: number,
+    module?: ModuleKind,
+    moduleResolution?: ModuleResolutionKind,
+    newLine?: NewLineKind,
+    noEmit?: boolean,
+    noEmitHelpers?: boolean,
+    noEmitOnError?: boolean,
+    noErrorTruncation?: boolean,
+    noFallthroughCasesInSwitch?: boolean,
+    noImplicitAny?: boolean,
+    noImplicitReturns?: boolean,
+    noImplicitThis?: boolean,
+    noStrictGenericChecks?: boolean,
+    noUnusedLocals?: boolean,
+    noUnusedParameters?: boolean,
+    noImplicitUseStrict?: boolean,
+    noLib?: boolean,
+    noResolve?: boolean,
+    out?: string,
+    outDir?: string,
+    outFile?: string,
+    paths?: MapLike<string[]>,
+    preserveConstEnums?: boolean,
+    preserveSymlinks?: boolean,
+    project?: string,
+    reactNamespace?: string,
+    jsxFactory?: string,
+    composite?: boolean,
+    removeComments?: boolean,
+    rootDir?: string,
+    rootDirs?: string[],
+    skipLibCheck?: boolean,
+    skipDefaultLibCheck?: boolean,
+    sourceMap?: boolean,
+    sourceRoot?: string,
+    strict?: boolean,
+    strictFunctionTypes?: boolean,
+    strictBindCallApply?: boolean,
+    strictNullChecks?: boolean,
+    strictPropertyInitialization?: boolean,
+    stripInternal?: boolean,
+    suppressExcessPropertyErrors?: boolean,
+    suppressImplicitAnyIndexErrors?: boolean,
+    target?: ScriptTarget,
+    traceResolution?: boolean,
+    resolveJsonModule?: boolean,
+    types?: string[],
+    typeRoots?: string[],
+    esModuleInterop?: boolean,
+    [option: string]: CompilerOptionsValue | TsConfigSourceFile | void
+  };
 
-    /**
-     * Paths used to compute primary types search locations
-     */
-    typeRoots?: string[];
-    esModuleInterop?: boolean;
-    [option: string]: CompilerOptionsValue | TsConfigSourceFile | void;
+  declare type TypeAcquisition = {
+    enableAutoDiscovery?: boolean,
+    enable?: boolean,
+    include?: string[],
+    exclude?: string[],
+    [option: string]: string[] | boolean | void
+  };
+
+  declare class ModuleKind {
+    static +None: Class<ModuleKind__None> & ModuleKind__None & 0; // 0
+    static +CommonJS: Class<ModuleKind__CommonJS> & ModuleKind__CommonJS & 1; // 1
+    static +AMD: Class<ModuleKind__AMD> & ModuleKind__AMD & 2; // 2
+    static +UMD: Class<ModuleKind__UMD> & ModuleKind__UMD & 3; // 3
+    static +System: Class<ModuleKind__System> & ModuleKind__System & 4; // 4
+    static +ES2015: Class<ModuleKind__ES2015> & ModuleKind__ES2015 & 5; // 5
+    static +ESNext: Class<ModuleKind__ESNext> & ModuleKind__ESNext & 6; // 6
   }
-  declare export interface TypeAcquisition {
-    enableAutoDiscovery?: boolean;
-    enable?: boolean;
-    include?: string[];
-    exclude?: string[];
-    [option: string]: string[] | boolean | void;
-  }
+
   declare class ModuleKind__None mixins ModuleKind {}
   declare class ModuleKind__CommonJS mixins ModuleKind {}
   declare class ModuleKind__AMD mixins ModuleKind {}
@@ -5404,15 +5630,11 @@ the difference is that messages are all preformatted in DMC.
   declare class ModuleKind__ES2015 mixins ModuleKind {}
   declare class ModuleKind__ESNext mixins ModuleKind {}
 
-  declare export class ModuleKind {
-    constructor(...args: empty): mixed;
-    static None: Class<ModuleKind__None> & ModuleKind__None & 0; // 0
-    static CommonJS: Class<ModuleKind__CommonJS> & ModuleKind__CommonJS & 1; // 1
-    static AMD: Class<ModuleKind__AMD> & ModuleKind__AMD & 2; // 2
-    static UMD: Class<ModuleKind__UMD> & ModuleKind__UMD & 3; // 3
-    static System: Class<ModuleKind__System> & ModuleKind__System & 4; // 4
-    static ES2015: Class<ModuleKind__ES2015> & ModuleKind__ES2015 & 5; // 5
-    static ESNext: Class<ModuleKind__ESNext> & ModuleKind__ESNext & 6; // 6
+  declare class JsxEmit {
+    static +None: Class<JsxEmit__None> & JsxEmit__None & 0; // 0
+    static +Preserve: Class<JsxEmit__Preserve> & JsxEmit__Preserve & 1; // 1
+    static +React: Class<JsxEmit__React> & JsxEmit__React & 2; // 2
+    static +ReactNative: Class<JsxEmit__ReactNative> & JsxEmit__ReactNative & 3; // 3
   }
 
   declare class JsxEmit__None mixins JsxEmit {}
@@ -5420,32 +5642,32 @@ the difference is that messages are all preformatted in DMC.
   declare class JsxEmit__React mixins JsxEmit {}
   declare class JsxEmit__ReactNative mixins JsxEmit {}
 
-  declare export class JsxEmit {
-    constructor(...args: empty): mixed;
-    static None: Class<JsxEmit__None> & JsxEmit__None & 0; // 0
-    static Preserve: Class<JsxEmit__Preserve> & JsxEmit__Preserve & 1; // 1
-    static React: Class<JsxEmit__React> & JsxEmit__React & 2; // 2
-    static ReactNative: Class<JsxEmit__ReactNative> & JsxEmit__ReactNative & 3; // 3
+  declare class NewLineKind {
+    static +CarriageReturnLineFeed: Class<NewLineKind__CarriageReturnLineFeed> &
+      NewLineKind__CarriageReturnLineFeed &
+      0; // 0
+    static +LineFeed: Class<NewLineKind__LineFeed> & NewLineKind__LineFeed & 1; // 1
   }
 
   declare class NewLineKind__CarriageReturnLineFeed mixins NewLineKind {}
   declare class NewLineKind__LineFeed mixins NewLineKind {}
 
-  declare export class NewLineKind {
-    constructor(...args: empty): mixed;
-    static CarriageReturnLineFeed: Class<NewLineKind__CarriageReturnLineFeed> &
-      NewLineKind__CarriageReturnLineFeed &
-      0; // 0
-    static LineFeed: Class<NewLineKind__LineFeed> & NewLineKind__LineFeed & 1; // 1
+  declare type LineAndCharacter = {
+    line: number,
+    character: number
+  };
+
+  declare class ScriptKind {
+    static +Unknown: Class<ScriptKind__Unknown> & ScriptKind__Unknown & 0; // 0
+    static +JS: Class<ScriptKind__JS> & ScriptKind__JS & 1; // 1
+    static +JSX: Class<ScriptKind__JSX> & ScriptKind__JSX & 2; // 2
+    static +TS: Class<ScriptKind__TS> & ScriptKind__TS & 3; // 3
+    static +TSX: Class<ScriptKind__TSX> & ScriptKind__TSX & 4; // 4
+    static +External: Class<ScriptKind__External> & ScriptKind__External & 5; // 5
+    static +JSON: Class<ScriptKind__JSON> & ScriptKind__JSON & 6; // 6
+    static +Deferred: Class<ScriptKind__Deferred> & ScriptKind__Deferred & 7; // 7
   }
 
-  declare export interface LineAndCharacter {
-    /**
-     * 0-based.
-     */
-    line: number;
-    character: number;
-  }
   declare class ScriptKind__Unknown mixins ScriptKind {}
   declare class ScriptKind__JS mixins ScriptKind {}
   declare class ScriptKind__JSX mixins ScriptKind {}
@@ -5455,16 +5677,16 @@ the difference is that messages are all preformatted in DMC.
   declare class ScriptKind__JSON mixins ScriptKind {}
   declare class ScriptKind__Deferred mixins ScriptKind {}
 
-  declare export class ScriptKind {
-    constructor(...args: empty): mixed;
-    static Unknown: Class<ScriptKind__Unknown> & ScriptKind__Unknown & 0; // 0
-    static JS: Class<ScriptKind__JS> & ScriptKind__JS & 1; // 1
-    static JSX: Class<ScriptKind__JSX> & ScriptKind__JSX & 2; // 2
-    static TS: Class<ScriptKind__TS> & ScriptKind__TS & 3; // 3
-    static TSX: Class<ScriptKind__TSX> & ScriptKind__TSX & 4; // 4
-    static External: Class<ScriptKind__External> & ScriptKind__External & 5; // 5
-    static JSON: Class<ScriptKind__JSON> & ScriptKind__JSON & 6; // 6
-    static Deferred: Class<ScriptKind__Deferred> & ScriptKind__Deferred & 7; // 7
+  declare class ScriptTarget {
+    static +ES3: Class<ScriptTarget__ES3> & ScriptTarget__ES3 & 0; // 0
+    static +ES5: Class<ScriptTarget__ES5> & ScriptTarget__ES5 & 1; // 1
+    static +ES2015: Class<ScriptTarget__ES2015> & ScriptTarget__ES2015 & 2; // 2
+    static +ES2016: Class<ScriptTarget__ES2016> & ScriptTarget__ES2016 & 3; // 3
+    static +ES2017: Class<ScriptTarget__ES2017> & ScriptTarget__ES2017 & 4; // 4
+    static +ES2018: Class<ScriptTarget__ES2018> & ScriptTarget__ES2018 & 5; // 5
+    static +ESNext: Class<ScriptTarget__ESNext> & ScriptTarget__ESNext & 6; // 6
+    static +JSON: Class<ScriptTarget__JSON> & ScriptTarget__JSON & 100; // 100
+    static +Latest: Class<ScriptTarget__Latest> & ScriptTarget__Latest & 6; // 6
   }
 
   declare class ScriptTarget__ES3 mixins ScriptTarget {}
@@ -5477,139 +5699,90 @@ the difference is that messages are all preformatted in DMC.
   declare class ScriptTarget__JSON mixins ScriptTarget {}
   declare class ScriptTarget__Latest mixins ScriptTarget {}
 
-  declare export class ScriptTarget {
-    constructor(...args: empty): mixed;
-    static ES3: Class<ScriptTarget__ES3> & ScriptTarget__ES3 & 0; // 0
-    static ES5: Class<ScriptTarget__ES5> & ScriptTarget__ES5 & 1; // 1
-    static ES2015: Class<ScriptTarget__ES2015> & ScriptTarget__ES2015 & 2; // 2
-    static ES2016: Class<ScriptTarget__ES2016> & ScriptTarget__ES2016 & 3; // 3
-    static ES2017: Class<ScriptTarget__ES2017> & ScriptTarget__ES2017 & 4; // 4
-    static ES2018: Class<ScriptTarget__ES2018> & ScriptTarget__ES2018 & 5; // 5
-    static ESNext: Class<ScriptTarget__ESNext> & ScriptTarget__ESNext & 6; // 6
-    static JSON: Class<ScriptTarget__JSON> & ScriptTarget__JSON & 100; // 100
-    static Latest: Class<ScriptTarget__Latest> & ScriptTarget__Latest & 6; // 6
+  declare class LanguageVariant {
+    static +Standard: Class<LanguageVariant__Standard> &
+      LanguageVariant__Standard &
+      0; // 0
+    static +JSX: Class<LanguageVariant__JSX> & LanguageVariant__JSX & 1; // 1
   }
 
   declare class LanguageVariant__Standard mixins LanguageVariant {}
   declare class LanguageVariant__JSX mixins LanguageVariant {}
 
-  declare export class LanguageVariant {
-    constructor(...args: empty): mixed;
-    static Standard: Class<LanguageVariant__Standard> &
-      LanguageVariant__Standard &
-      0; // 0
-    static JSX: Class<LanguageVariant__JSX> & LanguageVariant__JSX & 1; // 1
-  }
+  declare type ParsedCommandLine = {
+    options: CompilerOptions,
+    typeAcquisition?: TypeAcquisition,
+    fileNames: string[],
+    projectReferences?: $ReadOnlyArray<ProjectReference>,
+    raw?: any,
+    errors: Diagnostic[],
+    wildcardDirectories?: MapLike<WatchDirectoryFlags>,
+    compileOnSave?: boolean
+  };
 
-  /**
-   * Either a parsed command line or a parsed tsconfig.json
-   */
-  declare export interface ParsedCommandLine {
-    options: CompilerOptions;
-    typeAcquisition?: TypeAcquisition;
-    fileNames: string[];
-    projectReferences?: $ReadOnlyArray<ProjectReference>;
-    raw?: any;
-    errors: Diagnostic[];
-    wildcardDirectories?: MapLike<WatchDirectoryFlags>;
-    compileOnSave?: boolean;
-  }
-  declare class WatchDirectoryFlags__None mixins WatchDirectoryFlags {}
-  declare class WatchDirectoryFlags__Recursive mixins WatchDirectoryFlags {}
-
-  declare export class WatchDirectoryFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<WatchDirectoryFlags__None> &
+  declare class WatchDirectoryFlags {
+    static +None: Class<WatchDirectoryFlags__None> &
       WatchDirectoryFlags__None &
       0; // 0
-    static Recursive: Class<WatchDirectoryFlags__Recursive> &
+    static +Recursive: Class<WatchDirectoryFlags__Recursive> &
       WatchDirectoryFlags__Recursive &
       1; // 1
   }
 
-  declare export interface ExpandResult {
-    fileNames: string[];
-    wildcardDirectories: MapLike<WatchDirectoryFlags>;
-  }
-  declare export interface CreateProgramOptions {
-    rootNames: $ReadOnlyArray<string>;
-    options: CompilerOptions;
-    projectReferences?: $ReadOnlyArray<ProjectReference>;
-    host?: CompilerHost;
-    oldProgram?: Program;
-    configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>;
-  }
-  declare export interface ModuleResolutionHost {
-    fileExists(fileName: string): boolean;
-    readFile(fileName: string): string | void;
-    trace(s: string): void;
-    directoryExists(directoryName: string): boolean;
+  declare class WatchDirectoryFlags__None mixins WatchDirectoryFlags {}
+  declare class WatchDirectoryFlags__Recursive mixins WatchDirectoryFlags {}
 
-    /**
-     * Resolve a symbolic link.
-     * @see https://nodejs.org/api/fs.html#fs_fs_realpathsync_path_options
-     */
-    realpath(path: string): string;
-    getCurrentDirectory(): string;
-    getDirectories(path: string): string[];
-  }
+  declare type ExpandResult = {
+    fileNames: string[],
+    wildcardDirectories: MapLike<WatchDirectoryFlags>
+  };
 
-  /**
- * Represents the result of module resolution.
- * Module resolution will pick up tsx/jsx/js files even if '--jsx' and '--allowJs' are turned off.
-The Program will then filter results based on these flags.
+  declare type CreateProgramOptions = {
+    rootNames: $ReadOnlyArray<string>,
+    options: CompilerOptions,
+    projectReferences?: $ReadOnlyArray<ProjectReference>,
+    host?: CompilerHost,
+    oldProgram?: Program,
+    configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>
+  };
 
-Prefer to return a `ResolvedModuleFull` so that the file type does not have to be inferred.
-*/
-  declare export interface ResolvedModule {
-    /**
-     * Path of the file the module was resolved to.
-     */
-    resolvedFileName: string;
+  declare type ModuleResolutionHost = {
+    fileExists(fileName: string): boolean,
+    readFile(fileName: string): string | void,
+    trace(s: string): void,
+    directoryExists(directoryName: string): boolean,
+    realpath(path: string): string,
+    getCurrentDirectory(): string,
+    getDirectories(path: string): string[]
+  };
 
-    /**
-     * True if `resolvedFileName` comes from `node_modules`.
-     */
-    isExternalLibraryImport?: boolean;
-  }
+  declare type ResolvedModule = {
+    resolvedFileName: string,
+    isExternalLibraryImport?: boolean
+  };
 
-  /**
- * ResolvedModule with an explicitly provided `extension` property.
- * Prefer this over `ResolvedModule`.
-If changing this, remember to change `moduleResolutionIsEqualTo`.
-*/
-  declare export type ResolvedModuleFull = {
-    /**
-     * Extension of resolvedFileName. This must match what's at the end of resolvedFileName.
-     * This is optional for backwards-compatibility, but will be added if not provided.
-     */
+  declare type ResolvedModuleFull = {
+    ...$Exact<ResolvedModule>,
+
     extension: Extension,
     packageId?: PackageId
-  } & ResolvedModule;
+  };
 
-  /**
-   * Unique identifier with a package name and version.
-   * If changing this, remember to change `packageIdIsEqual`.
-   */
-  declare export interface PackageId {
-    /**
- * Name of the package.
- * Should not include `@types`.
-If accessing a non-index file, this should include its name e.g. "foo/bar".
-*/
-    name: string;
+  declare type PackageId = {
+    name: string,
+    subModuleName: string,
+    version: string
+  };
 
-    /**
-     * Name of a submodule within this package.
-     * May be "".
-     */
-    subModuleName: string;
-
-    /**
-     * Version of the package, e.g. "1.2.3"
-     */
-    version: string;
+  declare class Extension {
+    static +Ts: Class<Extension__Ts> & Extension__Ts & ".ts"; // ".ts"
+    static +Tsx: Class<Extension__Tsx> & Extension__Tsx & ".tsx"; // ".tsx"
+    static +Dts: Class<Extension__Dts> & Extension__Dts & ".d.ts"; // ".d.ts"
+    static +Js: Class<Extension__Js> & Extension__Js & ".js"; // ".js"
+    static +Jsx: Class<Extension__Jsx> & Extension__Jsx & ".jsx"; // ".jsx"
+    static +Json: Class<Extension__Json> & Extension__Json & ".json"; // ".json"
   }
+
   declare class Extension__Ts mixins Extension {}
   declare class Extension__Tsx mixins Extension {}
   declare class Extension__Dts mixins Extension {}
@@ -5617,34 +5790,25 @@ If accessing a non-index file, this should include its name e.g. "foo/bar".
   declare class Extension__Jsx mixins Extension {}
   declare class Extension__Json mixins Extension {}
 
-  declare export class Extension {
-    constructor(...args: empty): mixed;
-    static Ts: Class<Extension__Ts> & Extension__Ts & ".ts"; // ".ts"
-    static Tsx: Class<Extension__Tsx> & Extension__Tsx & ".tsx"; // ".tsx"
-    static Dts: Class<Extension__Dts> & Extension__Dts & ".d.ts"; // ".d.ts"
-    static Js: Class<Extension__Js> & Extension__Js & ".js"; // ".js"
-    static Jsx: Class<Extension__Jsx> & Extension__Jsx & ".jsx"; // ".jsx"
-    static Json: Class<Extension__Json> & Extension__Json & ".json"; // ".json"
-  }
+  declare type ResolvedModuleWithFailedLookupLocations = {
+    resolvedModule: ResolvedModuleFull | void
+  };
 
-  declare export interface ResolvedModuleWithFailedLookupLocations {
-    resolvedModule: ResolvedModuleFull | void;
-  }
-  declare export interface ResolvedTypeReferenceDirective {
-    primary: boolean;
-    resolvedFileName: string | void;
-    packageId?: PackageId;
+  declare type ResolvedTypeReferenceDirective = {
+    primary: boolean,
+    resolvedFileName: string | void,
+    packageId?: PackageId,
+    isExternalLibraryImport?: boolean
+  };
 
-    /**
-     * True if `resolvedFileName` comes from `node_modules`.
-     */
-    isExternalLibraryImport?: boolean;
-  }
-  declare export interface ResolvedTypeReferenceDirectiveWithFailedLookupLocations {
-    resolvedTypeReferenceDirective: ResolvedTypeReferenceDirective | void;
-    failedLookupLocations: $ReadOnlyArray<string>;
-  }
-  declare export type CompilerHost = {
+  declare type ResolvedTypeReferenceDirectiveWithFailedLookupLocations = {
+    resolvedTypeReferenceDirective: ResolvedTypeReferenceDirective | void,
+    failedLookupLocations: $ReadOnlyArray<string>
+  };
+
+  declare type CompilerHost = {
+    ...$Exact<ModuleResolutionHost>,
+
     getSourceFile(
       fileName: string,
       languageVersion: ScriptTarget,
@@ -5679,10 +5843,6 @@ If accessing a non-index file, this should include its name e.g. "foo/bar".
       reusedNames?: string[],
       redirectedReference?: ResolvedProjectReference
     ): (ResolvedModule | void)[],
-
-    /**
-     * This method is a companion for 'resolveModuleNames' and is used to resolve 'types' references to actual type declaration files
-     */
     resolveTypeReferenceDirectives(
       typeReferenceDirectiveNames: string[],
       containingFile: string,
@@ -5690,18 +5850,107 @@ If accessing a non-index file, this should include its name e.g. "foo/bar".
     ): (ResolvedTypeReferenceDirective | void)[],
     getEnvironmentVariable(name: string): string | void,
     createHash(data: string): string
-  } & ModuleResolutionHost;
+  };
 
-  declare export type SourceMapRange = {
+  declare type SourceMapRange = {
+    ...$Exact<TextRange>,
+
     source?: SourceMapSource
-  } & TextRange;
+  };
 
-  declare export interface SourceMapSource {
-    fileName: string;
-    text: string;
-    skipTrivia?: (pos: number) => number;
-    getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
+  declare type SourceMapSource = {
+    fileName: string,
+    text: string,
+    skipTrivia?: (pos: number) => number,
+    getLineAndCharacterOfPosition(pos: number): LineAndCharacter
+  };
+
+  declare class EmitFlags {
+    static +None: Class<EmitFlags__None> & EmitFlags__None & 0; // 0
+    static +SingleLine: Class<EmitFlags__SingleLine> &
+      EmitFlags__SingleLine &
+      1; // 1
+    static +AdviseOnEmitNode: Class<EmitFlags__AdviseOnEmitNode> &
+      EmitFlags__AdviseOnEmitNode &
+      2; // 2
+    static +NoSubstitution: Class<EmitFlags__NoSubstitution> &
+      EmitFlags__NoSubstitution &
+      4; // 4
+    static +CapturesThis: Class<EmitFlags__CapturesThis> &
+      EmitFlags__CapturesThis &
+      8; // 8
+    static +NoLeadingSourceMap: Class<EmitFlags__NoLeadingSourceMap> &
+      EmitFlags__NoLeadingSourceMap &
+      16; // 16
+    static +NoTrailingSourceMap: Class<EmitFlags__NoTrailingSourceMap> &
+      EmitFlags__NoTrailingSourceMap &
+      32; // 32
+    static +NoSourceMap: Class<EmitFlags__NoSourceMap> &
+      EmitFlags__NoSourceMap &
+      48; // 48
+    static +NoNestedSourceMaps: Class<EmitFlags__NoNestedSourceMaps> &
+      EmitFlags__NoNestedSourceMaps &
+      64; // 64
+    static +NoTokenLeadingSourceMaps: Class<EmitFlags__NoTokenLeadingSourceMaps> &
+      EmitFlags__NoTokenLeadingSourceMaps &
+      128; // 128
+    static +NoTokenTrailingSourceMaps: Class<EmitFlags__NoTokenTrailingSourceMaps> &
+      EmitFlags__NoTokenTrailingSourceMaps &
+      256; // 256
+    static +NoTokenSourceMaps: Class<EmitFlags__NoTokenSourceMaps> &
+      EmitFlags__NoTokenSourceMaps &
+      384; // 384
+    static +NoLeadingComments: Class<EmitFlags__NoLeadingComments> &
+      EmitFlags__NoLeadingComments &
+      512; // 512
+    static +NoTrailingComments: Class<EmitFlags__NoTrailingComments> &
+      EmitFlags__NoTrailingComments &
+      1024; // 1024
+    static +NoComments: Class<EmitFlags__NoComments> &
+      EmitFlags__NoComments &
+      1536; // 1536
+    static +NoNestedComments: Class<EmitFlags__NoNestedComments> &
+      EmitFlags__NoNestedComments &
+      2048; // 2048
+    static +HelperName: Class<EmitFlags__HelperName> &
+      EmitFlags__HelperName &
+      4096; // 4096
+    static +ExportName: Class<EmitFlags__ExportName> &
+      EmitFlags__ExportName &
+      8192; // 8192
+    static +LocalName: Class<EmitFlags__LocalName> &
+      EmitFlags__LocalName &
+      16384; // 16384
+    static +InternalName: Class<EmitFlags__InternalName> &
+      EmitFlags__InternalName &
+      32768; // 32768
+    static +Indented: Class<EmitFlags__Indented> & EmitFlags__Indented & 65536; // 65536
+    static +NoIndentation: Class<EmitFlags__NoIndentation> &
+      EmitFlags__NoIndentation &
+      131072; // 131072
+    static +AsyncFunctionBody: Class<EmitFlags__AsyncFunctionBody> &
+      EmitFlags__AsyncFunctionBody &
+      262144; // 262144
+    static +ReuseTempVariableScope: Class<EmitFlags__ReuseTempVariableScope> &
+      EmitFlags__ReuseTempVariableScope &
+      524288; // 524288
+    static +CustomPrologue: Class<EmitFlags__CustomPrologue> &
+      EmitFlags__CustomPrologue &
+      1048576; // 1048576
+    static +NoHoisting: Class<EmitFlags__NoHoisting> &
+      EmitFlags__NoHoisting &
+      2097152; // 2097152
+    static +HasEndOfDeclarationMarker: Class<EmitFlags__HasEndOfDeclarationMarker> &
+      EmitFlags__HasEndOfDeclarationMarker &
+      4194304; // 4194304
+    static +Iterator: Class<EmitFlags__Iterator> &
+      EmitFlags__Iterator &
+      8388608; // 8388608
+    static +NoAsciiEscaping: Class<EmitFlags__NoAsciiEscaping> &
+      EmitFlags__NoAsciiEscaping &
+      16777216; // 16777216
   }
+
   declare class EmitFlags__None mixins EmitFlags {}
   declare class EmitFlags__SingleLine mixins EmitFlags {}
   declare class EmitFlags__AdviseOnEmitNode mixins EmitFlags {}
@@ -5732,96 +5981,31 @@ If accessing a non-index file, this should include its name e.g. "foo/bar".
   declare class EmitFlags__Iterator mixins EmitFlags {}
   declare class EmitFlags__NoAsciiEscaping mixins EmitFlags {}
 
-  declare export class EmitFlags {
-    constructor(...args: empty): mixed;
-    static None: Class<EmitFlags__None> & EmitFlags__None & 0; // 0
-    static SingleLine: Class<EmitFlags__SingleLine> & EmitFlags__SingleLine & 1; // 1
-    static AdviseOnEmitNode: Class<EmitFlags__AdviseOnEmitNode> &
-      EmitFlags__AdviseOnEmitNode &
+  declare type EmitHelper = {
+    name: string,
+    scoped: boolean,
+    text: string | ((node: EmitHelperUniqueNameCallback) => string),
+    priority?: number
+  };
+
+  declare type EmitHelperUniqueNameCallback = (name: string) => string;
+  declare class EmitHint {
+    static +SourceFile: Class<EmitHint__SourceFile> & EmitHint__SourceFile & 0; // 0
+    static +Expression: Class<EmitHint__Expression> & EmitHint__Expression & 1; // 1
+    static +IdentifierName: Class<EmitHint__IdentifierName> &
+      EmitHint__IdentifierName &
       2; // 2
-    static NoSubstitution: Class<EmitFlags__NoSubstitution> &
-      EmitFlags__NoSubstitution &
+    static +MappedTypeParameter: Class<EmitHint__MappedTypeParameter> &
+      EmitHint__MappedTypeParameter &
+      3; // 3
+    static +Unspecified: Class<EmitHint__Unspecified> &
+      EmitHint__Unspecified &
       4; // 4
-    static CapturesThis: Class<EmitFlags__CapturesThis> &
-      EmitFlags__CapturesThis &
-      8; // 8
-    static NoLeadingSourceMap: Class<EmitFlags__NoLeadingSourceMap> &
-      EmitFlags__NoLeadingSourceMap &
-      16; // 16
-    static NoTrailingSourceMap: Class<EmitFlags__NoTrailingSourceMap> &
-      EmitFlags__NoTrailingSourceMap &
-      32; // 32
-    static NoSourceMap: Class<EmitFlags__NoSourceMap> &
-      EmitFlags__NoSourceMap &
-      48; // 48
-    static NoNestedSourceMaps: Class<EmitFlags__NoNestedSourceMaps> &
-      EmitFlags__NoNestedSourceMaps &
-      64; // 64
-    static NoTokenLeadingSourceMaps: Class<EmitFlags__NoTokenLeadingSourceMaps> &
-      EmitFlags__NoTokenLeadingSourceMaps &
-      128; // 128
-    static NoTokenTrailingSourceMaps: Class<EmitFlags__NoTokenTrailingSourceMaps> &
-      EmitFlags__NoTokenTrailingSourceMaps &
-      256; // 256
-    static NoTokenSourceMaps: Class<EmitFlags__NoTokenSourceMaps> &
-      EmitFlags__NoTokenSourceMaps &
-      384; // 384
-    static NoLeadingComments: Class<EmitFlags__NoLeadingComments> &
-      EmitFlags__NoLeadingComments &
-      512; // 512
-    static NoTrailingComments: Class<EmitFlags__NoTrailingComments> &
-      EmitFlags__NoTrailingComments &
-      1024; // 1024
-    static NoComments: Class<EmitFlags__NoComments> &
-      EmitFlags__NoComments &
-      1536; // 1536
-    static NoNestedComments: Class<EmitFlags__NoNestedComments> &
-      EmitFlags__NoNestedComments &
-      2048; // 2048
-    static HelperName: Class<EmitFlags__HelperName> &
-      EmitFlags__HelperName &
-      4096; // 4096
-    static ExportName: Class<EmitFlags__ExportName> &
-      EmitFlags__ExportName &
-      8192; // 8192
-    static LocalName: Class<EmitFlags__LocalName> &
-      EmitFlags__LocalName &
-      16384; // 16384
-    static InternalName: Class<EmitFlags__InternalName> &
-      EmitFlags__InternalName &
-      32768; // 32768
-    static Indented: Class<EmitFlags__Indented> & EmitFlags__Indented & 65536; // 65536
-    static NoIndentation: Class<EmitFlags__NoIndentation> &
-      EmitFlags__NoIndentation &
-      131072; // 131072
-    static AsyncFunctionBody: Class<EmitFlags__AsyncFunctionBody> &
-      EmitFlags__AsyncFunctionBody &
-      262144; // 262144
-    static ReuseTempVariableScope: Class<EmitFlags__ReuseTempVariableScope> &
-      EmitFlags__ReuseTempVariableScope &
-      524288; // 524288
-    static CustomPrologue: Class<EmitFlags__CustomPrologue> &
-      EmitFlags__CustomPrologue &
-      1048576; // 1048576
-    static NoHoisting: Class<EmitFlags__NoHoisting> &
-      EmitFlags__NoHoisting &
-      2097152; // 2097152
-    static HasEndOfDeclarationMarker: Class<EmitFlags__HasEndOfDeclarationMarker> &
-      EmitFlags__HasEndOfDeclarationMarker &
-      4194304; // 4194304
-    static Iterator: Class<EmitFlags__Iterator> & EmitFlags__Iterator & 8388608; // 8388608
-    static NoAsciiEscaping: Class<EmitFlags__NoAsciiEscaping> &
-      EmitFlags__NoAsciiEscaping &
-      16777216; // 16777216
+    static +EmbeddedStatement: Class<EmitHint__EmbeddedStatement> &
+      EmitHint__EmbeddedStatement &
+      5; // 5
   }
 
-  declare export interface EmitHelper {
-    name: string;
-    scoped: boolean;
-    text: string | ((node: EmitHelperUniqueNameCallback) => string);
-    priority?: number;
-  }
-  declare export type EmitHelperUniqueNameCallback = (name: string) => string;
   declare class EmitHint__SourceFile mixins EmitHint {}
   declare class EmitHint__Expression mixins EmitHint {}
   declare class EmitHint__IdentifierName mixins EmitHint {}
@@ -5829,271 +6013,282 @@ If accessing a non-index file, this should include its name e.g. "foo/bar".
   declare class EmitHint__Unspecified mixins EmitHint {}
   declare class EmitHint__EmbeddedStatement mixins EmitHint {}
 
-  declare export class EmitHint {
-    constructor(...args: empty): mixed;
-    static SourceFile: Class<EmitHint__SourceFile> & EmitHint__SourceFile & 0; // 0
-    static Expression: Class<EmitHint__Expression> & EmitHint__Expression & 1; // 1
-    static IdentifierName: Class<EmitHint__IdentifierName> &
-      EmitHint__IdentifierName &
-      2; // 2
-    static MappedTypeParameter: Class<EmitHint__MappedTypeParameter> &
-      EmitHint__MappedTypeParameter &
-      3; // 3
-    static Unspecified: Class<EmitHint__Unspecified> &
-      EmitHint__Unspecified &
-      4; // 4
-    static EmbeddedStatement: Class<EmitHint__EmbeddedStatement> &
-      EmitHint__EmbeddedStatement &
-      5; // 5
-  }
-
-  declare export interface TransformationContext {
-    /**
-     * Gets the compiler options supplied to the transformer.
-     */
-    getCompilerOptions(): CompilerOptions;
-
-    /**
-     * Starts a new lexical environment.
-     */
-    startLexicalEnvironment(): void;
-
-    /**
-     * Suspends the current lexical environment, usually after visiting a parameter list.
-     */
-    suspendLexicalEnvironment(): void;
-
-    /**
-     * Resumes a suspended lexical environment, usually before visiting a function body.
-     */
-    resumeLexicalEnvironment(): void;
-
-    /**
-     * Ends a lexical environment, returning any declarations.
-     */
-    endLexicalEnvironment(): Statement[] | void;
-
-    /**
-     * Hoists a function declaration to the containing scope.
-     */
-    hoistFunctionDeclaration(node: FunctionDeclaration): void;
-
-    /**
-     * Hoists a variable declaration to the containing scope.
-     */
-    hoistVariableDeclaration(node: Identifier): void;
-
-    /**
-     * Records a request for a non-scoped emit helper in the current context.
-     */
-    requestEmitHelper(helper: EmitHelper): void;
-
-    /**
-     * Gets and resets the requested non-scoped emit helpers.
-     */
-    readEmitHelpers(): EmitHelper[] | void;
-
-    /**
-     * Enables expression substitutions in the pretty printer for the provided SyntaxKind.
-     */
-    enableSubstitution(kind: SyntaxKind): void;
-
-    /**
-     * Determines whether expression substitutions are enabled for the provided node.
-     */
-    isSubstitutionEnabled(node: Node): boolean;
-
-    /**
- * Hook used by transformers to substitute expressions just before they
- * are emitted by the pretty printer.
-
-NOTE: Transformation hooks should only be modified during `Transformer` initialization,
-before returning the `NodeTransformer` callback.
-*/
-    onSubstituteNode: (hint: EmitHint, node: Node) => Node;
-
-    /**
-     * Enables before/after emit notifications in the pretty printer for the provided
-     * SyntaxKind.
-     */
-    enableEmitNotification(kind: SyntaxKind): void;
-
-    /**
-     * Determines whether before/after emit notifications should be raised in the pretty
-     * printer when it emits a node.
-     */
-    isEmitNotificationEnabled(node: Node): boolean;
-
-    /**
- * Hook used to allow transformers to capture state before or after
- * the printer emits a node.
-
-NOTE: Transformation hooks should only be modified during `Transformer` initialization,
-before returning the `NodeTransformer` callback.
-*/
+  declare type TransformationContext = {
+    getCompilerOptions(): CompilerOptions,
+    startLexicalEnvironment(): void,
+    suspendLexicalEnvironment(): void,
+    resumeLexicalEnvironment(): void,
+    endLexicalEnvironment(): Statement[] | void,
+    hoistFunctionDeclaration(node: FunctionDeclaration): void,
+    hoistVariableDeclaration(node: Identifier): void,
+    requestEmitHelper(helper: EmitHelper): void,
+    readEmitHelpers(): EmitHelper[] | void,
+    enableSubstitution(kind: SyntaxKind): void,
+    isSubstitutionEnabled(node: Node): boolean,
+    onSubstituteNode: (hint: EmitHint, node: Node) => Node,
+    enableEmitNotification(kind: SyntaxKind): void,
+    isEmitNotificationEnabled(node: Node): boolean,
     onEmitNode: (
       hint: EmitHint,
       node: Node,
       emitCallback: (hint: EmitHint, node: Node) => void
-    ) => void;
-  }
-  declare export interface TransformationResult<T: Node> {
-    /**
-     * Gets the transformed source files.
-     */
-    transformed: T[];
+    ) => void
+  };
 
-    /**
-     * Gets diagnostics for the transformation.
-     */
-    diagnostics?: DiagnosticWithLocation[];
-
-    /**
-     * Gets a substitute for a node, if one is available; otherwise, returns the original node.
-     * @param hint A hint as to the intended usage of the node.
-     * @param node The node to substitute.
-     */
-    substituteNode(hint: EmitHint, node: Node): Node;
-
-    /**
-     * Emits a node with possible notification.
-     * @param hint A hint as to the intended usage of the node.
-     * @param node The node to emit.
-     * @param emitCallback A callback used to emit the node.
-     */
+  declare type TransformationResult<T: Node> = {
+    transformed: T[],
+    diagnostics?: DiagnosticWithLocation[],
+    substituteNode(hint: EmitHint, node: Node): Node,
     emitNodeWithNotification(
       hint: EmitHint,
       node: Node,
       emitCallback: (hint: EmitHint, node: Node) => void
-    ): void;
+    ): void,
+    dispose(): void
+  };
 
-    /**
-     * Clean up EmitNode entries on any parse-tree nodes.
-     */
-    dispose(): void;
-  }
-
-  /**
-   * A function that is used to initialize and return a `Transformer` callback, which in turn
-   * will be used to transform one or more nodes.
-   */
-  declare export type TransformerFactory<T: Node> = (
+  declare type TransformerFactory<T: Node> = (
     context: TransformationContext
   ) => Transformer<T>;
-
-  /**
-   * A function that transforms a node.
-   */
-  declare export type Transformer<T: Node> = (node: T) => T;
-
-  /**
-   * A function that accepts and possibly transforms a node.
-   */
-  declare export type Visitor = (node: Node) => VisitResult<Node>;
-  declare export type VisitResult<T: Node> = T | T[] | void;
-  declare export interface Printer {
-    /**
- * Print a node and its subtree as-is, without any emit transformations.
- * @param hint A value indicating the purpose of a node. This is primarily used to
-distinguish between an `Identifier` used in an expression position, versus an
-`Identifier` used as an `IdentifierName` as part of a declaration. For most nodes you
-should just pass `Unspecified`.
- * @param node The node to print. The node and its subtree are printed as-is, without any
-emit transformations.
- * @param sourceFile A source file that provides context for the node. The source text of
-the file is used to emit the original source content for literals and identifiers, while
-the identifiers of the source file are used when generating unique names to avoid
-collisions.
-*/
-    printNode(hint: EmitHint, node: Node, sourceFile: SourceFile): string;
-
-    /**
-     * Prints a list of nodes using the given format flags
-     */
+  declare type Transformer<T: Node> = (node: T) => T;
+  declare type Visitor = (node: Node) => VisitResult<Node>;
+  declare type VisitResult<T: Node> = T | T[] | void;
+  declare type Printer = {
+    printNode(hint: EmitHint, node: Node, sourceFile: SourceFile): string,
     printList<T: Node>(
       format: ListFormat,
       list: NodeArray<T>,
       sourceFile: SourceFile
-    ): string;
+    ): string,
+    printFile(sourceFile: SourceFile): string,
+    printBundle(bundle: Bundle): string
+  };
 
-    /**
-     * Prints a source file as-is, without any emit transformations.
-     */
-    printFile(sourceFile: SourceFile): string;
-
-    /**
-     * Prints a bundle of source files as-is, without any emit transformations.
-     */
-    printBundle(bundle: Bundle): string;
-  }
-  declare export interface PrintHandlers {
-    /**
-     * A hook used by the Printer when generating unique names to avoid collisions with
-     * globally defined names that exist outside of the current source file.
-     */
-    hasGlobalName(name: string): boolean;
-
-    /**
- * A hook used by the Printer to provide notifications prior to emitting a node. A
- * compatible implementation **must** invoke `emitCallback` with the provided `hint` and
-`node` values.
- * @param hint A hint indicating the intended purpose of the node.
- * @param node The node to emit.
- * @param emitCallback A callback that, when invoked, will emit the node.
- * @example ```ts
-       * var printer = createPrinter(printerOptions, {
-       *   onEmitNode(hint, node, emitCallback) {
-       *     // set up or track state prior to emitting the node...
-       *     emitCallback(hint, node);
-       *     // restore state after emitting the node...
-       *   }
-       * });
-       * ```
-*/
+  declare type PrintHandlers = {
+    hasGlobalName(name: string): boolean,
     onEmitNode(
       hint: EmitHint,
       node: Node | void,
       emitCallback: (hint: EmitHint, node: Node | void) => void
-    ): void;
+    ): void,
+    substituteNode(hint: EmitHint, node: Node): Node
+  };
 
-    /**
- * A hook used by the Printer to perform just-in-time substitution of a node. This is
- * primarily used by node transformations that need to substitute one node for another,
-such as replacing `myExportedVar` with `exports.myExportedVar`.
- * @param hint A hint indicating the intended purpose of the node.
- * @param node The node to emit.
- * @example ```ts
-       * var printer = createPrinter(printerOptions, {
-       *   substituteNode(hint, node) {
-       *     // perform substitution if necessary...
-       *     return node;
-       *   }
-       * });
-       * ```
-*/
-    substituteNode(hint: EmitHint, node: Node): Node;
-  }
-  declare export interface PrinterOptions {
-    removeComments?: boolean;
-    newLine?: NewLineKind;
-    omitTrailingSemicolon?: boolean;
-    noEmitHelpers?: boolean;
-  }
-  declare export interface GetEffectiveTypeRootsHost {
-    directoryExists(directoryName: string): boolean;
-    getCurrentDirectory(): string;
-  }
-  declare export interface TextSpan {
-    start: number;
-    length: number;
-  }
-  declare export interface TextChangeRange {
-    span: TextSpan;
-    newLength: number;
-  }
-  declare export type SyntaxList = {
+  declare type PrinterOptions = {
+    removeComments?: boolean,
+    newLine?: NewLineKind,
+    omitTrailingSemicolon?: boolean,
+    noEmitHelpers?: boolean
+  };
+
+  declare type GetEffectiveTypeRootsHost = {
+    directoryExists(directoryName: string): boolean,
+    getCurrentDirectory(): string
+  };
+
+  declare type TextSpan = {
+    start: number,
+    length: number
+  };
+
+  declare type TextChangeRange = {
+    span: TextSpan,
+    newLength: number
+  };
+
+  declare type SyntaxList = {
+    ...$Exact<Node>,
+
     _children: Node[]
-  } & Node;
+  };
+
+  declare class ListFormat {
+    static +None: Class<ListFormat__None> & ListFormat__None & 0; // 0
+    static +SingleLine: Class<ListFormat__SingleLine> &
+      ListFormat__SingleLine &
+      0; // 0
+    static +MultiLine: Class<ListFormat__MultiLine> & ListFormat__MultiLine & 1; // 1
+    static +PreserveLines: Class<ListFormat__PreserveLines> &
+      ListFormat__PreserveLines &
+      2; // 2
+    static +LinesMask: Class<ListFormat__LinesMask> & ListFormat__LinesMask & 3; // 3
+    static +NotDelimited: Class<ListFormat__NotDelimited> &
+      ListFormat__NotDelimited &
+      0; // 0
+    static +BarDelimited: Class<ListFormat__BarDelimited> &
+      ListFormat__BarDelimited &
+      4; // 4
+    static +AmpersandDelimited: Class<ListFormat__AmpersandDelimited> &
+      ListFormat__AmpersandDelimited &
+      8; // 8
+    static +CommaDelimited: Class<ListFormat__CommaDelimited> &
+      ListFormat__CommaDelimited &
+      16; // 16
+    static +AsteriskDelimited: Class<ListFormat__AsteriskDelimited> &
+      ListFormat__AsteriskDelimited &
+      32; // 32
+    static +DelimitersMask: Class<ListFormat__DelimitersMask> &
+      ListFormat__DelimitersMask &
+      60; // 60
+    static +AllowTrailingComma: Class<ListFormat__AllowTrailingComma> &
+      ListFormat__AllowTrailingComma &
+      64; // 64
+    static +Indented: Class<ListFormat__Indented> & ListFormat__Indented & 128; // 128
+    static +SpaceBetweenBraces: Class<ListFormat__SpaceBetweenBraces> &
+      ListFormat__SpaceBetweenBraces &
+      256; // 256
+    static +SpaceBetweenSiblings: Class<ListFormat__SpaceBetweenSiblings> &
+      ListFormat__SpaceBetweenSiblings &
+      512; // 512
+    static +Braces: Class<ListFormat__Braces> & ListFormat__Braces & 1024; // 1024
+    static +Parenthesis: Class<ListFormat__Parenthesis> &
+      ListFormat__Parenthesis &
+      2048; // 2048
+    static +AngleBrackets: Class<ListFormat__AngleBrackets> &
+      ListFormat__AngleBrackets &
+      4096; // 4096
+    static +SquareBrackets: Class<ListFormat__SquareBrackets> &
+      ListFormat__SquareBrackets &
+      8192; // 8192
+    static +BracketsMask: Class<ListFormat__BracketsMask> &
+      ListFormat__BracketsMask &
+      15360; // 15360
+    static +OptionalIfUndefined: Class<ListFormat__OptionalIfUndefined> &
+      ListFormat__OptionalIfUndefined &
+      16384; // 16384
+    static +OptionalIfEmpty: Class<ListFormat__OptionalIfEmpty> &
+      ListFormat__OptionalIfEmpty &
+      32768; // 32768
+    static +Optional: Class<ListFormat__Optional> &
+      ListFormat__Optional &
+      49152; // 49152
+    static +PreferNewLine: Class<ListFormat__PreferNewLine> &
+      ListFormat__PreferNewLine &
+      65536; // 65536
+    static +NoTrailingNewLine: Class<ListFormat__NoTrailingNewLine> &
+      ListFormat__NoTrailingNewLine &
+      131072; // 131072
+    static +NoInterveningComments: Class<ListFormat__NoInterveningComments> &
+      ListFormat__NoInterveningComments &
+      262144; // 262144
+    static +NoSpaceIfEmpty: Class<ListFormat__NoSpaceIfEmpty> &
+      ListFormat__NoSpaceIfEmpty &
+      524288; // 524288
+    static +SingleElement: Class<ListFormat__SingleElement> &
+      ListFormat__SingleElement &
+      1048576; // 1048576
+    static +Modifiers: Class<ListFormat__Modifiers> &
+      ListFormat__Modifiers &
+      262656; // 262656
+    static +HeritageClauses: Class<ListFormat__HeritageClauses> &
+      ListFormat__HeritageClauses &
+      512; // 512
+    static +SingleLineTypeLiteralMembers: Class<ListFormat__SingleLineTypeLiteralMembers> &
+      ListFormat__SingleLineTypeLiteralMembers &
+      768; // 768
+    static +MultiLineTypeLiteralMembers: Class<ListFormat__MultiLineTypeLiteralMembers> &
+      ListFormat__MultiLineTypeLiteralMembers &
+      32897; // 32897
+    static +TupleTypeElements: Class<ListFormat__TupleTypeElements> &
+      ListFormat__TupleTypeElements &
+      528; // 528
+    static +UnionTypeConstituents: Class<ListFormat__UnionTypeConstituents> &
+      ListFormat__UnionTypeConstituents &
+      516; // 516
+    static +IntersectionTypeConstituents: Class<ListFormat__IntersectionTypeConstituents> &
+      ListFormat__IntersectionTypeConstituents &
+      520; // 520
+    static +ObjectBindingPatternElements: Class<ListFormat__ObjectBindingPatternElements> &
+      ListFormat__ObjectBindingPatternElements &
+      525136; // 525136
+    static +ArrayBindingPatternElements: Class<ListFormat__ArrayBindingPatternElements> &
+      ListFormat__ArrayBindingPatternElements &
+      524880; // 524880
+    static +ObjectLiteralExpressionProperties: Class<ListFormat__ObjectLiteralExpressionProperties> &
+      ListFormat__ObjectLiteralExpressionProperties &
+      526226; // 526226
+    static +ArrayLiteralExpressionElements: Class<ListFormat__ArrayLiteralExpressionElements> &
+      ListFormat__ArrayLiteralExpressionElements &
+      8914; // 8914
+    static +CommaListElements: Class<ListFormat__CommaListElements> &
+      ListFormat__CommaListElements &
+      528; // 528
+    static +CallExpressionArguments: Class<ListFormat__CallExpressionArguments> &
+      ListFormat__CallExpressionArguments &
+      2576; // 2576
+    static +NewExpressionArguments: Class<ListFormat__NewExpressionArguments> &
+      ListFormat__NewExpressionArguments &
+      18960; // 18960
+    static +TemplateExpressionSpans: Class<ListFormat__TemplateExpressionSpans> &
+      ListFormat__TemplateExpressionSpans &
+      262144; // 262144
+    static +SingleLineBlockStatements: Class<ListFormat__SingleLineBlockStatements> &
+      ListFormat__SingleLineBlockStatements &
+      768; // 768
+    static +MultiLineBlockStatements: Class<ListFormat__MultiLineBlockStatements> &
+      ListFormat__MultiLineBlockStatements &
+      129; // 129
+    static +VariableDeclarationList: Class<ListFormat__VariableDeclarationList> &
+      ListFormat__VariableDeclarationList &
+      528; // 528
+    static +SingleLineFunctionBodyStatements: Class<ListFormat__SingleLineFunctionBodyStatements> &
+      ListFormat__SingleLineFunctionBodyStatements &
+      768; // 768
+    static +MultiLineFunctionBodyStatements: Class<ListFormat__MultiLineFunctionBodyStatements> &
+      ListFormat__MultiLineFunctionBodyStatements &
+      1; // 1
+    static +ClassHeritageClauses: Class<ListFormat__ClassHeritageClauses> &
+      ListFormat__ClassHeritageClauses &
+      0; // 0
+    static +ClassMembers: Class<ListFormat__ClassMembers> &
+      ListFormat__ClassMembers &
+      129; // 129
+    static +InterfaceMembers: Class<ListFormat__InterfaceMembers> &
+      ListFormat__InterfaceMembers &
+      129; // 129
+    static +EnumMembers: Class<ListFormat__EnumMembers> &
+      ListFormat__EnumMembers &
+      145; // 145
+    static +CaseBlockClauses: Class<ListFormat__CaseBlockClauses> &
+      ListFormat__CaseBlockClauses &
+      129; // 129
+    static +NamedImportsOrExportsElements: Class<ListFormat__NamedImportsOrExportsElements> &
+      ListFormat__NamedImportsOrExportsElements &
+      525136; // 525136
+    static +JsxElementOrFragmentChildren: Class<ListFormat__JsxElementOrFragmentChildren> &
+      ListFormat__JsxElementOrFragmentChildren &
+      262144; // 262144
+    static +JsxElementAttributes: Class<ListFormat__JsxElementAttributes> &
+      ListFormat__JsxElementAttributes &
+      262656; // 262656
+    static +CaseOrDefaultClauseStatements: Class<ListFormat__CaseOrDefaultClauseStatements> &
+      ListFormat__CaseOrDefaultClauseStatements &
+      163969; // 163969
+    static +HeritageClauseTypes: Class<ListFormat__HeritageClauseTypes> &
+      ListFormat__HeritageClauseTypes &
+      528; // 528
+    static +SourceFileStatements: Class<ListFormat__SourceFileStatements> &
+      ListFormat__SourceFileStatements &
+      131073; // 131073
+    static +Decorators: Class<ListFormat__Decorators> &
+      ListFormat__Decorators &
+      49153; // 49153
+    static +TypeArguments: Class<ListFormat__TypeArguments> &
+      ListFormat__TypeArguments &
+      53776; // 53776
+    static +TypeParameters: Class<ListFormat__TypeParameters> &
+      ListFormat__TypeParameters &
+      53776; // 53776
+    static +Parameters: Class<ListFormat__Parameters> &
+      ListFormat__Parameters &
+      2576; // 2576
+    static +IndexSignatureParameters: Class<ListFormat__IndexSignatureParameters> &
+      ListFormat__IndexSignatureParameters &
+      8848; // 8848
+    static +JSDocComment: Class<ListFormat__JSDocComment> &
+      ListFormat__JSDocComment &
+      33; // 33
+  }
 
   declare class ListFormat__None mixins ListFormat {}
   declare class ListFormat__SingleLine mixins ListFormat {}
@@ -6163,369 +6358,161 @@ such as replacing `myExportedVar` with `exports.myExportedVar`.
   declare class ListFormat__IndexSignatureParameters mixins ListFormat {}
   declare class ListFormat__JSDocComment mixins ListFormat {}
 
-  declare export class ListFormat {
-    constructor(...args: empty): mixed;
-    static None: Class<ListFormat__None> & ListFormat__None & 0; // 0
-    static SingleLine: Class<ListFormat__SingleLine> &
-      ListFormat__SingleLine &
-      0; // 0
-    static MultiLine: Class<ListFormat__MultiLine> & ListFormat__MultiLine & 1; // 1
-    static PreserveLines: Class<ListFormat__PreserveLines> &
-      ListFormat__PreserveLines &
-      2; // 2
-    static LinesMask: Class<ListFormat__LinesMask> & ListFormat__LinesMask & 3; // 3
-    static NotDelimited: Class<ListFormat__NotDelimited> &
-      ListFormat__NotDelimited &
-      0; // 0
-    static BarDelimited: Class<ListFormat__BarDelimited> &
-      ListFormat__BarDelimited &
-      4; // 4
-    static AmpersandDelimited: Class<ListFormat__AmpersandDelimited> &
-      ListFormat__AmpersandDelimited &
-      8; // 8
-    static CommaDelimited: Class<ListFormat__CommaDelimited> &
-      ListFormat__CommaDelimited &
-      16; // 16
-    static AsteriskDelimited: Class<ListFormat__AsteriskDelimited> &
-      ListFormat__AsteriskDelimited &
-      32; // 32
-    static DelimitersMask: Class<ListFormat__DelimitersMask> &
-      ListFormat__DelimitersMask &
-      60; // 60
-    static AllowTrailingComma: Class<ListFormat__AllowTrailingComma> &
-      ListFormat__AllowTrailingComma &
-      64; // 64
-    static Indented: Class<ListFormat__Indented> & ListFormat__Indented & 128; // 128
-    static SpaceBetweenBraces: Class<ListFormat__SpaceBetweenBraces> &
-      ListFormat__SpaceBetweenBraces &
-      256; // 256
-    static SpaceBetweenSiblings: Class<ListFormat__SpaceBetweenSiblings> &
-      ListFormat__SpaceBetweenSiblings &
-      512; // 512
-    static Braces: Class<ListFormat__Braces> & ListFormat__Braces & 1024; // 1024
-    static Parenthesis: Class<ListFormat__Parenthesis> &
-      ListFormat__Parenthesis &
-      2048; // 2048
-    static AngleBrackets: Class<ListFormat__AngleBrackets> &
-      ListFormat__AngleBrackets &
-      4096; // 4096
-    static SquareBrackets: Class<ListFormat__SquareBrackets> &
-      ListFormat__SquareBrackets &
-      8192; // 8192
-    static BracketsMask: Class<ListFormat__BracketsMask> &
-      ListFormat__BracketsMask &
-      15360; // 15360
-    static OptionalIfUndefined: Class<ListFormat__OptionalIfUndefined> &
-      ListFormat__OptionalIfUndefined &
-      16384; // 16384
-    static OptionalIfEmpty: Class<ListFormat__OptionalIfEmpty> &
-      ListFormat__OptionalIfEmpty &
-      32768; // 32768
-    static Optional: Class<ListFormat__Optional> & ListFormat__Optional & 49152; // 49152
-    static PreferNewLine: Class<ListFormat__PreferNewLine> &
-      ListFormat__PreferNewLine &
-      65536; // 65536
-    static NoTrailingNewLine: Class<ListFormat__NoTrailingNewLine> &
-      ListFormat__NoTrailingNewLine &
-      131072; // 131072
-    static NoInterveningComments: Class<ListFormat__NoInterveningComments> &
-      ListFormat__NoInterveningComments &
-      262144; // 262144
-    static NoSpaceIfEmpty: Class<ListFormat__NoSpaceIfEmpty> &
-      ListFormat__NoSpaceIfEmpty &
-      524288; // 524288
-    static SingleElement: Class<ListFormat__SingleElement> &
-      ListFormat__SingleElement &
-      1048576; // 1048576
-    static Modifiers: Class<ListFormat__Modifiers> &
-      ListFormat__Modifiers &
-      262656; // 262656
-    static HeritageClauses: Class<ListFormat__HeritageClauses> &
-      ListFormat__HeritageClauses &
-      512; // 512
-    static SingleLineTypeLiteralMembers: Class<ListFormat__SingleLineTypeLiteralMembers> &
-      ListFormat__SingleLineTypeLiteralMembers &
-      768; // 768
-    static MultiLineTypeLiteralMembers: Class<ListFormat__MultiLineTypeLiteralMembers> &
-      ListFormat__MultiLineTypeLiteralMembers &
-      32897; // 32897
-    static TupleTypeElements: Class<ListFormat__TupleTypeElements> &
-      ListFormat__TupleTypeElements &
-      528; // 528
-    static UnionTypeConstituents: Class<ListFormat__UnionTypeConstituents> &
-      ListFormat__UnionTypeConstituents &
-      516; // 516
-    static IntersectionTypeConstituents: Class<ListFormat__IntersectionTypeConstituents> &
-      ListFormat__IntersectionTypeConstituents &
-      520; // 520
-    static ObjectBindingPatternElements: Class<ListFormat__ObjectBindingPatternElements> &
-      ListFormat__ObjectBindingPatternElements &
-      525136; // 525136
-    static ArrayBindingPatternElements: Class<ListFormat__ArrayBindingPatternElements> &
-      ListFormat__ArrayBindingPatternElements &
-      524880; // 524880
-    static ObjectLiteralExpressionProperties: Class<ListFormat__ObjectLiteralExpressionProperties> &
-      ListFormat__ObjectLiteralExpressionProperties &
-      526226; // 526226
-    static ArrayLiteralExpressionElements: Class<ListFormat__ArrayLiteralExpressionElements> &
-      ListFormat__ArrayLiteralExpressionElements &
-      8914; // 8914
-    static CommaListElements: Class<ListFormat__CommaListElements> &
-      ListFormat__CommaListElements &
-      528; // 528
-    static CallExpressionArguments: Class<ListFormat__CallExpressionArguments> &
-      ListFormat__CallExpressionArguments &
-      2576; // 2576
-    static NewExpressionArguments: Class<ListFormat__NewExpressionArguments> &
-      ListFormat__NewExpressionArguments &
-      18960; // 18960
-    static TemplateExpressionSpans: Class<ListFormat__TemplateExpressionSpans> &
-      ListFormat__TemplateExpressionSpans &
-      262144; // 262144
-    static SingleLineBlockStatements: Class<ListFormat__SingleLineBlockStatements> &
-      ListFormat__SingleLineBlockStatements &
-      768; // 768
-    static MultiLineBlockStatements: Class<ListFormat__MultiLineBlockStatements> &
-      ListFormat__MultiLineBlockStatements &
-      129; // 129
-    static VariableDeclarationList: Class<ListFormat__VariableDeclarationList> &
-      ListFormat__VariableDeclarationList &
-      528; // 528
-    static SingleLineFunctionBodyStatements: Class<ListFormat__SingleLineFunctionBodyStatements> &
-      ListFormat__SingleLineFunctionBodyStatements &
-      768; // 768
-    static MultiLineFunctionBodyStatements: Class<ListFormat__MultiLineFunctionBodyStatements> &
-      ListFormat__MultiLineFunctionBodyStatements &
-      1; // 1
-    static ClassHeritageClauses: Class<ListFormat__ClassHeritageClauses> &
-      ListFormat__ClassHeritageClauses &
-      0; // 0
-    static ClassMembers: Class<ListFormat__ClassMembers> &
-      ListFormat__ClassMembers &
-      129; // 129
-    static InterfaceMembers: Class<ListFormat__InterfaceMembers> &
-      ListFormat__InterfaceMembers &
-      129; // 129
-    static EnumMembers: Class<ListFormat__EnumMembers> &
-      ListFormat__EnumMembers &
-      145; // 145
-    static CaseBlockClauses: Class<ListFormat__CaseBlockClauses> &
-      ListFormat__CaseBlockClauses &
-      129; // 129
-    static NamedImportsOrExportsElements: Class<ListFormat__NamedImportsOrExportsElements> &
-      ListFormat__NamedImportsOrExportsElements &
-      525136; // 525136
-    static JsxElementOrFragmentChildren: Class<ListFormat__JsxElementOrFragmentChildren> &
-      ListFormat__JsxElementOrFragmentChildren &
-      262144; // 262144
-    static JsxElementAttributes: Class<ListFormat__JsxElementAttributes> &
-      ListFormat__JsxElementAttributes &
-      262656; // 262656
-    static CaseOrDefaultClauseStatements: Class<ListFormat__CaseOrDefaultClauseStatements> &
-      ListFormat__CaseOrDefaultClauseStatements &
-      163969; // 163969
-    static HeritageClauseTypes: Class<ListFormat__HeritageClauseTypes> &
-      ListFormat__HeritageClauseTypes &
-      528; // 528
-    static SourceFileStatements: Class<ListFormat__SourceFileStatements> &
-      ListFormat__SourceFileStatements &
-      131073; // 131073
-    static Decorators: Class<ListFormat__Decorators> &
-      ListFormat__Decorators &
-      49153; // 49153
-    static TypeArguments: Class<ListFormat__TypeArguments> &
-      ListFormat__TypeArguments &
-      53776; // 53776
-    static TypeParameters: Class<ListFormat__TypeParameters> &
-      ListFormat__TypeParameters &
-      53776; // 53776
-    static Parameters: Class<ListFormat__Parameters> &
-      ListFormat__Parameters &
-      2576; // 2576
-    static IndexSignatureParameters: Class<ListFormat__IndexSignatureParameters> &
-      ListFormat__IndexSignatureParameters &
-      8848; // 8848
-    static JSDocComment: Class<ListFormat__JSDocComment> &
-      ListFormat__JSDocComment &
-      33; // 33
-  }
+  declare type UserPreferences = {
+    disableSuggestions?: boolean,
+    quotePreference?: "double" | "single",
+    includeCompletionsForModuleExports?: boolean,
+    includeCompletionsWithInsertText?: boolean,
+    importModuleSpecifierPreference?: "relative" | "non-relative",
+    importModuleSpecifierEnding?: "minimal" | "index" | "js",
+    allowTextChangesInNewFiles?: boolean,
+    providePrefixAndSuffixTextForRename?: boolean
+  };
 
-  declare export interface UserPreferences {
-    disableSuggestions?: boolean;
-    quotePreference?: "double" | "single";
-    includeCompletionsForModuleExports?: boolean;
-    includeCompletionsWithInsertText?: boolean;
-    importModuleSpecifierPreference?: "relative" | "non-relative";
+  declare type PseudoBigInt = {
+    negative: boolean,
+    base10Value: string
+  };
 
-    /**
-     * Determines whether we import `foo/index.ts` as "foo", "foo/index", or "foo/index.js"
-     */
-    importModuleSpecifierEnding?: "minimal" | "index" | "js";
-    allowTextChangesInNewFiles?: boolean;
-    providePrefixAndSuffixTextForRename?: boolean;
-  }
-
-  /**
-   * Represents a bigint literal value without requiring bigint support
-   */
-  declare export interface PseudoBigInt {
-    negative: boolean;
-    base10Value: string;
-  }
-  declare class FileWatcherEventKind__Created mixins FileWatcherEventKind {}
-  declare class FileWatcherEventKind__Changed mixins FileWatcherEventKind {}
-  declare class FileWatcherEventKind__Deleted mixins FileWatcherEventKind {}
-
-  declare export class FileWatcherEventKind {
-    constructor(...args: empty): mixed;
-    static Created: Class<FileWatcherEventKind__Created> &
+  declare class FileWatcherEventKind {
+    static +Created: Class<FileWatcherEventKind__Created> &
       FileWatcherEventKind__Created &
       0; // 0
-    static Changed: Class<FileWatcherEventKind__Changed> &
+    static +Changed: Class<FileWatcherEventKind__Changed> &
       FileWatcherEventKind__Changed &
       1; // 1
-    static Deleted: Class<FileWatcherEventKind__Deleted> &
+    static +Deleted: Class<FileWatcherEventKind__Deleted> &
       FileWatcherEventKind__Deleted &
       2; // 2
   }
 
-  declare export type FileWatcherCallback = (
+  declare class FileWatcherEventKind__Created mixins FileWatcherEventKind {}
+  declare class FileWatcherEventKind__Changed mixins FileWatcherEventKind {}
+  declare class FileWatcherEventKind__Deleted mixins FileWatcherEventKind {}
+
+  declare type FileWatcherCallback = (
     fileName: string,
     eventKind: FileWatcherEventKind
   ) => void;
-  declare export type DirectoryWatcherCallback = (fileName: string) => void;
-  declare export interface System {
-    args: string[];
-    newLine: string;
-    useCaseSensitiveFileNames: boolean;
-    write(s: string): void;
-    writeOutputIsTTY(): boolean;
-    readFile(path: string, encoding?: string): string | void;
-    getFileSize(path: string): number;
-    writeFile(path: string, data: string, writeByteOrderMark?: boolean): void;
-
-    /**
- * 
- * @pollingInterval - this parameter is used in polling-based watchers and ignored in watchers that
-use native OS file watching
-*/
+  declare type DirectoryWatcherCallback = (fileName: string) => void;
+  declare type System = {
+    args: string[],
+    newLine: string,
+    useCaseSensitiveFileNames: boolean,
+    write(s: string): void,
+    writeOutputIsTTY(): boolean,
+    readFile(path: string, encoding?: string): string | void,
+    getFileSize(path: string): number,
+    writeFile(path: string, data: string, writeByteOrderMark?: boolean): void,
     watchFile(
       path: string,
       callback: FileWatcherCallback,
       pollingInterval?: number
-    ): FileWatcher;
+    ): FileWatcher,
     watchDirectory(
       path: string,
       callback: DirectoryWatcherCallback,
       recursive?: boolean
-    ): FileWatcher;
-    resolvePath(path: string): string;
-    fileExists(path: string): boolean;
-    directoryExists(path: string): boolean;
-    createDirectory(path: string): void;
-    getExecutingFilePath(): string;
-    getCurrentDirectory(): string;
-    getDirectories(path: string): string[];
+    ): FileWatcher,
+    resolvePath(path: string): string,
+    fileExists(path: string): boolean,
+    directoryExists(path: string): boolean,
+    createDirectory(path: string): void,
+    getExecutingFilePath(): string,
+    getCurrentDirectory(): string,
+    getDirectories(path: string): string[],
     readDirectory(
       path: string,
       extensions?: $ReadOnlyArray<string>,
       exclude?: $ReadOnlyArray<string>,
       include?: $ReadOnlyArray<string>,
       depth?: number
-    ): string[];
-    getModifiedTime(path: string): Date | void;
-    setModifiedTime(path: string, time: Date): void;
-    deleteFile(path: string): void;
-
-    /**
-     * A good implementation is node.js' `crypto.createHash`. (https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm)
-     */
-    createHash(data: string): string;
-
-    /**
-     * This must be cryptographically secure. Only implement this method using `crypto.createHash("sha256")`.
-     */
-    createSHA256Hash(data: string): string;
-    getMemoryUsage(): number;
-    exit(exitCode?: number): void;
-    realpath(path: string): string;
+    ): string[],
+    getModifiedTime(path: string): Date | void,
+    setModifiedTime(path: string, time: Date): void,
+    deleteFile(path: string): void,
+    createHash(data: string): string,
+    createSHA256Hash(data: string): string,
+    getMemoryUsage(): number,
+    exit(exitCode?: number): void,
+    realpath(path: string): string,
     setTimeout(
       callback: (...args: any[]) => void,
       ms: number,
       ...args: any[]
-    ): any;
-    clearTimeout(timeoutId: any): void;
-    clearScreen(): void;
-    base64decode(input: string): string;
-    base64encode(input: string): string;
-  }
-  declare export interface FileWatcher {
-    close(): void;
-  }
-  declare export function getNodeMajorVersion(): number | void;
+    ): any,
+    clearTimeout(timeoutId: any): void,
+    clearScreen(): void,
+    base64decode(input: string): string,
+    base64encode(input: string): string
+  };
 
-  declare export var sys: System;
-  declare export type ErrorCallback = (
+  declare type FileWatcher = {
+    close(): void
+  };
+
+  declare function getNodeMajorVersion(): number | void;
+
+  declare var sys: System;
+  declare type ErrorCallback = (
     message: DiagnosticMessage,
     length: number
   ) => void;
-  declare export interface Scanner {
-    getStartPos(): number;
-    getToken(): SyntaxKind;
-    getTextPos(): number;
-    getTokenPos(): number;
-    getTokenText(): string;
-    getTokenValue(): string;
-    hasExtendedUnicodeEscape(): boolean;
-    hasPrecedingLineBreak(): boolean;
-    isIdentifier(): boolean;
-    isReservedWord(): boolean;
-    isUnterminated(): boolean;
-    reScanGreaterToken(): SyntaxKind;
-    reScanSlashToken(): SyntaxKind;
-    reScanTemplateToken(): SyntaxKind;
-    scanJsxIdentifier(): SyntaxKind;
-    scanJsxAttributeValue(): SyntaxKind;
-    reScanJsxToken(): JsxTokenSyntaxKind;
-    reScanLessThanToken(): SyntaxKind;
-    scanJsxToken(): JsxTokenSyntaxKind;
-    scanJSDocToken(): JsDocSyntaxKind;
-    scan(): SyntaxKind;
-    getText(): string;
-    setText(text: string | void, start?: number, length?: number): void;
-    setOnError(onError: ErrorCallback | void): void;
-    setScriptTarget(scriptTarget: ScriptTarget): void;
-    setLanguageVariant(variant: LanguageVariant): void;
-    setTextPos(textPos: number): void;
-    lookAhead<T>(callback: () => T): T;
-    scanRange<T>(start: number, length: number, callback: () => T): T;
-    tryScan<T>(callback: () => T): T;
-  }
-  declare export function tokenToString(t: SyntaxKind): string | void;
+  declare type Scanner = {
+    getStartPos(): number,
+    getToken(): SyntaxKind,
+    getTextPos(): number,
+    getTokenPos(): number,
+    getTokenText(): string,
+    getTokenValue(): string,
+    hasExtendedUnicodeEscape(): boolean,
+    hasPrecedingLineBreak(): boolean,
+    isIdentifier(): boolean,
+    isReservedWord(): boolean,
+    isUnterminated(): boolean,
+    reScanGreaterToken(): SyntaxKind,
+    reScanSlashToken(): SyntaxKind,
+    reScanTemplateToken(): SyntaxKind,
+    scanJsxIdentifier(): SyntaxKind,
+    scanJsxAttributeValue(): SyntaxKind,
+    reScanJsxToken(): JsxTokenSyntaxKind,
+    reScanLessThanToken(): SyntaxKind,
+    scanJsxToken(): JsxTokenSyntaxKind,
+    scanJSDocToken(): JsDocSyntaxKind,
+    scan(): SyntaxKind,
+    getText(): string,
+    setText(text: string | void, start?: number, length?: number): void,
+    setOnError(onError: ErrorCallback | void): void,
+    setScriptTarget(scriptTarget: ScriptTarget): void,
+    setLanguageVariant(variant: LanguageVariant): void,
+    setTextPos(textPos: number): void,
+    lookAhead<T>(callback: () => T): T,
+    scanRange<T>(start: number, length: number, callback: () => T): T,
+    tryScan<T>(callback: () => T): T
+  };
 
-  declare export function getPositionOfLineAndCharacter(
+  declare function tokenToString(t: SyntaxKind): string | void;
+
+  declare function getPositionOfLineAndCharacter(
     sourceFile: SourceFileLike,
     line: number,
     character: number
   ): number;
 
-  declare export function getLineAndCharacterOfPosition(
+  declare function getLineAndCharacterOfPosition(
     sourceFile: SourceFileLike,
     position: number
   ): LineAndCharacter;
 
-  declare export function isWhiteSpaceLike(ch: number): boolean;
+  declare function isWhiteSpaceLike(ch: number): boolean;
 
-  /**
-   * Does not include line breaks. For that, see isWhiteSpaceLike.
-   */
-  declare export function isWhiteSpaceSingleLine(ch: number): boolean;
+  declare function isWhiteSpaceSingleLine(ch: number): boolean;
 
-  declare export function isLineBreak(ch: number): boolean;
+  declare function isLineBreak(ch: number): boolean;
 
-  declare export function couldStartTrivia(text: string, pos: number): boolean;
+  declare function couldStartTrivia(text: string, pos: number): boolean;
 
-  declare export function forEachLeadingCommentRange<U>(
+  declare function forEachLeadingCommentRange<U>(
     text: string,
     pos: number,
     cb: (
@@ -6536,7 +6523,7 @@ use native OS file watching
     ) => U
   ): U | void;
 
-  declare export function forEachLeadingCommentRange<T, U>(
+  declare function forEachLeadingCommentRange<T, U>(
     text: string,
     pos: number,
     cb: (
@@ -6549,7 +6536,7 @@ use native OS file watching
     state: T
   ): U | void;
 
-  declare export function forEachTrailingCommentRange<U>(
+  declare function forEachTrailingCommentRange<U>(
     text: string,
     pos: number,
     cb: (
@@ -6560,7 +6547,7 @@ use native OS file watching
     ) => U
   ): U | void;
 
-  declare export function forEachTrailingCommentRange<T, U>(
+  declare function forEachTrailingCommentRange<T, U>(
     text: string,
     pos: number,
     cb: (
@@ -6573,7 +6560,7 @@ use native OS file watching
     state: T
   ): U | void;
 
-  declare export function reduceEachLeadingCommentRange<T, U>(
+  declare function reduceEachLeadingCommentRange<T, U>(
     text: string,
     pos: number,
     cb: (
@@ -6588,7 +6575,7 @@ use native OS file watching
     initial: U
   ): U | void;
 
-  declare export function reduceEachTrailingCommentRange<T, U>(
+  declare function reduceEachTrailingCommentRange<T, U>(
     text: string,
     pos: number,
     cb: (
@@ -6603,32 +6590,29 @@ use native OS file watching
     initial: U
   ): U | void;
 
-  declare export function getLeadingCommentRanges(
+  declare function getLeadingCommentRanges(
     text: string,
     pos: number
   ): CommentRange[] | void;
 
-  declare export function getTrailingCommentRanges(
+  declare function getTrailingCommentRanges(
     text: string,
     pos: number
   ): CommentRange[] | void;
 
-  /**
-   * Optionally, get the shebang
-   */
-  declare export function getShebang(text: string): string | void;
+  declare function getShebang(text: string): string | void;
 
-  declare export function isIdentifierStart(
+  declare function isIdentifierStart(
     ch: number,
     languageVersion: ScriptTarget | void
   ): boolean;
 
-  declare export function isIdentifierPart(
+  declare function isIdentifierPart(
     ch: number,
     languageVersion: ScriptTarget | void
   ): boolean;
 
-  declare export function createScanner(
+  declare function createScanner(
     languageVersion: ScriptTarget,
     skipTrivia: boolean,
     languageVariant?: LanguageVariant,
@@ -6638,121 +6622,108 @@ use native OS file watching
     length?: number
   ): Scanner;
 
-  declare export function isExternalModuleNameRelative(moduleName: string): boolean;
+  declare function isExternalModuleNameRelative(moduleName: string): boolean;
 
-  declare export function sortAndDeduplicateDiagnostics<T: Diagnostic>(
+  declare function sortAndDeduplicateDiagnostics<T: Diagnostic>(
     diagnostics: $ReadOnlyArray<T>
   ): SortedReadonlyArray<T>;
 
-  declare export function getDefaultLibFileName(options: CompilerOptions): string;
+  declare function getDefaultLibFileName(options: CompilerOptions): string;
 
-  declare export function textSpanEnd(span: TextSpan): number;
+  declare function textSpanEnd(span: TextSpan): number;
 
-  declare export function textSpanIsEmpty(span: TextSpan): boolean;
+  declare function textSpanIsEmpty(span: TextSpan): boolean;
 
-  declare export function textSpanContainsPosition(
+  declare function textSpanContainsPosition(
     span: TextSpan,
     position: number
   ): boolean;
 
-  declare export function textSpanContainsTextSpan(
+  declare function textSpanContainsTextSpan(
     span: TextSpan,
     other: TextSpan
   ): boolean;
 
-  declare export function textSpanOverlapsWith(
+  declare function textSpanOverlapsWith(
     span: TextSpan,
     other: TextSpan
   ): boolean;
 
-  declare export function textSpanOverlap(
+  declare function textSpanOverlap(
     span1: TextSpan,
     span2: TextSpan
   ): TextSpan | void;
 
-  declare export function textSpanIntersectsWithTextSpan(
+  declare function textSpanIntersectsWithTextSpan(
     span: TextSpan,
     other: TextSpan
   ): boolean;
 
-  declare export function textSpanIntersectsWith(
+  declare function textSpanIntersectsWith(
     span: TextSpan,
     start: number,
     length: number
   ): boolean;
 
-  declare export function decodedTextSpanIntersectsWith(
+  declare function decodedTextSpanIntersectsWith(
     start1: number,
     length1: number,
     start2: number,
     length2: number
   ): boolean;
 
-  declare export function textSpanIntersectsWithPosition(
+  declare function textSpanIntersectsWithPosition(
     span: TextSpan,
     position: number
   ): boolean;
 
-  declare export function textSpanIntersection(
+  declare function textSpanIntersection(
     span1: TextSpan,
     span2: TextSpan
   ): TextSpan | void;
 
-  declare export function createTextSpan(start: number, length: number): TextSpan;
+  declare function createTextSpan(start: number, length: number): TextSpan;
 
-  declare export function createTextSpanFromBounds(
+  declare function createTextSpanFromBounds(
     start: number,
     end: number
   ): TextSpan;
 
-  declare export function textChangeRangeNewSpan(range: TextChangeRange): TextSpan;
+  declare function textChangeRangeNewSpan(range: TextChangeRange): TextSpan;
 
-  declare export function textChangeRangeIsUnchanged(range: TextChangeRange): boolean;
+  declare function textChangeRangeIsUnchanged(range: TextChangeRange): boolean;
 
-  declare export function createTextChangeRange(
+  declare function createTextChangeRange(
     span: TextSpan,
     newLength: number
   ): TextChangeRange;
 
-  declare export var unchangedTextChangeRange: TextChangeRange;
-
-  /**
- * Called to merge all the changes that occurred across several versions of a script snapshot
- * into a single change.  i.e. if a user keeps making successive edits to a script we will
-have a text change from V1 to V2, V2 to V3, ..., Vn.
-
-This function will then merge those changes into a single change range valid between V1 and
-Vn.
-*/
-  declare export function collapseTextChangeRangesAcrossMultipleVersions(
+  declare var unchangedTextChangeRange: TextChangeRange;
+  declare function collapseTextChangeRangesAcrossMultipleVersions(
     changes: $ReadOnlyArray<TextChangeRange>
   ): TextChangeRange;
 
-  declare export function getTypeParameterOwner(d: Declaration): Declaration | void;
+  declare function getTypeParameterOwner(d: Declaration): Declaration | void;
 
-  declare export type ParameterPropertyDeclaration = ParameterDeclaration & {
+  declare type ParameterPropertyDeclaration = ParameterDeclaration & {
     parent: ConstructorDeclaration,
     name: Identifier
   };
-  declare export function isParameterPropertyDeclaration(node: Node): boolean;
+  declare function isParameterPropertyDeclaration(node: Node): boolean;
 
-  declare export function isEmptyBindingPattern(node: BindingName): boolean;
+  declare function isEmptyBindingPattern(node: BindingName): boolean;
 
-  declare export function isEmptyBindingElement(node: BindingElement): boolean;
+  declare function isEmptyBindingElement(node: BindingElement): boolean;
 
-  declare export function walkUpBindingElementsAndPatterns(
+  declare function walkUpBindingElementsAndPatterns(
     binding: BindingElement
   ): VariableDeclaration | ParameterDeclaration;
 
-  declare export function getCombinedModifierFlags(node: Declaration): ModifierFlags;
+  declare function getCombinedModifierFlags(node: Declaration): ModifierFlags;
 
-  declare export function getCombinedNodeFlags(node: Node): NodeFlags;
+  declare function getCombinedNodeFlags(node: Node): NodeFlags;
 
-  /**
-   * Checks to see if the locale is in the appropriate format,
-   * and if it is, attempts to set the appropriate language.
-   */
-  declare export function validateLocaleAndSetLanguage(
+  declare function validateLocaleAndSetLanguage(
     locale: string,
     sys: {
       getExecutingFilePath(): string,
@@ -6763,634 +6734,516 @@ Vn.
     errors?: Push<Diagnostic>
   ): void;
 
-  declare export function getOriginalNode(node: Node): Node;
+  declare function getOriginalNode(node: Node): Node;
 
-  declare export function getOriginalNode<T: Node>(
+  declare function getOriginalNode<T: Node>(
     node: Node,
     nodeTest: (node: Node) => boolean
   ): T;
 
-  declare export function getOriginalNode(node: Node | void): Node | void;
+  declare function getOriginalNode(node: Node | void): Node | void;
 
-  declare export function getOriginalNode<T: Node>(
+  declare function getOriginalNode<T: Node>(
     node: Node | void,
     nodeTest: (node: Node | void) => boolean
   ): T | void;
 
-  /**
-   * Gets a value indicating whether a node originated in the parse tree.
-   * @param node The node to test.
-   */
-  declare export function isParseTreeNode(node: Node): boolean;
+  declare function isParseTreeNode(node: Node): boolean;
 
-  /**
-   * Gets the original parse tree node for a node.
-   * @param node The original node.
-   * @returns The original parse tree node if found; otherwise, undefined.
-   */
-  declare export function getParseTreeNode(node: Node): Node;
+  declare function getParseTreeNode(node: Node): Node;
 
-  /**
-   * Gets the original parse tree node for a node.
-   * @param node The original node.
-   * @param nodeTest A callback used to ensure the correct type of parse tree node is returned.
-   * @returns The original parse tree node if found; otherwise, undefined.
-   */
-  declare export function getParseTreeNode<T: Node>(
+  declare function getParseTreeNode<T: Node>(
     node: Node | void,
     nodeTest?: (node: Node) => boolean
   ): T | void;
 
-  /**
-   * Add an extra underscore to identifiers that start with two underscores to avoid issues with magic names like '__proto__'
-   */
-  declare export function escapeLeadingUnderscores(identifier: string): __String;
+  declare function escapeLeadingUnderscores(identifier: string): __String;
 
-  /**
-   * Remove extra underscore from escaped identifier text content.
-   * @param identifier The escaped identifier text.
-   * @returns The unescaped identifier text.
-   */
-  declare export function unescapeLeadingUnderscores(identifier: __String): string;
+  declare function unescapeLeadingUnderscores(identifier: __String): string;
 
-  declare export function idText(identifier: Identifier): string;
+  declare function idText(identifier: Identifier): string;
 
-  declare export function symbolName(symbol: Symbol): string;
+  declare function symbolName(symbol: Symbol): string;
 
-  declare export function getNameOfJSDocTypedef(
+  declare function getNameOfJSDocTypedef(
     declaration: JSDocTypedefTag
   ): Identifier | void;
 
-  declare export function getNameOfDeclaration(
+  declare function getNameOfDeclaration(
     declaration: Declaration | Expression
   ): DeclarationName | void;
 
-  /**
- * Gets the JSDoc parameter tags for the node if present.
- * @remarks Returns any JSDoc param tag whose name matches the provided
-parameter, whether a param tag on a containing function
-expression, or a param tag on a variable declaration whose
-initializer is the containing function. The tags closest to the
-node are returned first, so in the previous example, the param
-tag on the containing function expression would be first.
-
-For binding patterns, parameter tags are matched by position.
-*/
-  declare export function getJSDocParameterTags(
+  declare function getJSDocParameterTags(
     param: ParameterDeclaration
   ): $ReadOnlyArray<JSDocParameterTag>;
 
-  /**
- * Gets the JSDoc type parameter tags for the node if present.
- * @remarks Returns any JSDoc template tag whose names match the provided
-parameter, whether a template tag on a containing function
-expression, or a template tag on a variable declaration whose
-initializer is the containing function. The tags closest to the
-node are returned first, so in the previous example, the template
-tag on the containing function expression would be first.
-*/
-  declare export function getJSDocTypeParameterTags(
+  declare function getJSDocTypeParameterTags(
     param: TypeParameterDeclaration
   ): $ReadOnlyArray<JSDocTemplateTag>;
 
-  /**
- * Return true if the node has JSDoc parameter tags.
- * @remarks Includes parameter tags that are not directly on the node,
-for example on a variable declaration whose initializer is a function expression.
-*/
-  declare export function hasJSDocParameterTags(
+  declare function hasJSDocParameterTags(
     node: FunctionLikeDeclaration | SignatureDeclaration
   ): boolean;
 
-  /**
-   * Gets the JSDoc augments tag for the node if present
-   */
-  declare export function getJSDocAugmentsTag(node: Node): JSDocAugmentsTag | void;
+  declare function getJSDocAugmentsTag(node: Node): JSDocAugmentsTag | void;
 
-  /**
-   * Gets the JSDoc class tag for the node if present
-   */
-  declare export function getJSDocClassTag(node: Node): JSDocClassTag | void;
+  declare function getJSDocClassTag(node: Node): JSDocClassTag | void;
 
-  /**
-   * Gets the JSDoc enum tag for the node if present
-   */
-  declare export function getJSDocEnumTag(node: Node): JSDocEnumTag | void;
+  declare function getJSDocEnumTag(node: Node): JSDocEnumTag | void;
 
-  /**
-   * Gets the JSDoc this tag for the node if present
-   */
-  declare export function getJSDocThisTag(node: Node): JSDocThisTag | void;
+  declare function getJSDocThisTag(node: Node): JSDocThisTag | void;
 
-  /**
-   * Gets the JSDoc return tag for the node if present
-   */
-  declare export function getJSDocReturnTag(node: Node): JSDocReturnTag | void;
+  declare function getJSDocReturnTag(node: Node): JSDocReturnTag | void;
 
-  /**
-   * Gets the JSDoc template tag for the node if present
-   */
-  declare export function getJSDocTemplateTag(node: Node): JSDocTemplateTag | void;
+  declare function getJSDocTemplateTag(node: Node): JSDocTemplateTag | void;
 
-  /**
-   * Gets the JSDoc type tag for the node if present and valid
-   */
-  declare export function getJSDocTypeTag(node: Node): JSDocTypeTag | void;
+  declare function getJSDocTypeTag(node: Node): JSDocTypeTag | void;
 
-  /**
- * Gets the type node for the node if provided via JSDoc.
- * @remarks The search includes any JSDoc param tag that relates
-to the provided parameter, for example a type tag on the
-parameter itself, or a param tag on a containing function
-expression, or a param tag on a variable declaration whose
-initializer is the containing function. The tags closest to the
-node are examined first, so in the previous example, the type
-tag directly on the node would be returned.
-*/
-  declare export function getJSDocType(node: Node): TypeNode | void;
+  declare function getJSDocType(node: Node): TypeNode | void;
 
-  /**
- * Gets the return type node for the node if provided via JSDoc return tag or type tag.
- * @remarks `getJSDocReturnTag` just gets the whole JSDoc tag. This function
-gets the type from inside the braces, after the fat arrow, etc.
-*/
-  declare export function getJSDocReturnType(node: Node): TypeNode | void;
+  declare function getJSDocReturnType(node: Node): TypeNode | void;
 
-  /**
-   * Get all JSDoc tags related to a node, including those on parent nodes.
-   */
-  declare export function getJSDocTags(node: Node): $ReadOnlyArray<JSDocTag>;
+  declare function getJSDocTags(node: Node): $ReadOnlyArray<JSDocTag>;
 
-  /**
-   * Gets all JSDoc tags of a specified kind, or undefined if not present.
-   */
-  declare export function getAllJSDocTagsOfKind(
+  declare function getAllJSDocTagsOfKind(
     node: Node,
     kind: SyntaxKind
   ): $ReadOnlyArray<JSDocTag>;
 
-  /**
-   * Gets the effective type parameters. If the node was parsed in a
-   * JavaScript file, gets the type parameters from the `@template` tag from JSDoc.
-   */
-  declare export function getEffectiveTypeParameterDeclarations(
+  declare function getEffectiveTypeParameterDeclarations(
     node: DeclarationWithTypeParameters
   ): $ReadOnlyArray<TypeParameterDeclaration>;
 
-  declare export function getEffectiveConstraintOfTypeParameter(
+  declare function getEffectiveConstraintOfTypeParameter(
     node: TypeParameterDeclaration
   ): TypeNode | void;
 
-  declare export function isNumericLiteral(node: Node): boolean;
+  declare function isNumericLiteral(node: Node): boolean;
 
-  declare export function isBigIntLiteral(node: Node): boolean;
+  declare function isBigIntLiteral(node: Node): boolean;
 
-  declare export function isStringLiteral(node: Node): boolean;
+  declare function isStringLiteral(node: Node): boolean;
 
-  declare export function isJsxText(node: Node): boolean;
+  declare function isJsxText(node: Node): boolean;
 
-  declare export function isRegularExpressionLiteral(node: Node): boolean;
+  declare function isRegularExpressionLiteral(node: Node): boolean;
 
-  declare export function isNoSubstitutionTemplateLiteral(node: Node): boolean;
+  declare function isNoSubstitutionTemplateLiteral(node: Node): boolean;
 
-  declare export function isTemplateHead(node: Node): boolean;
+  declare function isTemplateHead(node: Node): boolean;
 
-  declare export function isTemplateMiddle(node: Node): boolean;
+  declare function isTemplateMiddle(node: Node): boolean;
 
-  declare export function isTemplateTail(node: Node): boolean;
+  declare function isTemplateTail(node: Node): boolean;
 
-  declare export function isIdentifier(node: Node): boolean;
+  declare function isIdentifier(node: Node): boolean;
 
-  declare export function isQualifiedName(node: Node): boolean;
+  declare function isQualifiedName(node: Node): boolean;
 
-  declare export function isComputedPropertyName(node: Node): boolean;
+  declare function isComputedPropertyName(node: Node): boolean;
 
-  declare export function isTypeParameterDeclaration(node: Node): boolean;
+  declare function isTypeParameterDeclaration(node: Node): boolean;
 
-  declare export function isParameter(node: Node): boolean;
+  declare function isParameter(node: Node): boolean;
 
-  declare export function isDecorator(node: Node): boolean;
+  declare function isDecorator(node: Node): boolean;
 
-  declare export function isPropertySignature(node: Node): boolean;
+  declare function isPropertySignature(node: Node): boolean;
 
-  declare export function isPropertyDeclaration(node: Node): boolean;
+  declare function isPropertyDeclaration(node: Node): boolean;
 
-  declare export function isMethodSignature(node: Node): boolean;
+  declare function isMethodSignature(node: Node): boolean;
 
-  declare export function isMethodDeclaration(node: Node): boolean;
+  declare function isMethodDeclaration(node: Node): boolean;
 
-  declare export function isConstructorDeclaration(node: Node): boolean;
+  declare function isConstructorDeclaration(node: Node): boolean;
 
-  declare export function isGetAccessorDeclaration(node: Node): boolean;
+  declare function isGetAccessorDeclaration(node: Node): boolean;
 
-  declare export function isSetAccessorDeclaration(node: Node): boolean;
+  declare function isSetAccessorDeclaration(node: Node): boolean;
 
-  declare export function isCallSignatureDeclaration(node: Node): boolean;
+  declare function isCallSignatureDeclaration(node: Node): boolean;
 
-  declare export function isConstructSignatureDeclaration(node: Node): boolean;
+  declare function isConstructSignatureDeclaration(node: Node): boolean;
 
-  declare export function isIndexSignatureDeclaration(node: Node): boolean;
+  declare function isIndexSignatureDeclaration(node: Node): boolean;
 
-  declare export function isTypePredicateNode(node: Node): boolean;
+  declare function isTypePredicateNode(node: Node): boolean;
 
-  declare export function isTypeReferenceNode(node: Node): boolean;
+  declare function isTypeReferenceNode(node: Node): boolean;
 
-  declare export function isFunctionTypeNode(node: Node): boolean;
+  declare function isFunctionTypeNode(node: Node): boolean;
 
-  declare export function isConstructorTypeNode(node: Node): boolean;
+  declare function isConstructorTypeNode(node: Node): boolean;
 
-  declare export function isTypeQueryNode(node: Node): boolean;
+  declare function isTypeQueryNode(node: Node): boolean;
 
-  declare export function isTypeLiteralNode(node: Node): boolean;
+  declare function isTypeLiteralNode(node: Node): boolean;
 
-  declare export function isArrayTypeNode(node: Node): boolean;
+  declare function isArrayTypeNode(node: Node): boolean;
 
-  declare export function isTupleTypeNode(node: Node): boolean;
+  declare function isTupleTypeNode(node: Node): boolean;
 
-  declare export function isUnionTypeNode(node: Node): boolean;
+  declare function isUnionTypeNode(node: Node): boolean;
 
-  declare export function isIntersectionTypeNode(node: Node): boolean;
+  declare function isIntersectionTypeNode(node: Node): boolean;
 
-  declare export function isConditionalTypeNode(node: Node): boolean;
+  declare function isConditionalTypeNode(node: Node): boolean;
 
-  declare export function isInferTypeNode(node: Node): boolean;
+  declare function isInferTypeNode(node: Node): boolean;
 
-  declare export function isParenthesizedTypeNode(node: Node): boolean;
+  declare function isParenthesizedTypeNode(node: Node): boolean;
 
-  declare export function isThisTypeNode(node: Node): boolean;
+  declare function isThisTypeNode(node: Node): boolean;
 
-  declare export function isTypeOperatorNode(node: Node): boolean;
+  declare function isTypeOperatorNode(node: Node): boolean;
 
-  declare export function isIndexedAccessTypeNode(node: Node): boolean;
+  declare function isIndexedAccessTypeNode(node: Node): boolean;
 
-  declare export function isMappedTypeNode(node: Node): boolean;
+  declare function isMappedTypeNode(node: Node): boolean;
 
-  declare export function isLiteralTypeNode(node: Node): boolean;
+  declare function isLiteralTypeNode(node: Node): boolean;
 
-  declare export function isImportTypeNode(node: Node): boolean;
+  declare function isImportTypeNode(node: Node): boolean;
 
-  declare export function isObjectBindingPattern(node: Node): boolean;
+  declare function isObjectBindingPattern(node: Node): boolean;
 
-  declare export function isArrayBindingPattern(node: Node): boolean;
+  declare function isArrayBindingPattern(node: Node): boolean;
 
-  declare export function isBindingElement(node: Node): boolean;
+  declare function isBindingElement(node: Node): boolean;
 
-  declare export function isArrayLiteralExpression(node: Node): boolean;
+  declare function isArrayLiteralExpression(node: Node): boolean;
 
-  declare export function isObjectLiteralExpression(node: Node): boolean;
+  declare function isObjectLiteralExpression(node: Node): boolean;
 
-  declare export function isPropertyAccessExpression(node: Node): boolean;
+  declare function isPropertyAccessExpression(node: Node): boolean;
 
-  declare export function isElementAccessExpression(node: Node): boolean;
+  declare function isElementAccessExpression(node: Node): boolean;
 
-  declare export function isCallExpression(node: Node): boolean;
+  declare function isCallExpression(node: Node): boolean;
 
-  declare export function isNewExpression(node: Node): boolean;
+  declare function isNewExpression(node: Node): boolean;
 
-  declare export function isTaggedTemplateExpression(node: Node): boolean;
+  declare function isTaggedTemplateExpression(node: Node): boolean;
 
-  declare export function isTypeAssertion(node: Node): boolean;
+  declare function isTypeAssertion(node: Node): boolean;
 
-  declare export function isParenthesizedExpression(node: Node): boolean;
+  declare function isParenthesizedExpression(node: Node): boolean;
 
-  declare export function skipPartiallyEmittedExpressions(
+  declare function skipPartiallyEmittedExpressions(
     node: Expression
   ): Expression;
 
-  declare export function skipPartiallyEmittedExpressions(node: Node): Node;
+  declare function skipPartiallyEmittedExpressions(node: Node): Node;
 
-  declare export function isFunctionExpression(node: Node): boolean;
+  declare function isFunctionExpression(node: Node): boolean;
 
-  declare export function isArrowFunction(node: Node): boolean;
+  declare function isArrowFunction(node: Node): boolean;
 
-  declare export function isDeleteExpression(node: Node): boolean;
+  declare function isDeleteExpression(node: Node): boolean;
 
-  declare export function isTypeOfExpression(node: Node): boolean;
+  declare function isTypeOfExpression(node: Node): boolean;
 
-  declare export function isVoidExpression(node: Node): boolean;
+  declare function isVoidExpression(node: Node): boolean;
 
-  declare export function isAwaitExpression(node: Node): boolean;
+  declare function isAwaitExpression(node: Node): boolean;
 
-  declare export function isPrefixUnaryExpression(node: Node): boolean;
+  declare function isPrefixUnaryExpression(node: Node): boolean;
 
-  declare export function isPostfixUnaryExpression(node: Node): boolean;
+  declare function isPostfixUnaryExpression(node: Node): boolean;
 
-  declare export function isBinaryExpression(node: Node): boolean;
+  declare function isBinaryExpression(node: Node): boolean;
 
-  declare export function isConditionalExpression(node: Node): boolean;
+  declare function isConditionalExpression(node: Node): boolean;
 
-  declare export function isTemplateExpression(node: Node): boolean;
+  declare function isTemplateExpression(node: Node): boolean;
 
-  declare export function isYieldExpression(node: Node): boolean;
+  declare function isYieldExpression(node: Node): boolean;
 
-  declare export function isSpreadElement(node: Node): boolean;
+  declare function isSpreadElement(node: Node): boolean;
 
-  declare export function isClassExpression(node: Node): boolean;
+  declare function isClassExpression(node: Node): boolean;
 
-  declare export function isOmittedExpression(node: Node): boolean;
+  declare function isOmittedExpression(node: Node): boolean;
 
-  declare export function isExpressionWithTypeArguments(node: Node): boolean;
+  declare function isExpressionWithTypeArguments(node: Node): boolean;
 
-  declare export function isAsExpression(node: Node): boolean;
+  declare function isAsExpression(node: Node): boolean;
 
-  declare export function isNonNullExpression(node: Node): boolean;
+  declare function isNonNullExpression(node: Node): boolean;
 
-  declare export function isMetaProperty(node: Node): boolean;
+  declare function isMetaProperty(node: Node): boolean;
 
-  declare export function isTemplateSpan(node: Node): boolean;
+  declare function isTemplateSpan(node: Node): boolean;
 
-  declare export function isSemicolonClassElement(node: Node): boolean;
+  declare function isSemicolonClassElement(node: Node): boolean;
 
-  declare export function isBlock(node: Node): boolean;
+  declare function isBlock(node: Node): boolean;
 
-  declare export function isVariableStatement(node: Node): boolean;
+  declare function isVariableStatement(node: Node): boolean;
 
-  declare export function isEmptyStatement(node: Node): boolean;
+  declare function isEmptyStatement(node: Node): boolean;
 
-  declare export function isExpressionStatement(node: Node): boolean;
+  declare function isExpressionStatement(node: Node): boolean;
 
-  declare export function isIfStatement(node: Node): boolean;
+  declare function isIfStatement(node: Node): boolean;
 
-  declare export function isDoStatement(node: Node): boolean;
+  declare function isDoStatement(node: Node): boolean;
 
-  declare export function isWhileStatement(node: Node): boolean;
+  declare function isWhileStatement(node: Node): boolean;
 
-  declare export function isForStatement(node: Node): boolean;
+  declare function isForStatement(node: Node): boolean;
 
-  declare export function isForInStatement(node: Node): boolean;
+  declare function isForInStatement(node: Node): boolean;
 
-  declare export function isForOfStatement(node: Node): boolean;
+  declare function isForOfStatement(node: Node): boolean;
 
-  declare export function isContinueStatement(node: Node): boolean;
+  declare function isContinueStatement(node: Node): boolean;
 
-  declare export function isBreakStatement(node: Node): boolean;
+  declare function isBreakStatement(node: Node): boolean;
 
-  declare export function isBreakOrContinueStatement(node: Node): boolean;
+  declare function isBreakOrContinueStatement(node: Node): boolean;
 
-  declare export function isReturnStatement(node: Node): boolean;
+  declare function isReturnStatement(node: Node): boolean;
 
-  declare export function isWithStatement(node: Node): boolean;
+  declare function isWithStatement(node: Node): boolean;
 
-  declare export function isSwitchStatement(node: Node): boolean;
+  declare function isSwitchStatement(node: Node): boolean;
 
-  declare export function isLabeledStatement(node: Node): boolean;
+  declare function isLabeledStatement(node: Node): boolean;
 
-  declare export function isThrowStatement(node: Node): boolean;
+  declare function isThrowStatement(node: Node): boolean;
 
-  declare export function isTryStatement(node: Node): boolean;
+  declare function isTryStatement(node: Node): boolean;
 
-  declare export function isDebuggerStatement(node: Node): boolean;
+  declare function isDebuggerStatement(node: Node): boolean;
 
-  declare export function isVariableDeclaration(node: Node): boolean;
+  declare function isVariableDeclaration(node: Node): boolean;
 
-  declare export function isVariableDeclarationList(node: Node): boolean;
+  declare function isVariableDeclarationList(node: Node): boolean;
 
-  declare export function isFunctionDeclaration(node: Node): boolean;
+  declare function isFunctionDeclaration(node: Node): boolean;
 
-  declare export function isClassDeclaration(node: Node): boolean;
+  declare function isClassDeclaration(node: Node): boolean;
 
-  declare export function isInterfaceDeclaration(node: Node): boolean;
+  declare function isInterfaceDeclaration(node: Node): boolean;
 
-  declare export function isTypeAliasDeclaration(node: Node): boolean;
+  declare function isTypeAliasDeclaration(node: Node): boolean;
 
-  declare export function isEnumDeclaration(node: Node): boolean;
+  declare function isEnumDeclaration(node: Node): boolean;
 
-  declare export function isModuleDeclaration(node: Node): boolean;
+  declare function isModuleDeclaration(node: Node): boolean;
 
-  declare export function isModuleBlock(node: Node): boolean;
+  declare function isModuleBlock(node: Node): boolean;
 
-  declare export function isCaseBlock(node: Node): boolean;
+  declare function isCaseBlock(node: Node): boolean;
 
-  declare export function isNamespaceExportDeclaration(node: Node): boolean;
+  declare function isNamespaceExportDeclaration(node: Node): boolean;
 
-  declare export function isImportEqualsDeclaration(node: Node): boolean;
+  declare function isImportEqualsDeclaration(node: Node): boolean;
 
-  declare export function isImportDeclaration(node: Node): boolean;
+  declare function isImportDeclaration(node: Node): boolean;
 
-  declare export function isImportClause(node: Node): boolean;
+  declare function isImportClause(node: Node): boolean;
 
-  declare export function isNamespaceImport(node: Node): boolean;
+  declare function isNamespaceImport(node: Node): boolean;
 
-  declare export function isNamedImports(node: Node): boolean;
+  declare function isNamedImports(node: Node): boolean;
 
-  declare export function isImportSpecifier(node: Node): boolean;
+  declare function isImportSpecifier(node: Node): boolean;
 
-  declare export function isExportAssignment(node: Node): boolean;
+  declare function isExportAssignment(node: Node): boolean;
 
-  declare export function isExportDeclaration(node: Node): boolean;
+  declare function isExportDeclaration(node: Node): boolean;
 
-  declare export function isNamedExports(node: Node): boolean;
+  declare function isNamedExports(node: Node): boolean;
 
-  declare export function isExportSpecifier(node: Node): boolean;
+  declare function isExportSpecifier(node: Node): boolean;
 
-  declare export function isMissingDeclaration(node: Node): boolean;
+  declare function isMissingDeclaration(node: Node): boolean;
 
-  declare export function isExternalModuleReference(node: Node): boolean;
+  declare function isExternalModuleReference(node: Node): boolean;
 
-  declare export function isJsxElement(node: Node): boolean;
+  declare function isJsxElement(node: Node): boolean;
 
-  declare export function isJsxSelfClosingElement(node: Node): boolean;
+  declare function isJsxSelfClosingElement(node: Node): boolean;
 
-  declare export function isJsxOpeningElement(node: Node): boolean;
+  declare function isJsxOpeningElement(node: Node): boolean;
 
-  declare export function isJsxClosingElement(node: Node): boolean;
+  declare function isJsxClosingElement(node: Node): boolean;
 
-  declare export function isJsxFragment(node: Node): boolean;
+  declare function isJsxFragment(node: Node): boolean;
 
-  declare export function isJsxOpeningFragment(node: Node): boolean;
+  declare function isJsxOpeningFragment(node: Node): boolean;
 
-  declare export function isJsxClosingFragment(node: Node): boolean;
+  declare function isJsxClosingFragment(node: Node): boolean;
 
-  declare export function isJsxAttribute(node: Node): boolean;
+  declare function isJsxAttribute(node: Node): boolean;
 
-  declare export function isJsxAttributes(node: Node): boolean;
+  declare function isJsxAttributes(node: Node): boolean;
 
-  declare export function isJsxSpreadAttribute(node: Node): boolean;
+  declare function isJsxSpreadAttribute(node: Node): boolean;
 
-  declare export function isJsxExpression(node: Node): boolean;
+  declare function isJsxExpression(node: Node): boolean;
 
-  declare export function isCaseClause(node: Node): boolean;
+  declare function isCaseClause(node: Node): boolean;
 
-  declare export function isDefaultClause(node: Node): boolean;
+  declare function isDefaultClause(node: Node): boolean;
 
-  declare export function isHeritageClause(node: Node): boolean;
+  declare function isHeritageClause(node: Node): boolean;
 
-  declare export function isCatchClause(node: Node): boolean;
+  declare function isCatchClause(node: Node): boolean;
 
-  declare export function isPropertyAssignment(node: Node): boolean;
+  declare function isPropertyAssignment(node: Node): boolean;
 
-  declare export function isShorthandPropertyAssignment(node: Node): boolean;
+  declare function isShorthandPropertyAssignment(node: Node): boolean;
 
-  declare export function isSpreadAssignment(node: Node): boolean;
+  declare function isSpreadAssignment(node: Node): boolean;
 
-  declare export function isEnumMember(node: Node): boolean;
+  declare function isEnumMember(node: Node): boolean;
 
-  declare export function isSourceFile(node: Node): boolean;
+  declare function isSourceFile(node: Node): boolean;
 
-  declare export function isBundle(node: Node): boolean;
+  declare function isBundle(node: Node): boolean;
 
-  declare export function isUnparsedSource(node: Node): boolean;
+  declare function isUnparsedSource(node: Node): boolean;
 
-  declare export function isJSDocTypeExpression(node: Node): boolean;
+  declare function isJSDocTypeExpression(node: Node): boolean;
 
-  declare export function isJSDocAllType(node: JSDocAllType): boolean;
+  declare function isJSDocAllType(node: JSDocAllType): boolean;
 
-  declare export function isJSDocUnknownType(node: Node): boolean;
+  declare function isJSDocUnknownType(node: Node): boolean;
 
-  declare export function isJSDocNullableType(node: Node): boolean;
+  declare function isJSDocNullableType(node: Node): boolean;
 
-  declare export function isJSDocNonNullableType(node: Node): boolean;
+  declare function isJSDocNonNullableType(node: Node): boolean;
 
-  declare export function isJSDocOptionalType(node: Node): boolean;
+  declare function isJSDocOptionalType(node: Node): boolean;
 
-  declare export function isJSDocFunctionType(node: Node): boolean;
+  declare function isJSDocFunctionType(node: Node): boolean;
 
-  declare export function isJSDocVariadicType(node: Node): boolean;
+  declare function isJSDocVariadicType(node: Node): boolean;
 
-  declare export function isJSDoc(node: Node): boolean;
+  declare function isJSDoc(node: Node): boolean;
 
-  declare export function isJSDocAugmentsTag(node: Node): boolean;
+  declare function isJSDocAugmentsTag(node: Node): boolean;
 
-  declare export function isJSDocClassTag(node: Node): boolean;
+  declare function isJSDocClassTag(node: Node): boolean;
 
-  declare export function isJSDocEnumTag(node: Node): boolean;
+  declare function isJSDocEnumTag(node: Node): boolean;
 
-  declare export function isJSDocThisTag(node: Node): boolean;
+  declare function isJSDocThisTag(node: Node): boolean;
 
-  declare export function isJSDocParameterTag(node: Node): boolean;
+  declare function isJSDocParameterTag(node: Node): boolean;
 
-  declare export function isJSDocReturnTag(node: Node): boolean;
+  declare function isJSDocReturnTag(node: Node): boolean;
 
-  declare export function isJSDocTypeTag(node: Node): boolean;
+  declare function isJSDocTypeTag(node: Node): boolean;
 
-  declare export function isJSDocTemplateTag(node: Node): boolean;
+  declare function isJSDocTemplateTag(node: Node): boolean;
 
-  declare export function isJSDocTypedefTag(node: Node): boolean;
+  declare function isJSDocTypedefTag(node: Node): boolean;
 
-  declare export function isJSDocPropertyTag(node: Node): boolean;
+  declare function isJSDocPropertyTag(node: Node): boolean;
 
-  declare export function isJSDocPropertyLikeTag(node: Node): boolean;
+  declare function isJSDocPropertyLikeTag(node: Node): boolean;
 
-  declare export function isJSDocTypeLiteral(node: Node): boolean;
+  declare function isJSDocTypeLiteral(node: Node): boolean;
 
-  declare export function isJSDocCallbackTag(node: Node): boolean;
+  declare function isJSDocCallbackTag(node: Node): boolean;
 
-  declare export function isJSDocSignature(node: Node): boolean;
+  declare function isJSDocSignature(node: Node): boolean;
 
-  /**
- * True if node is of some token syntax kind.
- * For example, this is true for an IfKeyword but not for an IfStatement.
-Literals are considered tokens, except TemplateLiteral, but does include TemplateHead/Middle/Tail.
-*/
-  declare export function isToken(n: Node): boolean;
+  declare function isToken(n: Node): boolean;
 
-  declare export function isLiteralExpression(node: Node): boolean;
+  declare function isLiteralExpression(node: Node): boolean;
 
-  declare export type TemplateLiteralToken =
+  declare type TemplateLiteralToken =
     | NoSubstitutionTemplateLiteral
     | TemplateHead
     | TemplateMiddle
     | TemplateTail;
-  declare export function isTemplateLiteralToken(node: Node): boolean;
+  declare function isTemplateLiteralToken(node: Node): boolean;
 
-  declare export function isTemplateMiddleOrTemplateTail(node: Node): boolean;
+  declare function isTemplateMiddleOrTemplateTail(node: Node): boolean;
 
-  declare export function isImportOrExportSpecifier(node: Node): boolean;
+  declare function isImportOrExportSpecifier(node: Node): boolean;
 
-  declare export function isStringTextContainingNode(node: Node): boolean;
+  declare function isStringTextContainingNode(node: Node): boolean;
 
-  declare export function isModifier(node: Node): boolean;
+  declare function isModifier(node: Node): boolean;
 
-  declare export function isEntityName(node: Node): boolean;
+  declare function isEntityName(node: Node): boolean;
 
-  declare export function isPropertyName(node: Node): boolean;
+  declare function isPropertyName(node: Node): boolean;
 
-  declare export function isBindingName(node: Node): boolean;
+  declare function isBindingName(node: Node): boolean;
 
-  declare export function isFunctionLike(node: Node): boolean;
+  declare function isFunctionLike(node: Node): boolean;
 
-  declare export function isClassElement(node: Node): boolean;
+  declare function isClassElement(node: Node): boolean;
 
-  declare export function isClassLike(node: Node): boolean;
+  declare function isClassLike(node: Node): boolean;
 
-  declare export function isAccessor(node: Node): boolean;
+  declare function isAccessor(node: Node): boolean;
 
-  declare export function isTypeElement(node: Node): boolean;
+  declare function isTypeElement(node: Node): boolean;
 
-  declare export function isClassOrTypeElement(node: Node): boolean;
+  declare function isClassOrTypeElement(node: Node): boolean;
 
-  declare export function isObjectLiteralElementLike(node: Node): boolean;
+  declare function isObjectLiteralElementLike(node: Node): boolean;
 
-  /**
- * Node test that determines whether a node is a valid type node.
- * This differs from the `isPartOfTypeNode` function which determines whether a node is *part*
-of a TypeNode.
-*/
-  declare export function isTypeNode(node: Node): boolean;
+  declare function isTypeNode(node: Node): boolean;
 
-  declare export function isFunctionOrConstructorTypeNode(node: Node): boolean;
+  declare function isFunctionOrConstructorTypeNode(node: Node): boolean;
 
-  declare export function isPropertyAccessOrQualifiedName(node: Node): boolean;
+  declare function isPropertyAccessOrQualifiedName(node: Node): boolean;
 
-  declare export function isCallLikeExpression(node: Node): boolean;
+  declare function isCallLikeExpression(node: Node): boolean;
 
-  declare export function isCallOrNewExpression(node: Node): boolean;
+  declare function isCallOrNewExpression(node: Node): boolean;
 
-  declare export function isTemplateLiteral(node: Node): boolean;
+  declare function isTemplateLiteral(node: Node): boolean;
 
-  declare export function isAssertionExpression(node: Node): boolean;
+  declare function isAssertionExpression(node: Node): boolean;
 
-  declare export function isIterationStatement(
+  declare function isIterationStatement(
     node: Node,
     lookInLabeledStatements: false
   ): boolean;
 
-  declare export function isIterationStatement(
+  declare function isIterationStatement(
     node: Node,
     lookInLabeledStatements: boolean
   ): boolean;
 
-  declare export function isJsxOpeningLikeElement(node: Node): boolean;
+  declare function isJsxOpeningLikeElement(node: Node): boolean;
 
-  declare export function isCaseOrDefaultClause(node: Node): boolean;
+  declare function isCaseOrDefaultClause(node: Node): boolean;
 
-  /**
-   * True if node is of a kind that may contain comment text.
-   */
-  declare export function isJSDocCommentContainingNode(node: Node): boolean;
+  declare function isJSDocCommentContainingNode(node: Node): boolean;
 
-  declare export function isSetAccessor(node: Node): boolean;
+  declare function isSetAccessor(node: Node): boolean;
 
-  declare export function isGetAccessor(node: Node): boolean;
+  declare function isGetAccessor(node: Node): boolean;
 
-  declare export function isObjectLiteralElement(node: Node): boolean;
+  declare function isObjectLiteralElement(node: Node): boolean;
 
-  declare export function isStringLiteralLike(node: Node): boolean;
+  declare function isStringLiteralLike(node: Node): boolean;
 
-  declare export function createNode(
+  declare function createNode(
     kind: SyntaxKind,
     pos?: number,
     end?: number
   ): Node;
 
-  /**
- * Invokes a callback for each child of the given node. The 'cbNode' callback is invoked for all child nodes
- * stored in properties. If a 'cbNodes' callback is specified, it is invoked for embedded arrays; otherwise,
-embedded arrays are flattened and the 'cbNode' callback is invoked for each element. If a callback returns
-a truthy value, iteration stops and that value is returned. Otherwise, undefined is returned.
- * @param node a given node to visit its children
- * @param cbNode a callback to be invoked for all child nodes
- * @param cbNodes a callback to be invoked for embedded array
- * @remarks `forEachChild` must visit the children of a node in the order
-that they appear in the source code. The language service depends on this property to locate nodes by position.
-*/
-  declare export function forEachChild<T>(
+  declare function forEachChild<T>(
     node: Node,
     cbNode: (node: Node) => T | void,
     cbNodes?: (nodes: NodeArray<Node>) => T | void
   ): T | void;
 
-  declare export function createSourceFile(
+  declare function createSourceFile(
     fileName: string,
     sourceText: string,
     languageVersion: ScriptTarget,
@@ -7398,69 +7251,49 @@ that they appear in the source code. The language service depends on this proper
     scriptKind?: ScriptKind
   ): SourceFile;
 
-  declare export function parseIsolatedEntityName(
+  declare function parseIsolatedEntityName(
     text: string,
     languageVersion: ScriptTarget
   ): EntityName | void;
 
-  /**
-   * Parse json text into SyntaxTree and return node and parse errors if any
-   * @param fileName
-   * @param sourceText
-   */
-  declare export function parseJsonText(
+  declare function parseJsonText(
     fileName: string,
     sourceText: string
   ): JsonSourceFile;
 
-  declare export function isExternalModule(file: SourceFile): boolean;
+  declare function isExternalModule(file: SourceFile): boolean;
 
-  declare export function updateSourceFile(
+  declare function updateSourceFile(
     sourceFile: SourceFile,
     newText: string,
     textChangeRange: TextChangeRange,
     aggressiveChecks?: boolean
   ): SourceFile;
 
-  declare export function parseCommandLine(
+  declare function parseCommandLine(
     commandLine: $ReadOnlyArray<string>,
     readFile?: (path: string) => string | void
   ): ParsedCommandLine;
 
-  declare export type DiagnosticReporter = (diagnostic: Diagnostic) => void;
+  declare type DiagnosticReporter = (diagnostic: Diagnostic) => void;
+  declare type ConfigFileDiagnosticsReporter = {
+    onUnRecoverableConfigFileDiagnostic: DiagnosticReporter
+  };
 
-  /**
-   * Reports config file diagnostics
-   */
-  declare export interface ConfigFileDiagnosticsReporter {
-    /**
-     * Reports unrecoverable error when parsing config file
-     */
-    onUnRecoverableConfigFileDiagnostic: DiagnosticReporter;
-  }
+  declare type ParseConfigFileHost = {
+    ...$Exact<ParseConfigHost>,
+    ...$Exact<ConfigFileDiagnosticsReporter>,
 
-  /**
-   * Interface extending ParseConfigHost to support ParseConfigFile that reads config file and reports errors
-   */
-  declare export type ParseConfigFileHost = {
     getCurrentDirectory(): string
-  } & ParseConfigHost &
-    ConfigFileDiagnosticsReporter;
+  };
 
-  /**
-   * Reads the config file, reports errors if any and exits if the config file cannot be found
-   */
-  declare export function getParsedCommandLineOfConfigFile(
+  declare function getParsedCommandLineOfConfigFile(
     configFileName: string,
     optionsToExtend: CompilerOptions,
     host: ParseConfigFileHost
   ): ParsedCommandLine | void;
 
-  /**
-   * Read tsconfig.json file
-   * @param fileName The path to the config file
-   */
-  declare export function readConfigFile(
+  declare function readConfigFile(
     fileName: string,
     readFile: (path: string) => string | void
   ): {
@@ -7468,12 +7301,7 @@ that they appear in the source code. The language service depends on this proper
     error?: Diagnostic
   };
 
-  /**
-   * Parse the text of the tsconfig.json file
-   * @param fileName The path to the config file
-   * @param jsonText The text of the config file
-   */
-  declare export function parseConfigFileTextToJson(
+  declare function parseConfigFileTextToJson(
     fileName: string,
     jsonText: string
   ): {
@@ -7481,31 +7309,17 @@ that they appear in the source code. The language service depends on this proper
     error?: Diagnostic
   };
 
-  /**
-   * Read tsconfig.json file
-   * @param fileName The path to the config file
-   */
-  declare export function readJsonConfigFile(
+  declare function readJsonConfigFile(
     fileName: string,
     readFile: (path: string) => string | void
   ): TsConfigSourceFile;
 
-  /**
-   * Convert the json syntax tree into the json value
-   */
-  declare export function convertToObject(
+  declare function convertToObject(
     sourceFile: JsonSourceFile,
     errors: Push<Diagnostic>
   ): any;
 
-  /**
- * Parse the contents of a config file (tsconfig.json).
- * @param json The contents of the config file to parse
- * @param host Instance of ParseConfigHost used to enumerate files in folder.
- * @param basePath A root directory to resolve relative path entries in the config
-file to. e.g. outDir
-*/
-  declare export function parseJsonConfigFileContent(
+  declare function parseJsonConfigFileContent(
     json: any,
     host: ParseConfigHost,
     basePath: string,
@@ -7515,14 +7329,7 @@ file to. e.g. outDir
     extraFileExtensions?: $ReadOnlyArray<FileExtensionInfo>
   ): ParsedCommandLine;
 
-  /**
- * Parse the contents of a config file (tsconfig.json).
- * @param jsonNode The contents of the config file to parse
- * @param host Instance of ParseConfigHost used to enumerate files in folder.
- * @param basePath A root directory to resolve relative path entries in the config
-file to. e.g. outDir
-*/
-  declare export function parseJsonSourceFileConfigFileContent(
+  declare function parseJsonSourceFileConfigFileContent(
     sourceFile: TsConfigSourceFile,
     host: ParseConfigHost,
     basePath: string,
@@ -7532,7 +7339,7 @@ file to. e.g. outDir
     extraFileExtensions?: $ReadOnlyArray<FileExtensionInfo>
   ): ParsedCommandLine;
 
-  declare export function convertCompilerOptionsFromJson(
+  declare function convertCompilerOptionsFromJson(
     jsonOptions: any,
     basePath: string,
     configFileName?: string
@@ -7541,7 +7348,7 @@ file to. e.g. outDir
     errors: Diagnostic[]
   };
 
-  declare export function convertTypeAcquisitionFromJson(
+  declare function convertTypeAcquisitionFromJson(
     jsonOptions: any,
     basePath: string,
     configFileName?: string
@@ -7550,18 +7357,12 @@ file to. e.g. outDir
     errors: Diagnostic[]
   };
 
-  declare export function getEffectiveTypeRoots(
+  declare function getEffectiveTypeRoots(
     options: CompilerOptions,
     host: GetEffectiveTypeRootsHost
   ): string[] | void;
 
-  /**
- * 
- * @param {string | void} containingFile - file that contains type reference directive, can be undefined if containing file is unknown.
-This is possible in case if resolution is performed for directives specified via 'types' parameter. In this case initial path for secondary lookups
-is assumed to be the same as root directory of the project.
-*/
-  declare export function resolveTypeReferenceDirective(
+  declare function resolveTypeReferenceDirective(
     typeReferenceDirectiveName: string,
     containingFile: string | void,
     options: CompilerOptions,
@@ -7569,59 +7370,47 @@ is assumed to be the same as root directory of the project.
     redirectedReference?: ResolvedProjectReference
   ): ResolvedTypeReferenceDirectiveWithFailedLookupLocations;
 
-  /**
- * Given a set of options, returns the set of type directive names
- *    that should be included for this program automatically.
-This list could either come from the config file,
-   or from enumerating the types root + initial secondary types lookup location.
-More type directives might appear in the program later as a result of loading actual source files;
-   this list is only the set of defaults that are implicitly included.
-*/
-  declare export function getAutomaticTypeDirectiveNames(
+  declare function getAutomaticTypeDirectiveNames(
     options: CompilerOptions,
     host: ModuleResolutionHost
   ): string[];
 
-  /**
-   * Cached module resolutions per containing directory.
-   * This assumes that any module id will have the same resolution for sibling files located in the same folder.
-   */
-  declare export type ModuleResolutionCache = {
+  declare type ModuleResolutionCache = {
+    ...$Exact<NonRelativeModuleNameResolutionCache>,
+
     getOrCreateCacheForDirectory(
       directoryName: string,
       redirectedReference?: ResolvedProjectReference
     ): Map<ResolvedModuleWithFailedLookupLocations>
-  } & NonRelativeModuleNameResolutionCache;
+  };
 
-  /**
-   * Stored map from non-relative module name to a table: directory -> result of module lookup in this directory
-   * We support only non-relative module names because resolution of relative module names is usually more deterministic and thus less expensive.
-   */
-  declare export interface NonRelativeModuleNameResolutionCache {
+  declare type NonRelativeModuleNameResolutionCache = {
     getOrCreateCacheForModuleName(
       nonRelativeModuleName: string,
       redirectedReference?: ResolvedProjectReference
-    ): PerModuleNameCache;
-  }
-  declare export interface PerModuleNameCache {
-    get(directory: string): ResolvedModuleWithFailedLookupLocations | void;
+    ): PerModuleNameCache
+  };
+
+  declare type PerModuleNameCache = {
+    get(directory: string): ResolvedModuleWithFailedLookupLocations | void,
     set(
       directory: string,
       result: ResolvedModuleWithFailedLookupLocations
-    ): void;
-  }
-  declare export function createModuleResolutionCache(
+    ): void
+  };
+
+  declare function createModuleResolutionCache(
     currentDirectory: string,
     getCanonicalFileName: (s: string) => string
   ): ModuleResolutionCache;
 
-  declare export function resolveModuleNameFromCache(
+  declare function resolveModuleNameFromCache(
     moduleName: string,
     containingFile: string,
     cache: ModuleResolutionCache
   ): ResolvedModuleWithFailedLookupLocations | void;
 
-  declare export function resolveModuleName(
+  declare function resolveModuleName(
     moduleName: string,
     containingFile: string,
     compilerOptions: CompilerOptions,
@@ -7630,7 +7419,7 @@ More type directives might appear in the program later as a result of loading ac
     redirectedReference?: ResolvedProjectReference
   ): ResolvedModuleWithFailedLookupLocations;
 
-  declare export function nodeModuleNameResolver(
+  declare function nodeModuleNameResolver(
     moduleName: string,
     containingFile: string,
     compilerOptions: CompilerOptions,
@@ -7639,7 +7428,7 @@ More type directives might appear in the program later as a result of loading ac
     redirectedReference?: ResolvedProjectReference
   ): ResolvedModuleWithFailedLookupLocations;
 
-  declare export function classicNameResolver(
+  declare function classicNameResolver(
     moduleName: string,
     containingFile: string,
     compilerOptions: CompilerOptions,
@@ -7648,15 +7437,12 @@ More type directives might appear in the program later as a result of loading ac
     redirectedReference?: ResolvedProjectReference
   ): ResolvedModuleWithFailedLookupLocations;
 
-  declare export function createNodeArray<T: Node>(
+  declare function createNodeArray<T: Node>(
     elements?: $ReadOnlyArray<T>,
     hasTrailingComma?: boolean
   ): NodeArray<T>;
 
-  /**
-   * If a node is passed, creates a string literal whose source text is read from a source node during emit.
-   */
-  declare export function createLiteral(
+  declare function createLiteral(
     value:
       | string
       | StringLiteral
@@ -7665,115 +7451,97 @@ More type directives might appear in the program later as a result of loading ac
       | Identifier
   ): StringLiteral;
 
-  declare export function createLiteral(value: number | PseudoBigInt): NumericLiteral;
+  declare function createLiteral(value: number | PseudoBigInt): NumericLiteral;
 
-  declare export function createLiteral(value: boolean): BooleanLiteral;
+  declare function createLiteral(value: boolean): BooleanLiteral;
 
-  declare export function createLiteral(
+  declare function createLiteral(
     value: string | number | PseudoBigInt | boolean
   ): PrimaryExpression;
 
-  declare export function createNumericLiteral(value: string): NumericLiteral;
+  declare function createNumericLiteral(value: string): NumericLiteral;
 
-  declare export function createBigIntLiteral(value: string): BigIntLiteral;
+  declare function createBigIntLiteral(value: string): BigIntLiteral;
 
-  declare export function createStringLiteral(text: string): StringLiteral;
+  declare function createStringLiteral(text: string): StringLiteral;
 
-  declare export function createRegularExpressionLiteral(
+  declare function createRegularExpressionLiteral(
     text: string
   ): RegularExpressionLiteral;
 
-  declare export function createIdentifier(text: string): Identifier;
+  declare function createIdentifier(text: string): Identifier;
 
-  declare export function updateIdentifier(node: Identifier): Identifier;
+  declare function updateIdentifier(node: Identifier): Identifier;
 
-  /**
-   * Create a unique temporary variable.
-   */
-  declare export function createTempVariable(
+  declare function createTempVariable(
     recordTempVariable: ((node: Identifier) => void) | void
   ): Identifier;
 
-  /**
-   * Create a unique temporary variable for use in a loop.
-   */
-  declare export function createLoopVariable(): Identifier;
+  declare function createLoopVariable(): Identifier;
 
-  /**
-   * Create a unique name based on the supplied text.
-   */
-  declare export function createUniqueName(text: string): Identifier;
+  declare function createUniqueName(text: string): Identifier;
 
-  /**
-   * Create a unique name based on the supplied text.
-   */
-  declare export function createOptimisticUniqueName(text: string): Identifier;
+  declare function createOptimisticUniqueName(text: string): Identifier;
 
-  /**
-   * Create a unique name based on the supplied text. This does not consider names injected by the transformer.
-   */
-  declare export function createFileLevelUniqueName(text: string): Identifier;
+  declare function createFileLevelUniqueName(text: string): Identifier;
 
-  /**
-   * Create a unique name generated for a node.
-   */
-  declare export function getGeneratedNameForNode(node: Node | void): Identifier;
+  declare function getGeneratedNameForNode(node: Node | void): Identifier;
 
-  declare export function createToken<TKind: SyntaxKind>(token: TKind): Token<TKind>;
+  declare function createToken<TKind: SyntaxKind>(token: TKind): Token<TKind>;
 
-  declare export function createSuper(): SuperExpression;
+  declare function createSuper(): SuperExpression;
 
-  declare export function createThis(): ThisExpression & Token<SyntaxKind.ThisKeyword>;
+  declare function createThis(): ThisExpression & Token<SyntaxKind.ThisKeyword>;
 
-  declare export function createNull(): NullLiteral & Token<SyntaxKind.NullKeyword>;
+  declare function createNull(): NullLiteral & Token<SyntaxKind.NullKeyword>;
 
-  declare export function createTrue(): BooleanLiteral & Token<SyntaxKind.TrueKeyword>;
+  declare function createTrue(): BooleanLiteral & Token<SyntaxKind.TrueKeyword>;
 
-  declare export function createFalse(): BooleanLiteral &
+  declare function createFalse(): BooleanLiteral &
     Token<SyntaxKind.FalseKeyword>;
 
-  declare export function createModifier<T: $ElementType<Modifier, "kind">>(
+  declare function createModifier<T: $ElementType<Modifier, "kind">>(
     kind: T
   ): Token<T>;
 
-  declare export function createModifiersFromModifierFlags(
+  declare function createModifiersFromModifierFlags(
     flags: ModifierFlags
   ): Modifier[];
 
-  declare export function createQualifiedName(
+  declare function createQualifiedName(
     left: EntityName,
     right: string | Identifier
   ): QualifiedName;
 
-  declare export function updateQualifiedName(
+  declare function updateQualifiedName(
     node: QualifiedName,
     left: EntityName,
     right: Identifier
   ): QualifiedName;
 
-  declare export function createComputedPropertyName(
+  declare function createComputedPropertyName(
     expression: Expression
   ): ComputedPropertyName;
 
-  declare export function updateComputedPropertyName(
+  declare function updateComputedPropertyName(
     node: ComputedPropertyName,
     expression: Expression
   ): ComputedPropertyName;
 
-  declare export function createTypeParameterDeclaration(
+  declare function createTypeParameterDeclaration(
     name: string | Identifier,
     constraint?: TypeNode,
     defaultType?: TypeNode
   ): TypeParameterDeclaration;
 
-  declare export function updateTypeParameterDeclaration(
+  declare function updateTypeParameterDeclaration(
     node: TypeParameterDeclaration,
     name: Identifier,
     constraint: TypeNode | void,
     defaultType: TypeNode | void
   ): TypeParameterDeclaration;
 
-  declare export function createParameter(
+  declare function createParameter(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     dotDotDotToken: DotDotDotToken | void,
@@ -7783,7 +7551,7 @@ More type directives might appear in the program later as a result of loading ac
     initializer?: Expression
   ): ParameterDeclaration;
 
-  declare export function updateParameter(
+  declare function updateParameter(
     node: ParameterDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7794,14 +7562,14 @@ More type directives might appear in the program later as a result of loading ac
     initializer: Expression | void
   ): ParameterDeclaration;
 
-  declare export function createDecorator(expression: Expression): Decorator;
+  declare function createDecorator(expression: Expression): Decorator;
 
-  declare export function updateDecorator(
+  declare function updateDecorator(
     node: Decorator,
     expression: Expression
   ): Decorator;
 
-  declare export function createPropertySignature(
+  declare function createPropertySignature(
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: PropertyName | string,
     questionToken: QuestionToken | void,
@@ -7809,7 +7577,7 @@ More type directives might appear in the program later as a result of loading ac
     initializer: Expression | void
   ): PropertySignature;
 
-  declare export function updatePropertySignature(
+  declare function updatePropertySignature(
     node: PropertySignature,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: PropertyName,
@@ -7818,7 +7586,7 @@ More type directives might appear in the program later as a result of loading ac
     initializer: Expression | void
   ): PropertySignature;
 
-  declare export function createProperty(
+  declare function createProperty(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | PropertyName,
@@ -7827,7 +7595,7 @@ More type directives might appear in the program later as a result of loading ac
     initializer: Expression | void
   ): PropertyDeclaration;
 
-  declare export function updateProperty(
+  declare function updateProperty(
     node: PropertyDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7837,7 +7605,7 @@ More type directives might appear in the program later as a result of loading ac
     initializer: Expression | void
   ): PropertyDeclaration;
 
-  declare export function createMethodSignature(
+  declare function createMethodSignature(
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     type: TypeNode | void,
@@ -7845,7 +7613,7 @@ More type directives might appear in the program later as a result of loading ac
     questionToken: QuestionToken | void
   ): MethodSignature;
 
-  declare export function updateMethodSignature(
+  declare function updateMethodSignature(
     node: MethodSignature,
     typeParameters: NodeArray<TypeParameterDeclaration> | void,
     parameters: NodeArray<ParameterDeclaration>,
@@ -7854,7 +7622,7 @@ More type directives might appear in the program later as a result of loading ac
     questionToken: QuestionToken | void
   ): MethodSignature;
 
-  declare export function createMethod(
+  declare function createMethod(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     asteriskToken: AsteriskToken | void,
@@ -7866,7 +7634,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): MethodDeclaration;
 
-  declare export function updateMethod(
+  declare function updateMethod(
     node: MethodDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7879,14 +7647,14 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): MethodDeclaration;
 
-  declare export function createConstructor(
+  declare function createConstructor(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     body: Block | void
   ): ConstructorDeclaration;
 
-  declare export function updateConstructor(
+  declare function updateConstructor(
     node: ConstructorDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7894,7 +7662,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): ConstructorDeclaration;
 
-  declare export function createGetAccessor(
+  declare function createGetAccessor(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | PropertyName,
@@ -7903,7 +7671,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): GetAccessorDeclaration;
 
-  declare export function updateGetAccessor(
+  declare function updateGetAccessor(
     node: GetAccessorDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7913,7 +7681,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): GetAccessorDeclaration;
 
-  declare export function createSetAccessor(
+  declare function createSetAccessor(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | PropertyName,
@@ -7921,7 +7689,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): SetAccessorDeclaration;
 
-  declare export function updateSetAccessor(
+  declare function updateSetAccessor(
     node: SetAccessorDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7930,40 +7698,40 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): SetAccessorDeclaration;
 
-  declare export function createCallSignature(
+  declare function createCallSignature(
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     type: TypeNode | void
   ): CallSignatureDeclaration;
 
-  declare export function updateCallSignature(
+  declare function updateCallSignature(
     node: CallSignatureDeclaration,
     typeParameters: NodeArray<TypeParameterDeclaration> | void,
     parameters: NodeArray<ParameterDeclaration>,
     type: TypeNode | void
   ): CallSignatureDeclaration;
 
-  declare export function createConstructSignature(
+  declare function createConstructSignature(
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     type: TypeNode | void
   ): ConstructSignatureDeclaration;
 
-  declare export function updateConstructSignature(
+  declare function updateConstructSignature(
     node: ConstructSignatureDeclaration,
     typeParameters: NodeArray<TypeParameterDeclaration> | void,
     parameters: NodeArray<ParameterDeclaration>,
     type: TypeNode | void
   ): ConstructSignatureDeclaration;
 
-  declare export function createIndexSignature(
+  declare function createIndexSignature(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     type: TypeNode
   ): IndexSignatureDeclaration;
 
-  declare export function updateIndexSignature(
+  declare function updateIndexSignature(
     node: IndexSignatureDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -7971,135 +7739,135 @@ More type directives might appear in the program later as a result of loading ac
     type: TypeNode
   ): IndexSignatureDeclaration;
 
-  declare export function createKeywordTypeNode(
+  declare function createKeywordTypeNode(
     kind: $ElementType<KeywordTypeNode, "kind">
   ): KeywordTypeNode;
 
-  declare export function createTypePredicateNode(
+  declare function createTypePredicateNode(
     parameterName: Identifier | ThisTypeNode | string,
     type: TypeNode
   ): TypePredicateNode;
 
-  declare export function updateTypePredicateNode(
+  declare function updateTypePredicateNode(
     node: TypePredicateNode,
     parameterName: Identifier | ThisTypeNode,
     type: TypeNode
   ): TypePredicateNode;
 
-  declare export function createTypeReferenceNode(
+  declare function createTypeReferenceNode(
     typeName: string | EntityName,
     typeArguments: $ReadOnlyArray<TypeNode> | void
   ): TypeReferenceNode;
 
-  declare export function updateTypeReferenceNode(
+  declare function updateTypeReferenceNode(
     node: TypeReferenceNode,
     typeName: EntityName,
     typeArguments: NodeArray<TypeNode> | void
   ): TypeReferenceNode;
 
-  declare export function createFunctionTypeNode(
+  declare function createFunctionTypeNode(
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     type: TypeNode | void
   ): FunctionTypeNode;
 
-  declare export function updateFunctionTypeNode(
+  declare function updateFunctionTypeNode(
     node: FunctionTypeNode,
     typeParameters: NodeArray<TypeParameterDeclaration> | void,
     parameters: NodeArray<ParameterDeclaration>,
     type: TypeNode | void
   ): FunctionTypeNode;
 
-  declare export function createConstructorTypeNode(
+  declare function createConstructorTypeNode(
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
     type: TypeNode | void
   ): ConstructorTypeNode;
 
-  declare export function updateConstructorTypeNode(
+  declare function updateConstructorTypeNode(
     node: ConstructorTypeNode,
     typeParameters: NodeArray<TypeParameterDeclaration> | void,
     parameters: NodeArray<ParameterDeclaration>,
     type: TypeNode | void
   ): ConstructorTypeNode;
 
-  declare export function createTypeQueryNode(exprName: EntityName): TypeQueryNode;
+  declare function createTypeQueryNode(exprName: EntityName): TypeQueryNode;
 
-  declare export function updateTypeQueryNode(
+  declare function updateTypeQueryNode(
     node: TypeQueryNode,
     exprName: EntityName
   ): TypeQueryNode;
 
-  declare export function createTypeLiteralNode(
+  declare function createTypeLiteralNode(
     members: $ReadOnlyArray<TypeElement> | void
   ): TypeLiteralNode;
 
-  declare export function updateTypeLiteralNode(
+  declare function updateTypeLiteralNode(
     node: TypeLiteralNode,
     members: NodeArray<TypeElement>
   ): TypeLiteralNode;
 
-  declare export function createArrayTypeNode(elementType: TypeNode): ArrayTypeNode;
+  declare function createArrayTypeNode(elementType: TypeNode): ArrayTypeNode;
 
-  declare export function updateArrayTypeNode(
+  declare function updateArrayTypeNode(
     node: ArrayTypeNode,
     elementType: TypeNode
   ): ArrayTypeNode;
 
-  declare export function createTupleTypeNode(
+  declare function createTupleTypeNode(
     elementTypes: $ReadOnlyArray<TypeNode>
   ): TupleTypeNode;
 
-  declare export function updateTupleTypeNode(
+  declare function updateTupleTypeNode(
     node: TupleTypeNode,
     elementTypes: $ReadOnlyArray<TypeNode>
   ): TupleTypeNode;
 
-  declare export function createOptionalTypeNode(type: TypeNode): OptionalTypeNode;
+  declare function createOptionalTypeNode(type: TypeNode): OptionalTypeNode;
 
-  declare export function updateOptionalTypeNode(
+  declare function updateOptionalTypeNode(
     node: OptionalTypeNode,
     type: TypeNode
   ): OptionalTypeNode;
 
-  declare export function createRestTypeNode(type: TypeNode): RestTypeNode;
+  declare function createRestTypeNode(type: TypeNode): RestTypeNode;
 
-  declare export function updateRestTypeNode(
+  declare function updateRestTypeNode(
     node: RestTypeNode,
     type: TypeNode
   ): RestTypeNode;
 
-  declare export function createUnionTypeNode(
+  declare function createUnionTypeNode(
     types: $ReadOnlyArray<TypeNode>
   ): UnionTypeNode;
 
-  declare export function updateUnionTypeNode(
+  declare function updateUnionTypeNode(
     node: UnionTypeNode,
     types: NodeArray<TypeNode>
   ): UnionTypeNode;
 
-  declare export function createIntersectionTypeNode(
+  declare function createIntersectionTypeNode(
     types: $ReadOnlyArray<TypeNode>
   ): IntersectionTypeNode;
 
-  declare export function updateIntersectionTypeNode(
+  declare function updateIntersectionTypeNode(
     node: IntersectionTypeNode,
     types: NodeArray<TypeNode>
   ): IntersectionTypeNode;
 
-  declare export function createUnionOrIntersectionTypeNode(
+  declare function createUnionOrIntersectionTypeNode(
     kind: SyntaxKind.UnionType | SyntaxKind.IntersectionType,
     types: $ReadOnlyArray<TypeNode>
   ): UnionOrIntersectionTypeNode;
 
-  declare export function createConditionalTypeNode(
+  declare function createConditionalTypeNode(
     checkType: TypeNode,
     extendsType: TypeNode,
     trueType: TypeNode,
     falseType: TypeNode
   ): ConditionalTypeNode;
 
-  declare export function updateConditionalTypeNode(
+  declare function updateConditionalTypeNode(
     node: ConditionalTypeNode,
     checkType: TypeNode,
     extendsType: TypeNode,
@@ -8107,23 +7875,23 @@ More type directives might appear in the program later as a result of loading ac
     falseType: TypeNode
   ): ConditionalTypeNode;
 
-  declare export function createInferTypeNode(
+  declare function createInferTypeNode(
     typeParameter: TypeParameterDeclaration
   ): InferTypeNode;
 
-  declare export function updateInferTypeNode(
+  declare function updateInferTypeNode(
     node: InferTypeNode,
     typeParameter: TypeParameterDeclaration
   ): InferTypeNode;
 
-  declare export function createImportTypeNode(
+  declare function createImportTypeNode(
     argument: TypeNode,
     qualifier?: EntityName,
     typeArguments?: $ReadOnlyArray<TypeNode>,
     isTypeOf?: boolean
   ): ImportTypeNode;
 
-  declare export function updateImportTypeNode(
+  declare function updateImportTypeNode(
     node: ImportTypeNode,
     argument: TypeNode,
     qualifier?: EntityName,
@@ -8131,48 +7899,48 @@ More type directives might appear in the program later as a result of loading ac
     isTypeOf?: boolean
   ): ImportTypeNode;
 
-  declare export function createParenthesizedType(
+  declare function createParenthesizedType(
     type: TypeNode
   ): ParenthesizedTypeNode;
 
-  declare export function updateParenthesizedType(
+  declare function updateParenthesizedType(
     node: ParenthesizedTypeNode,
     type: TypeNode
   ): ParenthesizedTypeNode;
 
-  declare export function createThisTypeNode(): ThisTypeNode;
+  declare function createThisTypeNode(): ThisTypeNode;
 
-  declare export function createTypeOperatorNode(type: TypeNode): TypeOperatorNode;
+  declare function createTypeOperatorNode(type: TypeNode): TypeOperatorNode;
 
-  declare export function createTypeOperatorNode(
+  declare function createTypeOperatorNode(
     operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword,
     type: TypeNode
   ): TypeOperatorNode;
 
-  declare export function updateTypeOperatorNode(
+  declare function updateTypeOperatorNode(
     node: TypeOperatorNode,
     type: TypeNode
   ): TypeOperatorNode;
 
-  declare export function createIndexedAccessTypeNode(
+  declare function createIndexedAccessTypeNode(
     objectType: TypeNode,
     indexType: TypeNode
   ): IndexedAccessTypeNode;
 
-  declare export function updateIndexedAccessTypeNode(
+  declare function updateIndexedAccessTypeNode(
     node: IndexedAccessTypeNode,
     objectType: TypeNode,
     indexType: TypeNode
   ): IndexedAccessTypeNode;
 
-  declare export function createMappedTypeNode(
+  declare function createMappedTypeNode(
     readonlyToken: ReadonlyToken | PlusToken | MinusToken | void,
     typeParameter: TypeParameterDeclaration,
     questionToken: QuestionToken | PlusToken | MinusToken | void,
     type: TypeNode | void
   ): MappedTypeNode;
 
-  declare export function updateMappedTypeNode(
+  declare function updateMappedTypeNode(
     node: MappedTypeNode,
     readonlyToken: ReadonlyToken | PlusToken | MinusToken | void,
     typeParameter: TypeParameterDeclaration,
@@ -8180,41 +7948,41 @@ More type directives might appear in the program later as a result of loading ac
     type: TypeNode | void
   ): MappedTypeNode;
 
-  declare export function createLiteralTypeNode(
+  declare function createLiteralTypeNode(
     literal: $ElementType<LiteralTypeNode, "literal">
   ): LiteralTypeNode;
 
-  declare export function updateLiteralTypeNode(
+  declare function updateLiteralTypeNode(
     node: LiteralTypeNode,
     literal: $ElementType<LiteralTypeNode, "literal">
   ): LiteralTypeNode;
 
-  declare export function createObjectBindingPattern(
+  declare function createObjectBindingPattern(
     elements: $ReadOnlyArray<BindingElement>
   ): ObjectBindingPattern;
 
-  declare export function updateObjectBindingPattern(
+  declare function updateObjectBindingPattern(
     node: ObjectBindingPattern,
     elements: $ReadOnlyArray<BindingElement>
   ): ObjectBindingPattern;
 
-  declare export function createArrayBindingPattern(
+  declare function createArrayBindingPattern(
     elements: $ReadOnlyArray<ArrayBindingElement>
   ): ArrayBindingPattern;
 
-  declare export function updateArrayBindingPattern(
+  declare function updateArrayBindingPattern(
     node: ArrayBindingPattern,
     elements: $ReadOnlyArray<ArrayBindingElement>
   ): ArrayBindingPattern;
 
-  declare export function createBindingElement(
+  declare function createBindingElement(
     dotDotDotToken: DotDotDotToken | void,
     propertyName: string | PropertyName | void,
     name: string | BindingName,
     initializer?: Expression
   ): BindingElement;
 
-  declare export function updateBindingElement(
+  declare function updateBindingElement(
     node: BindingElement,
     dotDotDotToken: DotDotDotToken | void,
     propertyName: PropertyName | void,
@@ -8222,125 +7990,117 @@ More type directives might appear in the program later as a result of loading ac
     initializer: Expression | void
   ): BindingElement;
 
-  declare export function createArrayLiteral(
+  declare function createArrayLiteral(
     elements?: $ReadOnlyArray<Expression>,
     multiLine?: boolean
   ): ArrayLiteralExpression;
 
-  declare export function updateArrayLiteral(
+  declare function updateArrayLiteral(
     node: ArrayLiteralExpression,
     elements: $ReadOnlyArray<Expression>
   ): ArrayLiteralExpression;
 
-  declare export function createObjectLiteral(
+  declare function createObjectLiteral(
     properties?: $ReadOnlyArray<ObjectLiteralElementLike>,
     multiLine?: boolean
   ): ObjectLiteralExpression;
 
-  declare export function updateObjectLiteral(
+  declare function updateObjectLiteral(
     node: ObjectLiteralExpression,
     properties: $ReadOnlyArray<ObjectLiteralElementLike>
   ): ObjectLiteralExpression;
 
-  declare export function createPropertyAccess(
+  declare function createPropertyAccess(
     expression: Expression,
     name: string | Identifier | void
   ): PropertyAccessExpression;
 
-  declare export function updatePropertyAccess(
+  declare function updatePropertyAccess(
     node: PropertyAccessExpression,
     expression: Expression,
     name: Identifier
   ): PropertyAccessExpression;
 
-  declare export function createElementAccess(
+  declare function createElementAccess(
     expression: Expression,
     index: number | Expression
   ): ElementAccessExpression;
 
-  declare export function updateElementAccess(
+  declare function updateElementAccess(
     node: ElementAccessExpression,
     expression: Expression,
     argumentExpression: Expression
   ): ElementAccessExpression;
 
-  declare export function createCall(
+  declare function createCall(
     expression: Expression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     argumentsArray: $ReadOnlyArray<Expression> | void
   ): CallExpression;
 
-  declare export function updateCall(
+  declare function updateCall(
     node: CallExpression,
     expression: Expression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     argumentsArray: $ReadOnlyArray<Expression>
   ): CallExpression;
 
-  declare export function createNew(
+  declare function createNew(
     expression: Expression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     argumentsArray: $ReadOnlyArray<Expression> | void
   ): NewExpression;
 
-  declare export function updateNew(
+  declare function updateNew(
     node: NewExpression,
     expression: Expression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     argumentsArray: $ReadOnlyArray<Expression> | void
   ): NewExpression;
 
-  /**
-   *
-   * @deprecated
-   */
-  declare export function createTaggedTemplate(
+  declare function createTaggedTemplate(
     tag: Expression,
     template: TemplateLiteral
   ): TaggedTemplateExpression;
 
-  declare export function createTaggedTemplate(
+  declare function createTaggedTemplate(
     tag: Expression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     template: TemplateLiteral
   ): TaggedTemplateExpression;
 
-  /**
-   *
-   * @deprecated
-   */
-  declare export function updateTaggedTemplate(
+  declare function updateTaggedTemplate(
     node: TaggedTemplateExpression,
     tag: Expression,
     template: TemplateLiteral
   ): TaggedTemplateExpression;
 
-  declare export function updateTaggedTemplate(
+  declare function updateTaggedTemplate(
     node: TaggedTemplateExpression,
     tag: Expression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     template: TemplateLiteral
   ): TaggedTemplateExpression;
 
-  declare export function createTypeAssertion(
+  declare function createTypeAssertion(
     type: TypeNode,
     expression: Expression
   ): TypeAssertion;
 
-  declare export function updateTypeAssertion(
+  declare function updateTypeAssertion(
     node: TypeAssertion,
     type: TypeNode,
     expression: Expression
   ): TypeAssertion;
 
-  declare export function createParen(expression: Expression): ParenthesizedExpression;
+  declare function createParen(expression: Expression): ParenthesizedExpression;
 
-  declare export function updateParen(
+  declare function updateParen(
     node: ParenthesizedExpression,
     expression: Expression
   ): ParenthesizedExpression;
 
-  declare export function createFunctionExpression(
+  declare function createFunctionExpression(
     modifiers: $ReadOnlyArray<Modifier> | void,
     asteriskToken: AsteriskToken | void,
     name: string | Identifier | void,
@@ -8350,7 +8110,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block
   ): FunctionExpression;
 
-  declare export function updateFunctionExpression(
+  declare function updateFunctionExpression(
     node: FunctionExpression,
     modifiers: $ReadOnlyArray<Modifier> | void,
     asteriskToken: AsteriskToken | void,
@@ -8361,7 +8121,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block
   ): FunctionExpression;
 
-  declare export function createArrowFunction(
+  declare function createArrowFunction(
     modifiers: $ReadOnlyArray<Modifier> | void,
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
     parameters: $ReadOnlyArray<ParameterDeclaration>,
@@ -8370,7 +8130,7 @@ More type directives might appear in the program later as a result of loading ac
     body: ConciseBody
   ): ArrowFunction;
 
-  declare export function updateArrowFunction(
+  declare function updateArrowFunction(
     node: ArrowFunction,
     modifiers: $ReadOnlyArray<Modifier> | void,
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
@@ -8380,78 +8140,74 @@ More type directives might appear in the program later as a result of loading ac
     body: ConciseBody
   ): ArrowFunction;
 
-  declare export function createDelete(expression: Expression): DeleteExpression;
+  declare function createDelete(expression: Expression): DeleteExpression;
 
-  declare export function updateDelete(
+  declare function updateDelete(
     node: DeleteExpression,
     expression: Expression
   ): DeleteExpression;
 
-  declare export function createTypeOf(expression: Expression): TypeOfExpression;
+  declare function createTypeOf(expression: Expression): TypeOfExpression;
 
-  declare export function updateTypeOf(
+  declare function updateTypeOf(
     node: TypeOfExpression,
     expression: Expression
   ): TypeOfExpression;
 
-  declare export function createVoid(expression: Expression): VoidExpression;
+  declare function createVoid(expression: Expression): VoidExpression;
 
-  declare export function updateVoid(
+  declare function updateVoid(
     node: VoidExpression,
     expression: Expression
   ): VoidExpression;
 
-  declare export function createAwait(expression: Expression): AwaitExpression;
+  declare function createAwait(expression: Expression): AwaitExpression;
 
-  declare export function updateAwait(
+  declare function updateAwait(
     node: AwaitExpression,
     expression: Expression
   ): AwaitExpression;
 
-  declare export function createPrefix(
+  declare function createPrefix(
     operator: PrefixUnaryOperator,
     operand: Expression
   ): PrefixUnaryExpression;
 
-  declare export function updatePrefix(
+  declare function updatePrefix(
     node: PrefixUnaryExpression,
     operand: Expression
   ): PrefixUnaryExpression;
 
-  declare export function createPostfix(
+  declare function createPostfix(
     operand: Expression,
     operator: PostfixUnaryOperator
   ): PostfixUnaryExpression;
 
-  declare export function updatePostfix(
+  declare function updatePostfix(
     node: PostfixUnaryExpression,
     operand: Expression
   ): PostfixUnaryExpression;
 
-  declare export function createBinary(
+  declare function createBinary(
     left: Expression,
     operator: BinaryOperator | BinaryOperatorToken,
     right: Expression
   ): BinaryExpression;
 
-  declare export function updateBinary(
+  declare function updateBinary(
     node: BinaryExpression,
     left: Expression,
     right: Expression,
     operator?: BinaryOperator | BinaryOperatorToken
   ): BinaryExpression;
 
-  /**
-   *
-   * @deprecated
-   */
-  declare export function createConditional(
+  declare function createConditional(
     condition: Expression,
     whenTrue: Expression,
     whenFalse: Expression
   ): ConditionalExpression;
 
-  declare export function createConditional(
+  declare function createConditional(
     condition: Expression,
     questionToken: QuestionToken,
     whenTrue: Expression,
@@ -8459,7 +8215,7 @@ More type directives might appear in the program later as a result of loading ac
     whenFalse: Expression
   ): ConditionalExpression;
 
-  declare export function updateConditional(
+  declare function updateConditional(
     node: ConditionalExpression,
     condition: Expression,
     questionToken: Token<SyntaxKind.QuestionToken>,
@@ -8468,48 +8224,48 @@ More type directives might appear in the program later as a result of loading ac
     whenFalse: Expression
   ): ConditionalExpression;
 
-  declare export function createTemplateExpression(
+  declare function createTemplateExpression(
     head: TemplateHead,
     templateSpans: $ReadOnlyArray<TemplateSpan>
   ): TemplateExpression;
 
-  declare export function updateTemplateExpression(
+  declare function updateTemplateExpression(
     node: TemplateExpression,
     head: TemplateHead,
     templateSpans: $ReadOnlyArray<TemplateSpan>
   ): TemplateExpression;
 
-  declare export function createTemplateHead(text: string): TemplateHead;
+  declare function createTemplateHead(text: string): TemplateHead;
 
-  declare export function createTemplateMiddle(text: string): TemplateMiddle;
+  declare function createTemplateMiddle(text: string): TemplateMiddle;
 
-  declare export function createTemplateTail(text: string): TemplateTail;
+  declare function createTemplateTail(text: string): TemplateTail;
 
-  declare export function createNoSubstitutionTemplateLiteral(
+  declare function createNoSubstitutionTemplateLiteral(
     text: string
   ): NoSubstitutionTemplateLiteral;
 
-  declare export function createYield(expression?: Expression): YieldExpression;
+  declare function createYield(expression?: Expression): YieldExpression;
 
-  declare export function createYield(
+  declare function createYield(
     asteriskToken: AsteriskToken | void,
     expression: Expression
   ): YieldExpression;
 
-  declare export function updateYield(
+  declare function updateYield(
     node: YieldExpression,
     asteriskToken: AsteriskToken | void,
     expression: Expression
   ): YieldExpression;
 
-  declare export function createSpread(expression: Expression): SpreadElement;
+  declare function createSpread(expression: Expression): SpreadElement;
 
-  declare export function updateSpread(
+  declare function updateSpread(
     node: SpreadElement,
     expression: Expression
   ): SpreadElement;
 
-  declare export function createClassExpression(
+  declare function createClassExpression(
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | Identifier | void,
     typeParameters: $ReadOnlyArray<TypeParameterDeclaration> | void,
@@ -8517,7 +8273,7 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<ClassElement>
   ): ClassExpression;
 
-  declare export function updateClassExpression(
+  declare function updateClassExpression(
     node: ClassExpression,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: Identifier | void,
@@ -8526,141 +8282,141 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<ClassElement>
   ): ClassExpression;
 
-  declare export function createOmittedExpression(): OmittedExpression;
+  declare function createOmittedExpression(): OmittedExpression;
 
-  declare export function createExpressionWithTypeArguments(
+  declare function createExpressionWithTypeArguments(
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     expression: Expression
   ): ExpressionWithTypeArguments;
 
-  declare export function updateExpressionWithTypeArguments(
+  declare function updateExpressionWithTypeArguments(
     node: ExpressionWithTypeArguments,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     expression: Expression
   ): ExpressionWithTypeArguments;
 
-  declare export function createAsExpression(
+  declare function createAsExpression(
     expression: Expression,
     type: TypeNode
   ): AsExpression;
 
-  declare export function updateAsExpression(
+  declare function updateAsExpression(
     node: AsExpression,
     expression: Expression,
     type: TypeNode
   ): AsExpression;
 
-  declare export function createNonNullExpression(
+  declare function createNonNullExpression(
     expression: Expression
   ): NonNullExpression;
 
-  declare export function updateNonNullExpression(
+  declare function updateNonNullExpression(
     node: NonNullExpression,
     expression: Expression
   ): NonNullExpression;
 
-  declare export function createMetaProperty(
+  declare function createMetaProperty(
     keywordToken: $ElementType<MetaProperty, "keywordToken">,
     name: Identifier
   ): MetaProperty;
 
-  declare export function updateMetaProperty(
+  declare function updateMetaProperty(
     node: MetaProperty,
     name: Identifier
   ): MetaProperty;
 
-  declare export function createTemplateSpan(
+  declare function createTemplateSpan(
     expression: Expression,
     literal: TemplateMiddle | TemplateTail
   ): TemplateSpan;
 
-  declare export function updateTemplateSpan(
+  declare function updateTemplateSpan(
     node: TemplateSpan,
     expression: Expression,
     literal: TemplateMiddle | TemplateTail
   ): TemplateSpan;
 
-  declare export function createSemicolonClassElement(): SemicolonClassElement;
+  declare function createSemicolonClassElement(): SemicolonClassElement;
 
-  declare export function createBlock(
+  declare function createBlock(
     statements: $ReadOnlyArray<Statement>,
     multiLine?: boolean
   ): Block;
 
-  declare export function updateBlock(
+  declare function updateBlock(
     node: Block,
     statements: $ReadOnlyArray<Statement>
   ): Block;
 
-  declare export function createVariableStatement(
+  declare function createVariableStatement(
     modifiers: $ReadOnlyArray<Modifier> | void,
     declarationList:
       | VariableDeclarationList
       | $ReadOnlyArray<VariableDeclaration>
   ): VariableStatement;
 
-  declare export function updateVariableStatement(
+  declare function updateVariableStatement(
     node: VariableStatement,
     modifiers: $ReadOnlyArray<Modifier> | void,
     declarationList: VariableDeclarationList
   ): VariableStatement;
 
-  declare export function createEmptyStatement(): EmptyStatement;
+  declare function createEmptyStatement(): EmptyStatement;
 
-  declare export function createExpressionStatement(
+  declare function createExpressionStatement(
     expression: Expression
   ): ExpressionStatement;
 
-  declare export function updateExpressionStatement(
+  declare function updateExpressionStatement(
     node: ExpressionStatement,
     expression: Expression
   ): ExpressionStatement;
 
-  declare export var createStatement: typeof createExpressionStatement;
-  declare export var updateStatement: typeof updateExpressionStatement;
-  declare export function createIf(
+  declare var createStatement: typeof createExpressionStatement;
+  declare var updateStatement: typeof updateExpressionStatement;
+  declare function createIf(
     expression: Expression,
     thenStatement: Statement,
     elseStatement?: Statement
   ): IfStatement;
 
-  declare export function updateIf(
+  declare function updateIf(
     node: IfStatement,
     expression: Expression,
     thenStatement: Statement,
     elseStatement: Statement | void
   ): IfStatement;
 
-  declare export function createDo(
+  declare function createDo(
     statement: Statement,
     expression: Expression
   ): DoStatement;
 
-  declare export function updateDo(
+  declare function updateDo(
     node: DoStatement,
     statement: Statement,
     expression: Expression
   ): DoStatement;
 
-  declare export function createWhile(
+  declare function createWhile(
     expression: Expression,
     statement: Statement
   ): WhileStatement;
 
-  declare export function updateWhile(
+  declare function updateWhile(
     node: WhileStatement,
     expression: Expression,
     statement: Statement
   ): WhileStatement;
 
-  declare export function createFor(
+  declare function createFor(
     initializer: ForInitializer | void,
     condition: Expression | void,
     incrementor: Expression | void,
     statement: Statement
   ): ForStatement;
 
-  declare export function updateFor(
+  declare function updateFor(
     node: ForStatement,
     initializer: ForInitializer | void,
     condition: Expression | void,
@@ -8668,27 +8424,27 @@ More type directives might appear in the program later as a result of loading ac
     statement: Statement
   ): ForStatement;
 
-  declare export function createForIn(
+  declare function createForIn(
     initializer: ForInitializer,
     expression: Expression,
     statement: Statement
   ): ForInStatement;
 
-  declare export function updateForIn(
+  declare function updateForIn(
     node: ForInStatement,
     initializer: ForInitializer,
     expression: Expression,
     statement: Statement
   ): ForInStatement;
 
-  declare export function createForOf(
+  declare function createForOf(
     awaitModifier: AwaitKeywordToken | void,
     initializer: ForInitializer,
     expression: Expression,
     statement: Statement
   ): ForOfStatement;
 
-  declare export function updateForOf(
+  declare function updateForOf(
     node: ForOfStatement,
     awaitModifier: AwaitKeywordToken | void,
     initializer: ForInitializer,
@@ -8696,108 +8452,108 @@ More type directives might appear in the program later as a result of loading ac
     statement: Statement
   ): ForOfStatement;
 
-  declare export function createContinue(
+  declare function createContinue(
     label?: string | Identifier
   ): ContinueStatement;
 
-  declare export function updateContinue(
+  declare function updateContinue(
     node: ContinueStatement,
     label: Identifier | void
   ): ContinueStatement;
 
-  declare export function createBreak(label?: string | Identifier): BreakStatement;
+  declare function createBreak(label?: string | Identifier): BreakStatement;
 
-  declare export function updateBreak(
+  declare function updateBreak(
     node: BreakStatement,
     label: Identifier | void
   ): BreakStatement;
 
-  declare export function createReturn(expression?: Expression): ReturnStatement;
+  declare function createReturn(expression?: Expression): ReturnStatement;
 
-  declare export function updateReturn(
+  declare function updateReturn(
     node: ReturnStatement,
     expression: Expression | void
   ): ReturnStatement;
 
-  declare export function createWith(
+  declare function createWith(
     expression: Expression,
     statement: Statement
   ): WithStatement;
 
-  declare export function updateWith(
+  declare function updateWith(
     node: WithStatement,
     expression: Expression,
     statement: Statement
   ): WithStatement;
 
-  declare export function createSwitch(
+  declare function createSwitch(
     expression: Expression,
     caseBlock: CaseBlock
   ): SwitchStatement;
 
-  declare export function updateSwitch(
+  declare function updateSwitch(
     node: SwitchStatement,
     expression: Expression,
     caseBlock: CaseBlock
   ): SwitchStatement;
 
-  declare export function createLabel(
+  declare function createLabel(
     label: string | Identifier,
     statement: Statement
   ): LabeledStatement;
 
-  declare export function updateLabel(
+  declare function updateLabel(
     node: LabeledStatement,
     label: Identifier,
     statement: Statement
   ): LabeledStatement;
 
-  declare export function createThrow(expression: Expression): ThrowStatement;
+  declare function createThrow(expression: Expression): ThrowStatement;
 
-  declare export function updateThrow(
+  declare function updateThrow(
     node: ThrowStatement,
     expression: Expression
   ): ThrowStatement;
 
-  declare export function createTry(
+  declare function createTry(
     tryBlock: Block,
     catchClause: CatchClause | void,
     finallyBlock: Block | void
   ): TryStatement;
 
-  declare export function updateTry(
+  declare function updateTry(
     node: TryStatement,
     tryBlock: Block,
     catchClause: CatchClause | void,
     finallyBlock: Block | void
   ): TryStatement;
 
-  declare export function createDebuggerStatement(): DebuggerStatement;
+  declare function createDebuggerStatement(): DebuggerStatement;
 
-  declare export function createVariableDeclaration(
+  declare function createVariableDeclaration(
     name: string | BindingName,
     type?: TypeNode,
     initializer?: Expression
   ): VariableDeclaration;
 
-  declare export function updateVariableDeclaration(
+  declare function updateVariableDeclaration(
     node: VariableDeclaration,
     name: BindingName,
     type: TypeNode | void,
     initializer: Expression | void
   ): VariableDeclaration;
 
-  declare export function createVariableDeclarationList(
+  declare function createVariableDeclarationList(
     declarations: $ReadOnlyArray<VariableDeclaration>,
     flags?: NodeFlags
   ): VariableDeclarationList;
 
-  declare export function updateVariableDeclarationList(
+  declare function updateVariableDeclarationList(
     node: VariableDeclarationList,
     declarations: $ReadOnlyArray<VariableDeclaration>
   ): VariableDeclarationList;
 
-  declare export function createFunctionDeclaration(
+  declare function createFunctionDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     asteriskToken: AsteriskToken | void,
@@ -8808,7 +8564,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): FunctionDeclaration;
 
-  declare export function updateFunctionDeclaration(
+  declare function updateFunctionDeclaration(
     node: FunctionDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8820,7 +8576,7 @@ More type directives might appear in the program later as a result of loading ac
     body: Block | void
   ): FunctionDeclaration;
 
-  declare export function createClassDeclaration(
+  declare function createClassDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | Identifier | void,
@@ -8829,7 +8585,7 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<ClassElement>
   ): ClassDeclaration;
 
-  declare export function updateClassDeclaration(
+  declare function updateClassDeclaration(
     node: ClassDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8839,7 +8595,7 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<ClassElement>
   ): ClassDeclaration;
 
-  declare export function createInterfaceDeclaration(
+  declare function createInterfaceDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | Identifier,
@@ -8848,7 +8604,7 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<TypeElement>
   ): InterfaceDeclaration;
 
-  declare export function updateInterfaceDeclaration(
+  declare function updateInterfaceDeclaration(
     node: InterfaceDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8858,7 +8614,7 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<TypeElement>
   ): InterfaceDeclaration;
 
-  declare export function createTypeAliasDeclaration(
+  declare function createTypeAliasDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | Identifier,
@@ -8866,7 +8622,7 @@ More type directives might appear in the program later as a result of loading ac
     type: TypeNode
   ): TypeAliasDeclaration;
 
-  declare export function updateTypeAliasDeclaration(
+  declare function updateTypeAliasDeclaration(
     node: TypeAliasDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8875,14 +8631,14 @@ More type directives might appear in the program later as a result of loading ac
     type: TypeNode
   ): TypeAliasDeclaration;
 
-  declare export function createEnumDeclaration(
+  declare function createEnumDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | Identifier,
     members: $ReadOnlyArray<EnumMember>
   ): EnumDeclaration;
 
-  declare export function updateEnumDeclaration(
+  declare function updateEnumDeclaration(
     node: EnumDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8890,7 +8646,7 @@ More type directives might appear in the program later as a result of loading ac
     members: $ReadOnlyArray<EnumMember>
   ): EnumDeclaration;
 
-  declare export function createModuleDeclaration(
+  declare function createModuleDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: ModuleName,
@@ -8898,7 +8654,7 @@ More type directives might appear in the program later as a result of loading ac
     flags?: NodeFlags
   ): ModuleDeclaration;
 
-  declare export function updateModuleDeclaration(
+  declare function updateModuleDeclaration(
     node: ModuleDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8906,41 +8662,41 @@ More type directives might appear in the program later as a result of loading ac
     body: ModuleBody | void
   ): ModuleDeclaration;
 
-  declare export function createModuleBlock(
+  declare function createModuleBlock(
     statements: $ReadOnlyArray<Statement>
   ): ModuleBlock;
 
-  declare export function updateModuleBlock(
+  declare function updateModuleBlock(
     node: ModuleBlock,
     statements: $ReadOnlyArray<Statement>
   ): ModuleBlock;
 
-  declare export function createCaseBlock(
+  declare function createCaseBlock(
     clauses: $ReadOnlyArray<CaseOrDefaultClause>
   ): CaseBlock;
 
-  declare export function updateCaseBlock(
+  declare function updateCaseBlock(
     node: CaseBlock,
     clauses: $ReadOnlyArray<CaseOrDefaultClause>
   ): CaseBlock;
 
-  declare export function createNamespaceExportDeclaration(
+  declare function createNamespaceExportDeclaration(
     name: string | Identifier
   ): NamespaceExportDeclaration;
 
-  declare export function updateNamespaceExportDeclaration(
+  declare function updateNamespaceExportDeclaration(
     node: NamespaceExportDeclaration,
     name: Identifier
   ): NamespaceExportDeclaration;
 
-  declare export function createImportEqualsDeclaration(
+  declare function createImportEqualsDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     name: string | Identifier,
     moduleReference: ModuleReference
   ): ImportEqualsDeclaration;
 
-  declare export function updateImportEqualsDeclaration(
+  declare function updateImportEqualsDeclaration(
     node: ImportEqualsDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8948,14 +8704,14 @@ More type directives might appear in the program later as a result of loading ac
     moduleReference: ModuleReference
   ): ImportEqualsDeclaration;
 
-  declare export function createImportDeclaration(
+  declare function createImportDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     importClause: ImportClause | void,
     moduleSpecifier: Expression
   ): ImportDeclaration;
 
-  declare export function updateImportDeclaration(
+  declare function updateImportDeclaration(
     node: ImportDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -8963,66 +8719,66 @@ More type directives might appear in the program later as a result of loading ac
     moduleSpecifier: Expression
   ): ImportDeclaration;
 
-  declare export function createImportClause(
+  declare function createImportClause(
     name: Identifier | void,
     namedBindings: NamedImportBindings | void
   ): ImportClause;
 
-  declare export function updateImportClause(
+  declare function updateImportClause(
     node: ImportClause,
     name: Identifier | void,
     namedBindings: NamedImportBindings | void
   ): ImportClause;
 
-  declare export function createNamespaceImport(name: Identifier): NamespaceImport;
+  declare function createNamespaceImport(name: Identifier): NamespaceImport;
 
-  declare export function updateNamespaceImport(
+  declare function updateNamespaceImport(
     node: NamespaceImport,
     name: Identifier
   ): NamespaceImport;
 
-  declare export function createNamedImports(
+  declare function createNamedImports(
     elements: $ReadOnlyArray<ImportSpecifier>
   ): NamedImports;
 
-  declare export function updateNamedImports(
+  declare function updateNamedImports(
     node: NamedImports,
     elements: $ReadOnlyArray<ImportSpecifier>
   ): NamedImports;
 
-  declare export function createImportSpecifier(
+  declare function createImportSpecifier(
     propertyName: Identifier | void,
     name: Identifier
   ): ImportSpecifier;
 
-  declare export function updateImportSpecifier(
+  declare function updateImportSpecifier(
     node: ImportSpecifier,
     propertyName: Identifier | void,
     name: Identifier
   ): ImportSpecifier;
 
-  declare export function createExportAssignment(
+  declare function createExportAssignment(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     isExportEquals: boolean | void,
     expression: Expression
   ): ExportAssignment;
 
-  declare export function updateExportAssignment(
+  declare function updateExportAssignment(
     node: ExportAssignment,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     expression: Expression
   ): ExportAssignment;
 
-  declare export function createExportDeclaration(
+  declare function createExportDeclaration(
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
     exportClause: NamedExports | void,
     moduleSpecifier?: Expression
   ): ExportDeclaration;
 
-  declare export function updateExportDeclaration(
+  declare function updateExportDeclaration(
     node: ExportDeclaration,
     decorators: $ReadOnlyArray<Decorator> | void,
     modifiers: $ReadOnlyArray<Modifier> | void,
@@ -9030,219 +8786,219 @@ More type directives might appear in the program later as a result of loading ac
     moduleSpecifier: Expression | void
   ): ExportDeclaration;
 
-  declare export function createNamedExports(
+  declare function createNamedExports(
     elements: $ReadOnlyArray<ExportSpecifier>
   ): NamedExports;
 
-  declare export function updateNamedExports(
+  declare function updateNamedExports(
     node: NamedExports,
     elements: $ReadOnlyArray<ExportSpecifier>
   ): NamedExports;
 
-  declare export function createExportSpecifier(
+  declare function createExportSpecifier(
     propertyName: string | Identifier | void,
     name: string | Identifier
   ): ExportSpecifier;
 
-  declare export function updateExportSpecifier(
+  declare function updateExportSpecifier(
     node: ExportSpecifier,
     propertyName: Identifier | void,
     name: Identifier
   ): ExportSpecifier;
 
-  declare export function createExternalModuleReference(
+  declare function createExternalModuleReference(
     expression: Expression
   ): ExternalModuleReference;
 
-  declare export function updateExternalModuleReference(
+  declare function updateExternalModuleReference(
     node: ExternalModuleReference,
     expression: Expression
   ): ExternalModuleReference;
 
-  declare export function createJsxElement(
+  declare function createJsxElement(
     openingElement: JsxOpeningElement,
     children: $ReadOnlyArray<JsxChild>,
     closingElement: JsxClosingElement
   ): JsxElement;
 
-  declare export function updateJsxElement(
+  declare function updateJsxElement(
     node: JsxElement,
     openingElement: JsxOpeningElement,
     children: $ReadOnlyArray<JsxChild>,
     closingElement: JsxClosingElement
   ): JsxElement;
 
-  declare export function createJsxSelfClosingElement(
+  declare function createJsxSelfClosingElement(
     tagName: JsxTagNameExpression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     attributes: JsxAttributes
   ): JsxSelfClosingElement;
 
-  declare export function updateJsxSelfClosingElement(
+  declare function updateJsxSelfClosingElement(
     node: JsxSelfClosingElement,
     tagName: JsxTagNameExpression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     attributes: JsxAttributes
   ): JsxSelfClosingElement;
 
-  declare export function createJsxOpeningElement(
+  declare function createJsxOpeningElement(
     tagName: JsxTagNameExpression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     attributes: JsxAttributes
   ): JsxOpeningElement;
 
-  declare export function updateJsxOpeningElement(
+  declare function updateJsxOpeningElement(
     node: JsxOpeningElement,
     tagName: JsxTagNameExpression,
     typeArguments: $ReadOnlyArray<TypeNode> | void,
     attributes: JsxAttributes
   ): JsxOpeningElement;
 
-  declare export function createJsxClosingElement(
+  declare function createJsxClosingElement(
     tagName: JsxTagNameExpression
   ): JsxClosingElement;
 
-  declare export function updateJsxClosingElement(
+  declare function updateJsxClosingElement(
     node: JsxClosingElement,
     tagName: JsxTagNameExpression
   ): JsxClosingElement;
 
-  declare export function createJsxFragment(
+  declare function createJsxFragment(
     openingFragment: JsxOpeningFragment,
     children: $ReadOnlyArray<JsxChild>,
     closingFragment: JsxClosingFragment
   ): JsxFragment;
 
-  declare export function updateJsxFragment(
+  declare function updateJsxFragment(
     node: JsxFragment,
     openingFragment: JsxOpeningFragment,
     children: $ReadOnlyArray<JsxChild>,
     closingFragment: JsxClosingFragment
   ): JsxFragment;
 
-  declare export function createJsxAttribute(
+  declare function createJsxAttribute(
     name: Identifier,
     initializer: StringLiteral | JsxExpression
   ): JsxAttribute;
 
-  declare export function updateJsxAttribute(
+  declare function updateJsxAttribute(
     node: JsxAttribute,
     name: Identifier,
     initializer: StringLiteral | JsxExpression
   ): JsxAttribute;
 
-  declare export function createJsxAttributes(
+  declare function createJsxAttributes(
     properties: $ReadOnlyArray<JsxAttributeLike>
   ): JsxAttributes;
 
-  declare export function updateJsxAttributes(
+  declare function updateJsxAttributes(
     node: JsxAttributes,
     properties: $ReadOnlyArray<JsxAttributeLike>
   ): JsxAttributes;
 
-  declare export function createJsxSpreadAttribute(
+  declare function createJsxSpreadAttribute(
     expression: Expression
   ): JsxSpreadAttribute;
 
-  declare export function updateJsxSpreadAttribute(
+  declare function updateJsxSpreadAttribute(
     node: JsxSpreadAttribute,
     expression: Expression
   ): JsxSpreadAttribute;
 
-  declare export function createJsxExpression(
+  declare function createJsxExpression(
     dotDotDotToken: DotDotDotToken | void,
     expression: Expression | void
   ): JsxExpression;
 
-  declare export function updateJsxExpression(
+  declare function updateJsxExpression(
     node: JsxExpression,
     expression: Expression | void
   ): JsxExpression;
 
-  declare export function createCaseClause(
+  declare function createCaseClause(
     expression: Expression,
     statements: $ReadOnlyArray<Statement>
   ): CaseClause;
 
-  declare export function updateCaseClause(
+  declare function updateCaseClause(
     node: CaseClause,
     expression: Expression,
     statements: $ReadOnlyArray<Statement>
   ): CaseClause;
 
-  declare export function createDefaultClause(
+  declare function createDefaultClause(
     statements: $ReadOnlyArray<Statement>
   ): DefaultClause;
 
-  declare export function updateDefaultClause(
+  declare function updateDefaultClause(
     node: DefaultClause,
     statements: $ReadOnlyArray<Statement>
   ): DefaultClause;
 
-  declare export function createHeritageClause(
+  declare function createHeritageClause(
     token: $ElementType<HeritageClause, "token">,
     types: $ReadOnlyArray<ExpressionWithTypeArguments>
   ): HeritageClause;
 
-  declare export function updateHeritageClause(
+  declare function updateHeritageClause(
     node: HeritageClause,
     types: $ReadOnlyArray<ExpressionWithTypeArguments>
   ): HeritageClause;
 
-  declare export function createCatchClause(
+  declare function createCatchClause(
     variableDeclaration: string | VariableDeclaration | void,
     block: Block
   ): CatchClause;
 
-  declare export function updateCatchClause(
+  declare function updateCatchClause(
     node: CatchClause,
     variableDeclaration: VariableDeclaration | void,
     block: Block
   ): CatchClause;
 
-  declare export function createPropertyAssignment(
+  declare function createPropertyAssignment(
     name: string | PropertyName,
     initializer: Expression
   ): PropertyAssignment;
 
-  declare export function updatePropertyAssignment(
+  declare function updatePropertyAssignment(
     node: PropertyAssignment,
     name: PropertyName,
     initializer: Expression
   ): PropertyAssignment;
 
-  declare export function createShorthandPropertyAssignment(
+  declare function createShorthandPropertyAssignment(
     name: string | Identifier,
     objectAssignmentInitializer?: Expression
   ): ShorthandPropertyAssignment;
 
-  declare export function updateShorthandPropertyAssignment(
+  declare function updateShorthandPropertyAssignment(
     node: ShorthandPropertyAssignment,
     name: Identifier,
     objectAssignmentInitializer: Expression | void
   ): ShorthandPropertyAssignment;
 
-  declare export function createSpreadAssignment(
+  declare function createSpreadAssignment(
     expression: Expression
   ): SpreadAssignment;
 
-  declare export function updateSpreadAssignment(
+  declare function updateSpreadAssignment(
     node: SpreadAssignment,
     expression: Expression
   ): SpreadAssignment;
 
-  declare export function createEnumMember(
+  declare function createEnumMember(
     name: string | PropertyName,
     initializer?: Expression
   ): EnumMember;
 
-  declare export function updateEnumMember(
+  declare function updateEnumMember(
     node: EnumMember,
     name: PropertyName,
     initializer: Expression | void
   ): EnumMember;
 
-  declare export function updateSourceFileNode(
+  declare function updateSourceFileNode(
     node: SourceFile,
     statements: $ReadOnlyArray<Statement>,
     isDeclarationFile?: boolean,
@@ -9252,70 +9008,55 @@ More type directives might appear in the program later as a result of loading ac
     libReferences?: $ElementType<SourceFile, "libReferenceDirectives">
   ): SourceFile;
 
-  /**
-   * Creates a shallow, memberwise clone of a node for mutation.
-   */
-  declare export function getMutableClone<T: Node>(node: T): T;
+  declare function getMutableClone<T: Node>(node: T): T;
 
-  /**
-   * Creates a synthetic statement to act as a placeholder for a not-emitted statement in
-   * order to preserve comments.
-   * @param original The original statement.
-   */
-  declare export function createNotEmittedStatement(
+  declare function createNotEmittedStatement(
     original: Node
   ): NotEmittedStatement;
 
-  /**
-   * Creates a synthetic expression to act as a placeholder for a not-emitted expression in
-   * order to preserve comments or sourcemap positions.
-   * @param expression The inner expression to emit.
-   * @param original The original outer expression.
-   * @param location The location for the expression. Defaults to the positions from "original" if provided.
-   */
-  declare export function createPartiallyEmittedExpression(
+  declare function createPartiallyEmittedExpression(
     expression: Expression,
     original?: Node
   ): PartiallyEmittedExpression;
 
-  declare export function updatePartiallyEmittedExpression(
+  declare function updatePartiallyEmittedExpression(
     node: PartiallyEmittedExpression,
     expression: Expression
   ): PartiallyEmittedExpression;
 
-  declare export function createCommaList(
+  declare function createCommaList(
     elements: $ReadOnlyArray<Expression>
   ): CommaListExpression;
 
-  declare export function updateCommaList(
+  declare function updateCommaList(
     node: CommaListExpression,
     elements: $ReadOnlyArray<Expression>
   ): CommaListExpression;
 
-  declare export function createBundle(
+  declare function createBundle(
     sourceFiles: $ReadOnlyArray<SourceFile>,
     prepends?: $ReadOnlyArray<UnparsedSource | InputFiles>
   ): Bundle;
 
-  declare export function createUnparsedSourceFile(text: string): UnparsedSource;
+  declare function createUnparsedSourceFile(text: string): UnparsedSource;
 
-  declare export function createUnparsedSourceFile(
+  declare function createUnparsedSourceFile(
     inputFile: InputFiles,
     type: "js" | "dts"
   ): UnparsedSource;
 
-  declare export function createUnparsedSourceFile(
+  declare function createUnparsedSourceFile(
     text: string,
     mapPath: string | void,
     map: string | void
   ): UnparsedSource;
 
-  declare export function createInputFiles(
+  declare function createInputFiles(
     javascriptText: string,
     declarationText: string
   ): InputFiles;
 
-  declare export function createInputFiles(
+  declare function createInputFiles(
     readFileText: (path: string) => string | void,
     javascriptPath: string,
     javascriptMapPath: string | void,
@@ -9323,7 +9064,7 @@ More type directives might appear in the program later as a result of loading ac
     declarationMapPath: string | void
   ): InputFiles;
 
-  declare export function createInputFiles(
+  declare function createInputFiles(
     javascriptText: string,
     declarationText: string,
     javascriptMapPath: string | void,
@@ -9332,170 +9073,142 @@ More type directives might appear in the program later as a result of loading ac
     declarationMapText: string | void
   ): InputFiles;
 
-  declare export function updateBundle(
+  declare function updateBundle(
     node: Bundle,
     sourceFiles: $ReadOnlyArray<SourceFile>,
     prepends?: $ReadOnlyArray<UnparsedSource>
   ): Bundle;
 
-  declare export function createImmediatelyInvokedFunctionExpression(
+  declare function createImmediatelyInvokedFunctionExpression(
     statements: $ReadOnlyArray<Statement>
   ): CallExpression;
 
-  declare export function createImmediatelyInvokedFunctionExpression(
+  declare function createImmediatelyInvokedFunctionExpression(
     statements: $ReadOnlyArray<Statement>,
     param: ParameterDeclaration,
     paramValue: Expression
   ): CallExpression;
 
-  declare export function createImmediatelyInvokedArrowFunction(
+  declare function createImmediatelyInvokedArrowFunction(
     statements: $ReadOnlyArray<Statement>
   ): CallExpression;
 
-  declare export function createImmediatelyInvokedArrowFunction(
+  declare function createImmediatelyInvokedArrowFunction(
     statements: $ReadOnlyArray<Statement>,
     param: ParameterDeclaration,
     paramValue: Expression
   ): CallExpression;
 
-  declare export function createComma(left: Expression, right: Expression): Expression;
+  declare function createComma(left: Expression, right: Expression): Expression;
 
-  declare export function createLessThan(
+  declare function createLessThan(
     left: Expression,
     right: Expression
   ): Expression;
 
-  declare export function createAssignment(
+  declare function createAssignment(
     left: ObjectLiteralExpression | ArrayLiteralExpression,
     right: Expression
   ): DestructuringAssignment;
 
-  declare export function createAssignment(
+  declare function createAssignment(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createStrictEquality(
+  declare function createStrictEquality(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createStrictInequality(
+  declare function createStrictInequality(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createAdd(
+  declare function createAdd(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createSubtract(
+  declare function createSubtract(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createPostfixIncrement(
+  declare function createPostfixIncrement(
     operand: Expression
   ): PostfixUnaryExpression;
 
-  declare export function createLogicalAnd(
+  declare function createLogicalAnd(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createLogicalOr(
+  declare function createLogicalOr(
     left: Expression,
     right: Expression
   ): BinaryExpression;
 
-  declare export function createLogicalNot(operand: Expression): PrefixUnaryExpression;
+  declare function createLogicalNot(operand: Expression): PrefixUnaryExpression;
 
-  declare export function createVoidZero(): VoidExpression;
+  declare function createVoidZero(): VoidExpression;
 
-  declare export function createExportDefault(
+  declare function createExportDefault(
     expression: Expression
   ): ExportAssignment;
 
-  declare export function createExternalModuleExport(
+  declare function createExternalModuleExport(
     exportName: Identifier
   ): ExportDeclaration;
 
-  /**
-   * Clears any EmitNode entries from parse-tree nodes.
-   * @param sourceFile A source file.
-   */
-  declare export function disposeEmitNodes(sourceFile: SourceFile): void;
+  declare function disposeEmitNodes(sourceFile: SourceFile): void;
 
-  declare export function setTextRange<T: TextRange>(
+  declare function setTextRange<T: TextRange>(
     range: T,
     location: TextRange | void
   ): T;
 
-  /**
-   * Sets flags that control emit behavior of a node.
-   */
-  declare export function setEmitFlags<T: Node>(node: T, emitFlags: EmitFlags): T;
+  declare function setEmitFlags<T: Node>(node: T, emitFlags: EmitFlags): T;
 
-  /**
-   * Gets a custom text range to use when emitting source maps.
-   */
-  declare export function getSourceMapRange(node: Node): SourceMapRange;
+  declare function getSourceMapRange(node: Node): SourceMapRange;
 
-  /**
-   * Sets a custom text range to use when emitting source maps.
-   */
-  declare export function setSourceMapRange<T: Node>(
+  declare function setSourceMapRange<T: Node>(
     node: T,
     range: SourceMapRange | void
   ): T;
 
-  /**
-   * Create an external source map source file reference
-   */
-  declare export function createSourceMapSource(
+  declare function createSourceMapSource(
     fileName: string,
     text: string,
     skipTrivia?: (pos: number) => number
   ): SourceMapSource;
 
-  /**
-   * Gets the TextRange to use for source maps for a token of a node.
-   */
-  declare export function getTokenSourceMapRange(
+  declare function getTokenSourceMapRange(
     node: Node,
     token: SyntaxKind
   ): SourceMapRange | void;
 
-  /**
-   * Sets the TextRange to use for source maps for a token of a node.
-   */
-  declare export function setTokenSourceMapRange<T: Node>(
+  declare function setTokenSourceMapRange<T: Node>(
     node: T,
     token: SyntaxKind,
     range: SourceMapRange | void
   ): T;
 
-  /**
-   * Gets a custom text range to use when emitting comments.
-   */
-  declare export function getCommentRange(node: Node): TextRange;
+  declare function getCommentRange(node: Node): TextRange;
 
-  /**
-   * Sets a custom text range to use when emitting comments.
-   */
-  declare export function setCommentRange<T: Node>(node: T, range: TextRange): T;
+  declare function setCommentRange<T: Node>(node: T, range: TextRange): T;
 
-  declare export function getSyntheticLeadingComments(
+  declare function getSyntheticLeadingComments(
     node: Node
   ): SynthesizedComment[] | void;
 
-  declare export function setSyntheticLeadingComments<T: Node>(
+  declare function setSyntheticLeadingComments<T: Node>(
     node: T,
     comments: SynthesizedComment[] | void
   ): T;
 
-  declare export function addSyntheticLeadingComment<T: Node>(
+  declare function addSyntheticLeadingComment<T: Node>(
     node: T,
     kind:
       | SyntaxKind.SingleLineCommentTrivia
@@ -9504,16 +9217,16 @@ More type directives might appear in the program later as a result of loading ac
     hasTrailingNewLine?: boolean
   ): T;
 
-  declare export function getSyntheticTrailingComments(
+  declare function getSyntheticTrailingComments(
     node: Node
   ): SynthesizedComment[] | void;
 
-  declare export function setSyntheticTrailingComments<T: Node>(
+  declare function setSyntheticTrailingComments<T: Node>(
     node: T,
     comments: SynthesizedComment[] | void
   ): T;
 
-  declare export function addSyntheticTrailingComment<T: Node>(
+  declare function addSyntheticTrailingComment<T: Node>(
     node: T,
     kind:
       | SyntaxKind.SingleLineCommentTrivia
@@ -9522,94 +9235,51 @@ More type directives might appear in the program later as a result of loading ac
     hasTrailingNewLine?: boolean
   ): T;
 
-  declare export function moveSyntheticComments<T: Node>(node: T, original: Node): T;
+  declare function moveSyntheticComments<T: Node>(node: T, original: Node): T;
 
-  /**
-   * Gets the constant value to emit for an expression.
-   */
-  declare export function getConstantValue(
+  declare function getConstantValue(
     node: PropertyAccessExpression | ElementAccessExpression
   ): string | number | void;
 
-  /**
-   * Sets the constant value to emit for an expression.
-   */
-  declare export function setConstantValue(
+  declare function setConstantValue(
     node: PropertyAccessExpression | ElementAccessExpression,
     value: string | number
   ): PropertyAccessExpression | ElementAccessExpression;
 
-  /**
-   * Adds an EmitHelper to a node.
-   */
-  declare export function addEmitHelper<T: Node>(node: T, helper: EmitHelper): T;
+  declare function addEmitHelper<T: Node>(node: T, helper: EmitHelper): T;
 
-  /**
-   * Add EmitHelpers to a node.
-   */
-  declare export function addEmitHelpers<T: Node>(
+  declare function addEmitHelpers<T: Node>(
     node: T,
     helpers: EmitHelper[] | void
   ): T;
 
-  /**
-   * Removes an EmitHelper from a node.
-   */
-  declare export function removeEmitHelper(node: Node, helper: EmitHelper): boolean;
+  declare function removeEmitHelper(node: Node, helper: EmitHelper): boolean;
 
-  /**
-   * Gets the EmitHelpers of a node.
-   */
-  declare export function getEmitHelpers(node: Node): EmitHelper[] | void;
+  declare function getEmitHelpers(node: Node): EmitHelper[] | void;
 
-  /**
-   * Moves matching emit helpers from a source node to a target node.
-   */
-  declare export function moveEmitHelpers(
+  declare function moveEmitHelpers(
     source: Node,
     target: Node,
     predicate: (helper: EmitHelper) => boolean
   ): void;
 
-  declare export function setOriginalNode<T: Node>(node: T, original: Node | void): T;
+  declare function setOriginalNode<T: Node>(node: T, original: Node | void): T;
 
-  /**
-   * Visits a Node using the supplied visitor, possibly returning a new Node in its place.
-   * @param node The Node to visit.
-   * @param visitor The callback used to visit the Node.
-   * @param test A callback to execute to verify the Node is valid.
-   * @param lift An optional callback to execute to lift a NodeArray into a valid Node.
-   */
-  declare export function visitNode<T: Node>(
+  declare function visitNode<T: Node>(
     node: T | void,
     visitor: Visitor | void,
     test?: (node: Node) => boolean,
     lift?: (node: NodeArray<Node>) => T
   ): T;
 
-  /**
-   * Visits a Node using the supplied visitor, possibly returning a new Node in its place.
-   * @param node The Node to visit.
-   * @param visitor The callback used to visit the Node.
-   * @param test A callback to execute to verify the Node is valid.
-   * @param lift An optional callback to execute to lift a NodeArray into a valid Node.
-   */
-  declare export function visitNode<T: Node>(
+  declare function visitNode<T: Node>(
     node: T | void,
     visitor: Visitor | void,
     test?: (node: Node) => boolean,
     lift?: (node: NodeArray<Node>) => T
   ): T | void;
 
-  /**
-   * Visits a NodeArray using the supplied visitor, possibly returning a new NodeArray in its place.
-   * @param nodes The NodeArray to visit.
-   * @param visitor The callback used to visit a Node.
-   * @param test A node test to execute for each node.
-   * @param start An optional value indicating the starting offset at which to start visiting.
-   * @param count An optional value indicating the maximum number of nodes to visit.
-   */
-  declare export function visitNodes<T: Node>(
+  declare function visitNodes<T: Node>(
     nodes: NodeArray<T> | void,
     visitor: Visitor,
     test?: (node: Node) => boolean,
@@ -9617,15 +9287,7 @@ More type directives might appear in the program later as a result of loading ac
     count?: number
   ): NodeArray<T>;
 
-  /**
-   * Visits a NodeArray using the supplied visitor, possibly returning a new NodeArray in its place.
-   * @param nodes The NodeArray to visit.
-   * @param visitor The callback used to visit a Node.
-   * @param test A node test to execute for each node.
-   * @param start An optional value indicating the starting offset at which to start visiting.
-   * @param count An optional value indicating the maximum number of nodes to visit.
-   */
-  declare export function visitNodes<T: Node>(
+  declare function visitNodes<T: Node>(
     nodes: NodeArray<T> | void,
     visitor: Visitor,
     test?: (node: Node) => boolean,
@@ -9633,11 +9295,7 @@ More type directives might appear in the program later as a result of loading ac
     count?: number
   ): NodeArray<T> | void;
 
-  /**
-   * Starts a new lexical environment and visits a statement list, ending the lexical environment
-   * and merging hoisted declarations upon completion.
-   */
-  declare export function visitLexicalEnvironment(
+  declare function visitLexicalEnvironment(
     statements: NodeArray<Statement>,
     visitor: Visitor,
     context: TransformationContext,
@@ -9645,66 +9303,38 @@ More type directives might appear in the program later as a result of loading ac
     ensureUseStrict?: boolean
   ): NodeArray<Statement>;
 
-  /**
-   * Starts a new lexical environment and visits a parameter list, suspending the lexical
-   * environment upon completion.
-   */
-  declare export function visitParameterList(
+  declare function visitParameterList(
     nodes: NodeArray<ParameterDeclaration> | void,
     visitor: Visitor,
     context: TransformationContext,
     nodesVisitor?: typeof visitNodes
   ): NodeArray<ParameterDeclaration>;
 
-  /**
-   * Resumes a suspended lexical environment and visits a function body, ending the lexical
-   * environment and merging hoisted declarations upon completion.
-   */
-  declare export function visitFunctionBody(
+  declare function visitFunctionBody(
     node: FunctionBody,
     visitor: Visitor,
     context: TransformationContext
   ): FunctionBody;
 
-  /**
-   * Resumes a suspended lexical environment and visits a function body, ending the lexical
-   * environment and merging hoisted declarations upon completion.
-   */
-  declare export function visitFunctionBody(
+  declare function visitFunctionBody(
     node: FunctionBody | void,
     visitor: Visitor,
     context: TransformationContext
   ): FunctionBody | void;
 
-  /**
-   * Resumes a suspended lexical environment and visits a concise body, ending the lexical
-   * environment and merging hoisted declarations upon completion.
-   */
-  declare export function visitFunctionBody(
+  declare function visitFunctionBody(
     node: ConciseBody,
     visitor: Visitor,
     context: TransformationContext
   ): ConciseBody;
 
-  /**
-   * Visits each child of a Node using the supplied visitor, possibly returning a new Node of the same kind in its place.
-   * @param node The Node whose children will be visited.
-   * @param visitor The callback used to visit each child.
-   * @param context A lexical environment context for the visitor.
-   */
-  declare export function visitEachChild<T: Node>(
+  declare function visitEachChild<T: Node>(
     node: T,
     visitor: Visitor,
     context: TransformationContext
   ): T;
 
-  /**
-   * Visits each child of a Node using the supplied visitor, possibly returning a new Node of the same kind in its place.
-   * @param node The Node whose children will be visited.
-   * @param visitor The callback used to visit each child.
-   * @param context A lexical environment context for the visitor.
-   */
-  declare export function visitEachChild<T: Node>(
+  declare function visitEachChild<T: Node>(
     node: T | void,
     visitor: Visitor,
     context: TransformationContext,
@@ -9712,89 +9342,68 @@ More type directives might appear in the program later as a result of loading ac
     tokenVisitor?: Visitor
   ): T | void;
 
-  declare export function createPrinter(
+  declare function createPrinter(
     printerOptions?: PrinterOptions,
     handlers?: PrintHandlers
   ): Printer;
 
-  declare export function findConfigFile(
+  declare function findConfigFile(
     searchPath: string,
     fileExists: (fileName: string) => boolean,
     configName?: string
   ): string | void;
 
-  declare export function resolveTripleslashReference(
+  declare function resolveTripleslashReference(
     moduleName: string,
     containingFile: string
   ): string;
 
-  declare export function createCompilerHost(
+  declare function createCompilerHost(
     options: CompilerOptions,
     setParentNodes?: boolean
   ): CompilerHost;
 
-  declare export function getPreEmitDiagnostics(
+  declare function getPreEmitDiagnostics(
     program: Program,
     sourceFile?: SourceFile,
     cancellationToken?: CancellationToken
   ): $ReadOnlyArray<Diagnostic>;
 
-  declare export interface FormatDiagnosticsHost {
-    getCurrentDirectory(): string;
-    getCanonicalFileName(fileName: string): string;
-    getNewLine(): string;
-  }
-  declare export function formatDiagnostics(
+  declare type FormatDiagnosticsHost = {
+    getCurrentDirectory(): string,
+    getCanonicalFileName(fileName: string): string,
+    getNewLine(): string
+  };
+
+  declare function formatDiagnostics(
     diagnostics: $ReadOnlyArray<Diagnostic>,
     host: FormatDiagnosticsHost
   ): string;
 
-  declare export function formatDiagnostic(
+  declare function formatDiagnostic(
     diagnostic: Diagnostic,
     host: FormatDiagnosticsHost
   ): string;
 
-  declare export function formatDiagnosticsWithColorAndContext(
+  declare function formatDiagnosticsWithColorAndContext(
     diagnostics: $ReadOnlyArray<Diagnostic>,
     host: FormatDiagnosticsHost
   ): string;
 
-  declare export function flattenDiagnosticMessageText(
+  declare function flattenDiagnosticMessageText(
     messageText: string | DiagnosticMessageChain | void,
     newLine: string
   ): string;
 
-  declare export function getConfigFileParsingDiagnostics(
+  declare function getConfigFileParsingDiagnostics(
     configFileParseResult: ParsedCommandLine
   ): $ReadOnlyArray<Diagnostic>;
 
-  /**
- * Create a new 'Program' instance. A Program is an immutable collection of 'SourceFile's and a 'CompilerOptions'
- * that represent a compilation unit.
-
-Creating a program proceeds from a set of root files, expanding the set of inputs by following imports and
-triple-slash-reference-path directives transitively. '@types' and triple-slash-reference-types are also pulled in.
- * @param createProgramOptions - The options for creating a program.
- * @returns A 'Program' object.
-*/
-  declare export function createProgram(
+  declare function createProgram(
     createProgramOptions: CreateProgramOptions
   ): Program;
 
-  /**
- * Create a new 'Program' instance. A Program is an immutable collection of 'SourceFile's and a 'CompilerOptions'
- * that represent a compilation unit.
-
-Creating a program proceeds from a set of root files, expanding the set of inputs by following imports and
-triple-slash-reference-path directives transitively. '@types' and triple-slash-reference-types are also pulled in.
- * @param rootNames - A set of root files.
- * @param options - The compiler options which should be used.
- * @param host - The host interacts with the underlying file system.
- * @param oldProgram - Reuses an old program structure.
- * @param configFileParsingDiagnostics - error during config file parsing
- * @returns A 'Program' object.
-*/
-  declare export function createProgram(
+  declare function createProgram(
     rootNames: $ReadOnlyArray<string>,
     options: CompilerOptions,
     host?: CompilerHost,
@@ -9802,207 +9411,103 @@ triple-slash-reference-path directives transitively. '@types' and triple-slash-r
     configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>
   ): Program;
 
-  /**
-   *
-   * @deprecated
-   */
-  declare export interface ResolveProjectReferencePathHost {
-    fileExists(fileName: string): boolean;
-  }
+  declare type ResolveProjectReferencePathHost = {
+    fileExists(fileName: string): boolean
+  };
 
-  /**
-   * Returns the target config filename of a project reference.
-   * Note: The file might not exist.
-   */
-  declare export function resolveProjectReferencePath(
+  declare function resolveProjectReferencePath(
     ref: ProjectReference
   ): ResolvedConfigFileName;
 
-  /**
-   *
-   * @deprecated
-   */
-  declare export function resolveProjectReferencePath(
+  declare function resolveProjectReferencePath(
     host: ResolveProjectReferencePathHost,
     ref: ProjectReference
   ): ResolvedConfigFileName;
 
-  declare export interface EmitOutput {
-    outputFiles: OutputFile[];
-    emitSkipped: boolean;
-  }
-  declare export interface OutputFile {
-    name: string;
-    writeByteOrderMark: boolean;
-    text: string;
-  }
-  declare export type AffectedFileResult<T> = {
+  declare type EmitOutput = {
+    outputFiles: OutputFile[],
+    emitSkipped: boolean
+  };
+
+  declare type OutputFile = {
+    name: string,
+    writeByteOrderMark: boolean,
+    text: string
+  };
+
+  declare type AffectedFileResult<T> = {
     result: T,
     affected: SourceFile | Program
   } | void;
-  declare export interface BuilderProgramHost {
-    /**
-     * return true if file names are treated with case sensitivity
-     */
-    useCaseSensitiveFileNames(): boolean;
+  declare type BuilderProgramHost = {
+    useCaseSensitiveFileNames(): boolean,
+    createHash?: (data: string) => string,
+    writeFile?: WriteFileCallback
+  };
 
-    /**
-     * If provided this would be used this hash instead of actual file shape text for detecting changes
-     */
-    createHash?: (data: string) => string;
-
-    /**
-     * When emit or emitNextAffectedFile are called without writeFile,
-     * this callback if present would be used to write files
-     */
-    writeFile?: WriteFileCallback;
-  }
-
-  /**
-   * Builder to manage the program state changes
-   */
-  declare export interface BuilderProgram {
-    /**
-     * Returns current program
-     */
-    getProgram(): Program;
-
-    /**
-     * Get compiler options of the program
-     */
-    getCompilerOptions(): CompilerOptions;
-
-    /**
-     * Get the source file in the program with file name
-     */
-    getSourceFile(fileName: string): SourceFile | void;
-
-    /**
-     * Get a list of files in the program
-     */
-    getSourceFiles(): $ReadOnlyArray<SourceFile>;
-
-    /**
-     * Get the diagnostics for compiler options
-     */
+  declare type BuilderProgram = {
+    getProgram(): Program,
+    getCompilerOptions(): CompilerOptions,
+    getSourceFile(fileName: string): SourceFile | void,
+    getSourceFiles(): $ReadOnlyArray<SourceFile>,
     getOptionsDiagnostics(
       cancellationToken?: CancellationToken
-    ): $ReadOnlyArray<Diagnostic>;
-
-    /**
-     * Get the diagnostics that dont belong to any file
-     */
+    ): $ReadOnlyArray<Diagnostic>,
     getGlobalDiagnostics(
       cancellationToken?: CancellationToken
-    ): $ReadOnlyArray<Diagnostic>;
-
-    /**
-     * Get the diagnostics from config file parsing
-     */
-    getConfigFileParsingDiagnostics(): $ReadOnlyArray<Diagnostic>;
-
-    /**
-     * Get the syntax diagnostics, for all source files if source file is not supplied
-     */
+    ): $ReadOnlyArray<Diagnostic>,
+    getConfigFileParsingDiagnostics(): $ReadOnlyArray<Diagnostic>,
     getSyntacticDiagnostics(
       sourceFile?: SourceFile,
       cancellationToken?: CancellationToken
-    ): $ReadOnlyArray<Diagnostic>;
-
-    /**
-     * Get the declaration diagnostics, for all source files if source file is not supplied
-     */
+    ): $ReadOnlyArray<Diagnostic>,
     getDeclarationDiagnostics(
       sourceFile?: SourceFile,
       cancellationToken?: CancellationToken
-    ): $ReadOnlyArray<DiagnosticWithLocation>;
-
-    /**
-     * Get all the dependencies of the file
-     */
-    getAllDependencies(sourceFile: SourceFile): $ReadOnlyArray<string>;
-
-    /**
- * Gets the semantic diagnostics from the program corresponding to this state of file (if provided) or whole program
- * The semantic diagnostics are cached and managed here
-Note that it is assumed that when asked about semantic diagnostics through this API,
-the file has been taken out of affected files so it is safe to use cache or get from program and cache the diagnostics
-In case of SemanticDiagnosticsBuilderProgram if the source file is not provided,
-it will iterate through all the affected files, to ensure that cache stays valid and yet provide a way to get all semantic diagnostics
-*/
+    ): $ReadOnlyArray<DiagnosticWithLocation>,
+    getAllDependencies(sourceFile: SourceFile): $ReadOnlyArray<string>,
     getSemanticDiagnostics(
       sourceFile?: SourceFile,
       cancellationToken?: CancellationToken
-    ): $ReadOnlyArray<Diagnostic>;
-
-    /**
- * Emits the JavaScript and declaration files.
- * When targetSource file is specified, emits the files corresponding to that source file,
-otherwise for the whole program.
-In case of EmitAndSemanticDiagnosticsBuilderProgram, when targetSourceFile is specified,
-it is assumed that that file is handled from affected file list. If targetSourceFile is not specified,
-it will only emit all the affected files instead of whole program
-
-The first of writeFile if provided, writeFile of BuilderProgramHost if provided, writeFile of compiler host
-in that order would be used to write the files
-*/
+    ): $ReadOnlyArray<Diagnostic>,
     emit(
       targetSourceFile?: SourceFile,
       writeFile?: WriteFileCallback,
       cancellationToken?: CancellationToken,
       emitOnlyDtsFiles?: boolean,
       customTransformers?: CustomTransformers
-    ): EmitResult;
+    ): EmitResult,
+    getCurrentDirectory(): string
+  };
 
-    /**
-     * Get the current directory of the program
-     */
-    getCurrentDirectory(): string;
-  }
+  declare type SemanticDiagnosticsBuilderProgram = {
+    ...$Exact<BuilderProgram>,
 
-  /**
-   * The builder that caches the semantic diagnostics for the program and handles the changed files and affected files
-   */
-  declare export type SemanticDiagnosticsBuilderProgram = {
-    /**
-     * Gets the semantic diagnostics from the program for the next affected file and caches it
-     * Returns undefined if the iteration is complete
-     */
     getSemanticDiagnosticsOfNextAffectedFile(
       cancellationToken?: CancellationToken,
       ignoreSourceFile?: (sourceFile: SourceFile) => boolean
     ): AffectedFileResult<$ReadOnlyArray<Diagnostic>>
-  } & BuilderProgram;
+  };
 
-  /**
-   * The builder that can handle the changes in program and iterate through changed file to emit the files
-   * The semantic diagnostics are cached per file and managed by clearing for the changed/affected files
-   */
-  declare export type EmitAndSemanticDiagnosticsBuilderProgram = {
-    /**
- * Emits the next affected file's emit result (EmitResult and sourceFiles emitted) or returns undefined if iteration is complete
- * The first of writeFile if provided, writeFile of BuilderProgramHost if provided, writeFile of compiler host
-in that order would be used to write the files
-*/
+  declare type EmitAndSemanticDiagnosticsBuilderProgram = {
+    ...$Exact<BuilderProgram>,
+
     emitNextAffectedFile(
       writeFile?: WriteFileCallback,
       cancellationToken?: CancellationToken,
       emitOnlyDtsFiles?: boolean,
       customTransformers?: CustomTransformers
     ): AffectedFileResult<EmitResult>
-  } & BuilderProgram;
+  };
 
-  /**
-   * Create the builder to manage semantic diagnostics and cache them
-   */
-  declare export function createSemanticDiagnosticsBuilderProgram(
+  declare function createSemanticDiagnosticsBuilderProgram(
     newProgram: Program,
     host: BuilderProgramHost,
     oldProgram?: SemanticDiagnosticsBuilderProgram,
     configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>
   ): SemanticDiagnosticsBuilderProgram;
 
-  declare export function createSemanticDiagnosticsBuilderProgram(
+  declare function createSemanticDiagnosticsBuilderProgram(
     rootNames: $ReadOnlyArray<string> | void,
     options: CompilerOptions | void,
     host?: CompilerHost,
@@ -10011,18 +9516,14 @@ in that order would be used to write the files
     projectReferences?: $ReadOnlyArray<ProjectReference>
   ): SemanticDiagnosticsBuilderProgram;
 
-  /**
-   * Create the builder that can handle the changes in program and iterate through changed files
-   * to emit the those files and manage semantic diagnostics cache as well
-   */
-  declare export function createEmitAndSemanticDiagnosticsBuilderProgram(
+  declare function createEmitAndSemanticDiagnosticsBuilderProgram(
     newProgram: Program,
     host: BuilderProgramHost,
     oldProgram?: EmitAndSemanticDiagnosticsBuilderProgram,
     configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>
   ): EmitAndSemanticDiagnosticsBuilderProgram;
 
-  declare export function createEmitAndSemanticDiagnosticsBuilderProgram(
+  declare function createEmitAndSemanticDiagnosticsBuilderProgram(
     rootNames: $ReadOnlyArray<string> | void,
     options: CompilerOptions | void,
     host?: CompilerHost,
@@ -10031,17 +9532,14 @@ in that order would be used to write the files
     projectReferences?: $ReadOnlyArray<ProjectReference>
   ): EmitAndSemanticDiagnosticsBuilderProgram;
 
-  /**
-   * Creates a builder thats just abstraction over program and can be used with watch
-   */
-  declare export function createAbstractBuilder(
+  declare function createAbstractBuilder(
     newProgram: Program,
     host: BuilderProgramHost,
     oldProgram?: BuilderProgram,
     configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>
   ): BuilderProgram;
 
-  declare export function createAbstractBuilder(
+  declare function createAbstractBuilder(
     rootNames: $ReadOnlyArray<string> | void,
     options: CompilerOptions | void,
     host?: CompilerHost,
@@ -10050,16 +9548,12 @@ in that order would be used to write the files
     projectReferences?: $ReadOnlyArray<ProjectReference>
   ): BuilderProgram;
 
-  declare export type WatchStatusReporter = (
+  declare type WatchStatusReporter = (
     diagnostic: Diagnostic,
     newLine: string,
     options: CompilerOptions
   ) => void;
-
-  /**
-   * Create the program with rootNames and options, if they are undefined, oldProgram and new configFile diagnostics create new program
-   */
-  declare export type CreateProgram<T: BuilderProgram> = (
+  declare type CreateProgram<T: BuilderProgram> = (
     rootNames: $ReadOnlyArray<string> | void,
     options: CompilerOptions | void,
     host?: CompilerHost,
@@ -10067,177 +9561,86 @@ in that order would be used to write the files
     configFileParsingDiagnostics?: $ReadOnlyArray<Diagnostic>,
     projectReferences?: $ReadOnlyArray<ProjectReference> | void
   ) => T;
-
-  /**
-   * Host that has watch functionality used in --watch mode
-   */
-  declare export interface WatchHost {
-    /**
-     * If provided, called with Diagnostic message that informs about change in watch status
-     */
+  declare type WatchHost = {
     onWatchStatusChange(
       diagnostic: Diagnostic,
       newLine: string,
       options: CompilerOptions
-    ): void;
-
-    /**
-     * Used to watch changes in source files, missing files needed to update the program or config file
-     */
+    ): void,
     watchFile(
       path: string,
       callback: FileWatcherCallback,
       pollingInterval?: number
-    ): FileWatcher;
-
-    /**
-     * Used to watch resolved module's failed lookup locations, config file specs, type roots where auto type reference directives are added
-     */
+    ): FileWatcher,
     watchDirectory(
       path: string,
       callback: DirectoryWatcherCallback,
       recursive?: boolean
-    ): FileWatcher;
-
-    /**
-     * If provided, will be used to set delayed compilation, so that multiple changes in short span are compiled together
-     */
+    ): FileWatcher,
     setTimeout(
       callback: (...args: any[]) => void,
       ms: number,
       ...args: any[]
-    ): any;
+    ): any,
+    clearTimeout(timeoutId: any): void
+  };
 
-    /**
-     * If provided, will be used to reset existing delayed compilation
-     */
-    clearTimeout(timeoutId: any): void;
-  }
-  declare export interface ProgramHost<T: BuilderProgram> {
-    /**
-     * Used to create the program when need for program creation or recreation detected
-     */
-    createProgram: CreateProgram<T>;
-    useCaseSensitiveFileNames(): boolean;
-    getNewLine(): string;
-    getCurrentDirectory(): string;
-    getDefaultLibFileName(options: CompilerOptions): string;
-    getDefaultLibLocation(): string;
-    createHash(data: string): string;
-
-    /**
-     * Use to check file presence for source files and
-     * if resolveModuleNames is not provided (complier is in charge of module resolution) then module files as well
-     */
-    fileExists(path: string): boolean;
-
-    /**
-     * Use to read file text for source files and
-     * if resolveModuleNames is not provided (complier is in charge of module resolution) then module files as well
-     */
-    readFile(path: string, encoding?: string): string | void;
-
-    /**
-     * If provided, used for module resolution as well as to handle directory structure
-     */
-    directoryExists(path: string): boolean;
-
-    /**
-     * If provided, used in resolutions as well as handling directory structure
-     */
-    getDirectories(path: string): string[];
-
-    /**
-     * If provided, used to cache and handle directory structure modifications
-     */
+  declare type ProgramHost<T: BuilderProgram> = {
+    createProgram: CreateProgram<T>,
+    useCaseSensitiveFileNames(): boolean,
+    getNewLine(): string,
+    getCurrentDirectory(): string,
+    getDefaultLibFileName(options: CompilerOptions): string,
+    getDefaultLibLocation(): string,
+    createHash(data: string): string,
+    fileExists(path: string): boolean,
+    readFile(path: string, encoding?: string): string | void,
+    directoryExists(path: string): boolean,
+    getDirectories(path: string): string[],
     readDirectory(
       path: string,
       extensions?: $ReadOnlyArray<string>,
       exclude?: $ReadOnlyArray<string>,
       include?: $ReadOnlyArray<string>,
       depth?: number
-    ): string[];
-
-    /**
-     * Symbol links resolution
-     */
-    realpath(path: string): string;
-
-    /**
-     * If provided would be used to write log about compilation
-     */
-    trace(s: string): void;
-
-    /**
-     * If provided is used to get the environment variable
-     */
-    getEnvironmentVariable(name: string): string | void;
-
-    /**
-     * If provided, used to resolve the module names, otherwise typescript's default module resolution
-     */
+    ): string[],
+    realpath(path: string): string,
+    trace(s: string): void,
+    getEnvironmentVariable(name: string): string | void,
     resolveModuleNames(
       moduleNames: string[],
       containingFile: string,
       reusedNames?: string[],
       redirectedReference?: ResolvedProjectReference
-    ): (ResolvedModule | void)[];
-
-    /**
-     * If provided, used to resolve type reference directives, otherwise typescript's default resolution
-     */
+    ): (ResolvedModule | void)[],
     resolveTypeReferenceDirectives(
       typeReferenceDirectiveNames: string[],
       containingFile: string,
       redirectedReference?: ResolvedProjectReference
-    ): (ResolvedTypeReferenceDirective | void)[];
-  }
-  declare export type WatchCompilerHost<T: BuilderProgram> = {
-    /**
-     * If provided, callback to invoke after every new program creation
-     */
+    ): (ResolvedTypeReferenceDirective | void)[]
+  };
+
+  declare type WatchCompilerHost<T: BuilderProgram> = {
+    ...$Exact<ProgramHost<T>>,
+    ...$Exact<WatchHost>,
+
     afterProgramCreate(program: T): void
-  } & ProgramHost<T> &
-    WatchHost;
+  };
 
-  /**
-   * Host to create watch with root files and options
-   */
-  declare export type WatchCompilerHostOfFilesAndCompilerOptions<T: BuilderProgram> = {
-    /**
-     * root files to use to generate program
-     */
+  declare type WatchCompilerHostOfFilesAndCompilerOptions<T: BuilderProgram> = {
+    ...$Exact<WatchCompilerHost<T>>,
+
     rootFiles: string[],
-
-    /**
-     * Compiler options
-     */
     options: CompilerOptions,
-
-    /**
-     * Project References
-     */
     projectReferences?: $ReadOnlyArray<ProjectReference>
-  } & WatchCompilerHost<T>;
+  };
 
-  /**
-   * Host to create watch with config file
-   */
-  declare export type WatchCompilerHostOfConfigFile<T: BuilderProgram> = {
-    /**
-     * Name of the config file to compile
-     */
+  declare type WatchCompilerHostOfConfigFile<T: BuilderProgram> = {
+    ...$Exact<WatchCompilerHost<T>>,
+    ...$Exact<ConfigFileDiagnosticsReporter>,
+
     configFileName: string,
-
-    /**
-     * Options to extend
-     */
     optionsToExtend?: CompilerOptions,
-
-    /**
-     * Used to generate source file names from the config file and its include, exclude, files rules
-     * and also to cache the directory stucture
-     */
     readDirectory(
       path: string,
       extensions?: $ReadOnlyArray<string>,
@@ -10245,35 +9648,21 @@ in that order would be used to write the files
       include?: $ReadOnlyArray<string>,
       depth?: number
     ): string[]
-  } & WatchCompilerHost<T> &
-    ConfigFileDiagnosticsReporter;
+  };
 
-  declare export interface Watch<T> {
-    /**
-     * Synchronize with host and get updated program
-     */
-    getProgram(): T;
-  }
+  declare type Watch<T> = {
+    getProgram(): T
+  };
 
-  /**
-   * Creates the watch what generates program using the config file
-   */
-  declare export type WatchOfConfigFile<T> = {} & Watch<T>;
+  declare type WatchOfConfigFile<T> = { ...$Exact<Watch<T>> };
 
-  /**
-   * Creates the watch that generates program using the root files and compiler options
-   */
-  declare export type WatchOfFilesAndCompilerOptions<T> = {
-    /**
-     * Updates the root files in the program, only if this is not config file compilation
-     */
+  declare type WatchOfFilesAndCompilerOptions<T> = {
+    ...$Exact<Watch<T>>,
+
     updateRootFileNames(fileNames: string[]): void
-  } & Watch<T>;
+  };
 
-  /**
-   * Create the watch compiler host for either configFile or fileNames and its options
-   */
-  declare export function createWatchCompilerHost<T: BuilderProgram>(
+  declare function createWatchCompilerHost<T: BuilderProgram>(
     configFileName: string,
     optionsToExtend: CompilerOptions | void,
     system: System,
@@ -10282,7 +9671,7 @@ in that order would be used to write the files
     reportWatchStatus?: WatchStatusReporter
   ): WatchCompilerHostOfConfigFile<T>;
 
-  declare export function createWatchCompilerHost<T: BuilderProgram>(
+  declare function createWatchCompilerHost<T: BuilderProgram>(
     rootFiles: string[],
     options: CompilerOptions,
     system: System,
@@ -10292,76 +9681,51 @@ in that order would be used to write the files
     projectReferences?: $ReadOnlyArray<ProjectReference>
   ): WatchCompilerHostOfFilesAndCompilerOptions<T>;
 
-  /**
-   * Creates the watch from the host for root files and compiler options
-   */
-  declare export function createWatchProgram<T: BuilderProgram>(
+  declare function createWatchProgram<T: BuilderProgram>(
     host: WatchCompilerHostOfFilesAndCompilerOptions<T>
   ): WatchOfFilesAndCompilerOptions<T>;
 
-  /**
-   * Creates the watch from the host for config file
-   */
-  declare export function createWatchProgram<T: BuilderProgram>(
+  declare function createWatchProgram<T: BuilderProgram>(
     host: WatchCompilerHostOfConfigFile<T>
   ): WatchOfConfigFile<T>;
 
-  declare export interface SourceFileLike {
-    getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
-  }
+  declare type SourceFileLike = {
+    getLineAndCharacterOfPosition(pos: number): LineAndCharacter
+  };
 
-  /**
- * Represents an immutable snapshot of a script at a specified time.Once acquired, the
- * snapshot is observably immutable. i.e. the same calls with the same parameters will return
-the same values.
-*/
-  declare export interface IScriptSnapshot {
-    /**
-     * Gets a portion of the script snapshot specified by [start, end).
-     */
-    getText(start: number, end: number): string;
+  declare type IScriptSnapshot = {
+    getText(start: number, end: number): string,
+    getLength(): number,
+    getChangeRange(oldSnapshot: IScriptSnapshot): TextChangeRange | void,
+    dispose(): void
+  };
 
-    /**
-     * Gets the length of this script snapshot.
-     */
-    getLength(): number;
-
-    /**
- * Gets the TextChangeRange that describe how the text changed between this text and
- * an older version.  This information is used by the incremental parser to determine
-what sections of the script need to be re-parsed.  'undefined' can be returned if the
-change range cannot be determined.  However, in that case, incremental parsing will
-not happen and the entire document will be re - parsed.
-*/
-    getChangeRange(oldSnapshot: IScriptSnapshot): TextChangeRange | void;
-
-    /**
-     * Releases all resources held by this script snapshot
-     */
-    dispose(): void;
-  }
-
-  declare export var npm$namespace$ScriptSnapshot: {
+  declare var npm$namespace$ScriptSnapshot: {
     fromString: typeof ScriptSnapshot$fromString
   };
-  declare export function ScriptSnapshot$fromString(text: string): IScriptSnapshot;
+  declare function ScriptSnapshot$fromString(text: string): IScriptSnapshot;
 
-  declare export interface PreProcessedFileInfo {
-    referencedFiles: FileReference[];
-    typeReferenceDirectives: FileReference[];
-    libReferenceDirectives: FileReference[];
-    importedFiles: FileReference[];
-    ambientExternalModules?: string[];
-    isLibFile: boolean;
-  }
-  declare export interface HostCancellationToken {
-    isCancellationRequested(): boolean;
-  }
-  declare export interface InstallPackageOptions {
-    fileName: Path;
-    packageName: string;
-  }
-  declare export type LanguageServiceHost = {
+  declare type PreProcessedFileInfo = {
+    referencedFiles: FileReference[],
+    typeReferenceDirectives: FileReference[],
+    libReferenceDirectives: FileReference[],
+    importedFiles: FileReference[],
+    ambientExternalModules?: string[],
+    isLibFile: boolean
+  };
+
+  declare type HostCancellationToken = {
+    isCancellationRequested(): boolean
+  };
+
+  declare type InstallPackageOptions = {
+    fileName: Path,
+    packageName: string
+  };
+
+  declare type LanguageServiceHost = {
+    ...$Exact<GetEffectiveTypeRootsHost>,
+
     getCompilationSettings(): CompilerOptions,
     getNewLine(): string,
     getProjectVersion(): string,
@@ -10405,62 +9769,44 @@ not happen and the entire document will be re - parsed.
       redirectedReference?: ResolvedProjectReference
     ): (ResolvedTypeReferenceDirective | void)[],
     getDirectories(directoryName: string): string[],
-
-    /**
-     * Gets a set of custom transformers to use during emit.
-     */
     getCustomTransformers(): CustomTransformers | void,
     isKnownTypesPackageName(name: string): boolean,
     installPackage(
       options: InstallPackageOptions
     ): Promise<ApplyCodeActionCommandResult>,
     writeFile(fileName: string, content: string): void
-  } & GetEffectiveTypeRootsHost;
+  };
 
-  declare export type WithMetadata<T> = T & {
+  declare type WithMetadata<T> = T & {
     metadata?: mixed
   };
-  declare export interface LanguageService {
-    cleanupSemanticCache(): void;
-    getSyntacticDiagnostics(fileName: string): DiagnosticWithLocation[];
-
-    /**
-     * The first time this is called, it will return global diagnostics (no location).
-     */
-    getSemanticDiagnostics(fileName: string): Diagnostic[];
-    getSuggestionDiagnostics(fileName: string): DiagnosticWithLocation[];
-    getCompilerOptionsDiagnostics(): Diagnostic[];
-
-    /**
-     *
-     * @deprecated Use getEncodedSyntacticClassifications instead.
-     */
+  declare type LanguageService = {
+    cleanupSemanticCache(): void,
+    getSyntacticDiagnostics(fileName: string): DiagnosticWithLocation[],
+    getSemanticDiagnostics(fileName: string): Diagnostic[],
+    getSuggestionDiagnostics(fileName: string): DiagnosticWithLocation[],
+    getCompilerOptionsDiagnostics(): Diagnostic[],
     getSyntacticClassifications(
       fileName: string,
       span: TextSpan
-    ): ClassifiedSpan[];
-
-    /**
-     *
-     * @deprecated Use getEncodedSemanticClassifications instead.
-     */
+    ): ClassifiedSpan[],
     getSemanticClassifications(
       fileName: string,
       span: TextSpan
-    ): ClassifiedSpan[];
+    ): ClassifiedSpan[],
     getEncodedSyntacticClassifications(
       fileName: string,
       span: TextSpan
-    ): Classifications;
+    ): Classifications,
     getEncodedSemanticClassifications(
       fileName: string,
       span: TextSpan
-    ): Classifications;
+    ): Classifications,
     getCompletionsAtPosition(
       fileName: string,
       position: number,
       options: GetCompletionsAtPositionOptions | void
-    ): WithMetadata<CompletionInfo> | void;
+    ): WithMetadata<CompletionInfo> | void,
     getCompletionEntryDetails(
       fileName: string,
       position: number,
@@ -10468,140 +9814,130 @@ not happen and the entire document will be re - parsed.
       formatOptions: FormatCodeOptions | FormatCodeSettings | void,
       source: string | void,
       preferences: UserPreferences | void
-    ): CompletionEntryDetails | void;
+    ): CompletionEntryDetails | void,
     getCompletionEntrySymbol(
       fileName: string,
       position: number,
       name: string,
       source: string | void
-    ): Symbol | void;
+    ): Symbol | void,
     getQuickInfoAtPosition(
       fileName: string,
       position: number
-    ): QuickInfo | void;
+    ): QuickInfo | void,
     getNameOrDottedNameSpan(
       fileName: string,
       startPos: number,
       endPos: number
-    ): TextSpan | void;
+    ): TextSpan | void,
     getBreakpointStatementAtPosition(
       fileName: string,
       position: number
-    ): TextSpan | void;
+    ): TextSpan | void,
     getSignatureHelpItems(
       fileName: string,
       position: number,
       options: SignatureHelpItemsOptions | void
-    ): SignatureHelpItems | void;
+    ): SignatureHelpItems | void,
     getRenameInfo(
       fileName: string,
       position: number,
       options?: RenameInfoOptions
-    ): RenameInfo;
+    ): RenameInfo,
     findRenameLocations(
       fileName: string,
       position: number,
       findInStrings: boolean,
       findInComments: boolean,
       providePrefixAndSuffixTextForRename?: boolean
-    ): $ReadOnlyArray<RenameLocation> | void;
+    ): $ReadOnlyArray<RenameLocation> | void,
     getDefinitionAtPosition(
       fileName: string,
       position: number
-    ): $ReadOnlyArray<DefinitionInfo> | void;
+    ): $ReadOnlyArray<DefinitionInfo> | void,
     getDefinitionAndBoundSpan(
       fileName: string,
       position: number
-    ): DefinitionInfoAndBoundSpan | void;
+    ): DefinitionInfoAndBoundSpan | void,
     getTypeDefinitionAtPosition(
       fileName: string,
       position: number
-    ): $ReadOnlyArray<DefinitionInfo> | void;
+    ): $ReadOnlyArray<DefinitionInfo> | void,
     getImplementationAtPosition(
       fileName: string,
       position: number
-    ): $ReadOnlyArray<ImplementationLocation> | void;
+    ): $ReadOnlyArray<ImplementationLocation> | void,
     getReferencesAtPosition(
       fileName: string,
       position: number
-    ): ReferenceEntry[] | void;
+    ): ReferenceEntry[] | void,
     findReferences(
       fileName: string,
       position: number
-    ): ReferencedSymbol[] | void;
+    ): ReferencedSymbol[] | void,
     getDocumentHighlights(
       fileName: string,
       position: number,
       filesToSearch: string[]
-    ): DocumentHighlights[] | void;
-
-    /**
-     *
-     * @deprecated
-     */
+    ): DocumentHighlights[] | void,
     getOccurrencesAtPosition(
       fileName: string,
       position: number
-    ): $ReadOnlyArray<ReferenceEntry> | void;
+    ): $ReadOnlyArray<ReferenceEntry> | void,
     getNavigateToItems(
       searchValue: string,
       maxResultCount?: number,
       fileName?: string,
       excludeDtsFiles?: boolean
-    ): NavigateToItem[];
-    getNavigationBarItems(fileName: string): NavigationBarItem[];
-    getNavigationTree(fileName: string): NavigationTree;
-    getOutliningSpans(fileName: string): OutliningSpan[];
+    ): NavigateToItem[],
+    getNavigationBarItems(fileName: string): NavigationBarItem[],
+    getNavigationTree(fileName: string): NavigationTree,
+    getOutliningSpans(fileName: string): OutliningSpan[],
     getTodoComments(
       fileName: string,
       descriptors: TodoCommentDescriptor[]
-    ): TodoComment[];
-    getBraceMatchingAtPosition(fileName: string, position: number): TextSpan[];
+    ): TodoComment[],
+    getBraceMatchingAtPosition(fileName: string, position: number): TextSpan[],
     getIndentationAtPosition(
       fileName: string,
       position: number,
       options: EditorOptions | EditorSettings
-    ): number;
+    ): number,
     getFormattingEditsForRange(
       fileName: string,
       start: number,
       end: number,
       options: FormatCodeOptions | FormatCodeSettings
-    ): TextChange[];
+    ): TextChange[],
     getFormattingEditsForDocument(
       fileName: string,
       options: FormatCodeOptions | FormatCodeSettings
-    ): TextChange[];
+    ): TextChange[],
     getFormattingEditsAfterKeystroke(
       fileName: string,
       position: number,
       key: string,
       options: FormatCodeOptions | FormatCodeSettings
-    ): TextChange[];
+    ): TextChange[],
     getDocCommentTemplateAtPosition(
       fileName: string,
       position: number
-    ): TextInsertion | void;
+    ): TextInsertion | void,
     isValidBraceCompletionAtPosition(
       fileName: string,
       position: number,
       openingBrace: number
-    ): boolean;
-
-    /**
-     * This will return a defined result if the position is after the `>` of the opening tag, or somewhere in the text, of a JSXElement with no closing tag.
-     * Editors should call this after `>` is typed.
-     */
+    ): boolean,
     getJsxClosingTagAtPosition(
       fileName: string,
       position: number
-    ): JsxClosingTagInfo | void;
+    ): JsxClosingTagInfo | void,
     getSpanOfEnclosingComment(
       fileName: string,
       position: number,
       onlyMultiLine: boolean
-    ): TextSpan | void;
-    toLineColumnOffset(fileName: string, position: number): LineAndCharacter;
+    ): TextSpan | void,
+    toLineColumnOffset(fileName: string, position: number): LineAndCharacter,
     getCodeFixesAtPosition(
       fileName: string,
       start: number,
@@ -10609,57 +9945,42 @@ not happen and the entire document will be re - parsed.
       errorCodes: $ReadOnlyArray<number>,
       formatOptions: FormatCodeSettings,
       preferences: UserPreferences
-    ): $ReadOnlyArray<CodeFixAction>;
+    ): $ReadOnlyArray<CodeFixAction>,
     getCombinedCodeFix(
       scope: CombinedCodeFixScope,
       fixId: {},
       formatOptions: FormatCodeSettings,
       preferences: UserPreferences
-    ): CombinedCodeActions;
+    ): CombinedCodeActions,
     applyCodeActionCommand(
       action: CodeActionCommand,
       formatSettings?: FormatCodeSettings
-    ): Promise<ApplyCodeActionCommandResult>;
+    ): Promise<ApplyCodeActionCommandResult>,
     applyCodeActionCommand(
       action: CodeActionCommand[],
       formatSettings?: FormatCodeSettings
-    ): Promise<ApplyCodeActionCommandResult[]>;
+    ): Promise<ApplyCodeActionCommandResult[]>,
     applyCodeActionCommand(
       action: CodeActionCommand | CodeActionCommand[],
       formatSettings?: FormatCodeSettings
-    ): Promise<ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]>;
-
-    /**
-     *
-     * @deprecated `fileName` will be ignored
-     */
+    ): Promise<ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]>,
     applyCodeActionCommand(
       fileName: string,
       action: CodeActionCommand
-    ): Promise<ApplyCodeActionCommandResult>;
-
-    /**
-     *
-     * @deprecated `fileName` will be ignored
-     */
+    ): Promise<ApplyCodeActionCommandResult>,
     applyCodeActionCommand(
       fileName: string,
       action: CodeActionCommand[]
-    ): Promise<ApplyCodeActionCommandResult[]>;
-
-    /**
-     *
-     * @deprecated `fileName` will be ignored
-     */
+    ): Promise<ApplyCodeActionCommandResult[]>,
     applyCodeActionCommand(
       fileName: string,
       action: CodeActionCommand | CodeActionCommand[]
-    ): Promise<ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]>;
+    ): Promise<ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]>,
     getApplicableRefactors(
       fileName: string,
       positionOrRange: number | TextRange,
       preferences: UserPreferences | void
-    ): ApplicableRefactorInfo[];
+    ): ApplicableRefactorInfo[],
     getEditsForRefactor(
       fileName: string,
       formatOptions: FormatCodeSettings,
@@ -10667,31 +9988,34 @@ not happen and the entire document will be re - parsed.
       refactorName: string,
       actionName: string,
       preferences: UserPreferences | void
-    ): RefactorEditInfo | void;
+    ): RefactorEditInfo | void,
     organizeImports(
       scope: OrganizeImportsScope,
       formatOptions: FormatCodeSettings,
       preferences: UserPreferences | void
-    ): $ReadOnlyArray<FileTextChanges>;
+    ): $ReadOnlyArray<FileTextChanges>,
     getEditsForFileRename(
       oldFilePath: string,
       newFilePath: string,
       formatOptions: FormatCodeSettings,
       preferences: UserPreferences | void
-    ): $ReadOnlyArray<FileTextChanges>;
-    getEmitOutput(fileName: string, emitOnlyDtsFiles?: boolean): EmitOutput;
-    getProgram(): Program | void;
-    dispose(): void;
-  }
-  declare export interface JsxClosingTagInfo {
-    newText: string;
-  }
-  declare export interface CombinedCodeFixScope {
-    type: "file";
-    fileName: string;
-  }
-  declare export type OrganizeImportsScope = CombinedCodeFixScope;
-  declare export type CompletionsTriggerCharacter =
+    ): $ReadOnlyArray<FileTextChanges>,
+    getEmitOutput(fileName: string, emitOnlyDtsFiles?: boolean): EmitOutput,
+    getProgram(): Program | void,
+    dispose(): void
+  };
+
+  declare type JsxClosingTagInfo = {
+    newText: string
+  };
+
+  declare type CombinedCodeFixScope = {
+    type: "file",
+    fileName: string
+  };
+
+  declare type OrganizeImportsScope = CombinedCodeFixScope;
+  declare type CompletionsTriggerCharacter =
     | "."
     | '"'
     | "'"
@@ -10699,353 +10023,255 @@ not happen and the entire document will be re - parsed.
     | "/"
     | "@"
     | "<";
-  declare export type GetCompletionsAtPositionOptions = {
-    /**
-     * If the editor is asking for completions because a certain character was typed
-     * (as opposed to when the user explicitly requested them) this should be set.
-     */
+  declare type GetCompletionsAtPositionOptions = {
+    ...$Exact<UserPreferences>,
+
     triggerCharacter?: CompletionsTriggerCharacter,
-
-    /**
-     *
-     * @deprecated Use includeCompletionsForModuleExports
-     */
     includeExternalModuleExports?: boolean,
-
-    /**
-     *
-     * @deprecated Use includeCompletionsWithInsertText
-     */
     includeInsertTextCompletions?: boolean
-  } & UserPreferences;
+  };
 
-  declare export type SignatureHelpTriggerCharacter = "," | "(" | "<";
-  declare export type SignatureHelpRetriggerCharacter =
+  declare type SignatureHelpTriggerCharacter = "," | "(" | "<";
+  declare type SignatureHelpRetriggerCharacter =
     | SignatureHelpTriggerCharacter
     | ")";
-  declare export interface SignatureHelpItemsOptions {
-    triggerReason?: SignatureHelpTriggerReason;
-  }
-  declare export type SignatureHelpTriggerReason =
+  declare type SignatureHelpItemsOptions = {
+    triggerReason?: SignatureHelpTriggerReason
+  };
+
+  declare type SignatureHelpTriggerReason =
     | SignatureHelpInvokedReason
     | SignatureHelpCharacterTypedReason
     | SignatureHelpRetriggeredReason;
+  declare type SignatureHelpInvokedReason = {
+    kind: "invoked",
+    triggerCharacter?: void
+  };
 
-  /**
-   * Signals that the user manually requested signature help.
-   * The language service will unconditionally attempt to provide a result.
-   */
-  declare export interface SignatureHelpInvokedReason {
-    kind: "invoked";
-    triggerCharacter?: void;
-  }
+  declare type SignatureHelpCharacterTypedReason = {
+    kind: "characterTyped",
+    triggerCharacter: SignatureHelpTriggerCharacter
+  };
 
-  /**
-   * Signals that the signature help request came from a user typing a character.
-   * Depending on the character and the syntactic context, the request may or may not be served a result.
-   */
-  declare export interface SignatureHelpCharacterTypedReason {
-    kind: "characterTyped";
+  declare type SignatureHelpRetriggeredReason = {
+    kind: "retrigger",
+    triggerCharacter?: SignatureHelpRetriggerCharacter
+  };
 
-    /**
-     * Character that was responsible for triggering signature help.
-     */
-    triggerCharacter: SignatureHelpTriggerCharacter;
-  }
+  declare type ApplyCodeActionCommandResult = {
+    successMessage: string
+  };
 
-  /**
- * Signals that this signature help request came from typing a character or moving the cursor.
- * This should only occur if a signature help session was already active and the editor needs to see if it should adjust.
-The language service will unconditionally attempt to provide a result.
-`triggerCharacter` can be `undefined` for a retrigger caused by a cursor move.
-*/
-  declare export interface SignatureHelpRetriggeredReason {
-    kind: "retrigger";
+  declare type Classifications = {
+    spans: number[],
+    endOfLineState: EndOfLineState
+  };
 
-    /**
-     * Character that was responsible for triggering signature help.
-     */
-    triggerCharacter?: SignatureHelpRetriggerCharacter;
-  }
-  declare export interface ApplyCodeActionCommandResult {
-    successMessage: string;
-  }
-  declare export interface Classifications {
-    spans: number[];
-    endOfLineState: EndOfLineState;
-  }
-  declare export interface ClassifiedSpan {
-    textSpan: TextSpan;
-    classificationType: ClassificationTypeNames;
-  }
+  declare type ClassifiedSpan = {
+    textSpan: TextSpan,
+    classificationType: ClassificationTypeNames
+  };
 
-  /**
- * Navigation bar interface designed for visual studio's dual-column layout.
- * This does not form a proper tree.
-The navbar is returned as a list of top-level items, each of which has a list of child items.
-Child items always have an empty array for their `childItems`.
-*/
-  declare export interface NavigationBarItem {
-    text: string;
-    kind: ScriptElementKind;
-    kindModifiers: string;
-    spans: TextSpan[];
-    childItems: NavigationBarItem[];
-    indent: number;
-    bolded: boolean;
-    grayed: boolean;
-  }
+  declare type NavigationBarItem = {
+    text: string,
+    kind: ScriptElementKind,
+    kindModifiers: string,
+    spans: TextSpan[],
+    childItems: NavigationBarItem[],
+    indent: number,
+    bolded: boolean,
+    grayed: boolean
+  };
 
-  /**
-   * Node in a tree of nested declarations in a file.
-   * The top node is always a script or module node.
-   */
-  declare export interface NavigationTree {
-    /**
-     * Name of the declaration, or a short description, e.g. "<class>".
-     */
-    text: string;
-    kind: ScriptElementKind;
+  declare type NavigationTree = {
+    text: string,
+    kind: ScriptElementKind,
+    kindModifiers: string,
+    spans: TextSpan[],
+    nameSpan: TextSpan | void,
+    childItems?: NavigationTree[]
+  };
 
-    /**
-     * ScriptElementKindModifier separated by commas, e.g. "public,abstract"
-     */
-    kindModifiers: string;
+  declare type TodoCommentDescriptor = {
+    text: string,
+    priority: number
+  };
 
-    /**
-     * Spans of the nodes that generated this declaration.
-     * There will be more than one if this is the result of merging.
-     */
-    spans: TextSpan[];
-    nameSpan: TextSpan | void;
+  declare type TodoComment = {
+    descriptor: TodoCommentDescriptor,
+    message: string,
+    position: number
+  };
 
-    /**
-     * Present if non-empty
-     */
-    childItems?: NavigationTree[];
-  }
-  declare export interface TodoCommentDescriptor {
-    text: string;
-    priority: number;
-  }
-  declare export interface TodoComment {
-    descriptor: TodoCommentDescriptor;
-    message: string;
-    position: number;
-  }
-  declare export interface TextChange {
-    span: TextSpan;
-    newText: string;
-  }
-  declare export interface FileTextChanges {
-    fileName: string;
-    textChanges: TextChange[];
-    isNewFile?: boolean;
-  }
-  declare export interface CodeAction {
-    /**
-     * Description of the code action to display in the UI of the editor
-     */
-    description: string;
+  declare type TextChange = {
+    span: TextSpan,
+    newText: string
+  };
 
-    /**
-     * Text changes to apply to each file as part of the code action
-     */
-    changes: FileTextChanges[];
+  declare type FileTextChanges = {
+    fileName: string,
+    textChanges: TextChange[],
+    isNewFile?: boolean
+  };
 
-    /**
-     * If the user accepts the code fix, the editor should send the action back in a `applyAction` request.
-     * This allows the language service to have side effects (e.g. installing dependencies) upon a code fix.
-     */
-    commands?: CodeActionCommand[];
-  }
-  declare export type CodeFixAction = {
-    /**
-     * Short name to identify the fix, for use by telemetry.
-     */
+  declare type CodeAction = {
+    description: string,
+    changes: FileTextChanges[],
+    commands?: CodeActionCommand[]
+  };
+
+  declare type CodeFixAction = {
+    ...$Exact<CodeAction>,
+
     fixName: string,
-
-    /**
-     * If present, one may call 'getCombinedCodeFix' with this fixId.
-     * This may be omitted to indicate that the code fix can't be applied in a group.
-     */
     fixId?: {},
     fixAllDescription?: string
-  } & CodeAction;
+  };
 
-  declare export interface CombinedCodeActions {
-    changes: $ReadOnlyArray<FileTextChanges>;
-    commands?: $ReadOnlyArray<CodeActionCommand>;
-  }
-  declare export type CodeActionCommand = InstallPackageAction | GenerateTypesAction;
-  declare export interface InstallPackageAction {}
-  declare export type GenerateTypesAction = {} & GenerateTypesOptions;
+  declare type CombinedCodeActions = {
+    changes: $ReadOnlyArray<FileTextChanges>,
+    commands?: $ReadOnlyArray<CodeActionCommand>
+  };
 
-  declare export interface GenerateTypesOptions {
-    file: string;
-    fileToGenerateTypesFor: string;
-    outputFileName: string;
-  }
+  declare type CodeActionCommand = InstallPackageAction | GenerateTypesAction;
+  declare type InstallPackageAction = {};
 
-  /**
-   * A set of one or more available refactoring actions, grouped under a parent refactoring.
-   */
-  declare export interface ApplicableRefactorInfo {
-    /**
-     * The programmatic name of the refactoring
-     */
-    name: string;
+  declare type GenerateTypesAction = { ...$Exact<GenerateTypesOptions> };
 
-    /**
-     * A description of this refactoring category to show to the user.
-     * If the refactoring gets inlined (see below), this text will not be visible.
-     */
-    description: string;
+  declare type GenerateTypesOptions = {
+    file: string,
+    fileToGenerateTypesFor: string,
+    outputFileName: string
+  };
 
-    /**
- * Inlineable refactorings can have their actions hoisted out to the top level
- * of a context menu. Non-inlineanable refactorings should always be shown inside
-their parent grouping.
+  declare type ApplicableRefactorInfo = {
+    name: string,
+    description: string,
+    inlineable?: boolean,
+    actions: RefactorActionInfo[]
+  };
 
-If not specified, this value is assumed to be 'true'
-*/
-    inlineable?: boolean;
-    actions: RefactorActionInfo[];
-  }
+  declare type RefactorActionInfo = {
+    name: string,
+    description: string
+  };
 
-  /**
-   * Represents a single refactoring action - for example, the "Extract Method..." refactor might
-   * offer several actions, each corresponding to a surround class or closure to extract into.
-   */
-  declare export interface RefactorActionInfo {
-    /**
-     * The programmatic name of the refactoring action
-     */
-    name: string;
+  declare type RefactorEditInfo = {
+    edits: FileTextChanges[],
+    renameFilename?: string,
+    renameLocation?: number,
+    commands?: CodeActionCommand[]
+  };
 
-    /**
- * A description of this refactoring action to show to the user.
- * If the parent refactoring is inlined away, this will be the only text shown,
-so this description should make sense by itself if the parent is inlineable=true
-*/
-    description: string;
-  }
+  declare type TextInsertion = {
+    newText: string,
+    caretOffset: number
+  };
 
-  /**
-   * A set of edits to make in response to a refactor action, plus an optional
-   * location where renaming should be invoked from
-   */
-  declare export interface RefactorEditInfo {
-    edits: FileTextChanges[];
-    renameFilename?: string;
-    renameLocation?: number;
-    commands?: CodeActionCommand[];
-  }
-  declare export interface TextInsertion {
-    newText: string;
+  declare type DocumentSpan = {
+    textSpan: TextSpan,
+    fileName: string,
+    originalTextSpan?: TextSpan,
+    originalFileName?: string
+  };
 
-    /**
-     * The position in newText the caret should point to after the insertion.
-     */
-    caretOffset: number;
-  }
-  declare export interface DocumentSpan {
-    textSpan: TextSpan;
-    fileName: string;
+  declare type RenameLocation = {
+    ...$Exact<DocumentSpan>,
 
-    /**
-     * If the span represents a location that was remapped (e.g. via a .d.ts.map file),
-     * then the original filename and span will be specified here
-     */
-    originalTextSpan?: TextSpan;
-    originalFileName?: string;
-  }
-  declare export type RenameLocation = {
     prefixText?: string,
     suffixText?: string
-  } & DocumentSpan;
+  };
 
-  declare export type ReferenceEntry = {
+  declare type ReferenceEntry = {
+    ...$Exact<DocumentSpan>,
+
     isWriteAccess: boolean,
     isDefinition: boolean,
     isInString?: true
-  } & DocumentSpan;
+  };
 
-  declare export type ImplementationLocation = {
+  declare type ImplementationLocation = {
+    ...$Exact<DocumentSpan>,
+
     kind: ScriptElementKind,
     displayParts: SymbolDisplayPart[]
-  } & DocumentSpan;
+  };
 
-  declare export interface DocumentHighlights {
-    fileName: string;
-    highlightSpans: HighlightSpan[];
+  declare type DocumentHighlights = {
+    fileName: string,
+    highlightSpans: HighlightSpan[]
+  };
+
+  declare class HighlightSpanKind {
+    static +none: Class<HighlightSpanKind__none> &
+      HighlightSpanKind__none &
+      "none"; // "none"
+    static +definition: Class<HighlightSpanKind__definition> &
+      HighlightSpanKind__definition &
+      "definition"; // "definition"
+    static +reference: Class<HighlightSpanKind__reference> &
+      HighlightSpanKind__reference &
+      "reference"; // "reference"
+    static +writtenReference: Class<HighlightSpanKind__writtenReference> &
+      HighlightSpanKind__writtenReference &
+      "writtenReference"; // "writtenReference"
   }
+
   declare class HighlightSpanKind__none mixins HighlightSpanKind {}
   declare class HighlightSpanKind__definition mixins HighlightSpanKind {}
   declare class HighlightSpanKind__reference mixins HighlightSpanKind {}
   declare class HighlightSpanKind__writtenReference mixins HighlightSpanKind {}
 
-  declare export class HighlightSpanKind {
-    constructor(...args: empty): mixed;
-    static none: Class<HighlightSpanKind__none> &
-      HighlightSpanKind__none &
-      "none"; // "none"
-    static definition: Class<HighlightSpanKind__definition> &
-      HighlightSpanKind__definition &
-      "definition"; // "definition"
-    static reference: Class<HighlightSpanKind__reference> &
-      HighlightSpanKind__reference &
-      "reference"; // "reference"
-    static writtenReference: Class<HighlightSpanKind__writtenReference> &
-      HighlightSpanKind__writtenReference &
-      "writtenReference"; // "writtenReference"
+  declare type HighlightSpan = {
+    fileName?: string,
+    isInString?: true,
+    textSpan: TextSpan,
+    kind: HighlightSpanKind
+  };
+
+  declare type NavigateToItem = {
+    name: string,
+    kind: ScriptElementKind,
+    kindModifiers: string,
+    matchKind: "exact" | "prefix" | "substring" | "camelCase",
+    isCaseSensitive: boolean,
+    fileName: string,
+    textSpan: TextSpan,
+    containerName: string,
+    containerKind: ScriptElementKind
+  };
+
+  declare class IndentStyle {
+    static +None: Class<IndentStyle__None> & IndentStyle__None & 0; // 0
+    static +Block: Class<IndentStyle__Block> & IndentStyle__Block & 1; // 1
+    static +Smart: Class<IndentStyle__Smart> & IndentStyle__Smart & 2; // 2
   }
 
-  declare export interface HighlightSpan {
-    fileName?: string;
-    isInString?: true;
-    textSpan: TextSpan;
-    kind: HighlightSpanKind;
-  }
-  declare export interface NavigateToItem {
-    name: string;
-    kind: ScriptElementKind;
-    kindModifiers: string;
-    matchKind: "exact" | "prefix" | "substring" | "camelCase";
-    isCaseSensitive: boolean;
-    fileName: string;
-    textSpan: TextSpan;
-    containerName: string;
-    containerKind: ScriptElementKind;
-  }
   declare class IndentStyle__None mixins IndentStyle {}
   declare class IndentStyle__Block mixins IndentStyle {}
   declare class IndentStyle__Smart mixins IndentStyle {}
 
-  declare export class IndentStyle {
-    constructor(...args: empty): mixed;
-    static None: Class<IndentStyle__None> & IndentStyle__None & 0; // 0
-    static Block: Class<IndentStyle__Block> & IndentStyle__Block & 1; // 1
-    static Smart: Class<IndentStyle__Smart> & IndentStyle__Smart & 2; // 2
-  }
+  declare type EditorOptions = {
+    BaseIndentSize?: number,
+    IndentSize: number,
+    TabSize: number,
+    NewLineCharacter: string,
+    ConvertTabsToSpaces: boolean,
+    IndentStyle: IndentStyle
+  };
 
-  declare export interface EditorOptions {
-    BaseIndentSize?: number;
-    IndentSize: number;
-    TabSize: number;
-    NewLineCharacter: string;
-    ConvertTabsToSpaces: boolean;
-    IndentStyle: IndentStyle;
-  }
-  declare export interface EditorSettings {
-    baseIndentSize?: number;
-    indentSize?: number;
-    tabSize?: number;
-    newLineCharacter?: string;
-    convertTabsToSpaces?: boolean;
-    indentStyle?: IndentStyle;
-  }
-  declare export type FormatCodeOptions = {
+  declare type EditorSettings = {
+    baseIndentSize?: number,
+    indentSize?: number,
+    tabSize?: number,
+    newLineCharacter?: string,
+    convertTabsToSpaces?: boolean,
+    indentStyle?: IndentStyle
+  };
+
+  declare type FormatCodeOptions = {
+    ...$Exact<EditorOptions>,
+
     InsertSpaceAfterCommaDelimiter: boolean,
     InsertSpaceAfterSemicolonInForStatements: boolean,
     InsertSpaceBeforeAndAfterBinaryOperators: boolean,
@@ -11062,9 +10288,11 @@ so this description should make sense by itself if the parent is inlineable=true
     PlaceOpenBraceOnNewLineForFunctions: boolean,
     PlaceOpenBraceOnNewLineForControlBlocks: boolean,
     insertSpaceBeforeTypeAnnotation?: boolean
-  } & EditorOptions;
+  };
 
-  declare export type FormatCodeSettings = {
+  declare type FormatCodeSettings = {
+    ...$Exact<EditorSettings>,
+
     insertSpaceAfterCommaDelimiter?: boolean,
     insertSpaceAfterSemicolonInForStatements?: boolean,
     insertSpaceBeforeAndAfterBinaryOperators?: boolean,
@@ -11082,31 +10310,106 @@ so this description should make sense by itself if the parent is inlineable=true
     placeOpenBraceOnNewLineForControlBlocks?: boolean,
     insertSpaceBeforeTypeAnnotation?: boolean,
     indentMultiLineObjectLiteralBeginningOnBlankLine?: boolean
-  } & EditorSettings;
+  };
 
-  declare export function getDefaultFormatCodeSettings(
+  declare function getDefaultFormatCodeSettings(
     newLineCharacter?: string
   ): FormatCodeSettings;
 
-  declare export type DefinitionInfo = {
+  declare type DefinitionInfo = {
+    ...$Exact<DocumentSpan>,
+
     kind: ScriptElementKind,
     name: string,
     containerKind: ScriptElementKind,
     containerName: string
-  } & DocumentSpan;
+  };
 
-  declare export interface DefinitionInfoAndBoundSpan {
-    definitions?: $ReadOnlyArray<DefinitionInfo>;
-    textSpan: TextSpan;
-  }
-  declare export type ReferencedSymbolDefinitionInfo = {
+  declare type DefinitionInfoAndBoundSpan = {
+    definitions?: $ReadOnlyArray<DefinitionInfo>,
+    textSpan: TextSpan
+  };
+
+  declare type ReferencedSymbolDefinitionInfo = {
+    ...$Exact<DefinitionInfo>,
+
     displayParts: SymbolDisplayPart[]
-  } & DefinitionInfo;
+  };
 
-  declare export interface ReferencedSymbol {
-    definition: ReferencedSymbolDefinitionInfo;
-    references: ReferenceEntry[];
+  declare type ReferencedSymbol = {
+    definition: ReferencedSymbolDefinitionInfo,
+    references: ReferenceEntry[]
+  };
+
+  declare class SymbolDisplayPartKind {
+    static +aliasName: Class<SymbolDisplayPartKind__aliasName> &
+      SymbolDisplayPartKind__aliasName &
+      0; // 0
+    static +className: Class<SymbolDisplayPartKind__className> &
+      SymbolDisplayPartKind__className &
+      1; // 1
+    static +enumName: Class<SymbolDisplayPartKind__enumName> &
+      SymbolDisplayPartKind__enumName &
+      2; // 2
+    static +fieldName: Class<SymbolDisplayPartKind__fieldName> &
+      SymbolDisplayPartKind__fieldName &
+      3; // 3
+    static +interfaceName: Class<SymbolDisplayPartKind__interfaceName> &
+      SymbolDisplayPartKind__interfaceName &
+      4; // 4
+    static +keyword: Class<SymbolDisplayPartKind__keyword> &
+      SymbolDisplayPartKind__keyword &
+      5; // 5
+    static +lineBreak: Class<SymbolDisplayPartKind__lineBreak> &
+      SymbolDisplayPartKind__lineBreak &
+      6; // 6
+    static +numericLiteral: Class<SymbolDisplayPartKind__numericLiteral> &
+      SymbolDisplayPartKind__numericLiteral &
+      7; // 7
+    static +stringLiteral: Class<SymbolDisplayPartKind__stringLiteral> &
+      SymbolDisplayPartKind__stringLiteral &
+      8; // 8
+    static +localName: Class<SymbolDisplayPartKind__localName> &
+      SymbolDisplayPartKind__localName &
+      9; // 9
+    static +methodName: Class<SymbolDisplayPartKind__methodName> &
+      SymbolDisplayPartKind__methodName &
+      10; // 10
+    static +moduleName: Class<SymbolDisplayPartKind__moduleName> &
+      SymbolDisplayPartKind__moduleName &
+      11; // 11
+    static +operator: Class<SymbolDisplayPartKind__operator> &
+      SymbolDisplayPartKind__operator &
+      12; // 12
+    static +parameterName: Class<SymbolDisplayPartKind__parameterName> &
+      SymbolDisplayPartKind__parameterName &
+      13; // 13
+    static +propertyName: Class<SymbolDisplayPartKind__propertyName> &
+      SymbolDisplayPartKind__propertyName &
+      14; // 14
+    static +punctuation: Class<SymbolDisplayPartKind__punctuation> &
+      SymbolDisplayPartKind__punctuation &
+      15; // 15
+    static +space: Class<SymbolDisplayPartKind__space> &
+      SymbolDisplayPartKind__space &
+      16; // 16
+    static +text: Class<SymbolDisplayPartKind__text> &
+      SymbolDisplayPartKind__text &
+      17; // 17
+    static +typeParameterName: Class<SymbolDisplayPartKind__typeParameterName> &
+      SymbolDisplayPartKind__typeParameterName &
+      18; // 18
+    static +enumMemberName: Class<SymbolDisplayPartKind__enumMemberName> &
+      SymbolDisplayPartKind__enumMemberName &
+      19; // 19
+    static +functionName: Class<SymbolDisplayPartKind__functionName> &
+      SymbolDisplayPartKind__functionName &
+      20; // 20
+    static +regularExpressionLiteral: Class<SymbolDisplayPartKind__regularExpressionLiteral> &
+      SymbolDisplayPartKind__regularExpressionLiteral &
+      21; // 21
   }
+
   declare class SymbolDisplayPartKind__aliasName mixins SymbolDisplayPartKind {}
   declare class SymbolDisplayPartKind__className mixins SymbolDisplayPartKind {}
   declare class SymbolDisplayPartKind__enumName mixins SymbolDisplayPartKind {}
@@ -11142,251 +10445,164 @@ so this description should make sense by itself if the parent is inlineable=true
   declare class SymbolDisplayPartKind__regularExpressionLiteral
     mixins SymbolDisplayPartKind {}
 
-  declare export class SymbolDisplayPartKind {
-    constructor(...args: empty): mixed;
-    static aliasName: Class<SymbolDisplayPartKind__aliasName> &
-      SymbolDisplayPartKind__aliasName &
-      0; // 0
-    static className: Class<SymbolDisplayPartKind__className> &
-      SymbolDisplayPartKind__className &
-      1; // 1
-    static enumName: Class<SymbolDisplayPartKind__enumName> &
-      SymbolDisplayPartKind__enumName &
-      2; // 2
-    static fieldName: Class<SymbolDisplayPartKind__fieldName> &
-      SymbolDisplayPartKind__fieldName &
-      3; // 3
-    static interfaceName: Class<SymbolDisplayPartKind__interfaceName> &
-      SymbolDisplayPartKind__interfaceName &
-      4; // 4
-    static keyword: Class<SymbolDisplayPartKind__keyword> &
-      SymbolDisplayPartKind__keyword &
-      5; // 5
-    static lineBreak: Class<SymbolDisplayPartKind__lineBreak> &
-      SymbolDisplayPartKind__lineBreak &
-      6; // 6
-    static numericLiteral: Class<SymbolDisplayPartKind__numericLiteral> &
-      SymbolDisplayPartKind__numericLiteral &
-      7; // 7
-    static stringLiteral: Class<SymbolDisplayPartKind__stringLiteral> &
-      SymbolDisplayPartKind__stringLiteral &
-      8; // 8
-    static localName: Class<SymbolDisplayPartKind__localName> &
-      SymbolDisplayPartKind__localName &
-      9; // 9
-    static methodName: Class<SymbolDisplayPartKind__methodName> &
-      SymbolDisplayPartKind__methodName &
-      10; // 10
-    static moduleName: Class<SymbolDisplayPartKind__moduleName> &
-      SymbolDisplayPartKind__moduleName &
-      11; // 11
-    static operator: Class<SymbolDisplayPartKind__operator> &
-      SymbolDisplayPartKind__operator &
-      12; // 12
-    static parameterName: Class<SymbolDisplayPartKind__parameterName> &
-      SymbolDisplayPartKind__parameterName &
-      13; // 13
-    static propertyName: Class<SymbolDisplayPartKind__propertyName> &
-      SymbolDisplayPartKind__propertyName &
-      14; // 14
-    static punctuation: Class<SymbolDisplayPartKind__punctuation> &
-      SymbolDisplayPartKind__punctuation &
-      15; // 15
-    static space: Class<SymbolDisplayPartKind__space> &
-      SymbolDisplayPartKind__space &
-      16; // 16
-    static text: Class<SymbolDisplayPartKind__text> &
-      SymbolDisplayPartKind__text &
-      17; // 17
-    static typeParameterName: Class<SymbolDisplayPartKind__typeParameterName> &
-      SymbolDisplayPartKind__typeParameterName &
-      18; // 18
-    static enumMemberName: Class<SymbolDisplayPartKind__enumMemberName> &
-      SymbolDisplayPartKind__enumMemberName &
-      19; // 19
-    static functionName: Class<SymbolDisplayPartKind__functionName> &
-      SymbolDisplayPartKind__functionName &
-      20; // 20
-    static regularExpressionLiteral: Class<SymbolDisplayPartKind__regularExpressionLiteral> &
-      SymbolDisplayPartKind__regularExpressionLiteral &
-      21; // 21
+  declare type SymbolDisplayPart = {
+    text: string,
+    kind: string
+  };
+
+  declare type JSDocTagInfo = {
+    name: string,
+    text?: string
+  };
+
+  declare type QuickInfo = {
+    kind: ScriptElementKind,
+    kindModifiers: string,
+    textSpan: TextSpan,
+    displayParts?: SymbolDisplayPart[],
+    documentation?: SymbolDisplayPart[],
+    tags?: JSDocTagInfo[]
+  };
+
+  declare type RenameInfo = RenameInfoSuccess | RenameInfoFailure;
+  declare type RenameInfoSuccess = {
+    canRename: true,
+    fileToRename?: string,
+    displayName: string,
+    fullDisplayName: string,
+    kind: ScriptElementKind,
+    kindModifiers: string,
+    triggerSpan: TextSpan
+  };
+
+  declare type RenameInfoFailure = {
+    canRename: false,
+    localizedErrorMessage: string
+  };
+
+  declare type RenameInfoOptions = {
+    allowRenameOfImportPath?: boolean
+  };
+
+  declare type SignatureHelpParameter = {
+    name: string,
+    documentation: SymbolDisplayPart[],
+    displayParts: SymbolDisplayPart[],
+    isOptional: boolean
+  };
+
+  declare type SignatureHelpItem = {
+    isVariadic: boolean,
+    prefixDisplayParts: SymbolDisplayPart[],
+    suffixDisplayParts: SymbolDisplayPart[],
+    separatorDisplayParts: SymbolDisplayPart[],
+    parameters: SignatureHelpParameter[],
+    documentation: SymbolDisplayPart[],
+    tags: JSDocTagInfo[]
+  };
+
+  declare type SignatureHelpItems = {
+    items: SignatureHelpItem[],
+    applicableSpan: TextSpan,
+    selectedItemIndex: number,
+    argumentIndex: number,
+    argumentCount: number
+  };
+
+  declare type CompletionInfo = {
+    isGlobalCompletion: boolean,
+    isMemberCompletion: boolean,
+    isNewIdentifierLocation: boolean,
+    entries: CompletionEntry[]
+  };
+
+  declare type CompletionEntry = {
+    name: string,
+    kind: ScriptElementKind,
+    kindModifiers?: string,
+    sortText: string,
+    insertText?: string,
+    replacementSpan?: TextSpan,
+    hasAction?: true,
+    source?: string,
+    isRecommended?: true
+  };
+
+  declare type CompletionEntryDetails = {
+    name: string,
+    kind: ScriptElementKind,
+    kindModifiers: string,
+    displayParts: SymbolDisplayPart[],
+    documentation?: SymbolDisplayPart[],
+    tags?: JSDocTagInfo[],
+    codeActions?: CodeAction[],
+    source?: SymbolDisplayPart[]
+  };
+
+  declare type OutliningSpan = {
+    textSpan: TextSpan,
+    hintSpan: TextSpan,
+    bannerText: string,
+    autoCollapse: boolean,
+    kind: OutliningSpanKind
+  };
+
+  declare class OutliningSpanKind {
+    static +Comment: Class<OutliningSpanKind__Comment> &
+      OutliningSpanKind__Comment &
+      "comment"; // "comment"
+    static +Region: Class<OutliningSpanKind__Region> &
+      OutliningSpanKind__Region &
+      "region"; // "region"
+    static +Code: Class<OutliningSpanKind__Code> &
+      OutliningSpanKind__Code &
+      "code"; // "code"
+    static +Imports: Class<OutliningSpanKind__Imports> &
+      OutliningSpanKind__Imports &
+      "imports"; // "imports"
   }
 
-  declare export interface SymbolDisplayPart {
-    text: string;
-    kind: string;
-  }
-  declare export interface JSDocTagInfo {
-    name: string;
-    text?: string;
-  }
-  declare export interface QuickInfo {
-    kind: ScriptElementKind;
-    kindModifiers: string;
-    textSpan: TextSpan;
-    displayParts?: SymbolDisplayPart[];
-    documentation?: SymbolDisplayPart[];
-    tags?: JSDocTagInfo[];
-  }
-  declare export type RenameInfo = RenameInfoSuccess | RenameInfoFailure;
-  declare export interface RenameInfoSuccess {
-    canRename: true;
-
-    /**
-     * File or directory to rename.
-     * If set, `getEditsForFileRename` should be called instead of `findRenameLocations`.
-     */
-    fileToRename?: string;
-    displayName: string;
-    fullDisplayName: string;
-    kind: ScriptElementKind;
-    kindModifiers: string;
-    triggerSpan: TextSpan;
-  }
-  declare export interface RenameInfoFailure {
-    canRename: false;
-    localizedErrorMessage: string;
-  }
-  declare export interface RenameInfoOptions {
-    allowRenameOfImportPath?: boolean;
-  }
-  declare export interface SignatureHelpParameter {
-    name: string;
-    documentation: SymbolDisplayPart[];
-    displayParts: SymbolDisplayPart[];
-    isOptional: boolean;
-  }
-
-  /**
- * Represents a single signature to show in signature help.
- * The id is used for subsequent calls into the language service to ask questions about the
-signature help item in the context of any documents that have been updated.  i.e. after
-an edit has happened, while signature help is still active, the host can ask important
-questions like 'what parameter is the user currently contained within?'.
-*/
-  declare export interface SignatureHelpItem {
-    isVariadic: boolean;
-    prefixDisplayParts: SymbolDisplayPart[];
-    suffixDisplayParts: SymbolDisplayPart[];
-    separatorDisplayParts: SymbolDisplayPart[];
-    parameters: SignatureHelpParameter[];
-    documentation: SymbolDisplayPart[];
-    tags: JSDocTagInfo[];
-  }
-
-  /**
-   * Represents a set of signature help items, and the preferred item that should be selected.
-   */
-  declare export interface SignatureHelpItems {
-    items: SignatureHelpItem[];
-    applicableSpan: TextSpan;
-    selectedItemIndex: number;
-    argumentIndex: number;
-    argumentCount: number;
-  }
-  declare export interface CompletionInfo {
-    /**
-     * Not true for all glboal completions. This will be true if the enclosing scope matches a few syntax kinds. See `isSnippetScope`.
-     */
-    isGlobalCompletion: boolean;
-    isMemberCompletion: boolean;
-
-    /**
-     * true when the current location also allows for a new identifier
-     */
-    isNewIdentifierLocation: boolean;
-    entries: CompletionEntry[];
-  }
-  declare export interface CompletionEntry {
-    name: string;
-    kind: ScriptElementKind;
-    kindModifiers?: string;
-    sortText: string;
-    insertText?: string;
-
-    /**
- * An optional span that indicates the text to be replaced by this completion item.
- * If present, this span should be used instead of the default one.
-It will be set if the required span differs from the one generated by the default replacement behavior.
-*/
-    replacementSpan?: TextSpan;
-    hasAction?: true;
-    source?: string;
-    isRecommended?: true;
-  }
-  declare export interface CompletionEntryDetails {
-    name: string;
-    kind: ScriptElementKind;
-    kindModifiers: string;
-    displayParts: SymbolDisplayPart[];
-    documentation?: SymbolDisplayPart[];
-    tags?: JSDocTagInfo[];
-    codeActions?: CodeAction[];
-    source?: SymbolDisplayPart[];
-  }
-  declare export interface OutliningSpan {
-    /**
-     * The span of the document to actually collapse.
-     */
-    textSpan: TextSpan;
-
-    /**
-     * The span of the document to display when the user hovers over the collapsed span.
-     */
-    hintSpan: TextSpan;
-
-    /**
-     * The text to display in the editor for the collapsed region.
-     */
-    bannerText: string;
-
-    /**
-     * Whether or not this region should be automatically collapsed when
-     * the 'Collapse to Definitions' command is invoked.
-     */
-    autoCollapse: boolean;
-
-    /**
-     * Classification of the contents of the span
-     */
-    kind: OutliningSpanKind;
-  }
   declare class OutliningSpanKind__Comment mixins OutliningSpanKind {}
   declare class OutliningSpanKind__Region mixins OutliningSpanKind {}
   declare class OutliningSpanKind__Code mixins OutliningSpanKind {}
   declare class OutliningSpanKind__Imports mixins OutliningSpanKind {}
 
-  declare export class OutliningSpanKind {
-    constructor(...args: empty): mixed;
-    static Comment: Class<OutliningSpanKind__Comment> &
-      OutliningSpanKind__Comment &
-      "comment"; // "comment"
-    static Region: Class<OutliningSpanKind__Region> &
-      OutliningSpanKind__Region &
-      "region"; // "region"
-    static Code: Class<OutliningSpanKind__Code> &
-      OutliningSpanKind__Code &
-      "code"; // "code"
-    static Imports: Class<OutliningSpanKind__Imports> &
-      OutliningSpanKind__Imports &
-      "imports"; // "imports"
+  declare class OutputFileType {
+    static +JavaScript: Class<OutputFileType__JavaScript> &
+      OutputFileType__JavaScript &
+      0; // 0
+    static +SourceMap: Class<OutputFileType__SourceMap> &
+      OutputFileType__SourceMap &
+      1; // 1
+    static +Declaration: Class<OutputFileType__Declaration> &
+      OutputFileType__Declaration &
+      2; // 2
   }
 
   declare class OutputFileType__JavaScript mixins OutputFileType {}
   declare class OutputFileType__SourceMap mixins OutputFileType {}
   declare class OutputFileType__Declaration mixins OutputFileType {}
 
-  declare export class OutputFileType {
-    constructor(...args: empty): mixed;
-    static JavaScript: Class<OutputFileType__JavaScript> &
-      OutputFileType__JavaScript &
-      0; // 0
-    static SourceMap: Class<OutputFileType__SourceMap> &
-      OutputFileType__SourceMap &
+  declare class EndOfLineState {
+    static +None: Class<EndOfLineState__None> & EndOfLineState__None & 0; // 0
+    static +InMultiLineCommentTrivia: Class<EndOfLineState__InMultiLineCommentTrivia> &
+      EndOfLineState__InMultiLineCommentTrivia &
       1; // 1
-    static Declaration: Class<OutputFileType__Declaration> &
-      OutputFileType__Declaration &
+    static +InSingleQuoteStringLiteral: Class<EndOfLineState__InSingleQuoteStringLiteral> &
+      EndOfLineState__InSingleQuoteStringLiteral &
       2; // 2
+    static +InDoubleQuoteStringLiteral: Class<EndOfLineState__InDoubleQuoteStringLiteral> &
+      EndOfLineState__InDoubleQuoteStringLiteral &
+      3; // 3
+    static +InTemplateHeadOrNoSubstitutionTemplate: Class<EndOfLineState__InTemplateHeadOrNoSubstitutionTemplate> &
+      EndOfLineState__InTemplateHeadOrNoSubstitutionTemplate &
+      4; // 4
+    static +InTemplateMiddleOrTail: Class<EndOfLineState__InTemplateMiddleOrTail> &
+      EndOfLineState__InTemplateMiddleOrTail &
+      5; // 5
+    static +InTemplateSubstitutionPosition: Class<EndOfLineState__InTemplateSubstitutionPosition> &
+      EndOfLineState__InTemplateSubstitutionPosition &
+      6; // 6
   }
 
   declare class EndOfLineState__None mixins EndOfLineState {}
@@ -11402,27 +10618,31 @@ It will be set if the required span differs from the one generated by the defaul
   declare class EndOfLineState__InTemplateSubstitutionPosition
     mixins EndOfLineState {}
 
-  declare export class EndOfLineState {
-    constructor(...args: empty): mixed;
-    static None: Class<EndOfLineState__None> & EndOfLineState__None & 0; // 0
-    static InMultiLineCommentTrivia: Class<EndOfLineState__InMultiLineCommentTrivia> &
-      EndOfLineState__InMultiLineCommentTrivia &
-      1; // 1
-    static InSingleQuoteStringLiteral: Class<EndOfLineState__InSingleQuoteStringLiteral> &
-      EndOfLineState__InSingleQuoteStringLiteral &
-      2; // 2
-    static InDoubleQuoteStringLiteral: Class<EndOfLineState__InDoubleQuoteStringLiteral> &
-      EndOfLineState__InDoubleQuoteStringLiteral &
-      3; // 3
-    static InTemplateHeadOrNoSubstitutionTemplate: Class<EndOfLineState__InTemplateHeadOrNoSubstitutionTemplate> &
-      EndOfLineState__InTemplateHeadOrNoSubstitutionTemplate &
+  declare class TokenClass {
+    static +Punctuation: Class<TokenClass__Punctuation> &
+      TokenClass__Punctuation &
+      0; // 0
+    static +Keyword: Class<TokenClass__Keyword> & TokenClass__Keyword & 1; // 1
+    static +Operator: Class<TokenClass__Operator> & TokenClass__Operator & 2; // 2
+    static +Comment: Class<TokenClass__Comment> & TokenClass__Comment & 3; // 3
+    static +Whitespace: Class<TokenClass__Whitespace> &
+      TokenClass__Whitespace &
       4; // 4
-    static InTemplateMiddleOrTail: Class<EndOfLineState__InTemplateMiddleOrTail> &
-      EndOfLineState__InTemplateMiddleOrTail &
+    static +Identifier: Class<TokenClass__Identifier> &
+      TokenClass__Identifier &
       5; // 5
-    static InTemplateSubstitutionPosition: Class<EndOfLineState__InTemplateSubstitutionPosition> &
-      EndOfLineState__InTemplateSubstitutionPosition &
+    static +NumberLiteral: Class<TokenClass__NumberLiteral> &
+      TokenClass__NumberLiteral &
       6; // 6
+    static +BigIntLiteral: Class<TokenClass__BigIntLiteral> &
+      TokenClass__BigIntLiteral &
+      7; // 7
+    static +StringLiteral: Class<TokenClass__StringLiteral> &
+      TokenClass__StringLiteral &
+      8; // 8
+    static +RegExpLiteral: Class<TokenClass__RegExpLiteral> &
+      TokenClass__RegExpLiteral &
+      9; // 9
   }
 
   declare class TokenClass__Punctuation mixins TokenClass {}
@@ -11436,73 +10656,134 @@ It will be set if the required span differs from the one generated by the defaul
   declare class TokenClass__StringLiteral mixins TokenClass {}
   declare class TokenClass__RegExpLiteral mixins TokenClass {}
 
-  declare export class TokenClass {
-    constructor(...args: empty): mixed;
-    static Punctuation: Class<TokenClass__Punctuation> &
-      TokenClass__Punctuation &
-      0; // 0
-    static Keyword: Class<TokenClass__Keyword> & TokenClass__Keyword & 1; // 1
-    static Operator: Class<TokenClass__Operator> & TokenClass__Operator & 2; // 2
-    static Comment: Class<TokenClass__Comment> & TokenClass__Comment & 3; // 3
-    static Whitespace: Class<TokenClass__Whitespace> &
-      TokenClass__Whitespace &
-      4; // 4
-    static Identifier: Class<TokenClass__Identifier> &
-      TokenClass__Identifier &
-      5; // 5
-    static NumberLiteral: Class<TokenClass__NumberLiteral> &
-      TokenClass__NumberLiteral &
-      6; // 6
-    static BigIntLiteral: Class<TokenClass__BigIntLiteral> &
-      TokenClass__BigIntLiteral &
-      7; // 7
-    static StringLiteral: Class<TokenClass__StringLiteral> &
-      TokenClass__StringLiteral &
-      8; // 8
-    static RegExpLiteral: Class<TokenClass__RegExpLiteral> &
-      TokenClass__RegExpLiteral &
-      9; // 9
-  }
+  declare type ClassificationResult = {
+    finalLexState: EndOfLineState,
+    entries: ClassificationInfo[]
+  };
 
-  declare export interface ClassificationResult {
-    finalLexState: EndOfLineState;
-    entries: ClassificationInfo[];
-  }
-  declare export interface ClassificationInfo {
-    length: number;
-    classification: TokenClass;
-  }
-  declare export interface Classifier {
-    /**
- * Gives lexical classifications of tokens on a line without any syntactic context.
- * For instance, a token consisting of the text 'string' can be either an identifier
-named 'string' or the keyword 'string', however, because this classifier is not aware,
-it relies on certain heuristics to give acceptable results. For classifications where
-speed trumps accuracy, this function is preferable; however, for true accuracy, the
-syntactic classifier is ideal. In fact, in certain editing scenarios, combining the
-lexical, syntactic, and semantic classifiers may issue the best user experience.
- * @param text The text of a line to classify.
- * @param lexState The state of the lexical classifier at the end of the previous line.
- * @param syntacticClassifierAbsent Whether the client is *not* using a syntactic classifier.
-If there is no syntactic classifier (syntacticClassifierAbsent=true),
-certain heuristics may be used in its place; however, if there is a
-syntactic classifier (syntacticClassifierAbsent=false), certain
-classifications which may be incorrectly categorized will be given
-back as Identifiers in order to allow the syntactic classifier to
-subsume the classification.
- * @deprecated Use getLexicalClassifications instead.
-*/
+  declare type ClassificationInfo = {
+    length: number,
+    classification: TokenClass
+  };
+
+  declare type Classifier = {
     getClassificationsForLine(
       text: string,
       lexState: EndOfLineState,
       syntacticClassifierAbsent: boolean
-    ): ClassificationResult;
+    ): ClassificationResult,
     getEncodedLexicalClassifications(
       text: string,
       endOfLineState: EndOfLineState,
       syntacticClassifierAbsent: boolean
-    ): Classifications;
+    ): Classifications
+  };
+
+  declare class ScriptElementKind {
+    static +unknown: Class<ScriptElementKind__unknown> &
+      ScriptElementKind__unknown &
+      ""; // ""
+    static +warning: Class<ScriptElementKind__warning> &
+      ScriptElementKind__warning &
+      "warning"; // "warning"
+    static +keyword: Class<ScriptElementKind__keyword> &
+      ScriptElementKind__keyword &
+      "keyword"; // "keyword"
+    static +scriptElement: Class<ScriptElementKind__scriptElement> &
+      ScriptElementKind__scriptElement &
+      "script"; // "script"
+    static +moduleElement: Class<ScriptElementKind__moduleElement> &
+      ScriptElementKind__moduleElement &
+      "module"; // "module"
+    static +classElement: Class<ScriptElementKind__classElement> &
+      ScriptElementKind__classElement &
+      "class"; // "class"
+    static +localClassElement: Class<ScriptElementKind__localClassElement> &
+      ScriptElementKind__localClassElement &
+      "local class"; // "local class"
+    static +interfaceElement: Class<ScriptElementKind__interfaceElement> &
+      ScriptElementKind__interfaceElement &
+      "interface"; // "interface"
+    static +typeElement: Class<ScriptElementKind__typeElement> &
+      ScriptElementKind__typeElement &
+      "type"; // "type"
+    static +enumElement: Class<ScriptElementKind__enumElement> &
+      ScriptElementKind__enumElement &
+      "enum"; // "enum"
+    static +enumMemberElement: Class<ScriptElementKind__enumMemberElement> &
+      ScriptElementKind__enumMemberElement &
+      "enum member"; // "enum member"
+    static +variableElement: Class<ScriptElementKind__variableElement> &
+      ScriptElementKind__variableElement &
+      "var"; // "var"
+    static +localVariableElement: Class<ScriptElementKind__localVariableElement> &
+      ScriptElementKind__localVariableElement &
+      "local var"; // "local var"
+    static +functionElement: Class<ScriptElementKind__functionElement> &
+      ScriptElementKind__functionElement &
+      "function"; // "function"
+    static +localFunctionElement: Class<ScriptElementKind__localFunctionElement> &
+      ScriptElementKind__localFunctionElement &
+      "local function"; // "local function"
+    static +memberFunctionElement: Class<ScriptElementKind__memberFunctionElement> &
+      ScriptElementKind__memberFunctionElement &
+      "method"; // "method"
+    static +memberGetAccessorElement: Class<ScriptElementKind__memberGetAccessorElement> &
+      ScriptElementKind__memberGetAccessorElement &
+      "getter"; // "getter"
+    static +memberSetAccessorElement: Class<ScriptElementKind__memberSetAccessorElement> &
+      ScriptElementKind__memberSetAccessorElement &
+      "setter"; // "setter"
+    static +memberVariableElement: Class<ScriptElementKind__memberVariableElement> &
+      ScriptElementKind__memberVariableElement &
+      "property"; // "property"
+    static +constructorImplementationElement: Class<ScriptElementKind__constructorImplementationElement> &
+      ScriptElementKind__constructorImplementationElement &
+      "constructor"; // "constructor"
+    static +callSignatureElement: Class<ScriptElementKind__callSignatureElement> &
+      ScriptElementKind__callSignatureElement &
+      "call"; // "call"
+    static +indexSignatureElement: Class<ScriptElementKind__indexSignatureElement> &
+      ScriptElementKind__indexSignatureElement &
+      "index"; // "index"
+    static +constructSignatureElement: Class<ScriptElementKind__constructSignatureElement> &
+      ScriptElementKind__constructSignatureElement &
+      "construct"; // "construct"
+    static +parameterElement: Class<ScriptElementKind__parameterElement> &
+      ScriptElementKind__parameterElement &
+      "parameter"; // "parameter"
+    static +typeParameterElement: Class<ScriptElementKind__typeParameterElement> &
+      ScriptElementKind__typeParameterElement &
+      "type parameter"; // "type parameter"
+    static +primitiveType: Class<ScriptElementKind__primitiveType> &
+      ScriptElementKind__primitiveType &
+      "primitive type"; // "primitive type"
+    static +label: Class<ScriptElementKind__label> &
+      ScriptElementKind__label &
+      "label"; // "label"
+    static +alias: Class<ScriptElementKind__alias> &
+      ScriptElementKind__alias &
+      "alias"; // "alias"
+    static +constElement: Class<ScriptElementKind__constElement> &
+      ScriptElementKind__constElement &
+      "const"; // "const"
+    static +letElement: Class<ScriptElementKind__letElement> &
+      ScriptElementKind__letElement &
+      "let"; // "let"
+    static +directory: Class<ScriptElementKind__directory> &
+      ScriptElementKind__directory &
+      "directory"; // "directory"
+    static +externalModuleName: Class<ScriptElementKind__externalModuleName> &
+      ScriptElementKind__externalModuleName &
+      "external module name"; // "external module name"
+    static +jsxAttribute: Class<ScriptElementKind__jsxAttribute> &
+      ScriptElementKind__jsxAttribute &
+      "JSX attribute"; // "JSX attribute"
+    static +string: Class<ScriptElementKind__string> &
+      ScriptElementKind__string &
+      "string"; // "string"
   }
+
   declare class ScriptElementKind__unknown mixins ScriptElementKind {}
   declare class ScriptElementKind__warning mixins ScriptElementKind {}
   declare class ScriptElementKind__keyword mixins ScriptElementKind {}
@@ -11550,110 +10831,52 @@ subsume the classification.
   declare class ScriptElementKind__jsxAttribute mixins ScriptElementKind {}
   declare class ScriptElementKind__string mixins ScriptElementKind {}
 
-  declare export class ScriptElementKind {
-    constructor(...args: empty): mixed;
-    static unknown: Class<ScriptElementKind__unknown> &
-      ScriptElementKind__unknown &
+  declare class ScriptElementKindModifier {
+    static +none: Class<ScriptElementKindModifier__none> &
+      ScriptElementKindModifier__none &
       ""; // ""
-    static warning: Class<ScriptElementKind__warning> &
-      ScriptElementKind__warning &
-      "warning"; // "warning"
-    static keyword: Class<ScriptElementKind__keyword> &
-      ScriptElementKind__keyword &
-      "keyword"; // "keyword"
-    static scriptElement: Class<ScriptElementKind__scriptElement> &
-      ScriptElementKind__scriptElement &
-      "script"; // "script"
-    static moduleElement: Class<ScriptElementKind__moduleElement> &
-      ScriptElementKind__moduleElement &
-      "module"; // "module"
-    static classElement: Class<ScriptElementKind__classElement> &
-      ScriptElementKind__classElement &
-      "class"; // "class"
-    static localClassElement: Class<ScriptElementKind__localClassElement> &
-      ScriptElementKind__localClassElement &
-      "local class"; // "local class"
-    static interfaceElement: Class<ScriptElementKind__interfaceElement> &
-      ScriptElementKind__interfaceElement &
-      "interface"; // "interface"
-    static typeElement: Class<ScriptElementKind__typeElement> &
-      ScriptElementKind__typeElement &
-      "type"; // "type"
-    static enumElement: Class<ScriptElementKind__enumElement> &
-      ScriptElementKind__enumElement &
-      "enum"; // "enum"
-    static enumMemberElement: Class<ScriptElementKind__enumMemberElement> &
-      ScriptElementKind__enumMemberElement &
-      "enum member"; // "enum member"
-    static variableElement: Class<ScriptElementKind__variableElement> &
-      ScriptElementKind__variableElement &
-      "var"; // "var"
-    static localVariableElement: Class<ScriptElementKind__localVariableElement> &
-      ScriptElementKind__localVariableElement &
-      "local var"; // "local var"
-    static functionElement: Class<ScriptElementKind__functionElement> &
-      ScriptElementKind__functionElement &
-      "function"; // "function"
-    static localFunctionElement: Class<ScriptElementKind__localFunctionElement> &
-      ScriptElementKind__localFunctionElement &
-      "local function"; // "local function"
-    static memberFunctionElement: Class<ScriptElementKind__memberFunctionElement> &
-      ScriptElementKind__memberFunctionElement &
-      "method"; // "method"
-    static memberGetAccessorElement: Class<ScriptElementKind__memberGetAccessorElement> &
-      ScriptElementKind__memberGetAccessorElement &
-      "getter"; // "getter"
-    static memberSetAccessorElement: Class<ScriptElementKind__memberSetAccessorElement> &
-      ScriptElementKind__memberSetAccessorElement &
-      "setter"; // "setter"
-    static memberVariableElement: Class<ScriptElementKind__memberVariableElement> &
-      ScriptElementKind__memberVariableElement &
-      "property"; // "property"
-    static constructorImplementationElement: Class<ScriptElementKind__constructorImplementationElement> &
-      ScriptElementKind__constructorImplementationElement &
-      "constructor"; // "constructor"
-    static callSignatureElement: Class<ScriptElementKind__callSignatureElement> &
-      ScriptElementKind__callSignatureElement &
-      "call"; // "call"
-    static indexSignatureElement: Class<ScriptElementKind__indexSignatureElement> &
-      ScriptElementKind__indexSignatureElement &
-      "index"; // "index"
-    static constructSignatureElement: Class<ScriptElementKind__constructSignatureElement> &
-      ScriptElementKind__constructSignatureElement &
-      "construct"; // "construct"
-    static parameterElement: Class<ScriptElementKind__parameterElement> &
-      ScriptElementKind__parameterElement &
-      "parameter"; // "parameter"
-    static typeParameterElement: Class<ScriptElementKind__typeParameterElement> &
-      ScriptElementKind__typeParameterElement &
-      "type parameter"; // "type parameter"
-    static primitiveType: Class<ScriptElementKind__primitiveType> &
-      ScriptElementKind__primitiveType &
-      "primitive type"; // "primitive type"
-    static label: Class<ScriptElementKind__label> &
-      ScriptElementKind__label &
-      "label"; // "label"
-    static alias: Class<ScriptElementKind__alias> &
-      ScriptElementKind__alias &
-      "alias"; // "alias"
-    static constElement: Class<ScriptElementKind__constElement> &
-      ScriptElementKind__constElement &
-      "const"; // "const"
-    static letElement: Class<ScriptElementKind__letElement> &
-      ScriptElementKind__letElement &
-      "let"; // "let"
-    static directory: Class<ScriptElementKind__directory> &
-      ScriptElementKind__directory &
-      "directory"; // "directory"
-    static externalModuleName: Class<ScriptElementKind__externalModuleName> &
-      ScriptElementKind__externalModuleName &
-      "external module name"; // "external module name"
-    static jsxAttribute: Class<ScriptElementKind__jsxAttribute> &
-      ScriptElementKind__jsxAttribute &
-      "JSX attribute"; // "JSX attribute"
-    static string: Class<ScriptElementKind__string> &
-      ScriptElementKind__string &
-      "string"; // "string"
+    static +publicMemberModifier: Class<ScriptElementKindModifier__publicMemberModifier> &
+      ScriptElementKindModifier__publicMemberModifier &
+      "public"; // "public"
+    static +privateMemberModifier: Class<ScriptElementKindModifier__privateMemberModifier> &
+      ScriptElementKindModifier__privateMemberModifier &
+      "private"; // "private"
+    static +protectedMemberModifier: Class<ScriptElementKindModifier__protectedMemberModifier> &
+      ScriptElementKindModifier__protectedMemberModifier &
+      "protected"; // "protected"
+    static +exportedModifier: Class<ScriptElementKindModifier__exportedModifier> &
+      ScriptElementKindModifier__exportedModifier &
+      "export"; // "export"
+    static +ambientModifier: Class<ScriptElementKindModifier__ambientModifier> &
+      ScriptElementKindModifier__ambientModifier &
+      "declare"; // "declare"
+    static +staticModifier: Class<ScriptElementKindModifier__staticModifier> &
+      ScriptElementKindModifier__staticModifier &
+      "static"; // "static"
+    static +abstractModifier: Class<ScriptElementKindModifier__abstractModifier> &
+      ScriptElementKindModifier__abstractModifier &
+      "abstract"; // "abstract"
+    static +optionalModifier: Class<ScriptElementKindModifier__optionalModifier> &
+      ScriptElementKindModifier__optionalModifier &
+      "optional"; // "optional"
+    static +dtsModifier: Class<ScriptElementKindModifier__dtsModifier> &
+      ScriptElementKindModifier__dtsModifier &
+      ".d.ts"; // ".d.ts"
+    static +tsModifier: Class<ScriptElementKindModifier__tsModifier> &
+      ScriptElementKindModifier__tsModifier &
+      ".ts"; // ".ts"
+    static +tsxModifier: Class<ScriptElementKindModifier__tsxModifier> &
+      ScriptElementKindModifier__tsxModifier &
+      ".tsx"; // ".tsx"
+    static +jsModifier: Class<ScriptElementKindModifier__jsModifier> &
+      ScriptElementKindModifier__jsModifier &
+      ".js"; // ".js"
+    static +jsxModifier: Class<ScriptElementKindModifier__jsxModifier> &
+      ScriptElementKindModifier__jsxModifier &
+      ".jsx"; // ".jsx"
+    static +jsonModifier: Class<ScriptElementKindModifier__jsonModifier> &
+      ScriptElementKindModifier__jsonModifier &
+      ".json"; // ".json"
   }
 
   declare class ScriptElementKindModifier__none
@@ -11687,53 +10910,79 @@ subsume the classification.
   declare class ScriptElementKindModifier__jsonModifier
     mixins ScriptElementKindModifier {}
 
-  declare export class ScriptElementKindModifier {
-    constructor(...args: empty): mixed;
-    static none: Class<ScriptElementKindModifier__none> &
-      ScriptElementKindModifier__none &
-      ""; // ""
-    static publicMemberModifier: Class<ScriptElementKindModifier__publicMemberModifier> &
-      ScriptElementKindModifier__publicMemberModifier &
-      "public"; // "public"
-    static privateMemberModifier: Class<ScriptElementKindModifier__privateMemberModifier> &
-      ScriptElementKindModifier__privateMemberModifier &
-      "private"; // "private"
-    static protectedMemberModifier: Class<ScriptElementKindModifier__protectedMemberModifier> &
-      ScriptElementKindModifier__protectedMemberModifier &
-      "protected"; // "protected"
-    static exportedModifier: Class<ScriptElementKindModifier__exportedModifier> &
-      ScriptElementKindModifier__exportedModifier &
-      "export"; // "export"
-    static ambientModifier: Class<ScriptElementKindModifier__ambientModifier> &
-      ScriptElementKindModifier__ambientModifier &
-      "declare"; // "declare"
-    static staticModifier: Class<ScriptElementKindModifier__staticModifier> &
-      ScriptElementKindModifier__staticModifier &
-      "static"; // "static"
-    static abstractModifier: Class<ScriptElementKindModifier__abstractModifier> &
-      ScriptElementKindModifier__abstractModifier &
-      "abstract"; // "abstract"
-    static optionalModifier: Class<ScriptElementKindModifier__optionalModifier> &
-      ScriptElementKindModifier__optionalModifier &
-      "optional"; // "optional"
-    static dtsModifier: Class<ScriptElementKindModifier__dtsModifier> &
-      ScriptElementKindModifier__dtsModifier &
-      ".d.ts"; // ".d.ts"
-    static tsModifier: Class<ScriptElementKindModifier__tsModifier> &
-      ScriptElementKindModifier__tsModifier &
-      ".ts"; // ".ts"
-    static tsxModifier: Class<ScriptElementKindModifier__tsxModifier> &
-      ScriptElementKindModifier__tsxModifier &
-      ".tsx"; // ".tsx"
-    static jsModifier: Class<ScriptElementKindModifier__jsModifier> &
-      ScriptElementKindModifier__jsModifier &
-      ".js"; // ".js"
-    static jsxModifier: Class<ScriptElementKindModifier__jsxModifier> &
-      ScriptElementKindModifier__jsxModifier &
-      ".jsx"; // ".jsx"
-    static jsonModifier: Class<ScriptElementKindModifier__jsonModifier> &
-      ScriptElementKindModifier__jsonModifier &
-      ".json"; // ".json"
+  declare class ClassificationTypeNames {
+    static +comment: Class<ClassificationTypeNames__comment> &
+      ClassificationTypeNames__comment &
+      "comment"; // "comment"
+    static +identifier: Class<ClassificationTypeNames__identifier> &
+      ClassificationTypeNames__identifier &
+      "identifier"; // "identifier"
+    static +keyword: Class<ClassificationTypeNames__keyword> &
+      ClassificationTypeNames__keyword &
+      "keyword"; // "keyword"
+    static +numericLiteral: Class<ClassificationTypeNames__numericLiteral> &
+      ClassificationTypeNames__numericLiteral &
+      "number"; // "number"
+    static +bigintLiteral: Class<ClassificationTypeNames__bigintLiteral> &
+      ClassificationTypeNames__bigintLiteral &
+      "bigint"; // "bigint"
+    static +operator: Class<ClassificationTypeNames__operator> &
+      ClassificationTypeNames__operator &
+      "operator"; // "operator"
+    static +stringLiteral: Class<ClassificationTypeNames__stringLiteral> &
+      ClassificationTypeNames__stringLiteral &
+      "string"; // "string"
+    static +whiteSpace: Class<ClassificationTypeNames__whiteSpace> &
+      ClassificationTypeNames__whiteSpace &
+      "whitespace"; // "whitespace"
+    static +text: Class<ClassificationTypeNames__text> &
+      ClassificationTypeNames__text &
+      "text"; // "text"
+    static +punctuation: Class<ClassificationTypeNames__punctuation> &
+      ClassificationTypeNames__punctuation &
+      "punctuation"; // "punctuation"
+    static +className: Class<ClassificationTypeNames__className> &
+      ClassificationTypeNames__className &
+      "class name"; // "class name"
+    static +enumName: Class<ClassificationTypeNames__enumName> &
+      ClassificationTypeNames__enumName &
+      "enum name"; // "enum name"
+    static +interfaceName: Class<ClassificationTypeNames__interfaceName> &
+      ClassificationTypeNames__interfaceName &
+      "interface name"; // "interface name"
+    static +moduleName: Class<ClassificationTypeNames__moduleName> &
+      ClassificationTypeNames__moduleName &
+      "module name"; // "module name"
+    static +typeParameterName: Class<ClassificationTypeNames__typeParameterName> &
+      ClassificationTypeNames__typeParameterName &
+      "type parameter name"; // "type parameter name"
+    static +typeAliasName: Class<ClassificationTypeNames__typeAliasName> &
+      ClassificationTypeNames__typeAliasName &
+      "type alias name"; // "type alias name"
+    static +parameterName: Class<ClassificationTypeNames__parameterName> &
+      ClassificationTypeNames__parameterName &
+      "parameter name"; // "parameter name"
+    static +docCommentTagName: Class<ClassificationTypeNames__docCommentTagName> &
+      ClassificationTypeNames__docCommentTagName &
+      "doc comment tag name"; // "doc comment tag name"
+    static +jsxOpenTagName: Class<ClassificationTypeNames__jsxOpenTagName> &
+      ClassificationTypeNames__jsxOpenTagName &
+      "jsx open tag name"; // "jsx open tag name"
+    static +jsxCloseTagName: Class<ClassificationTypeNames__jsxCloseTagName> &
+      ClassificationTypeNames__jsxCloseTagName &
+      "jsx close tag name"; // "jsx close tag name"
+    static +jsxSelfClosingTagName: Class<ClassificationTypeNames__jsxSelfClosingTagName> &
+      ClassificationTypeNames__jsxSelfClosingTagName &
+      "jsx self closing tag name"; // "jsx self closing tag name"
+    static +jsxAttribute: Class<ClassificationTypeNames__jsxAttribute> &
+      ClassificationTypeNames__jsxAttribute &
+      "jsx attribute"; // "jsx attribute"
+    static +jsxText: Class<ClassificationTypeNames__jsxText> &
+      ClassificationTypeNames__jsxText &
+      "jsx text"; // "jsx text"
+    static +jsxAttributeStringLiteralValue: Class<ClassificationTypeNames__jsxAttributeStringLiteralValue> &
+      ClassificationTypeNames__jsxAttributeStringLiteralValue &
+      "jsx attribute string literal value"; // "jsx attribute string literal value"
   }
 
   declare class ClassificationTypeNames__comment
@@ -11784,80 +11033,82 @@ subsume the classification.
   declare class ClassificationTypeNames__jsxAttributeStringLiteralValue
     mixins ClassificationTypeNames {}
 
-  declare export class ClassificationTypeNames {
-    constructor(...args: empty): mixed;
-    static comment: Class<ClassificationTypeNames__comment> &
-      ClassificationTypeNames__comment &
-      "comment"; // "comment"
-    static identifier: Class<ClassificationTypeNames__identifier> &
-      ClassificationTypeNames__identifier &
-      "identifier"; // "identifier"
-    static keyword: Class<ClassificationTypeNames__keyword> &
-      ClassificationTypeNames__keyword &
-      "keyword"; // "keyword"
-    static numericLiteral: Class<ClassificationTypeNames__numericLiteral> &
-      ClassificationTypeNames__numericLiteral &
-      "number"; // "number"
-    static bigintLiteral: Class<ClassificationTypeNames__bigintLiteral> &
-      ClassificationTypeNames__bigintLiteral &
-      "bigint"; // "bigint"
-    static operator: Class<ClassificationTypeNames__operator> &
-      ClassificationTypeNames__operator &
-      "operator"; // "operator"
-    static stringLiteral: Class<ClassificationTypeNames__stringLiteral> &
-      ClassificationTypeNames__stringLiteral &
-      "string"; // "string"
-    static whiteSpace: Class<ClassificationTypeNames__whiteSpace> &
-      ClassificationTypeNames__whiteSpace &
-      "whitespace"; // "whitespace"
-    static text: Class<ClassificationTypeNames__text> &
-      ClassificationTypeNames__text &
-      "text"; // "text"
-    static punctuation: Class<ClassificationTypeNames__punctuation> &
-      ClassificationTypeNames__punctuation &
-      "punctuation"; // "punctuation"
-    static className: Class<ClassificationTypeNames__className> &
-      ClassificationTypeNames__className &
-      "class name"; // "class name"
-    static enumName: Class<ClassificationTypeNames__enumName> &
-      ClassificationTypeNames__enumName &
-      "enum name"; // "enum name"
-    static interfaceName: Class<ClassificationTypeNames__interfaceName> &
-      ClassificationTypeNames__interfaceName &
-      "interface name"; // "interface name"
-    static moduleName: Class<ClassificationTypeNames__moduleName> &
-      ClassificationTypeNames__moduleName &
-      "module name"; // "module name"
-    static typeParameterName: Class<ClassificationTypeNames__typeParameterName> &
-      ClassificationTypeNames__typeParameterName &
-      "type parameter name"; // "type parameter name"
-    static typeAliasName: Class<ClassificationTypeNames__typeAliasName> &
-      ClassificationTypeNames__typeAliasName &
-      "type alias name"; // "type alias name"
-    static parameterName: Class<ClassificationTypeNames__parameterName> &
-      ClassificationTypeNames__parameterName &
-      "parameter name"; // "parameter name"
-    static docCommentTagName: Class<ClassificationTypeNames__docCommentTagName> &
-      ClassificationTypeNames__docCommentTagName &
-      "doc comment tag name"; // "doc comment tag name"
-    static jsxOpenTagName: Class<ClassificationTypeNames__jsxOpenTagName> &
-      ClassificationTypeNames__jsxOpenTagName &
-      "jsx open tag name"; // "jsx open tag name"
-    static jsxCloseTagName: Class<ClassificationTypeNames__jsxCloseTagName> &
-      ClassificationTypeNames__jsxCloseTagName &
-      "jsx close tag name"; // "jsx close tag name"
-    static jsxSelfClosingTagName: Class<ClassificationTypeNames__jsxSelfClosingTagName> &
-      ClassificationTypeNames__jsxSelfClosingTagName &
-      "jsx self closing tag name"; // "jsx self closing tag name"
-    static jsxAttribute: Class<ClassificationTypeNames__jsxAttribute> &
-      ClassificationTypeNames__jsxAttribute &
-      "jsx attribute"; // "jsx attribute"
-    static jsxText: Class<ClassificationTypeNames__jsxText> &
-      ClassificationTypeNames__jsxText &
-      "jsx text"; // "jsx text"
-    static jsxAttributeStringLiteralValue: Class<ClassificationTypeNames__jsxAttributeStringLiteralValue> &
-      ClassificationTypeNames__jsxAttributeStringLiteralValue &
-      "jsx attribute string literal value"; // "jsx attribute string literal value"
+  declare class ClassificationType {
+    static +comment: Class<ClassificationType__comment> &
+      ClassificationType__comment &
+      1; // 1
+    static +identifier: Class<ClassificationType__identifier> &
+      ClassificationType__identifier &
+      2; // 2
+    static +keyword: Class<ClassificationType__keyword> &
+      ClassificationType__keyword &
+      3; // 3
+    static +numericLiteral: Class<ClassificationType__numericLiteral> &
+      ClassificationType__numericLiteral &
+      4; // 4
+    static +operator: Class<ClassificationType__operator> &
+      ClassificationType__operator &
+      5; // 5
+    static +stringLiteral: Class<ClassificationType__stringLiteral> &
+      ClassificationType__stringLiteral &
+      6; // 6
+    static +regularExpressionLiteral: Class<ClassificationType__regularExpressionLiteral> &
+      ClassificationType__regularExpressionLiteral &
+      7; // 7
+    static +whiteSpace: Class<ClassificationType__whiteSpace> &
+      ClassificationType__whiteSpace &
+      8; // 8
+    static +text: Class<ClassificationType__text> &
+      ClassificationType__text &
+      9; // 9
+    static +punctuation: Class<ClassificationType__punctuation> &
+      ClassificationType__punctuation &
+      10; // 10
+    static +className: Class<ClassificationType__className> &
+      ClassificationType__className &
+      11; // 11
+    static +enumName: Class<ClassificationType__enumName> &
+      ClassificationType__enumName &
+      12; // 12
+    static +interfaceName: Class<ClassificationType__interfaceName> &
+      ClassificationType__interfaceName &
+      13; // 13
+    static +moduleName: Class<ClassificationType__moduleName> &
+      ClassificationType__moduleName &
+      14; // 14
+    static +typeParameterName: Class<ClassificationType__typeParameterName> &
+      ClassificationType__typeParameterName &
+      15; // 15
+    static +typeAliasName: Class<ClassificationType__typeAliasName> &
+      ClassificationType__typeAliasName &
+      16; // 16
+    static +parameterName: Class<ClassificationType__parameterName> &
+      ClassificationType__parameterName &
+      17; // 17
+    static +docCommentTagName: Class<ClassificationType__docCommentTagName> &
+      ClassificationType__docCommentTagName &
+      18; // 18
+    static +jsxOpenTagName: Class<ClassificationType__jsxOpenTagName> &
+      ClassificationType__jsxOpenTagName &
+      19; // 19
+    static +jsxCloseTagName: Class<ClassificationType__jsxCloseTagName> &
+      ClassificationType__jsxCloseTagName &
+      20; // 20
+    static +jsxSelfClosingTagName: Class<ClassificationType__jsxSelfClosingTagName> &
+      ClassificationType__jsxSelfClosingTagName &
+      21; // 21
+    static +jsxAttribute: Class<ClassificationType__jsxAttribute> &
+      ClassificationType__jsxAttribute &
+      22; // 22
+    static +jsxText: Class<ClassificationType__jsxText> &
+      ClassificationType__jsxText &
+      23; // 23
+    static +jsxAttributeStringLiteralValue: Class<ClassificationType__jsxAttributeStringLiteralValue> &
+      ClassificationType__jsxAttributeStringLiteralValue &
+      24; // 24
+    static +bigintLiteral: Class<ClassificationType__bigintLiteral> &
+      ClassificationType__bigintLiteral &
+      25; // 25
   }
 
   declare class ClassificationType__comment mixins ClassificationType {}
@@ -11891,121 +11142,16 @@ subsume the classification.
     mixins ClassificationType {}
   declare class ClassificationType__bigintLiteral mixins ClassificationType {}
 
-  declare export class ClassificationType {
-    constructor(...args: empty): mixed;
-    static comment: Class<ClassificationType__comment> &
-      ClassificationType__comment &
-      1; // 1
-    static identifier: Class<ClassificationType__identifier> &
-      ClassificationType__identifier &
-      2; // 2
-    static keyword: Class<ClassificationType__keyword> &
-      ClassificationType__keyword &
-      3; // 3
-    static numericLiteral: Class<ClassificationType__numericLiteral> &
-      ClassificationType__numericLiteral &
-      4; // 4
-    static operator: Class<ClassificationType__operator> &
-      ClassificationType__operator &
-      5; // 5
-    static stringLiteral: Class<ClassificationType__stringLiteral> &
-      ClassificationType__stringLiteral &
-      6; // 6
-    static regularExpressionLiteral: Class<ClassificationType__regularExpressionLiteral> &
-      ClassificationType__regularExpressionLiteral &
-      7; // 7
-    static whiteSpace: Class<ClassificationType__whiteSpace> &
-      ClassificationType__whiteSpace &
-      8; // 8
-    static text: Class<ClassificationType__text> & ClassificationType__text & 9; // 9
-    static punctuation: Class<ClassificationType__punctuation> &
-      ClassificationType__punctuation &
-      10; // 10
-    static className: Class<ClassificationType__className> &
-      ClassificationType__className &
-      11; // 11
-    static enumName: Class<ClassificationType__enumName> &
-      ClassificationType__enumName &
-      12; // 12
-    static interfaceName: Class<ClassificationType__interfaceName> &
-      ClassificationType__interfaceName &
-      13; // 13
-    static moduleName: Class<ClassificationType__moduleName> &
-      ClassificationType__moduleName &
-      14; // 14
-    static typeParameterName: Class<ClassificationType__typeParameterName> &
-      ClassificationType__typeParameterName &
-      15; // 15
-    static typeAliasName: Class<ClassificationType__typeAliasName> &
-      ClassificationType__typeAliasName &
-      16; // 16
-    static parameterName: Class<ClassificationType__parameterName> &
-      ClassificationType__parameterName &
-      17; // 17
-    static docCommentTagName: Class<ClassificationType__docCommentTagName> &
-      ClassificationType__docCommentTagName &
-      18; // 18
-    static jsxOpenTagName: Class<ClassificationType__jsxOpenTagName> &
-      ClassificationType__jsxOpenTagName &
-      19; // 19
-    static jsxCloseTagName: Class<ClassificationType__jsxCloseTagName> &
-      ClassificationType__jsxCloseTagName &
-      20; // 20
-    static jsxSelfClosingTagName: Class<ClassificationType__jsxSelfClosingTagName> &
-      ClassificationType__jsxSelfClosingTagName &
-      21; // 21
-    static jsxAttribute: Class<ClassificationType__jsxAttribute> &
-      ClassificationType__jsxAttribute &
-      22; // 22
-    static jsxText: Class<ClassificationType__jsxText> &
-      ClassificationType__jsxText &
-      23; // 23
-    static jsxAttributeStringLiteralValue: Class<ClassificationType__jsxAttributeStringLiteralValue> &
-      ClassificationType__jsxAttributeStringLiteralValue &
-      24; // 24
-    static bigintLiteral: Class<ClassificationType__bigintLiteral> &
-      ClassificationType__bigintLiteral &
-      25; // 25
-  }
+  declare function createClassifier(): Classifier;
 
-  declare export function createClassifier(): Classifier;
-
-  /**
- * The document registry represents a store of SourceFile objects that can be shared between
- * multiple LanguageService instances. A LanguageService instance holds on the SourceFile (AST)
-of files in the context.
-SourceFile objects account for most of the memory usage by the language service. Sharing
-the same DocumentRegistry instance between different instances of LanguageService allow
-for more efficient memory utilization since all projects will share at least the library
-file (lib.d.ts).
-
-A more advanced use of the document registry is to serialize sourceFile objects to disk
-and re-hydrate them when needed.
-
-To create a default DocumentRegistry, use createDocumentRegistry to create one, and pass it
-to all subsequent createLanguageService calls.
-*/
-  declare export interface DocumentRegistry {
-    /**
- * Request a stored SourceFile with a given fileName and compilationSettings.
- * The first call to acquire will call createLanguageServiceSourceFile to generate
-the SourceFile if was not found in the registry.
- * @param fileName The name of the file requested
- * @param compilationSettings Some compilation settings like target affects the
-shape of a the resulting SourceFile. This allows the DocumentRegistry to store
-multiple copies of the same file for different compilation settings.
- * @param scriptSnapshot Text of the file. Only used if the file was not found
-in the registry and a new one was created.
- * @param version Current version of the file. Only used if the file was not found
-in the registry and a new one was created.
-*/
+  declare type DocumentRegistry = {
     acquireDocument(
       fileName: string,
       compilationSettings: CompilerOptions,
       scriptSnapshot: IScriptSnapshot,
       version: string,
       scriptKind?: ScriptKind
-    ): SourceFile;
+    ): SourceFile,
     acquireDocumentWithKey(
       fileName: string,
       path: Path,
@@ -12014,26 +11160,14 @@ in the registry and a new one was created.
       scriptSnapshot: IScriptSnapshot,
       version: string,
       scriptKind?: ScriptKind
-    ): SourceFile;
-
-    /**
- * Request an updated version of an already existing SourceFile with a given fileName
- * and compilationSettings. The update will in-turn call updateLanguageServiceSourceFile
-to get an updated SourceFile.
- * @param fileName The name of the file requested
- * @param compilationSettings Some compilation settings like target affects the
-shape of a the resulting SourceFile. This allows the DocumentRegistry to store
-multiple copies of the same file for different compilation settings.
- * @param scriptSnapshot Text of the file.
- * @param version Current version of the file.
-*/
+    ): SourceFile,
     updateDocument(
       fileName: string,
       compilationSettings: CompilerOptions,
       scriptSnapshot: IScriptSnapshot,
       version: string,
       scriptKind?: ScriptKind
-    ): SourceFile;
+    ): SourceFile,
     updateDocumentWithKey(
       fileName: string,
       path: Path,
@@ -12042,59 +11176,53 @@ multiple copies of the same file for different compilation settings.
       scriptSnapshot: IScriptSnapshot,
       version: string,
       scriptKind?: ScriptKind
-    ): SourceFile;
+    ): SourceFile,
     getKeyForCompilationSettings(
       settings: CompilerOptions
-    ): DocumentRegistryBucketKey;
-
-    /**
- * Informs the DocumentRegistry that a file is not needed any longer.
- * 
-Note: It is not allowed to call release on a SourceFile that was not acquired from
-this registry originally.
- * @param fileName The name of the file to be released
- * @param compilationSettings The compilation settings used to acquire the file
-*/
+    ): DocumentRegistryBucketKey,
     releaseDocument(
       fileName: string,
       compilationSettings: CompilerOptions
-    ): void;
-    releaseDocumentWithKey(path: Path, key: DocumentRegistryBucketKey): void;
-    reportStats(): string;
-  }
-  declare export type DocumentRegistryBucketKey = string & {
+    ): void,
+    releaseDocumentWithKey(path: Path, key: DocumentRegistryBucketKey): void,
+    reportStats(): string
+  };
+
+  declare type DocumentRegistryBucketKey = string & {
     __bucketKey: any
   };
-  declare export function createDocumentRegistry(
+  declare function createDocumentRegistry(
     useCaseSensitiveFileNames?: boolean,
     currentDirectory?: string
   ): DocumentRegistry;
 
-  declare export function preProcessFile(
+  declare function preProcessFile(
     sourceText: string,
     readImportFiles?: boolean,
     detectJavaScriptImports?: boolean
   ): PreProcessedFileInfo;
 
-  declare export interface TranspileOptions {
-    compilerOptions?: CompilerOptions;
-    fileName?: string;
-    reportDiagnostics?: boolean;
-    moduleName?: string;
-    renamedDependencies?: MapLike<string>;
-    transformers?: CustomTransformers;
-  }
-  declare export interface TranspileOutput {
-    outputText: string;
-    diagnostics?: Diagnostic[];
-    sourceMapText?: string;
-  }
-  declare export function transpileModule(
+  declare type TranspileOptions = {
+    compilerOptions?: CompilerOptions,
+    fileName?: string,
+    reportDiagnostics?: boolean,
+    moduleName?: string,
+    renamedDependencies?: MapLike<string>,
+    transformers?: CustomTransformers
+  };
+
+  declare type TranspileOutput = {
+    outputText: string,
+    diagnostics?: Diagnostic[],
+    sourceMapText?: string
+  };
+
+  declare function transpileModule(
     input: string,
     transpileOptions: TranspileOptions
   ): TranspileOutput;
 
-  declare export function transpile(
+  declare function transpile(
     input: string,
     compilerOptions?: CompilerOptions,
     fileName?: string,
@@ -12102,32 +11230,32 @@ this registry originally.
     moduleName?: string
   ): string;
 
-  declare export function generateTypesForModule(
+  declare function generateTypesForModule(
     name: string,
     moduleValue: mixed,
     formatSettings: FormatCodeSettings
   ): string;
 
-  declare export function generateTypesForGlobal(
+  declare function generateTypesForGlobal(
     name: string,
     globalValue: mixed,
     formatSettings: FormatCodeSettings
   ): string;
 
-  declare export var servicesVersion: "0.8";
-  declare export function toEditorSettings(
+  declare var servicesVersion: "0.8";
+  declare function toEditorSettings(
     options: EditorOptions | EditorSettings
   ): EditorSettings;
 
-  declare export function displayPartsToString(
+  declare function displayPartsToString(
     displayParts: SymbolDisplayPart[] | void
   ): string;
 
-  declare export function getDefaultCompilerOptions(): CompilerOptions;
+  declare function getDefaultCompilerOptions(): CompilerOptions;
 
-  declare export function getSupportedCodeFixes(): string[];
+  declare function getSupportedCodeFixes(): string[];
 
-  declare export function createLanguageServiceSourceFile(
+  declare function createLanguageServiceSourceFile(
     fileName: string,
     scriptSnapshot: IScriptSnapshot,
     scriptTarget: ScriptTarget,
@@ -12136,8 +11264,8 @@ this registry originally.
     scriptKind?: ScriptKind
   ): SourceFile;
 
-  declare export var disableIncrementalParsing: boolean;
-  declare export function updateLanguageServiceSourceFile(
+  declare var disableIncrementalParsing: boolean;
+  declare function updateLanguageServiceSourceFile(
     sourceFile: SourceFile,
     scriptSnapshot: IScriptSnapshot,
     version: string,
@@ -12145,40 +11273,28 @@ this registry originally.
     aggressiveChecks?: boolean
   ): SourceFile;
 
-  declare export function createLanguageService(
+  declare function createLanguageService(
     host: LanguageServiceHost,
     documentRegistry?: DocumentRegistry,
     syntaxOnly?: boolean
   ): LanguageService;
 
-  /**
- * Get the path of the default library files (lib.d.ts) as distributed with the typescript
- * node package.
-The functionality is not supported if the ts module is consumed outside of a node module.
-*/
-  declare export function getDefaultLibFilePath(options: CompilerOptions): string;
+  declare function getDefaultLibFilePath(options: CompilerOptions): string;
 
-  /**
-   * Transform one or more nodes using the supplied transformers.
-   * @param source A single `Node` or an array of `Node` objects.
-   * @param transformers An array of `TransformerFactory` callbacks used to process the transformation.
-   * @param compilerOptions Optional compiler options.
-   */
-  declare export function transform<T: Node>(
+  declare function transform<T: Node>(
     source: T | T[],
     transformers: TransformerFactory<T>[],
     compilerOptions?: CompilerOptions
   ): TransformationResult<T>;
-
-  declare export type ActionSet = "action::set";
-  declare export type ActionInvalidate = "action::invalidate";
-  declare export type ActionPackageInstalled = "action::packageInstalled";
-  declare export type ActionValueInspected = "action::valueInspected";
-  declare export type EventTypesRegistry = "event::typesRegistry";
-  declare export type EventBeginInstallTypes = "event::beginInstallTypes";
-  declare export type EventEndInstallTypes = "event::endInstallTypes";
-  declare export type EventInitializationFailed = "event::initializationFailed";
-  declare export interface TypingInstallerResponse {
+  declare type ActionSet = "action::set";
+  declare type ActionInvalidate = "action::invalidate";
+  declare type ActionPackageInstalled = "action::packageInstalled";
+  declare type ActionValueInspected = "action::valueInspected";
+  declare type EventTypesRegistry = "event::typesRegistry";
+  declare type EventBeginInstallTypes = "event::beginInstallTypes";
+  declare type EventEndInstallTypes = "event::endInstallTypes";
+  declare type EventInitializationFailed = "event::initializationFailed";
+  declare type TypingInstallerResponse = {
     kind:
       | ActionSet
       | ActionInvalidate
@@ -12187,12 +11303,16 @@ The functionality is not supported if the ts module is consumed outside of a nod
       | ActionValueInspected
       | EventBeginInstallTypes
       | EventEndInstallTypes
-      | EventInitializationFailed;
-  }
-  declare export interface TypingInstallerRequestWithProjectName {
-    projectName: string;
-  }
-  declare export type DiscoverTypings = {
+      | EventInitializationFailed
+  };
+
+  declare type TypingInstallerRequestWithProjectName = {
+    projectName: string
+  };
+
+  declare type DiscoverTypings = {
+    ...$Exact<TypingInstallerRequestWithProjectName>,
+
     fileNames: string[],
     projectRootPath: Path,
     compilerOptions: CompilerOptions,
@@ -12200,67 +11320,83 @@ The functionality is not supported if the ts module is consumed outside of a nod
     unresolvedImports: SortedReadonlyArray<string>,
     cachePath?: string,
     kind: "discover"
-  } & TypingInstallerRequestWithProjectName;
+  };
 
-  declare export type CloseProject = {
+  declare type CloseProject = {
+    ...$Exact<TypingInstallerRequestWithProjectName>,
+
     kind: "closeProject"
-  } & TypingInstallerRequestWithProjectName;
+  };
 
-  declare export interface TypesRegistryRequest {
-    kind: "typesRegistry";
-  }
-  declare export type InstallPackageRequest = {
+  declare type TypesRegistryRequest = {
+    kind: "typesRegistry"
+  };
+
+  declare type InstallPackageRequest = {
+    ...$Exact<TypingInstallerRequestWithProjectName>,
+
     kind: "installPackage",
     fileName: Path,
     packageName: string,
     projectRootPath: Path
-  } & TypingInstallerRequestWithProjectName;
+  };
 
-  declare export type PackageInstalledResponse = {
+  declare type PackageInstalledResponse = {
+    ...$Exact<ProjectResponse>,
+
     kind: ActionPackageInstalled,
     success: boolean,
     message: string
-  } & ProjectResponse;
+  };
 
-  declare export type InitializationFailedResponse = {
+  declare type InitializationFailedResponse = {
+    ...$Exact<TypingInstallerResponse>,
+
     kind: EventInitializationFailed,
     message: string
-  } & TypingInstallerResponse;
+  };
 
-  declare export type ProjectResponse = {
+  declare type ProjectResponse = {
+    ...$Exact<TypingInstallerResponse>,
+
     projectName: string
-  } & TypingInstallerResponse;
+  };
 
-  declare export type InvalidateCachedTypings = {
+  declare type InvalidateCachedTypings = {
+    ...$Exact<ProjectResponse>,
+
     kind: ActionInvalidate
-  } & ProjectResponse;
+  };
 
-  declare export type InstallTypes = {
+  declare type InstallTypes = {
+    ...$Exact<ProjectResponse>,
+
     kind: EventBeginInstallTypes | EventEndInstallTypes,
     eventId: number,
     typingsInstallerVersion: string,
     packagesToInstall: $ReadOnlyArray<string>
-  } & ProjectResponse;
+  };
 
-  declare export type BeginInstallTypes = {
+  declare type BeginInstallTypes = {
+    ...$Exact<InstallTypes>,
+
     kind: EventBeginInstallTypes
-  } & InstallTypes;
+  };
 
-  declare export type EndInstallTypes = {
+  declare type EndInstallTypes = {
+    ...$Exact<InstallTypes>,
+
     kind: EventEndInstallTypes,
     installSuccess: boolean
-  } & InstallTypes;
+  };
 
-  declare export type SetTypings = {
+  declare type SetTypings = {
+    ...$Exact<ProjectResponse>,
+
     typeAcquisition: TypeAcquisition,
     compilerOptions: CompilerOptions,
     typings: string[],
     unresolvedImports: SortedReadonlyArray<string>,
     kind: ActionSet
-  } & ProjectResponse;
+  };
 }
-declare export function setTimeout(
-  handler: (...args: any[]) => void,
-  timeout: number
-): any;
-declare export function clearTimeout(handle: any): void;
