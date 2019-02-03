@@ -1793,7 +1793,7 @@ declare module "typescript" {
     | PropertyDeclaration
     | PropertyAssignment
     | EnumMember;
-  declare type NodeArray<T: Node> = {
+  declare type NodeArray<T: $ReadOnly<Node>> = {
     ...$Exact<TextRange>,
 
     hasTrailingComma?: boolean
