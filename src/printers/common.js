@@ -1,6 +1,6 @@
 /* @flow */
 
-import program from "commander";
+import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 
 import printers from "./index";
@@ -49,10 +49,13 @@ export const generics = (types: ?Array<RawNode>): string => {
 };
 
 export const comment = (jsdoc: Array<any>): string => {
-  if (!program.opts().jsdoc) return "";
+  if (!opts().jsdoc) return "";
   const blocks = jsdoc
     .map(doc => {
-      const comment = (doc.comment || "").replace("\n", "\n * ");
+      const comment = (doc.comment ? `\n${doc.comment}` : "").replace(
+        /\n/g,
+        "\n * ",
+      );
 
       const tags = (doc.tags || []).map(tag => {
         const typeName =
@@ -70,5 +73,5 @@ export const comment = (jsdoc: Array<any>): string => {
     })
     .join("");
 
-  return `\n/**\n * ${blocks}\n*/\n`;
+  return `\n/**${blocks}\n */\n`;
 };

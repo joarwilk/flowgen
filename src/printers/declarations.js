@@ -1,6 +1,6 @@
 /* @flow */
 
-import program from "commander";
+import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
@@ -104,7 +104,7 @@ export const interfaceDeclaration = (
   nodeName: string,
   node: RawNode,
 ): string => {
-  const isRecord = program.opts().interfaceRecords;
+  const isRecord = opts().interfaceRecords;
   if (isRecord) {
     return interfaceRecordDeclaration(nodeName, node);
   }
@@ -151,12 +151,12 @@ export const enumStringDeclaration = (
     members += `| ${JSON.stringify(member.name.text)}`;
   }
   return `declare ${exporter} type ${nodeName} =
-  ${members}
+  ${members === "" ? "empty" : members}
 \n`;
 };
 
 export const enumDeclaration = (nodeName: string, node: RawNode): string => {
-  const isStringEnum = program.opts().stringEnums;
+  const isStringEnum = opts().stringEnums;
 
   if (isStringEnum) {
     return enumStringDeclaration(nodeName, node);

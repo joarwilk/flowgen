@@ -4,6 +4,7 @@ import fs from "fs";
 import tsc from "typescript-compiler";
 
 import namespaceManager from "../namespaceManager";
+import { type Options, assignOptions, resetOptions } from "../options";
 import { recursiveWalkTree } from "../parse";
 
 const compile = (sourceFile): string => {
@@ -27,7 +28,11 @@ export default {
     tsc.compile(path, "--module commonjs -t ES6 --out " + target);
   },
 
-  compileDefinitionString: (string: string): string => {
+  compileDefinitionString: (string: string, options?: Options): string => {
+    if (options) {
+      resetOptions();
+      assignOptions(options);
+    }
     namespaceManager.reset();
 
     return compile(
@@ -35,7 +40,11 @@ export default {
     );
   },
 
-  compileDefinitionFile: (path: string): string => {
+  compileDefinitionFile: (path: string, options?: Options): string => {
+    if (options) {
+      resetOptions();
+      assignOptions(options);
+    }
     namespaceManager.reset();
 
     return compile(
