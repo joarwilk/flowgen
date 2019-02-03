@@ -3,7 +3,9 @@ import { compiler, beautify } from "..";
 it("should handle empty enums", () => {
   const ts = `enum Empty { }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle basic enums", () => {
@@ -13,7 +15,9 @@ it("should handle basic enums", () => {
     LABEL_REPEATED,
   }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle number enums", () => {
@@ -25,7 +29,9 @@ it("should handle number enums", () => {
     DECIMAL = 3.14,
   }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle string enums", () => {
@@ -35,5 +41,7 @@ it("should handle string enums", () => {
     LABEL_REPEATED = 'LABEL_REPEATED',
   }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });
