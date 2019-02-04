@@ -28,6 +28,15 @@ export const printType = (type: RawNode): string => {
     case SyntaxKind.NeverKeyword:
     case SyntaxKind.UnknownKeyword:
       return printers.basics.print(type.kind);
+    case SyntaxKind.SymbolKeyword:
+      // TODO: What to print here?
+      return "Symbol";
+
+    case SyntaxKind.ConditionalType: {
+      const line = `"There was Conditional Type, use $Call utility type"`;
+      console.log(line);
+      return line;
+    }
 
     case SyntaxKind.FunctionType:
     case SyntaxKind.FunctionTypeAnnotation:
@@ -38,7 +47,7 @@ export const printType = (type: RawNode): string => {
 
     //case SyntaxKind.IdentifierObject:
     case SyntaxKind.Identifier:
-    //case SyntaxKind.StringLiteralType:
+      //case SyntaxKind.StringLiteralType:
       return printers.relationships.namespace(
         printers.relationships.namespaceProp(
           printers.identifiers.print(type.text),
@@ -58,6 +67,7 @@ export const printType = (type: RawNode): string => {
         case SyntaxKind.MinusToken:
           return `-${type.operand.text}`;
         default:
+          console.log('"NO PRINT IMPLEMENTED: PrefixUnaryExpression"');
           return '"NO PRINT IMPLEMENTED: PrefixUnaryExpression"';
       }
 
@@ -75,6 +85,9 @@ export const printType = (type: RawNode): string => {
         case SyntaxKind.KeyOfKeyword:
           return `$Keys<${printType(type.type)}>`;
         default:
+          console.log(
+            `"NO PRINT IMPLEMENTED: TypeOperator ${SyntaxKind[type.operator]}"`,
+          );
           return `"NO PRINT IMPLEMENTED: TypeOperator ${
             SyntaxKind[type.operator]
           }"`;
@@ -166,6 +179,15 @@ export const printType = (type: RawNode): string => {
       return `[${type.elementTypes.map(printType).join(", ")}]`;
 
     case SyntaxKind.MethodSignature:
+      if (
+        type.modifiers &&
+        type.modifiers.some(modifier => modifier.kind === "ReadonlyKeyword")
+      ) {
+        return `+${type.name.text}: ${printers.functions.functionType(
+          type,
+          false,
+        )}`;
+      }
       return `${type.name.text}${printers.functions.functionType(type, true)}`;
 
     case SyntaxKind.ExpressionWithTypeArguments:
@@ -218,10 +240,6 @@ export const printType = (type: RawNode): string => {
 
     // case SyntaxKind.LiteralType:
     //   return type.value;
-
-    case SyntaxKind.SymbolKeyword:
-      // TODO: What to print here?
-      return "";
 
     case SyntaxKind.MethodDeclaration:
       // Skip methods marked as private

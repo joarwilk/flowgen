@@ -6,7 +6,13 @@ import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
 export const parameter = (param: RawNode): string => {
-  let left = printers.node.printType(param.name);
+  let left = "";
+  if (param.modifiers) {
+    for (const modifier of param.modifiers) {
+      if (modifier.kind === "ReadonlyKeyword") left += "+";
+    }
+  }
+  left += printers.node.printType(param.name);
   let right;
 
   if (param.name.kind === "ObjectBindingPattern") {

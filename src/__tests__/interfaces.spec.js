@@ -63,3 +63,14 @@ interface Props {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should support readonly modifier", () => {
+  const ts = `
+interface Helper {
+  readonly name: string;
+  readonly callback(): void;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

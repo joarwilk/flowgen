@@ -63,3 +63,11 @@ exports[`should handle single interface 2`] = `
 };
 "
 `;
+
+exports[`should support readonly modifier 1`] = `
+"declare interface Helper {
+  +name: string;
+  +callback: () => void;
+}
+"
+`;
