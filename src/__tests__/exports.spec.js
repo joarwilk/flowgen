@@ -1,6 +1,6 @@
 import { compiler, beautify } from "..";
 
-it("should handle imports", () => {
+it("should handle exports", () => {
   const ts = `
 export default module
 export { module }

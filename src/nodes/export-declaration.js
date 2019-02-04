@@ -2,8 +2,6 @@
 import type { RawNode } from "./node";
 import Node from "./node";
 
-import printers from "../printers";
-
 export default class ExportDeclaration extends Node {
   constructor(node: RawNode) {
     super(node);
@@ -11,13 +9,19 @@ export default class ExportDeclaration extends Node {
 
   print() {
     if (this.raw.exportClause) {
-      return `declare export {
-        ${this.raw.exportClause.elements.map(node => {
-          return `${node.name.text}`;
-        })}
-      };`;
+      const elements = this.raw.exportClause.elements;
+      if (elements) {
+        let specifier = "";
+        if (this.raw.moduleSpecifier)
+          specifier = `from '${this.raw.moduleSpecifier.text}';`;
+        return `declare export {
+          ${elements.map(node => {
+            return `${node.name.text}`;
+          })}
+        }${specifier}\n`;
+      }
     } else {
-      return `declare export * from '${this.raw.moduleSpecifier.text}';`;
+      return `declare export * from '${this.raw.moduleSpecifier.text}';\n`;
     }
   }
 }
