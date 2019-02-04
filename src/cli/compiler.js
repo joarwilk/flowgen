@@ -29,8 +29,8 @@ export default {
   },
 
   compileDefinitionString: (string: string, options?: Options): string => {
+    resetOptions();
     if (options) {
-      resetOptions();
       assignOptions(options);
     }
     namespaceManager.reset();
@@ -41,8 +41,8 @@ export default {
   },
 
   compileDefinitionFile: (path: string, options?: Options): string => {
+    resetOptions();
     if (options) {
-      resetOptions();
       assignOptions(options);
     }
     namespaceManager.reset();
