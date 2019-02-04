@@ -55,9 +55,17 @@ export class Factory {
   // Some definition files (like lodash) declare the same
   // interface/type/function multiple times as a way of overloading.
   // Flow does not support that, and this is where we handle that
-  createPropertyNode(node: RawNode, name?: string): PropertyNode {
+  createPropertyNode(
+    node: RawNode,
+    name?: string,
+    context?: Node<>,
+  ): PropertyNode {
     if (!name) {
       return new PropertyNode(node);
+    }
+
+    if (context instanceof ModuleNode) {
+      name += context.name;
     }
 
     if (Object.keys(this._propDeclarations).includes(name)) {
