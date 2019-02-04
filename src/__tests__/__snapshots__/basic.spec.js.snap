@@ -11,7 +11,15 @@ exports[`should handle basic keywords 1`] = `
   g: void,
   h: { [key: string]: any },
   i: 1,
-  j: 2
+  j: 2,
+  k: true,
+  l: false,
+  m: \\"foo\\",
+  n: \\"bar\\",
+  o: empty,
+  p: mixed,
+  r: -1,
+  s: -2
 };
 "
 `;

@@ -239,12 +239,14 @@ declare type commander$ICommand = {
     unknown: string[],
   },
 
+  arguments(desc: string): commander$ICommand,
+
   /**
    * Return an object containing options as key-value pairs
    * @return  *
    * @api  public
    */
-  opts(): any,
+  opts(): { [key: string]: any },
 
   /**
    * Argument `name` is missing.
@@ -397,9 +399,10 @@ declare interface commander$IOption {
 }
 
 declare type commander$IExportedCommand = {
+  ...$Exact<commander$ICommand>,
   Command: commander$ICommandStatic,
   Option: commander$IOptionStatic,
-} & commander$ICommand;
+};
 
 declare module "commander" {
   declare module.exports: commander$IExportedCommand;

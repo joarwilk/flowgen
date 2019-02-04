@@ -1,7 +1,5 @@
 // @flow
-import fs from "fs";
 import path from "path";
-import ts from "typescript";
 
 import meta from "./meta";
 import beautify from "./beautifier";
@@ -11,9 +9,10 @@ import compiler from "./compiler";
 import defaultExporter from "./default-exporter";
 import flowTypedExporter from "./flow-typed-exporter";
 
-import { readFileSync } from "fs";
-
 type RunnerOptions = {
+  jsdoc: boolean,
+  interfaceRecords: boolean,
+  stringEnums: boolean,
   version: string,
   out: string,
   flowTypedFormat: boolean,
@@ -28,7 +27,7 @@ export default (options: RunnerOptions) => {
   // No real reason to return an object here instead of combining
   // the compile function into the wrapper, but I like the API it produces.
   return {
-    compile: (files: Array<string>) => {
+    compile: (files: Array<string>): void => {
       // Iterate all the files the user has passed in
       files.forEach((file, index) => {
         // Get the module name from the file name
@@ -45,7 +44,7 @@ export default (options: RunnerOptions) => {
         // Let the user know what's going on
         if (files.length > 3) {
           // If we're compiling a lot of files, show more stats
-          const progress = Math.round(index / files.length * 100);
+          const progress = Math.round((index / files.length) * 100);
           process.stdout.write("\r\x1b[K");
           process.stdout.write(progress + "% | " + moduleName);
         } else {
@@ -54,7 +53,11 @@ export default (options: RunnerOptions) => {
 
         // Produce the flow library content
         try {
-          const flowDefinitions = compiler.compileDefinitionFile(file);
+          const flowDefinitions = compiler.compileDefinitionFile(file, {
+            jsdoc: options.jsdoc,
+            interfaceRecords: options.interfaceRecords,
+            stringEnums: options.stringEnums,
+          });
 
           // Write the output to disk
           const absoluteOutputFilePath: string = writeFile(

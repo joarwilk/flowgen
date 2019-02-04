@@ -1,13 +1,15 @@
 [ignore]
-./tester
-*/test/*
+<PROJECT_ROOT>/node_modules/.*
+.*/__tests__/.*
+<PROJECT_ROOT>/lib/.*
 
 [include]
-./export.js
-./src
+
+[declarations]
+./node_modules/lodash/.*
 
 [libs]
-./types
+flow-typed
 
 [version]
 >= 0.37.0
@@ -16,8 +18,6 @@
 suppress_comment= \\(.\\|\n\\)*\\--FlowIgnore
 
 module.name_mapper.extension='scss' -> '<PROJECT_ROOT>/src/typings/css-modules.js'
-
-module.system=haste
 
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable

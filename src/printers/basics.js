@@ -1,5 +1,6 @@
 /* @flow */
-const types = {
+
+const types: { [key: string]: string } = {
   VoidKeyword: "void",
   StringKeyword: "string",
   AnyKeyword: "any",
@@ -9,7 +10,9 @@ const types = {
   UndefinedKeyword: "void",
   ObjectKeyword: "{[key: string]: any}",
   FalseKeyword: "false",
-  TrueKeyword: "true"
+  TrueKeyword: "true",
+  NeverKeyword: "empty",
+  UnknownKeyword: "mixed",
 };
 
 export const print = (kind: string): string => {

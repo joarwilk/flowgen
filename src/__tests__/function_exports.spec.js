@@ -14,6 +14,14 @@ it("should handle default exported es module functions", () => {
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should handle function overload es module functions", () => {
+  const ts = `export function routerReducer(state?: RouterState, action?: Action): RouterState;
+export function routerReducer(state?: RouterState): RouterState;
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should remove this annotation from functions", () => {
   const ts =
     "function addClickListener(onclick: (this: void, e: Event) => void): void;";

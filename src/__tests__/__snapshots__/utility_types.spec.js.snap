@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle utility types 1`] = `
+"declare type A = $ReadOnly<{
+  a: number
+}>;
+declare type B = $Shape<{
+  a: number
+}>;
+declare type C = $NonMaybeType<string | null>;
+declare type D = $ReadOnlyArray<string>;
+"
+`;

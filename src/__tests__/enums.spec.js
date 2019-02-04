@@ -1,5 +1,13 @@
 import { compiler, beautify } from "..";
 
+it("should handle empty enums", () => {
+  const ts = `enum Empty { }`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
+});
+
 it("should handle basic enums", () => {
   const ts = `enum Label {
     LABEL_OPTIONAL,
@@ -7,17 +15,23 @@ it("should handle basic enums", () => {
     LABEL_REPEATED,
   }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle number enums", () => {
   const ts = `enum Label {
-    LABEL_OPTIONAL = 1,
-    LABEL_REQUIRED = 2,
-    LABEL_REPEATED = 3,
+    ONE = 1,
+    TWO = 2,
+    THREE = 3,
+    NEGATIVE = -123,
+    DECIMAL = 3.14,
   }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle string enums", () => {
@@ -27,5 +41,7 @@ it("should handle string enums", () => {
     LABEL_REPEATED = 'LABEL_REPEATED',
   }`;
   const result = compiler.compileDefinitionString(ts);
-  expect(beautify(result)).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot("class");
+  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
+  expect(beautify(result2)).toMatchSnapshot("union");
 });

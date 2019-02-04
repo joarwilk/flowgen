@@ -1,12 +1,13 @@
 /* @flow */
-import ts from "typescript";
+import { createSourceFile, ScriptTarget } from "typescript";
 import fs from "fs";
 import tsc from "typescript-compiler";
 
 import namespaceManager from "../namespaceManager";
+import { type Options, assignOptions, resetOptions } from "../options";
 import { recursiveWalkTree } from "../parse";
 
-const compile = sourceFile => {
+const compile = (sourceFile): string => {
   const rootNode = recursiveWalkTree(sourceFile);
 
   const output = rootNode
@@ -23,26 +24,34 @@ const compile = sourceFile => {
  * Compiles typescript files
  */
 export default {
-  compileTest: (path: string, target: string) => {
+  compileTest: (path: string, target: string): void => {
     tsc.compile(path, "--module commonjs -t ES6 --out " + target);
   },
 
-  compileDefinitionString: (string: string) => {
+  compileDefinitionString: (string: string, options?: Options): string => {
+    resetOptions();
+    if (options) {
+      assignOptions(options);
+    }
     namespaceManager.reset();
 
     return compile(
-      ts.createSourceFile("/dev/null", string, ts.ScriptTarget.ES6, false),
+      createSourceFile("/dev/null", string, ScriptTarget.ES2015, false),
     );
   },
 
-  compileDefinitionFile: (path: string) => {
+  compileDefinitionFile: (path: string, options?: Options): string => {
+    resetOptions();
+    if (options) {
+      assignOptions(options);
+    }
     namespaceManager.reset();
 
     return compile(
-      ts.createSourceFile(
+      createSourceFile(
         path,
         fs.readFileSync(path).toString(),
-        ts.ScriptTarget.ES6,
+        ScriptTarget.ES2015,
         false,
       ),
     );

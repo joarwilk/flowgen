@@ -1,0 +1,25 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended",
+    "plugin:jest/recommended",
+    "prettier/flowtype"
+  ],
+  "plugins": ["flowtype", "jest"],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-redeclare": "off",
+    "no-console": "off",
+    "no-unused-vars": [
+      2,
+      { "vars": "all", "args": "after-used", "argsIgnorePattern": "^_" }
+    ]
+  }
+}

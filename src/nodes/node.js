@@ -2,20 +2,21 @@
 export type RawNode = any;
 
 import _ from "lodash";
-import { stripDetailsFromTree, parseNameFromNode } from "../parse";
+import type { Node as TSNode } from "typescript";
+import { parseNameFromNode, stripDetailsFromTree } from "../parse/ast";
 
 import printers from "../printers";
 
-export default class Node {
+export default class Node<NodeType = RawNode> {
   children: {
-    [key: string]: Node,
+    [key: string]: Node<>,
   };
   kind: string;
   name: string;
-  raw: RawNode;
+  raw: NodeType;
   namespace: ?string;
 
-  constructor(node: ?RawNode) {
+  constructor(node: ?NodeType) {
     this.children = {};
 
     if (node) {
@@ -24,32 +25,47 @@ export default class Node {
     }
   }
 
-  addChild(name: string, node: Node) {
+  addChild(name: string, node: Node<>): void {
     this.children[name] = node;
+  }
+
+  //TODO: remove this
+  addChildren(name: string, node: Node<>): void {
+    if (!this.children[name]) {
+      this.children[name] = node;
+      return;
+    }
+    if (this.children[name]) {
+      for (const key in node.children) {
+        this.children[name].addChild(key, node.children[key]);
+      }
+      return;
+    }
   }
 
   /**
    * Used for overloading the props of some types
    */
-  maybeAddMember(members: Object | Array<Object>) {
-    if (!this.raw.members) {
+  maybeAddMember(members: Object | Array<Object>): void {
+    const rawMembers: Array<TSNode> | void = (this.raw: any).members;
+    if (!rawMembers) {
       return;
     }
-
     if (Array.isArray(members)) {
       members.forEach(member => {
-        this.raw.members.push(stripDetailsFromTree(member));
+        rawMembers.push(stripDetailsFromTree(member));
       });
     } else {
-      this.raw.members.push(stripDetailsFromTree(members));
+      rawMembers.push(stripDetailsFromTree(members));
     }
   }
 
-  getChildren() {
+  getChildren(): Array<Node<>> {
     return _.toArray(this.children);
   }
 
-  print() {
+  //eslint-disable-next-line
+  print(namespace?: string): string {
     return printers.node.printType(this.raw);
   }
 }

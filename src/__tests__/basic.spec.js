@@ -12,6 +12,14 @@ it("should handle basic keywords", () => {
     h: object,
     i: 1,
     j: 2,
+    k: true,
+    l: false,
+    m: 'foo',
+    n: 'bar',
+    o: never,
+    p: unknown,
+    r: -1,
+    s: -2,
   }`;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
