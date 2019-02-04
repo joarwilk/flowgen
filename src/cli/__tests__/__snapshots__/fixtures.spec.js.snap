@@ -168,7 +168,7 @@ declare interface DangerDSLType {
  * Currently, this is just the raw file paths that have been
  * added, removed or modified.
  */
-git: GitDSL,
++git: GitDSL,
 
 /**
  * The GitHub metadata. This covers things like PR info,
@@ -184,14 +184,14 @@ git: GitDSL,
  * this is the full JSON from the webhook. You can find the full
  * typings for those webhooks [at github-webhook-event-types](https://github.com/orta/github-webhook-event-types).
  */
-github: GitHubDSL,
++github: GitHubDSL,
 
 /**
  * Functions which are globally useful in most Dangerfiles. Right
  * now, these functions are around making sentences of arrays, or
  * for making hrefs easily.
  */
-utils: DangerUtilsDSL
++utils: DangerUtilsDSL
 } 
 	
 /**
@@ -373,22 +373,22 @@ declare interface GitJSONDSL {
 /**
  * Filepaths with changes relative to the git root
  */
-modified_files: string[],
++modified_files: string[],
 
 /**
  * Newly created filepaths relative to the git root
  */
-created_files: string[],
++created_files: string[],
 
 /**
  * Removed filepaths relative to the git root
  */
-deleted_files: string[],
++deleted_files: string[],
 
 /**
  * The Git commit metadata
  */
-commits: GitCommit[]
++commits: GitCommit[]
 } 
 	
 /**
