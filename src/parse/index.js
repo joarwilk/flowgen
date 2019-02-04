@@ -32,7 +32,7 @@ const collectNode = (
       } else {
         const module = factory.createModuleNode(node.name.text);
 
-        context.addChild(node.name.text, module);
+        context.addChild("module" + node.name.text, module);
 
         traverseNode(node.body, module, factory);
         break;
@@ -46,14 +46,14 @@ const collectNode = (
     case ts.SyntaxKind.InterfaceDeclaration:
       context.addChild(
         parseNameFromNode(node),
-        factory.createPropertyNode(node, parseNameFromNode(node)),
+        factory.createPropertyNode(node, parseNameFromNode(node), context),
       );
       break;
 
     case ts.SyntaxKind.TypeAliasDeclaration:
       context.addChild(
         parseNameFromNode(node),
-        factory.createPropertyNode(node, parseNameFromNode(node)),
+        factory.createPropertyNode(node, parseNameFromNode(node), context),
       );
       break;
 
