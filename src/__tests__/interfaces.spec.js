@@ -50,3 +50,16 @@ interface User {
   });
   expect(beautify(result2)).toMatchSnapshot();
 });
+
+it("should handle all properties", () => {
+  const ts = `
+interface Props {
+  "aria-label": string;
+  "aria-labelledby"?: number;
+  color: string;
+  [key: string]: string;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

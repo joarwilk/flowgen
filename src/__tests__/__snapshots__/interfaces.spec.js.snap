@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle all properties 1`] = `
+"declare interface Props {
+  \\"aria-label\\": string;
+  \\"aria-labelledby\\"?: number;
+  color: string;
+  [key: string]: string;
+}
+"
+`;
+
 exports[`should handle interface inheritance 1`] = `
 "declare interface User {
   firstName: string;
