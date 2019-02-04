@@ -15,6 +15,7 @@ export default class Node<NodeType = RawNode> {
   name: string;
   raw: NodeType;
   namespace: ?string;
+  module: ?string;
 
   constructor(node: ?NodeType) {
     this.children = {};
