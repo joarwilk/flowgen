@@ -39,7 +39,7 @@ export const printType = (type: RawNode): string => {
     }
 
     case SyntaxKind.FunctionType:
-    case SyntaxKind.FunctionTypeAnnotation:
+    //case SyntaxKind.FunctionTypeAnnotation:
       return printers.functions.functionType(type);
 
     case SyntaxKind.TypeLiteral:
@@ -237,9 +237,6 @@ export const printType = (type: RawNode): string => {
 
     case SyntaxKind.IntersectionType:
       return type.types.map(printType).join(" & ");
-
-    // case SyntaxKind.LiteralType:
-    //   return type.value;
 
     case SyntaxKind.MethodDeclaration:
       // Skip methods marked as private
