@@ -76,6 +76,7 @@ const interfaceRecordType = (
 const interfaceRecordDeclaration = (
   nodeName: string,
   node: RawNode,
+  modifier: string,
 ): string => {
   let heritage = "";
 
@@ -92,8 +93,7 @@ const interfaceRecordDeclaration = (
     heritage = heritage.length > 0 ? `${heritage},\n` : "";
   }
 
-  let str = `${printers.relationships.exporter(node) ||
-    "declare "}type ${nodeName}${printers.common.generics(
+  let str = `${modifier}type ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} = ${interfaceRecordType(node, heritage)}\n`;
 
@@ -103,10 +103,11 @@ const interfaceRecordDeclaration = (
 export const interfaceDeclaration = (
   nodeName: string,
   node: RawNode,
+  modifier: string,
 ): string => {
   const isRecord = opts().interfaceRecords;
   if (isRecord) {
-    return interfaceRecordDeclaration(nodeName, node);
+    return interfaceRecordDeclaration(nodeName, node, modifier);
   }
   let heritage = "";
 
@@ -124,17 +125,19 @@ export const interfaceDeclaration = (
 
   const type = node.heritageClauses ? "type" : "interface";
 
-  let str = `${printers.relationships.exporter(node) ||
-    "declare "}${type} ${nodeName}${printers.common.generics(
+  let str = `${modifier}${type} ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} ${type === "type" ? "= " : ""}${interfaceType(node)} ${heritage}`;
 
   return str;
 };
 
-export const typeDeclaration = (nodeName: string, node: RawNode): string => {
-  let str = `${printers.relationships.exporter(node) ||
-    "declare "}type ${nodeName}${printers.common.generics(
+export const typeDeclaration = (
+  nodeName: string,
+  node: RawNode,
+  modifier: string,
+): string => {
+  let str = `${modifier}type ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} = ${printers.node.printType(node.type)};`;
 

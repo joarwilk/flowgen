@@ -13,8 +13,12 @@ declare export default {|
   declarations: {|
     variableDeclaration(node: RawNode): string,
     interfaceType(node: RawNode, withSemicolons?: boolean): string,
-    interfaceDeclaration(nodeName: string, node: RawNode): string,
-    typeDeclaration(nodeName: string, node: RawNode): string,
+    interfaceDeclaration(
+      nodeName: string,
+      node: RawNode,
+      modifier: string,
+    ): string,
+    typeDeclaration(nodeName: string, node: RawNode, modifier: string): string,
     enumDeclaration(nodeName: string, node: RawNode): string,
     typeReference(node: RawNode): string,
     classDeclaration(nodeName: string, node: RawNode): string,
