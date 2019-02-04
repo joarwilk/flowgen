@@ -8,7 +8,6 @@ import compiler from "./compiler";
 
 import defaultExporter from "./default-exporter";
 import flowTypedExporter from "./flow-typed-exporter";
-import { assignOptions } from "../options";
 
 type RunnerOptions = {
   jsdoc: boolean,
@@ -21,11 +20,6 @@ type RunnerOptions = {
 };
 
 export default (options: RunnerOptions) => {
-  assignOptions({
-    jsdoc: options.jsdoc,
-    interfaceRecords: options.interfaceRecords,
-    stringEnums: options.stringEnums,
-  });
   const writeFile = options.flowTypedFormat
     ? flowTypedExporter
     : defaultExporter;
@@ -59,7 +53,11 @@ export default (options: RunnerOptions) => {
 
         // Produce the flow library content
         try {
-          const flowDefinitions = compiler.compileDefinitionFile(file);
+          const flowDefinitions = compiler.compileDefinitionFile(file, {
+            jsdoc: options.jsdoc,
+            interfaceRecords: options.interfaceRecords,
+            stringEnums: options.stringEnums,
+          });
 
           // Write the output to disk
           const absoluteOutputFilePath: string = writeFile(
