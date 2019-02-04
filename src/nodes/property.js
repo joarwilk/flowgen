@@ -72,6 +72,12 @@ export default class Property extends Node<PropertyNode> {
       out += printers.common.comment(this.raw.jsDoc);
     }
 
+    const isDeclare = this.module !== "root";
+    const exporter = printers.relationships.exporter(this.raw);
+    const modifier = exporter
+      ? `${isDeclare ? "declare " : ""}${exporter}`
+      : "declare ";
+
     switch (this.raw.kind) {
       case "FunctionDeclaration":
         out += printers.functions.functionDeclaration(name, this.raw);
@@ -80,10 +86,14 @@ export default class Property extends Node<PropertyNode> {
         out += printers.declarations.classDeclaration(name, this.raw);
         break;
       case "InterfaceDeclaration":
-        out += printers.declarations.interfaceDeclaration(name, this.raw);
+        out += printers.declarations.interfaceDeclaration(
+          name,
+          this.raw,
+          modifier,
+        );
         break;
       case "TypeAliasDeclaration":
-        out += printers.declarations.typeDeclaration(name, this.raw);
+        out += printers.declarations.typeDeclaration(name, this.raw, modifier);
         break;
       case "EnumDeclaration":
         out += printers.declarations.enumDeclaration(name, this.raw);

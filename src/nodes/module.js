@@ -11,6 +11,11 @@ export default class Module extends Node {
     this.name = name;
   }
 
+  addChild(name: string, child: Node<>): void {
+    child.module = this.name;
+    this.children[name] = child;
+  }
+
   print = () => {
     return `declare module '${this.name}' {
         ${this.getChildren()

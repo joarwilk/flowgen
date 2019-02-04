@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle module 1`] = `
+"declare module \\"test\\" {
+  declare export type Test = \\"ok\\" | \\"error\\";
+  declare type Test2 = \\"ok\\" | \\"error\\";
+  declare type Maybe<T> =
+    | {
+        type: \\"just\\",
+        value: T
+      }
+    | {
+        type: \\"nothing\\"
+      };
+  declare export type Ref<T> = {
+    current: T
+  };
+  declare export var ok: number;
+}
+"
+`;
+
+exports[`should handle module function merging 1`] = `
+"declare module \\"test\\" {
+  declare function test(err: number): void;
+
+  declare function test(response: string): string;
+}
+"
+`;
+
+exports[`should handle module merging 1`] = `
+"declare module \\"test\\" {
+  declare interface A {
+    bar: string;
+    baz: string;
+  }
+  declare export var ok: number;
+  declare export var error: string;
+}
+"
+`;
+
+exports[`should not merge distinct modules 1`] = `
+"declare module \\"A\\" {
+  declare export interface A {
+    foo: string;
+  }
+}
+declare module \\"B\\" {
+  declare export interface A {
+    baz: string;
+  }
+}
+export interface A {
+  bar: string;
+}
+"
+`;
