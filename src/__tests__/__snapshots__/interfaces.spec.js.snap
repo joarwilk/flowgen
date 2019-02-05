@@ -64,6 +64,16 @@ exports[`should handle single interface 2`] = `
 "
 `;
 
+exports[`should support call signature 1`] = `
+"declare interface ObjectSchemaConstructor {
+  <T: { [key: string]: any }>(
+    fields?: ObjectSchemaDefinition<T>
+  ): ObjectSchema<T>;
+  new(): ObjectSchema<{}>;
+}
+"
+`;
+
 exports[`should support readonly modifier 1`] = `
 "declare interface Helper {
   +name: string;

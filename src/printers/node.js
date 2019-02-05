@@ -39,7 +39,7 @@ export const printType = (type: RawNode): string => {
     }
 
     case SyntaxKind.FunctionType:
-    //case SyntaxKind.FunctionTypeAnnotation:
+      //case SyntaxKind.FunctionTypeAnnotation:
       return printers.functions.functionType(type);
 
     case SyntaxKind.TypeLiteral:
@@ -212,7 +212,8 @@ export const printType = (type: RawNode): string => {
       return printers.common.parameter(type);
 
     case SyntaxKind.CallSignature: {
-      let str = `(${type.parameters
+      const generics = printers.common.generics(type.typeParameters);
+      const str = `${generics}(${type.parameters
         .map(printers.common.parameter)
         .join(", ")})`;
       return type.type ? `${str}: ${printType(type.type)}` : str;
