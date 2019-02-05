@@ -56,11 +56,17 @@ export const printType = (type: RawNode): string => {
       );
 
     case SyntaxKind.BindingElement:
-    case SyntaxKind.TypeParameter:
+    case SyntaxKind.TypeParameter: {
+      let defaultType = "";
+      let constraint = "";
       if (type.constraint) {
-        return `${type.name.text}: ${printType(type.constraint)}`;
+        constraint = `: ${printType(type.constraint)}`;
       }
-      return type.name.text;
+      if (type.default) {
+        defaultType = `= ${printType(type.default)}`;
+      }
+      return `${type.name.text}${constraint}${defaultType}`;
+    }
 
     case SyntaxKind.PrefixUnaryExpression:
       switch (type.operator) {
