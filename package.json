@@ -51,7 +51,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prettier": "prettier  --write \"{src,types}/**/*.js\"",
-    "compile": "babel --out-dir lib ./src",
+    "compile": "babel ./src --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.js'",
     "compile:watch": "npm run compile -- -w",
     "test": "jest"
   }
