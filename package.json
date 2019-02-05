@@ -2,6 +2,7 @@
   "name": "flowgen",
   "description": "Generate flowtype definition files from TypeScript",
   "version": "1.5.0",
+  "typings": "index.d.ts",
   "bin": {
     "flowgen": "./lib/cli/index.js"
   },
@@ -42,7 +43,9 @@
     "jest": "^23.6.0"
   },
   "files": [
-    "lib"
+    "lib",
+    "index.d.ts",
+    "index.js.flow"
   ],
   "license": "ISC",
   "main": "lib/index.js",
