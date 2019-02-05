@@ -1,9 +1,9 @@
 //@flow
 
 export type Options = {|
-  jsdoc: boolean,
-  interfaceRecords: boolean,
-  stringEnums: boolean,
+  jsdoc?: boolean,
+  interfaceRecords?: boolean,
+  stringEnums?: boolean,
 |};
 
 const defaultOptions: Options = Object.freeze({
