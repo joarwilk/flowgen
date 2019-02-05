@@ -1,3 +1,5 @@
+// @flow
+
 import {compiler, beautify} from "..";
 
 it("should handle static methods ES6 classes", () => {
