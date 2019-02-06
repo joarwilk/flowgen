@@ -98,3 +98,13 @@ interface Example<State> {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should handle toString property name", () => {
+  const ts = `
+interface A {
+  toString(): string;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

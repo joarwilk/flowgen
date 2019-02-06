@@ -17,9 +17,9 @@ export class Factory {
   _functionDeclarations: Object;
 
   constructor() {
-    this._modules = {};
-    this._propDeclarations = {};
-    this._functionDeclarations = {};
+    this._modules = Object.create(null);
+    this._propDeclarations = Object.create(null);
+    this._functionDeclarations = Object.create(null);
   }
 
   // If multiple declarations are found for the same module name

@@ -18,7 +18,7 @@ export default class Node<NodeType = RawNode> {
   module: ?string;
 
   constructor(node: ?NodeType) {
-    this.children = {};
+    this.children = Object.create(null);
 
     if (node) {
       this.raw = stripDetailsFromTree(node);
