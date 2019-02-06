@@ -1,10 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle imports 1`] = `
-"import type { GeneratorOptions } from \\"@babel/generator\\";
-import traverse, { Visitor, NodePath } from \\"@babel/traverse\\";
+"import { GeneratorOptions } from \\"@babel/generator\\";
+import { Visitor as NewVisitor } from \\"@babel/traverse\\";
 import template from \\"@babel/template\\";
 import * as t from \\"@babel/types\\";
 import v, * as d from \\"typescript\\";
+"
+`;
+
+exports[`should handle imports inside module 1`] = `
+"declare module \\"@babel/core\\" {
+  import type { GeneratorOptions } from \\"@babel/generator\\";
+
+  import type { Visitor as NewVisitor } from \\"@babel/traverse\\";
+
+  import typeof template from \\"@babel/template\\";
+
+  import typeof * as t from \\"@babel/types\\";
+
+  import typeof v, * as d from \\"typescript\\";
+}
 "
 `;

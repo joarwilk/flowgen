@@ -1,6 +1,8 @@
 /* @flow */
+
 import type { RawNode } from "./node";
 import Node from "./node";
+import printers from "../printers";
 
 export default class Import extends Node {
   constructor(node: RawNode) {
@@ -15,38 +17,35 @@ export default class Import extends Node {
       if (name && bindings) {
         const elements = bindings.elements;
         if (elements) {
-          return `import ${name.text}, {
-          ${elements.map(node => {
-            return `${node.name.text}`;
-          })}
+          return `import${this.module === "root" ? "" : " type"} ${name.text}, {
+          ${elements.map(node => printers.node.printType(node))}
         } from '${this.raw.moduleSpecifier.text}';\n`;
         } else {
           const namespace = bindings.name.text;
-          return `import ${name.text}, * as ${namespace} from '${
-            this.raw.moduleSpecifier.text
-          }';\n`;
+          return `import${this.module === "root" ? "" : " typeof"} ${
+            name.text
+          }, * as ${namespace} from '${this.raw.moduleSpecifier.text}';\n`;
         }
       }
       if (name) {
-        return `import ${name.text} from '${this.raw.moduleSpecifier.text}';\n`;
+        return `import${this.module === "root" ? "" : " typeof"} ${
+          name.text
+        } from '${this.raw.moduleSpecifier.text}';\n`;
       }
       if (bindings) {
         const elements = bindings.elements;
         if (elements) {
-          return `import type {
-          ${elements.map(node => {
-            return `${node.name.text}`;
-          })}
+          return `import${this.module === "root" ? "" : " type"} {
+          ${elements.map(node => printers.node.printType(node))}
         } from '${this.raw.moduleSpecifier.text}';\n`;
         } else {
           const name = bindings.name.text;
-          return `import * as ${name} from '${
-            this.raw.moduleSpecifier.text
-          }';\n`;
+          return `import${
+            this.module === "root" ? "" : " typeof"
+          } * as ${name} from '${this.raw.moduleSpecifier.text}';\n`;
         }
       }
     }
-    // TODO: Implement this.
-    return ``;
+    return `import '${this.raw.moduleSpecifier.text}';\n`;
   }
 }

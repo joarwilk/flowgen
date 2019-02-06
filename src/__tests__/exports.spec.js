@@ -6,7 +6,9 @@ it("should handle exports", () => {
   const ts = `
 export default module
 export { module }
+export { module as newModule }
 export { GeneratorOptions } from "@babel/generator";
+export { GeneratorOptions as NewGeneratorOptions } from "@babel/generator";
 export * from 'typescript';
 //enable when typescript supports
 //export traverse, { Visitor, NodePath } from "@babel/traverse";
