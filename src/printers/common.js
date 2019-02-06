@@ -36,6 +36,34 @@ export const parameter = (param: RawNode): string => {
   return `${left}: ${right}`;
 };
 
+export const methodSignature = (param: RawNode) => {
+  let left = "";
+  let isMethod = true;
+  if (param.modifiers) {
+    for (const modifier of param.modifiers) {
+      if (modifier.kind === "ReadonlyKeyword") {
+        left += "+";
+        isMethod = false;
+      }
+    }
+  }
+  left += printers.node.printType(param.name);
+  let right;
+
+  if (param.questionToken) {
+    left += "?";
+    isMethod = false;
+  }
+
+  if (!param.type) {
+    right = "<<UNKNOWN PARAM FORMAT>>";
+  } else {
+    right = printers.functions.functionType(param, isMethod);
+  }
+
+  return `${left}${isMethod ? "" : ": "}${right}`;
+};
+
 export const parseTypeReference = (node: RawNode): string => {
   if (node.typeName.left && node.typeName.right) {
     return (
