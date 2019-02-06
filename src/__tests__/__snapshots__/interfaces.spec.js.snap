@@ -74,6 +74,14 @@ exports[`should support call signature 1`] = `
 "
 `;
 
+exports[`should support optional methods 1`] = `
+"declare interface Example<State> {
+  required<R>(value: any, state: State): true;
+  optional?: <R>(value: any, state: State) => false;
+}
+"
+`;
+
 exports[`should support readonly modifier 1`] = `
 "declare interface Helper {
   +name: string;

@@ -87,3 +87,14 @@ it("should support call signature", () => {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should support optional methods", () => {
+  const ts = `
+interface Example<State> {
+  required<R>(value: any, state: State): true;
+  optional?<R>(value: any, state: State): false;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

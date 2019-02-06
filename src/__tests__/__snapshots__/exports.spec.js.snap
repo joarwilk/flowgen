@@ -3,7 +3,10 @@
 exports[`should handle exports 1`] = `
 "declare export default typeof module;
 declare export { module };
-declare export { GeneratorOptions } from \\"@babel/generator\\";
+declare export { module as newModule };
+declare export {
+  GeneratorOptions as NewGeneratorOptions
+} from \\"@babel/generator\\";
 declare export * from \\"typescript\\"
 "
 `;

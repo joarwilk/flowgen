@@ -185,16 +185,7 @@ export const printType = (type: RawNode): string => {
       return `[${type.elementTypes.map(printType).join(", ")}]`;
 
     case SyntaxKind.MethodSignature:
-      if (
-        type.modifiers &&
-        type.modifiers.some(modifier => modifier.kind === "ReadonlyKeyword")
-      ) {
-        return `+${type.name.text}: ${printers.functions.functionType(
-          type,
-          false,
-        )}`;
-      }
-      return `${type.name.text}${printers.functions.functionType(type, true)}`;
+      return printers.common.methodSignature(type);
 
     case SyntaxKind.ExpressionWithTypeArguments:
       return (
@@ -284,6 +275,13 @@ export const printType = (type: RawNode): string => {
 
     case SyntaxKind.ParenthesizedType:
       return `(${printType(type.type)})`;
+
+    case SyntaxKind.ImportSpecifier:
+    case SyntaxKind.ExportSpecifier:
+      if (type.propertyName) {
+        return `${printType(type.propertyName)} as ${printType(type.name)}`;
+      }
+      return printType(type.name);
   }
 
   const output = `"NO PRINT IMPLEMENTED: ${type.kind}"`;
