@@ -1,6 +1,7 @@
 {
   "name": "flowgen",
   "description": "Generate flowtype definition files from TypeScript",
+  "typings": "index.d.ts",
   "version": "1.5.4",
   "bin": {
     "flowgen": "./lib/cli/index.js"
@@ -42,13 +43,15 @@
     "jest": "^23.6.0"
   },
   "files": [
-    "lib"
+    "lib",
+    "index.d.ts",
+    "index.js.flow"
   ],
   "license": "ISC",
   "main": "lib/index.js",
   "scripts": {
     "prettier": "prettier  --write \"{src,types}/**/*.js\"",
-    "compile": "rm -rf lib; babel --out-dir lib ./src",
+    "compile": "babel ./src --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.js'",
     "compile:watch": "npm run compile -- -w",
     "test": "jest"
   }

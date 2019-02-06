@@ -1,6 +1,6 @@
 [ignore]
 <PROJECT_ROOT>/node_modules/.*
-.*/__tests__/.*
+.*/__snapshots__/.*
 <PROJECT_ROOT>/lib/.*
 
 [include]
@@ -14,7 +14,12 @@ flow-typed
 [version]
 >= 0.37.0
 
+[lints]
+all=warn
+untyped-type-import=error
+
 [options]
+include_warnings=true
 suppress_comment= \\(.\\|\n\\)*\\--FlowIgnore
 
 module.name_mapper.extension='scss' -> '<PROJECT_ROOT>/src/typings/css-modules.js'
@@ -30,3 +35,9 @@ module.file_ext=.json
 module.file_ext=.jsx
 module.file_ext=.css
 module.file_ext=.scss
+
+[strict]
+nonstrict-import
+unsafe-getters-setters
+untyped-import
+untyped-type-import

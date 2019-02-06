@@ -39,7 +39,7 @@ export const printType = (type: RawNode): string => {
     }
 
     case SyntaxKind.FunctionType:
-    //case SyntaxKind.FunctionTypeAnnotation:
+      //case SyntaxKind.FunctionTypeAnnotation:
       return printers.functions.functionType(type);
 
     case SyntaxKind.TypeLiteral:
@@ -56,11 +56,17 @@ export const printType = (type: RawNode): string => {
       );
 
     case SyntaxKind.BindingElement:
-    case SyntaxKind.TypeParameter:
+    case SyntaxKind.TypeParameter: {
+      let defaultType = "";
+      let constraint = "";
       if (type.constraint) {
-        return `${type.name.text}: ${printType(type.constraint)}`;
+        constraint = `: ${printType(type.constraint)}`;
       }
-      return type.name.text;
+      if (type.default) {
+        defaultType = `= ${printType(type.default)}`;
+      }
+      return `${type.name.text}${constraint}${defaultType}`;
+    }
 
     case SyntaxKind.PrefixUnaryExpression:
       switch (type.operator) {
@@ -212,7 +218,8 @@ export const printType = (type: RawNode): string => {
       return printers.common.parameter(type);
 
     case SyntaxKind.CallSignature: {
-      let str = `(${type.parameters
+      const generics = printers.common.generics(type.typeParameters);
+      const str = `${generics}(${type.parameters
         .map(printers.common.parameter)
         .join(", ")})`;
       return type.type ? `${str}: ${printType(type.type)}` : str;

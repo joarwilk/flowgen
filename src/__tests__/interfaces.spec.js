@@ -1,3 +1,5 @@
+// @flow
+
 import { compiler, beautify } from "..";
 
 it("should handle single interface", () => {
@@ -70,6 +72,17 @@ interface Helper {
   readonly name: string;
   readonly callback(): void;
 }
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should support call signature", () => {
+  const ts = `
+  declare interface ObjectSchemaConstructor {
+    <T extends object>(fields?: ObjectSchemaDefinition<T>): ObjectSchema<T>;
+    new (): ObjectSchema<{}>;
+  }
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
