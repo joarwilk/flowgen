@@ -10,6 +10,15 @@ export function syncHistoryWithStore(history: History, store: Store<any>, option
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should handle toString function overload", () => {
+  const ts = `export function toString(): void;
+export function toString(e: number): void;
+export function toString(b: string): void;
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should handle default exported es module functions", () => {
   const ts = `export default function routerReducer(state?: RouterState, action?: Action): RouterState;`;
   const result = compiler.compileDefinitionString(ts);

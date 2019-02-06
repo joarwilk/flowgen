@@ -64,6 +64,13 @@ exports[`should handle single interface 2`] = `
 "
 `;
 
+exports[`should handle toString property name 1`] = `
+"declare interface A {
+  toString(): string;
+}
+"
+`;
+
 exports[`should support call signature 1`] = `
 "declare interface ObjectSchemaConstructor {
   <T: { [key: string]: any }>(
