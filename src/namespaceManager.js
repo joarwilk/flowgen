@@ -1,6 +1,6 @@
 /* @flow */
 
-let namespaceProps = {};
+let namespaceProps = Object.create(null);
 let namespaces: Array<string> = [];
 
 let context: string = "";
@@ -15,7 +15,7 @@ export default {
   setContext: (namespace: string) => (context = namespace),
 
   reset: () => {
-    namespaceProps = {};
+    namespaceProps = Object.create(null);
     namespaces = [];
   },
 };
