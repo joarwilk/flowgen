@@ -10,6 +10,10 @@ export type Compiler = {|
   compileTest(path: string, target: string): void,
   compileDefinitionString(string: string, options?: Options): string,
   compileDefinitionFile(path: string, options?: Options): string,
+
+  // Low-level exports
+  reset(options?: Options): void,
+  compile(sourceFile: any): string,
 |};
 
 declare type Flowgen = {|
