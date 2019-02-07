@@ -136,3 +136,27 @@ interface A {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should handle untyped object binding pattern", () => {
+  const ts = `
+interface ObjectBinding {
+  (): void;
+  ({}): void;
+  ({ a, b }): void;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should handle typed object binding pattern", () => {
+  const ts = `
+interface ObjectBinding {
+  (): void;
+  ({}: any): void;
+  ({ a, b }: { a: string, b: number }): void;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

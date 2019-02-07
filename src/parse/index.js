@@ -102,6 +102,10 @@ const collectNode = (
       // TODO: unimplemented;
       break;
 
+    case ts.SyntaxKind.EmptyStatement:
+      // This should be empty
+      break;
+
     default:
       console.log("Missing node parse", ts.SyntaxKind[node.kind]);
   }

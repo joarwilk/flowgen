@@ -71,6 +71,27 @@ exports[`should handle toString property name 1`] = `
 "
 `;
 
+exports[`should handle typed object binding pattern 1`] = `
+"declare interface ObjectBinding {
+  (): void;
+  (x: any): void;
+  (x: {
+    a: string,
+    b: number
+  }): void;
+}
+"
+`;
+
+exports[`should handle untyped object binding pattern 1`] = `
+"declare interface ObjectBinding {
+  (): void;
+  (x: {}): void;
+  (x: { a: any, b: any }): void;
+}
+"
+`;
+
 exports[`should remove generic defaults in call signature 1`] = `
 "declare interface AbstractLevelDOWNConstructor {
   <K, V>(location: string): AbstractLevelDOWN<K, V>;

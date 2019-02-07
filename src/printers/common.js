@@ -12,15 +12,26 @@ export const parameter = (param: RawNode): string => {
       if (modifier.kind === "ReadonlyKeyword") left += "+";
     }
   }
-  left += printers.node.printType(param.name);
   let right;
 
   if (param.name.kind === "ObjectBindingPattern") {
-    left = `{${param.name.elements.map(printers.node.printType).join(", ")}}`;
+    left = `x`;
+  } else {
+    left += printers.node.printType(param.name);
   }
 
   if (!param.type) {
-    right = "<<UNKNOWN PARAM FORMAT>>";
+    if (param.name.kind === "ObjectBindingPattern") {
+      if (param.name.elements.length > 0) {
+        right = `{${param.name.elements
+          .map(element => `${printers.node.printType(element)}: any`)
+          .join(", ")}}`;
+      } else {
+        right = "{}";
+      }
+    } else {
+      right = "any";
+    }
   } else {
     right = printers.node.printType(param.type);
   }
