@@ -210,7 +210,10 @@ export const printType = (type: RawNode): string => {
 
     case SyntaxKind.CallSignature: {
       // TODO: rewrite to printers.functions.functionType
-      const generics = printers.common.generics(type.typeParameters);
+      const generics = printers.common.generics(type.typeParameters, node => {
+        node.withoutDefault = true;
+        return node;
+      });
       const str = `${generics}(${type.parameters
         .filter(param => param.name.text !== "this")
         .map(printers.common.parameter)

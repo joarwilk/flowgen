@@ -106,6 +106,16 @@ interface C<This, Datum> {
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should remove generic defaults in call signature", () => {
+  const ts = `
+interface AbstractLevelDOWNConstructor {
+    <K = any, V = any>(location: string): AbstractLevelDOWN<K, V>;
+}  
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should support optional methods", () => {
   const ts = `
 interface Example<State> {

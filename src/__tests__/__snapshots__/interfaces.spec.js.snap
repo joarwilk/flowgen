@@ -71,6 +71,13 @@ exports[`should handle toString property name 1`] = `
 "
 `;
 
+exports[`should remove generic defaults in call signature 1`] = `
+"declare interface AbstractLevelDOWNConstructor {
+  <K, V>(location: string): AbstractLevelDOWN<K, V>;
+}
+"
+`;
+
 exports[`should remove this in call signature 1`] = `
 "declare interface Arc<This, Datum> {
   (d: Datum, ...args: any[]): string | null;
