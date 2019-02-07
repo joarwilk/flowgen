@@ -178,7 +178,7 @@ export const printType = (type: RawNode): string => {
       return (
         keywordPrefix +
         printers.relationships.namespaceProp(type.name.text) +
-        ": "
+        `: any // ${printType(type.initializer)}`
       );
 
     case SyntaxKind.TupleType:
