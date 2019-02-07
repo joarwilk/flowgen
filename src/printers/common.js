@@ -55,11 +55,7 @@ export const methodSignature = (param: RawNode) => {
     isMethod = false;
   }
 
-  if (!param.type) {
-    right = "<<UNKNOWN PARAM FORMAT>>";
-  } else {
-    right = printers.functions.functionType(param, isMethod);
-  }
+  right = printers.functions.functionType(param, isMethod);
 
   return `${left}${isMethod ? "" : ": "}${right}`;
 };
