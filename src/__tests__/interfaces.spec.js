@@ -88,6 +88,24 @@ it("should support call signature", () => {
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should remove this in call signature", () => {
+  const ts = `
+interface Arc<This, Datum> {
+  (this: This, d: Datum, ...args: any[]): string | null;
+}
+  
+interface D<This, Datum> {
+  new (this: This, d: Datum, ...args: any[]);
+}
+  
+interface C<This, Datum> {
+  (this: This, d: Datum, ...args: any[]);
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should support optional methods", () => {
   const ts = `
 interface Example<State> {

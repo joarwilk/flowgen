@@ -71,6 +71,19 @@ exports[`should handle toString property name 1`] = `
 "
 `;
 
+exports[`should remove this in call signature 1`] = `
+"declare interface Arc<This, Datum> {
+  (d: Datum, ...args: any[]): string | null;
+}
+declare interface D<This, Datum> {
+  new(d: Datum, ...args: any[]): void;
+}
+declare interface C<This, Datum> {
+  (d: Datum, ...args: any[]): any;
+}
+"
+`;
+
 exports[`should support call signature 1`] = `
 "declare interface ObjectSchemaConstructor {
   <T: { [key: string]: any }>(
