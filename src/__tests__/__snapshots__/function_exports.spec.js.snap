@@ -37,6 +37,11 @@ declare export function toString(b: string): void;
 "
 `;
 
+exports[`should remove default parameters from functions 1`] = `
+"declare function addClickListener<T>(onclick: (e: Event) => void): T;
+"
+`;
+
 exports[`should remove this annotation from functions 1`] = `
 "declare function addClickListener(onclick: (e: Event) => void): void;
 "

@@ -74,9 +74,15 @@ export const parseTypeReference = (node: RawNode): string => {
   return node.typeName.text + generics(node.typeArguments);
 };
 
-export const generics = (types: ?Array<RawNode>): string => {
+export const generics = (
+  types: ?Array<RawNode>,
+  map?: (node: RawNode) => RawNode = node => node,
+): string => {
   if (types && types.length) {
-    return `<${types.map(printers.node.printType).join(", ")}>`;
+    return `<${types
+      .map(map)
+      .map(printers.node.printType)
+      .join(", ")}>`;
   }
 
   return "";

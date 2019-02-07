@@ -62,7 +62,7 @@ export const printType = (type: RawNode): string => {
       if (type.constraint) {
         constraint = `: ${printType(type.constraint)}`;
       }
-      if (type.default) {
+      if (!type.withoutDefault && type.default) {
         defaultType = `= ${printType(type.default)}`;
       }
       return `${type.name.text}${constraint}${defaultType}`;
@@ -209,11 +209,14 @@ export const printType = (type: RawNode): string => {
       return printers.common.parameter(type);
 
     case SyntaxKind.CallSignature: {
+      // TODO: rewrite to printers.functions.functionType
       const generics = printers.common.generics(type.typeParameters);
       const str = `${generics}(${type.parameters
+        .filter(param => param.name.text !== "this")
         .map(printers.common.parameter)
         .join(", ")})`;
-      return type.type ? `${str}: ${printType(type.type)}` : str;
+      // TODO: I can't understand this
+      return type.type ? `${str}: ${printType(type.type)}` : `${str}: any`;
     }
 
     case SyntaxKind.UnionType: {
