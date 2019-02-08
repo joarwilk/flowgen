@@ -39,3 +39,10 @@ it("should remove this annotation from functions", () => {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should remove default parameters from functions", () => {
+  const ts =
+    "function addClickListener<T = Error>(onclick: (e: Event) => void): T;";
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

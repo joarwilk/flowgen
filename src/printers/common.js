@@ -12,15 +12,26 @@ export const parameter = (param: RawNode): string => {
       if (modifier.kind === "ReadonlyKeyword") left += "+";
     }
   }
-  left += printers.node.printType(param.name);
   let right;
 
   if (param.name.kind === "ObjectBindingPattern") {
-    left = `{${param.name.elements.map(printers.node.printType).join(", ")}}`;
+    left = `x`;
+  } else {
+    left += printers.node.printType(param.name);
   }
 
   if (!param.type) {
-    right = "<<UNKNOWN PARAM FORMAT>>";
+    if (param.name.kind === "ObjectBindingPattern") {
+      if (param.name.elements.length > 0) {
+        right = `{${param.name.elements
+          .map(element => `${printers.node.printType(element)}: any`)
+          .join(", ")}}`;
+      } else {
+        right = "{}";
+      }
+    } else {
+      right = "any";
+    }
   } else {
     right = printers.node.printType(param.type);
   }
@@ -55,11 +66,7 @@ export const methodSignature = (param: RawNode) => {
     isMethod = false;
   }
 
-  if (!param.type) {
-    right = "<<UNKNOWN PARAM FORMAT>>";
-  } else {
-    right = printers.functions.functionType(param, isMethod);
-  }
+  right = printers.functions.functionType(param, isMethod);
 
   return `${left}${isMethod ? "" : ": "}${right}`;
 };
@@ -74,9 +81,15 @@ export const parseTypeReference = (node: RawNode): string => {
   return node.typeName.text + generics(node.typeArguments);
 };
 
-export const generics = (types: ?Array<RawNode>): string => {
+export const generics = (
+  types: ?Array<RawNode>,
+  map?: (node: RawNode) => RawNode = node => node,
+): string => {
   if (types && types.length) {
-    return `<${types.map(printers.node.printType).join(", ")}>`;
+    return `<${types
+      .map(map)
+      .map(printers.node.printType)
+      .join(", ")}>`;
   }
 
   return "";

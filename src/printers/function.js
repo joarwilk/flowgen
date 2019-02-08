@@ -10,7 +10,10 @@ export const functionType = (
   const params = func.parameters
     .filter(param => param.name.text !== "this")
     .map(printers.common.parameter);
-  const generics = printers.common.generics(func.typeParameters);
+  const generics = printers.common.generics(func.typeParameters, node => {
+    node.withoutDefault = true;
+    return node;
+  });
   const returns = func.type ? printers.node.printType(func.type) : "void";
 
   const firstPass = `${generics}(${params.join(", ")})${

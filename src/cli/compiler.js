@@ -24,6 +24,16 @@ const compile = (sourceFile): string => {
  * Compiles typescript files
  */
 export default {
+  reset(options?: Options) {
+    resetOptions();
+    if (options) {
+      assignOptions(options);
+    }
+    namespaceManager.reset();
+  },
+
+  compile,
+
   compileTest: (path: string, target: string): void => {
     tsc.compile(path, "--module commonjs -t ES6 --out " + target);
   },
@@ -36,7 +46,7 @@ export default {
     namespaceManager.reset();
 
     return compile(
-      createSourceFile("/dev/null", string, ScriptTarget.ES2015, false),
+      createSourceFile("/dev/null", string, ScriptTarget.Latest, false),
     );
   },
 
@@ -51,7 +61,7 @@ export default {
       createSourceFile(
         path,
         fs.readFileSync(path).toString(),
-        ScriptTarget.ES2015,
+        ScriptTarget.Latest,
         false,
       ),
     );
