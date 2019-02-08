@@ -62,7 +62,7 @@ export const printType = (type: RawNode): string => {
       if (type.constraint) {
         constraint = `: ${printType(type.constraint)}`;
       }
-      if (type.default) {
+      if (!type.withoutDefault && type.default) {
         defaultType = `= ${printType(type.default)}`;
       }
       return `${type.name.text}${constraint}${defaultType}`;
@@ -178,7 +178,7 @@ export const printType = (type: RawNode): string => {
       return (
         keywordPrefix +
         printers.relationships.namespaceProp(type.name.text) +
-        ": "
+        `: any // ${printType(type.initializer)}`
       );
 
     case SyntaxKind.TupleType:
@@ -209,11 +209,17 @@ export const printType = (type: RawNode): string => {
       return printers.common.parameter(type);
 
     case SyntaxKind.CallSignature: {
-      const generics = printers.common.generics(type.typeParameters);
+      // TODO: rewrite to printers.functions.functionType
+      const generics = printers.common.generics(type.typeParameters, node => {
+        node.withoutDefault = true;
+        return node;
+      });
       const str = `${generics}(${type.parameters
+        .filter(param => param.name.text !== "this")
         .map(printers.common.parameter)
         .join(", ")})`;
-      return type.type ? `${str}: ${printType(type.type)}` : str;
+      // TODO: I can't understand this
+      return type.type ? `${str}: ${printType(type.type)}` : `${str}: any`;
     }
 
     case SyntaxKind.UnionType: {

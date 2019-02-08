@@ -88,6 +88,34 @@ it("should support call signature", () => {
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should remove this in call signature", () => {
+  const ts = `
+interface Arc<This, Datum> {
+  (this: This, d: Datum, ...args: any[]): string | null;
+}
+  
+interface D<This, Datum> {
+  new (this: This, d: Datum, ...args: any[]);
+}
+  
+interface C<This, Datum> {
+  (this: This, d: Datum, ...args: any[]);
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should remove generic defaults in call signature", () => {
+  const ts = `
+interface AbstractLevelDOWNConstructor {
+    <K = any, V = any>(location: string): AbstractLevelDOWN<K, V>;
+}  
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should support optional methods", () => {
   const ts = `
 interface Example<State> {
@@ -103,6 +131,30 @@ it("should handle toString property name", () => {
   const ts = `
 interface A {
   toString(): string;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should handle untyped object binding pattern", () => {
+  const ts = `
+interface ObjectBinding {
+  (): void;
+  ({}): void;
+  ({ a, b }): void;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should handle typed object binding pattern", () => {
+  const ts = `
+interface ObjectBinding {
+  (): void;
+  ({}: any): void;
+  ({ a, b }: { a: string, b: number }): void;
 }
 `;
   const result = compiler.compileDefinitionString(ts);
