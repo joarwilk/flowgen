@@ -46,6 +46,8 @@ export default class Import extends Node {
         }
       }
     }
-    return `import '${this.raw.moduleSpecifier.text}';\n`;
+    return this.module === "root"
+      ? `import '${this.raw.moduleSpecifier.text}';\n`
+      : "";
   }
 }
