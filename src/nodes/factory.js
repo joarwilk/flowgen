@@ -12,9 +12,9 @@ import NamespaceNode from "./namespace";
 import { getMembersFromNode } from "../parse/ast";
 
 export class Factory {
-  _modules: Object;
-  _propDeclarations: Object;
-  _functionDeclarations: Object;
+  _modules: { [key: string]: ModuleNode };
+  _propDeclarations: { [key: string]: PropertyNode };
+  _functionDeclarations: { [key: string]: number };
 
   constructor() {
     this._modules = Object.create(null);
@@ -60,7 +60,7 @@ export class Factory {
     name?: string,
     context?: Node<>,
   ): PropertyNode {
-    if (!name) {
+    if (typeof name === "undefined") {
       return new PropertyNode(node);
     }
 
