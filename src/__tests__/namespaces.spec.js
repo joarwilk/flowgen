@@ -37,3 +37,46 @@ namespace test {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should handle exported interfaces and types", () => {
+  const ts = `
+namespace Example {
+  export interface StoreModel<S> {}
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should handle nested namespaces", () => {
+  const ts = `
+import * as external from "external";
+
+declare namespace E0 {
+  type A = external.type;
+  namespace U1 {
+    declare var e2: number;
+    enum E2 {
+      E = 1,
+    }
+    namespace S2 {
+      type S3 = E2;
+      declare var n3: symbol;
+      class N3 {}
+    }
+    namespace N2 {
+      declare function s3(): void;
+      declare type S3 = number;
+    }
+  }
+  namespace S1 {
+    type A2 = U1.E2;
+    type B2 = U1.E2.E;
+    declare var m3: string;
+  }
+  declare var s1: string;
+}  
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

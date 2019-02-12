@@ -1,5 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle exported interfaces and types 1`] = `
+"export interface Example$StoreModel<S> {}
+"
+`;
+
 exports[`should handle namespace function merging 1`] = `
 "declare var npm$namespace$test: {
   test: typeof test$test
@@ -26,5 +31,60 @@ exports[`should handle namespaces 1`] = `
   ok: typeof test$ok
 };
 declare export var test$ok: number;
+"
+`;
+
+exports[`should handle nested namespaces 1`] = `
+"import * as external from \\"external\\";
+
+declare var npm$namespace$E0: {
+  s1: typeof E0$s1,
+
+  U1: typeof npm$namespace$E0$U1,
+  S1: typeof npm$namespace$E0$S1
+};
+declare type E0$A = external.type;
+
+declare var npm$namespace$E0$U1: {
+  e2: typeof E0$U1$e2,
+  E2: typeof E0$U1$E2,
+
+  S2: typeof npm$namespace$E0$U1$S2,
+  N2: typeof npm$namespace$E0$U1$N2
+};
+declare var E0$U1$e2: number;
+
+declare var E0$U1$E2: {|
+  +E: 1 // 1
+|};
+
+declare var npm$namespace$E0$U1$S2: {
+  n3: typeof E0$U1$S2$n3,
+
+  N3: typeof E0$U1$S2$N3
+};
+declare type E0$U1$S2$S3 = $Values<typeof E0$U1$E2>;
+
+declare var E0$U1$S2$n3: Symbol;
+
+declare class E0$U1$S2$N3 {}
+
+declare var npm$namespace$E0$U1$N2: {
+  s3: typeof E0$U1$N2$s3
+};
+declare function E0$U1$N2$s3(): void;
+
+declare type E0$U1$N2$S3 = $Values<typeof E0$U1$E2>;
+
+declare var npm$namespace$E0$S1: {
+  m3: typeof E0$S1$m3
+};
+declare type E0$S1$A2 = $Values<typeof U1$E2>;
+
+declare type E0$S1$B2 = typeof U1$E2.E;
+
+declare var E0$S1$m3: string;
+
+declare var E0$s1: string;
 "
 `;
