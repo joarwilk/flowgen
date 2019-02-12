@@ -3,7 +3,7 @@ import { SourceFile } from "typescript";
 export type Options = {
   jsdoc?: boolean;
   interfaceRecords?: boolean;
-  stringEnums?: boolean;
+  moduleExports?: boolean;
 };
 
 export type Compiler = {
