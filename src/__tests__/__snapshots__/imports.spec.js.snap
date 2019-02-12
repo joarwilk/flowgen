@@ -1,5 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle import type 1`] = `
+"declare type S = $Exports<\\"http\\">;
+"
+`;
+
 exports[`should handle imports 1`] = `
 "import { GeneratorOptions } from \\"@babel/generator\\";
 import { Visitor as NewVisitor } from \\"@babel/traverse\\";
