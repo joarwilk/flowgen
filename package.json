@@ -10,9 +10,9 @@
     "commander": "^2.11.0",
     "lodash": "^4.17.4",
     "paralleljs": "^0.2.1",
-    "prettier": "^1.12.1",
-    "shelljs": "^0.8.2",
-    "typescript": "^3.3.1",
+    "prettier": "^1.16.4",
+    "shelljs": "^0.8.3",
+    "typescript": "^3.3.3",
     "typescript-compiler": "^1.4.1-2"
   },
   "devDependencies": {
@@ -24,6 +24,7 @@
     "@babel/plugin-proposal-function-sent": "^7.0.0",
     "@babel/plugin-proposal-json-strings": "^7.0.0",
     "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "@babel/plugin-proposal-throw-expressions": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-syntax-import-meta": "^7.0.0",
@@ -39,7 +40,7 @@
     "eslint-plugin-flowtype": "^3.2.1",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jest": "^22.2.2",
-    "flow-bin": "^0.92.0",
+    "flow-bin": "^0.92.1",
     "jest": "^23.6.0"
   },
   "files": [
