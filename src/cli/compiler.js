@@ -62,6 +62,10 @@ export default {
   compileDefinitionString: (string: string, options?: Options): string => {
     reset(options);
 
+    const compilerOptions = {
+      noLib: true,
+      target: ScriptTarget.Latest,
+    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     compilerHost.getSourceFile = (file, languageVersion) => {
@@ -73,10 +77,6 @@ export default {
         ).transformed[0];
       }
       return oldSourceFile(file, languageVersion);
-    };
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
     };
 
     const program = createProgram(["file.ts"], compilerOptions, compilerHost);
@@ -92,6 +92,10 @@ export default {
   compileDefinitionFile: (path: string, options?: Options): string => {
     reset(options);
 
+    const compilerOptions = {
+      noLib: true,
+      target: ScriptTarget.Latest,
+    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     compilerHost.getSourceFile = (file, languageVersion) => {
@@ -108,10 +112,6 @@ export default {
         ).transformed[0];
       }
       return oldSourceFile(file, languageVersion);
-    };
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
     };
 
     const program = createProgram([path], compilerOptions, compilerHost);
