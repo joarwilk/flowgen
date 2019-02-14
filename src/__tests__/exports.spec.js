@@ -17,3 +17,11 @@ export * from 'typescript';
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+test("should handle unnamed default export", () => {
+  const ts = `
+export default function(): void;
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
