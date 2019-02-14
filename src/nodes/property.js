@@ -9,6 +9,7 @@ import type {
   VariableStatement,
   JSDoc,
 } from "typescript";
+import * as ts from "typescript";
 import Node from "./node";
 
 import printers from "../printers";
@@ -18,32 +19,32 @@ import { parseNameFromNode } from "../parse/ast";
 type PropertyNode =
   | {
       ...$Exact<FunctionDeclaration>,
-      kind: "FunctionDeclaration",
+      //kind: "FunctionDeclaration",
       jsDoc: Array<JSDoc>,
     }
   | {
       ...$Exact<ClassDeclaration>,
-      kind: "ClassDeclaration",
+      //kind: "ClassDeclaration",
       jsDoc: Array<JSDoc>,
     }
   | {
       ...$Exact<InterfaceDeclaration>,
-      kind: "InterfaceDeclaration",
+      //kind: "InterfaceDeclaration",
       jsDoc: Array<JSDoc>,
     }
   | {
       ...$Exact<TypeAliasDeclaration>,
-      kind: "TypeAliasDeclaration",
+      //kind: "TypeAliasDeclaration",
       jsDoc: Array<JSDoc>,
     }
   | {
       ...$Exact<EnumDeclaration>,
-      kind: "EnumDeclaration",
+      //kind: "EnumDeclaration",
       jsDoc: Array<JSDoc>,
     }
   | {
       ...$Exact<VariableStatement>,
-      kind: "VariableStatement",
+      //kind: "VariableStatement",
       jsDoc: Array<JSDoc>,
     };
 
@@ -56,7 +57,7 @@ export default class Property extends Node<PropertyNode> {
     this.name = parseNameFromNode(node);
   }
 
-  print(namespace: string = ""): string {
+  print(namespace: string = "", mod: string = "root"): string {
     let out = "";
     let name = this.name;
 
@@ -72,35 +73,35 @@ export default class Property extends Node<PropertyNode> {
       out += printers.common.comment(this.raw.jsDoc);
     }
 
-    const isDeclare = this.module !== "root";
+    const isDeclare = mod !== "root";
     const exporter = printers.relationships.exporter(this.raw);
     const modifier = exporter
       ? `${isDeclare ? "declare " : ""}${exporter}`
       : "declare ";
 
     switch (this.raw.kind) {
-      case "FunctionDeclaration":
+      case ts.SyntaxKind.FunctionDeclaration:
         out += printers.functions.functionDeclaration(name, this.raw);
         break;
-      case "ClassDeclaration":
+      case ts.SyntaxKind.ClassDeclaration:
         out += printers.declarations.classDeclaration(name, this.raw);
         break;
-      case "InterfaceDeclaration":
+      case ts.SyntaxKind.InterfaceDeclaration:
         out += printers.declarations.interfaceDeclaration(
           name,
           this.raw,
           modifier,
         );
         break;
-      case "TypeAliasDeclaration":
+      case ts.SyntaxKind.TypeAliasDeclaration:
         out += printers.declarations.typeDeclaration(name, this.raw, modifier);
         break;
-      case "EnumDeclaration":
+      case ts.SyntaxKind.EnumDeclaration:
         out += printers.declarations.enumDeclaration(name, this.raw);
         break;
-      case "VariableStatement":
+      case ts.SyntaxKind.VariableStatement:
         for (const decl of this.raw.declarationList.declarations) {
-          if (namespace && decl.name.kind === "Identifier") {
+          if (namespace && decl.name.kind === ts.SyntaxKind.Identifier) {
             const text = (decl.name: any).text;
             namespaceManager.registerProp(namespace, text);
           }
