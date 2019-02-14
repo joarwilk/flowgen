@@ -1,6 +1,7 @@
 // @flow
+
 import type { RawNode } from "../nodes/node";
-import type { JSDoc } from "typescript";
+import * as ts from "typescript";
 
 // TODO: resolve circular dependencies
 declare export default {|
@@ -11,6 +12,7 @@ declare export default {|
     print(kind: string): string,
   |},
   declarations: {|
+    propertyDeclaration(node: RawNode, keywordPrefix: string): string,
     variableDeclaration(node: RawNode): string,
     interfaceType(node: RawNode, withSemicolons?: boolean): string,
     interfaceDeclaration(
@@ -26,8 +28,14 @@ declare export default {|
   common: {|
     parameter(param: RawNode): string,
     parseTypeReference(node: RawNode): string,
-    generics(types: ?Array<RawNode>): string,
-    comment(jsdoc: Array<JSDoc>): string,
+    methodSignature(param: RawNode): string,
+    generics(
+      types: ?ts.NodeArray<RawNode>,
+      map?: (node: RawNode) => RawNode,
+    ): string,
+    literalType(node: RawNode): string,
+    typeParameter(node: RawNode): string,
+    comment(jsdoc: $ReadOnlyArray<ts.JSDoc>): string,
   |},
   functions: {|
     functionType(func: RawNode, dotAsReturn?: boolean): string,
@@ -38,6 +46,7 @@ declare export default {|
     exporter(node: RawNode): string,
     namespace(name: string, hidePunctuation?: boolean): string,
     namespaceProp(name: string, hidePunctuation?: boolean): string,
+    importExportSpecifier(node: RawNode): string,
   |},
   node: {|
     printType(type: RawNode): string,
