@@ -7,19 +7,20 @@ import Node from "../nodes/node";
 import type ModuleNode from "../nodes/module";
 import NodeFactory, { type Factory } from "../nodes/factory";
 import namespaceManager from "../namespaceManager";
-import { parseNameFromNode } from "./ast";
+import { parseNameFromNode, stripDetailsFromTree } from "./ast";
 
 const collectNode = (
   node: RawNode,
   context: Node<>,
   factory: Factory,
 ): void => {
+  stripDetailsFromTree(node);
   switch (node.kind) {
     case ts.SyntaxKind.ModuleDeclaration:
       if (
         node.flags === 4098 ||
         (node.flags & ts.NodeFlags.Namespace) ===
-          16 /* TODO: Replace with namespace flag enum */
+          ts.NodeFlags.Namespace /* TODO: Replace with namespace flag enum */
       ) {
         const namespace = factory.createNamespaceNode(node.name.text);
 
@@ -90,16 +91,18 @@ const collectNode = (
       break;
 
     case ts.SyntaxKind.ImportEqualsDeclaration:
+      // see transformers
+      break;
+
+    case ts.SyntaxKind.NamespaceExportDeclaration:
       // TODO: unimplemented;
       break;
+
     case ts.SyntaxKind.EnumDeclaration:
       context.addChild(
         parseNameFromNode(node),
         factory.createPropertyNode(node),
       );
-      break;
-    case ts.SyntaxKind.NamespaceExportDeclaration:
-      // TODO: unimplemented;
       break;
 
     case ts.SyntaxKind.EmptyStatement:
