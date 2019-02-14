@@ -5,6 +5,7 @@ import {
   createSourceFile,
   ScriptTarget,
   type SourceFile,
+  transform,
 } from "typescript";
 import fs from "fs";
 import tsc from "typescript-compiler";
@@ -12,6 +13,7 @@ import tsc from "typescript-compiler";
 import namespaceManager from "../namespaceManager";
 import { type Options, assignOptions, resetOptions } from "../options";
 import { checker } from "../checker";
+import { importEqualsTransformer, legacyModules } from "../parse/transformers";
 import { recursiveWalkTree } from "../parse";
 
 const compile = (sourceFile: SourceFile): string => {
@@ -35,6 +37,8 @@ const reset = (options?: Options) => {
   namespaceManager.reset();
 };
 
+const transformers = [legacyModules(), importEqualsTransformer()];
+
 /**
  * Compiles typescript files
  */
@@ -47,6 +51,10 @@ export default {
     checker.current = typeChecker;
   },
 
+  getTransformers() {
+    return transformers;
+  },
+
   compileTest: (path: string, target: string): void => {
     tsc.compile(path, "--module commonjs -t ES6 --out " + target);
   },
@@ -54,33 +62,24 @@ export default {
   compileDefinitionString: (string: string, options?: Options): string => {
     reset(options);
 
-    // const compilerHost = {
-    //   fileExists: () => true,
-    //   getCanonicalFileName: filename => filename,
-    //   getCurrentDirectory: () => "",
-    //   getDefaultLibFileName: () => require.resolve("typescript/lib/lib.d.ts"),
-    //   getNewLine: () => "\n",
-    //   getSourceFile: () => {
-    //     return createSourceFile(
-    //       "/dev/null",
-    //       string,
-    //       ScriptTarget.Latest,
-    //       false,
-    //     );
-    //   },
-    //   readFile: () => {},
-    //   useCaseSensitiveFileNames: () => true,
-    //   writeFile: () => {},
-    // };
+    const compilerHost = createCompilerHost({}, true);
+    const oldSourceFile = compilerHost.getSourceFile;
+    compilerHost.getSourceFile = (file, languageVersion) => {
+      if (file === "file.ts") {
+        return transform(
+          createSourceFile("/dev/null", string, languageVersion, true),
+          transformers,
+          compilerOptions,
+        ).transformed[0];
+      }
+      return oldSourceFile(file, languageVersion);
+    };
+    const compilerOptions = {
+      noLib: true,
+      target: ScriptTarget.Latest,
+    };
 
-    const program = createProgram(
-      ["file.ts"],
-      {
-        noLib: true,
-        target: ScriptTarget.Latest,
-      },
-      createCompilerHost({}, true),
-    );
+    const program = createProgram(["file.ts"], compilerOptions, compilerHost);
 
     checker.current = program.getTypeChecker();
     const sourceFile = program.getSourceFile("file.ts");
@@ -93,34 +92,29 @@ export default {
   compileDefinitionFile: (path: string, options?: Options): string => {
     reset(options);
 
-    // const compilerHost = {
-    //   fileExists: () => true,
-    //   getCanonicalFileName: filename => filename,
-    //   getCurrentDirectory: () => "",
-    //   getDefaultLibFileName: () => require.resolve("typescript/lib/lib.d.ts"),
-    //   getNewLine: () => "\n",
-    //   getSourceFile: path => {
-    //     return createSourceFile(
-    //       path,
-    //       fs.readFileSync(path).toString(),
-    //       ScriptTarget.Latest,
-    //       false,
-    //     );
-    //   },
-    //   readFile: () => {},
-    //   useCaseSensitiveFileNames: () => true,
-    //   writeFile: () => {},
-    // };
+    const compilerHost = createCompilerHost({}, true);
+    const oldSourceFile = compilerHost.getSourceFile;
+    compilerHost.getSourceFile = (file, languageVersion) => {
+      if (file === path) {
+        return transform(
+          createSourceFile(
+            file,
+            compilerHost.readFile(file),
+            languageVersion,
+            true,
+          ),
+          transformers,
+          compilerOptions,
+        ).transformed[0];
+      }
+      return oldSourceFile(file, languageVersion);
+    };
+    const compilerOptions = {
+      noLib: true,
+      target: ScriptTarget.Latest,
+    };
 
-    const program = createProgram(
-      [path],
-      {
-        noLib: true,
-        target: ScriptTarget.Latest,
-      },
-      createCompilerHost({}, true),
-      //compilerHost,
-    );
+    const program = createProgram([path], compilerOptions, compilerHost);
 
     checker.current = program.getTypeChecker();
     const sourceFile = program.getSourceFile(path);
