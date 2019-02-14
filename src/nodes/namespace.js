@@ -18,16 +18,15 @@ export default class Namespace extends Node {
 
   addChild(name: string, child: Node<>): void {
     child.namespace = this.name;
-    child.isValue = child
-      .getChildren()
-      .some(
-        node =>
-          node instanceof Namespace ||
-          node.raw.kind === ts.SyntaxKind.VariableStatement ||
-          node.raw.kind === ts.SyntaxKind.ClassDeclaration ||
-          node.raw.kind === ts.SyntaxKind.FunctionDeclaration ||
-          node.raw.kind === ts.SyntaxKind.EnumDeclaration,
+    child.isValue = child.getChildren().some(node => {
+      return (
+        node instanceof Namespace ||
+        node.raw.kind === ts.SyntaxKind.VariableStatement ||
+        node.raw.kind === ts.SyntaxKind.ClassDeclaration ||
+        node.raw.kind === ts.SyntaxKind.FunctionDeclaration ||
+        node.raw.kind === ts.SyntaxKind.EnumDeclaration
       );
+    });
     namespaceManager.registerProp(this.name, child.name);
 
     this.children[name] = child;
@@ -53,13 +52,13 @@ export default class Namespace extends Node {
     }
     if (this.children[name]) {
       for (const key in child.children) {
-        this.children[name].addChild(key, child.children[key]);
+        this.children[name].addChildren(key, child.children[key]);
       }
       return;
     }
   }
 
-  print = (namespace: string = ""): string => {
+  print = (namespace: string = "", mod: string = "root"): string => {
     const functions = this.getChildren().filter(
       child =>
         child.raw && child.raw.kind === ts.SyntaxKind.FunctionDeclaration,
@@ -88,7 +87,7 @@ export default class Namespace extends Node {
 
     const children = `${this.getChildren()
       .map(child => {
-        return child.print(name);
+        return child.print(name, mod);
       })
       .join("\n\n")}`;
 
