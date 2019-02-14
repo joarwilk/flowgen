@@ -1,8 +1,45 @@
 /* @flow */
 
+import * as ts from "typescript";
 import { opts } from "../options";
+import { checker } from "../checker";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
+
+export const propertyDeclaration = (node: RawNode, keywordPrefix: string) => {
+  if (
+    node.modifiers &&
+    node.modifiers.some(
+      modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword,
+    )
+  ) {
+    return "";
+  }
+
+  if (node.parameters) {
+    return (
+      keywordPrefix +
+      printers.node.printType(node.name) +
+      ": " +
+      node.parameters.map(printers.common.parameter)
+    );
+  }
+
+  if (node.type) {
+    return (
+      keywordPrefix +
+      printers.relationships.namespaceProp(printers.node.printType(node.name)) +
+      ": " +
+      printers.node.printType(node.type)
+    );
+  }
+
+  return (
+    keywordPrefix +
+    printers.relationships.namespaceProp(printers.node.printType(node.name)) +
+    `: any // ${printers.node.printType(node.initializer)}`
+  );
+};
 
 export const variableDeclaration = (node: RawNode): string => {
   const declarations = node.declarationList.declarations
@@ -116,7 +153,20 @@ export const interfaceDeclaration = (
     heritage = node.heritageClauses
       .map(clause => {
         return clause.types
-          .map(type => printers.node.printType(type))
+          .map(type => {
+            // TODO: refactor this
+            const symbol = checker.current.getSymbolAtLocation(type.expression);
+            if (type.expression.kind === ts.SyntaxKind.Identifier) {
+              return (
+                printers.node.getFullyQualifiedPropertyAccessExpression(
+                  symbol,
+                  type.expression,
+                ) + printers.common.generics(type.typeArguments)
+              );
+            } else {
+              return printers.node.printType(type);
+            }
+          })
           .join(" & ");
       })
       .join("");
@@ -144,31 +194,9 @@ export const typeDeclaration = (
   return str;
 };
 
-export const enumStringDeclaration = (
-  nodeName: string,
-  node: RawNode,
-): string => {
-  const exporter = printers.relationships.exporter(node);
-  let members = "";
-  for (const [, member] of node.members.entries()) {
-    members += `| ${JSON.stringify(member.name.text)}`;
-  }
-  return `declare ${exporter} type ${nodeName} =
-  ${members === "" ? "empty" : members}
-\n`;
-};
-
 export const enumDeclaration = (nodeName: string, node: RawNode): string => {
-  const isStringEnum = opts().stringEnums;
-
-  if (isStringEnum) {
-    return enumStringDeclaration(nodeName, node);
-  }
-
   const exporter = printers.relationships.exporter(node);
-  const constructor = `constructor(...args: empty): mixed;\n`;
   let members = "";
-  let instances = "";
   for (const [index, member] of node.members.entries()) {
     let value;
     const name = `${nodeName}__${member.name.text}`;
@@ -177,15 +205,13 @@ export const enumDeclaration = (nodeName: string, node: RawNode): string => {
     } else {
       value = index;
     }
-    const left = `Class<${name}> & ${name} & ${value}`;
-    instances += `declare class ${name} mixins ${nodeName} {}\n`;
-    members += `static +${member.name.text}: ${left};`;
+    members += `+${member.name.text}: ${value},`;
     members += `// ${value}\n`;
   }
-  return `declare ${exporter} class ${nodeName} {
-  ${constructor}${members}
-}\n
-${instances}`;
+  return `
+declare ${exporter} var ${nodeName}: {|
+  ${members}
+|};\n`;
 };
 
 export const typeReference = (node: RawNode): string => {
@@ -195,10 +221,9 @@ export const typeReference = (node: RawNode): string => {
       printers.common.generics(node.typeArguments)
     );
   }
-
   return (
     printers.relationships.namespaceProp(
-      printers.identifiers.print(node.typeName.text),
+      printers.identifiers.print(node.typeName.escapedText),
     ) + printers.common.generics(node.typeArguments)
   );
 };
@@ -210,7 +235,22 @@ export const classDeclaration = (nodeName: string, node: RawNode): string => {
   if (node.heritageClauses) {
     heritage = node.heritageClauses
       .map(clause => {
-        return clause.types.map(printers.node.printType).join(", ");
+        return clause.types
+          .map(type => {
+            // TODO: refactor this
+            const symbol = checker.current.getSymbolAtLocation(type.expression);
+            if (type.expression.kind === ts.SyntaxKind.Identifier) {
+              return (
+                printers.node.getFullyQualifiedPropertyAccessExpression(
+                  symbol,
+                  type.expression,
+                ) + printers.common.generics(type.typeArguments)
+              );
+            } else {
+              return printers.node.printType(type);
+            }
+          })
+          .join(", ");
       })
       .join(", ");
     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
