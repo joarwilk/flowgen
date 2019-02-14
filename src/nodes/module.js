@@ -24,7 +24,7 @@ export default class Module extends Node {
     }
     if (this.children[name]) {
       for (const key in child.children) {
-        this.children[name].addChild(key, child.children[key]);
+        this.children[name].addChildren(key, child.children[key]);
       }
       return;
     }
@@ -34,7 +34,7 @@ export default class Module extends Node {
     return `declare module '${this.name}' {
         ${this.getChildren()
           .map(child => {
-            return child.print();
+            return child.print(undefined, this.name);
           })
           .join("\n\t")}
     }\n`;
