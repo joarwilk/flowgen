@@ -40,7 +40,7 @@ export default class Node<NodeType = RawNode> {
     }
     if (this.children[name]) {
       for (const key in node.children) {
-        this.children[name].addChild(key, node.children[key]);
+        this.children[name].addChildren(key, node.children[key]);
       }
       return;
     }
@@ -68,7 +68,7 @@ export default class Node<NodeType = RawNode> {
   }
 
   //eslint-disable-next-line
-  print(namespace?: string): string {
+  print(namespace?: string, module?: string): string {
     return printers.node.printType(this.raw);
   }
 }
