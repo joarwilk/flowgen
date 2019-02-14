@@ -1,5 +1,6 @@
 // @flow
 
+import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
@@ -37,10 +38,18 @@ export const functionDeclaration = (
   nodeName: string,
   node: RawNode,
 ): string => {
+  const exporter = printers.relationships.exporter(node);
+  let name = nodeName;
+  if (
+    node.modifiers &&
+    node.modifiers.some(
+      modifier => modifier.kind === ts.SyntaxKind.DefaultKeyword,
+    )
+  ) {
+    name = nodeName === "INVALID NAME REF" ? "fn" : nodeName;
+  }
   // each functionDeclaration gets it's own line
-  let str = `declare ${printers.relationships.exporter(
-    node,
-  )}function ${nodeName}${functionType(node, true)}\n`;
+  let str = `declare ${exporter}function ${name}${functionType(node, true)}\n`;
 
   return str;
 };
