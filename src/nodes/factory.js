@@ -10,6 +10,8 @@ import PropertyNode from "./property";
 import NamespaceNode from "./namespace";
 
 import { getMembersFromNode } from "../parse/ast";
+import { checker } from "../checker";
+import { getFullyQualifiedName } from "../printers/node";
 
 export class Factory {
   _modules: { [key: string]: ModuleNode };
@@ -65,7 +67,11 @@ export class Factory {
     }
 
     if (context instanceof ModuleNode) {
-      name += context.name;
+      name = context.name + "$" + name;
+    }
+    if (context instanceof NamespaceNode && checker.current) {
+      const symbol = checker.current.getSymbolAtLocation(node.name);
+      name = getFullyQualifiedName(symbol, node.name, false);
     }
 
     if (Object.keys(this._propDeclarations).includes(name)) {
