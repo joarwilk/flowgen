@@ -4,6 +4,6 @@ exports[`should handle utility types 1`] = `
 "import { Node } from \\"react\\";
 import * as React from \\"react\\";
 declare function s(node: Node): void;
-declare function s(node: React.ReactNode): void;
+declare function s(node: React.Node): void;
 "
 `;
