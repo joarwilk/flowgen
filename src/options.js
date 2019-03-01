@@ -3,13 +3,13 @@
 export type Options = {|
   jsdoc?: boolean,
   interfaceRecords?: boolean,
-  stringEnums?: boolean,
+  moduleExports?: boolean,
 |};
 
 const defaultOptions: Options = Object.freeze({
   jsdoc: true,
   interfaceRecords: false,
-  stringEnums: false,
+  moduleExports: true,
 });
 
 let options: Options = { ...defaultOptions };

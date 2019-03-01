@@ -12,7 +12,7 @@ import flowTypedExporter from "./flow-typed-exporter";
 type RunnerOptions = {
   jsdoc: boolean,
   interfaceRecords: boolean,
-  stringEnums: boolean,
+  moduleExports: boolean,
   version: string,
   out: string,
   flowTypedFormat: boolean,
@@ -56,7 +56,7 @@ export default (options: RunnerOptions) => {
           const flowDefinitions = compiler.compileDefinitionFile(file, {
             jsdoc: options.jsdoc,
             interfaceRecords: options.interfaceRecords,
-            stringEnums: options.stringEnums,
+            moduleExports: options.moduleExports,
           });
 
           // Write the output to disk

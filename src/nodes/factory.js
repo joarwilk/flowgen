@@ -10,11 +10,13 @@ import PropertyNode from "./property";
 import NamespaceNode from "./namespace";
 
 import { getMembersFromNode } from "../parse/ast";
+import { checker } from "../checker";
+import { getFullyQualifiedName } from "../printers/node";
 
 export class Factory {
-  _modules: Object;
-  _propDeclarations: Object;
-  _functionDeclarations: Object;
+  _modules: { [key: string]: ModuleNode };
+  _propDeclarations: { [key: string]: PropertyNode };
+  _functionDeclarations: { [key: string]: number };
 
   constructor() {
     this._modules = Object.create(null);
@@ -60,12 +62,16 @@ export class Factory {
     name?: string,
     context?: Node<>,
   ): PropertyNode {
-    if (!name) {
+    if (typeof name === "undefined") {
       return new PropertyNode(node);
     }
 
     if (context instanceof ModuleNode) {
-      name += context.name;
+      name = context.name + "$" + name;
+    }
+    if (context instanceof NamespaceNode && checker.current) {
+      const symbol = checker.current.getSymbolAtLocation(node.name);
+      name = getFullyQualifiedName(symbol, node.name, false);
     }
 
     if (Object.keys(this._propDeclarations).includes(name)) {

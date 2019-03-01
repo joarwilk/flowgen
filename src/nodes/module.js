@@ -16,11 +16,25 @@ export default class Module extends Node {
     this.children[name] = child;
   }
 
+  addChildren(name: string, child: Node<>): void {
+    child.module = this.name;
+    if (!this.children[name]) {
+      this.children[name] = child;
+      return;
+    }
+    if (this.children[name]) {
+      for (const key in child.children) {
+        this.children[name].addChildren(key, child.children[key]);
+      }
+      return;
+    }
+  }
+
   print = () => {
     return `declare module '${this.name}' {
         ${this.getChildren()
           .map(child => {
-            return child.print();
+            return child.print(undefined, this.name);
           })
           .join("\n\t")}
     }\n`;

@@ -6,8 +6,6 @@ it("should handle empty enums", () => {
   const ts = `enum Empty { }`;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot("class");
-  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
-  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle basic enums", () => {
@@ -15,11 +13,12 @@ it("should handle basic enums", () => {
     LABEL_OPTIONAL,
     LABEL_REQUIRED,
     LABEL_REPEATED,
-  }`;
+  }
+type A = Label
+type B = Label.LABEL_OPTIONAL
+`;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot("class");
-  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
-  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle number enums", () => {
@@ -29,11 +28,12 @@ it("should handle number enums", () => {
     THREE = 3,
     NEGATIVE = -123,
     DECIMAL = 3.14,
-  }`;
+  }
+type A = Label
+type B = Label.TWO
+`;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot("class");
-  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
-  expect(beautify(result2)).toMatchSnapshot("union");
 });
 
 it("should handle string enums", () => {
@@ -41,9 +41,10 @@ it("should handle string enums", () => {
     LABEL_OPTIONAL = 'LABEL_OPTIONAL',
     LABEL_REQUIRED = 'LABEL_REQUIRED',
     LABEL_REPEATED = 'LABEL_REPEATED',
-  }`;
+  }
+type A = Label
+type B = Label.LABEL_REQUIRED
+`;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot("class");
-  const result2 = compiler.compileDefinitionString(ts, { stringEnums: true });
-  expect(beautify(result2)).toMatchSnapshot("union");
 });

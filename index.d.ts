@@ -1,9 +1,9 @@
-import { SourceFile } from "typescript";
+import { SourceFile, TypeChecker } from "typescript";
 
 export type Options = {
   jsdoc?: boolean;
   interfaceRecords?: boolean;
-  stringEnums?: boolean;
+  moduleExports?: boolean;
 };
 
 export type Compiler = {
@@ -13,6 +13,7 @@ export type Compiler = {
 
   // Low-level exports
   reset(options?: Options): void;
+  setChecker(checker: TypeChecker): void;
   compile(sourceFile: SourceFile): string;
 };
 

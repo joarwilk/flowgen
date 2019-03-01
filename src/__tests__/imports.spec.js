@@ -27,3 +27,11 @@ declare module '@babel/core' {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should handle import type", () => {
+  const ts = `
+type S = typeof import('http')
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});

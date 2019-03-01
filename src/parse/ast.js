@@ -2,16 +2,27 @@
 
 import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
+import util from "util";
 import _ from "lodash";
 import getNodeName from "../nodename";
 
 import printers from "../printers";
+
+const inspect = Symbol.for("nodejs.util.inspect.custom");
 
 export const parseNameFromNode = (node: RawNode): string => {
   if (node.name && node.name.text) {
     return node.name.text;
   } else if (node.type && node.type.typeName) {
     return node.type.typeName.text;
+  } else if (node.exportClause) {
+    let names = [];
+    ts.forEachChild(node.exportClause, child => {
+      names.push(parseNameFromNode(child));
+    });
+    return names.join(",");
+  } else if (node.importClause && node.importClause.namedBindings) {
+    return parseNameFromNode(node.importClause.namedBindings);
   } else if (node.moduleSpecifier) {
     return node.moduleSpecifier.text;
   } else if (node.expression) {
@@ -23,9 +34,9 @@ export const parseNameFromNode = (node: RawNode): string => {
       .join(" ");
 
     return declarations;
-  } else if (node.exportClause) {
+  } else if (node.kind === ts.SyntaxKind.NamedImports) {
     let names = [];
-    ts.forEachChild(node.exportClause, child => {
+    ts.forEachChild(node, child => {
       names.push(parseNameFromNode(child));
     });
     return names.join(",");
@@ -35,27 +46,56 @@ export const parseNameFromNode = (node: RawNode): string => {
   return "INVALID NAME REF";
 };
 
+function inspectFn(depth, options) {
+  const newOptions = Object.assign({}, options, {
+    depth: options.depth === null ? null : options.depth - 1,
+  });
+  if (depth < 0) {
+    const { parent, symbol, localSymbol, ...rest } = this;
+    delete rest[inspect];
+    if (rest.kind) {
+      return `${ts.SyntaxKind[rest.kind]} ${util.inspect(rest, newOptions)}`;
+    } else {
+      return util.inspect(rest, newOptions);
+    }
+  }
+  const { parent, symbol, localSymbol, ...rest } = this;
+  for (const key in rest) {
+    if (rest.hasOwnProperty(key) && typeof rest[key] === "object") {
+      rest[key][inspect] = inspectFn.bind(rest[key]);
+    }
+  }
+  delete rest[inspect];
+  if (rest.kind) {
+    return `${ts.SyntaxKind[rest.kind]} ${util.inspect(rest, newOptions)}`;
+  } else {
+    return util.inspect(rest, newOptions);
+  }
+}
+
 // Traverse a node and strip information we dont care about
 // This is mostly to make debugging a bit less verbose
 export const stripDetailsFromTree = (root: RawNode): any => {
-  const clone = _.omit(root, ["pos", "end", "parent", "flags"]);
+  for (const key in root) {
+    const val = root[key];
 
-  for (const key in clone) {
-    const val = clone[key];
+    if (key === "parent") continue;
+    if (key === "symbol") continue;
+    if (key === "localSymbol") continue;
+    if (typeof val === "function") continue;
+    if (typeof val !== "object") continue;
 
-    if (clone.hasOwnProperty(key) && typeof val === "object") {
-      if (_.isArray(val)) {
-        clone[key] = val.map(item => stripDetailsFromTree(item));
+    if (root.hasOwnProperty(key) && typeof val === "object") {
+      if (Array.isArray(val)) {
+        root[key] = root[key].map(stripDetailsFromTree);
       } else {
-        clone[key] = stripDetailsFromTree(val);
+        root[key][inspect] = inspectFn.bind(val);
       }
     }
   }
 
-  // Use actual names instead of node type IDs
-  clone.kind = getNodeName(clone);
-
-  return clone;
+  root[inspect] = inspectFn.bind(root);
+  return root;
 };
 
 export function getMembersFromNode(node: any): void {

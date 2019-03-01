@@ -1,11 +1,12 @@
 /* @flow */
-export type RawNode = any;
 
 import _ from "lodash";
 import type { Node as TSNode } from "typescript";
 import { parseNameFromNode, stripDetailsFromTree } from "../parse/ast";
 
 import printers from "../printers";
+
+export type RawNode = any;
 
 export default class Node<NodeType = RawNode> {
   children: {
@@ -18,9 +19,10 @@ export default class Node<NodeType = RawNode> {
   module: ?string;
 
   constructor(node: ?NodeType) {
+    //$off
     this.children = Object.create(null);
 
-    if (node) {
+    if (node !== null) {
       this.raw = stripDetailsFromTree(node);
       this.name = parseNameFromNode(node);
     }
@@ -38,7 +40,7 @@ export default class Node<NodeType = RawNode> {
     }
     if (this.children[name]) {
       for (const key in node.children) {
-        this.children[name].addChild(key, node.children[key]);
+        this.children[name].addChildren(key, node.children[key]);
       }
       return;
     }
@@ -47,7 +49,7 @@ export default class Node<NodeType = RawNode> {
   /**
    * Used for overloading the props of some types
    */
-  maybeAddMember(members: Object | Array<Object>): void {
+  maybeAddMember(members: Object | $ReadOnlyArray<Object>): void {
     const rawMembers: Array<TSNode> | void = (this.raw: any).members;
     if (!rawMembers) {
       return;
@@ -61,12 +63,12 @@ export default class Node<NodeType = RawNode> {
     }
   }
 
-  getChildren(): Array<Node<>> {
+  getChildren(): $ReadOnlyArray<Node<>> {
     return _.toArray(this.children);
   }
 
   //eslint-disable-next-line
-  print(namespace?: string): string {
+  print(namespace?: string, module?: string): string {
     return printers.node.printType(this.raw);
   }
 }

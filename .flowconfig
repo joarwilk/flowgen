@@ -19,14 +19,19 @@ all=warn
 untyped-type-import=error
 
 [options]
-include_warnings=true
-suppress_comment= \\(.\\|\n\\)*\\--FlowIgnore
+suppress_comment=\\(.\\|\n\\)*\\$off
+suppress_type=$off
+suppress_comment=\\(.\\|\n\\)*\\$todo
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(<VERSION>\\)?)\\)
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)?)\\)?:? #[0-9]+
+suppress_type=$todo
 
 module.name_mapper.extension='scss' -> '<PROJECT_ROOT>/src/typings/css-modules.js'
 
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable
 esproposal.export_star_as=enable
+esproposal.optional_chaining=enable
 
 munge_underscores=true
 
