@@ -296,6 +296,18 @@ export function getTypeofFullyQualifiedName(
   }
 }
 
+function fixDefaultTypeArguments(symbol, type) {
+  if (!symbol) return
+  if (!symbol.declarations) return
+  const decl = symbol.declarations[0];
+  const allTypeParametersHaveDefaults =
+    !!decl?.typeParameters?.length &&
+    decl.typeParameters.every(param => !!param.default);
+  if (allTypeParametersHaveDefaults && !type.typeArguments) {
+    type.typeArguments = [];
+  }
+}
+
 export const printType = (rawType: any): string => {
   // debuggerif()
   //TODO: #6 No match found in SyntaxKind enum
@@ -449,6 +461,7 @@ export const printType = (rawType: any): string => {
       if (checker.current) {
         //$todo
         const symbol = checker.current.getSymbolAtLocation(type.typeName);
+        fixDefaultTypeArguments(symbol, type);
         renames(symbol, type);
         if (
           symbol &&

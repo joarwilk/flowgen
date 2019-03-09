@@ -117,7 +117,7 @@ export const generics = (
   types: ?$ReadOnlyArray<RawNode>,
   map?: (node: RawNode) => RawNode = node => node,
 ): string => {
-  if (types && types.length) {
+  if (types && typeof types.length !== "undefined") {
     return `<${types
       .map(map)
       .map(printers.node.printType)
