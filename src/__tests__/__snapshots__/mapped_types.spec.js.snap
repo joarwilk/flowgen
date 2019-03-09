@@ -17,5 +17,6 @@ declare type MappedObj = $ObjMapi<
   SourceObject,
   <K>(K) => Ref<$ElementType<SourceObject, K>>
 >;
+declare type ConstantKey = $PropertyType<MappedObj, \\"a\\">;
 "
 `;

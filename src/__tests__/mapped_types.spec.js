@@ -16,6 +16,7 @@ type MappedUnion = {
 type MappedObj = {
   [K in keyof SourceObject]: Ref<SourceObject[K]>
 }
+type ConstantKey = MappedObj["a"]
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
