@@ -116,6 +116,21 @@ interface AbstractLevelDOWNConstructor {
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should support omitting generic defaults in types, classes, interfaces", () => {
+  const ts = `
+interface Foo<T = symbol, U = number> {
+}  
+type Bar<T = number, U = string> = {}
+class Baz<T = string, U = number> {}
+
+declare var a: Foo
+declare var b: Bar
+declare var c: Baz
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should support optional methods", () => {
   const ts = `
 interface Example<State> {
