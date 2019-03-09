@@ -156,6 +156,7 @@ export const interfaceDeclaration = (
           .map(type => {
             // TODO: refactor this
             const symbol = checker.current.getSymbolAtLocation(type.expression);
+            printers.node.fixDefaultTypeArguments(symbol, type);
             if (type.expression.kind === ts.SyntaxKind.Identifier) {
               return (
                 printers.node.getFullyQualifiedPropertyAccessExpression(
@@ -223,7 +224,7 @@ export const typeReference = (node: RawNode): string => {
   }
   return (
     printers.relationships.namespaceProp(
-      printers.identifiers.print(node.typeName.escapedText),
+      printers.identifiers.print(node.typeName.text),
     ) + printers.common.generics(node.typeArguments)
   );
 };
@@ -239,6 +240,7 @@ export const classDeclaration = (nodeName: string, node: RawNode): string => {
           .map(type => {
             // TODO: refactor this
             const symbol = checker.current.getSymbolAtLocation(type.expression);
+            printers.node.fixDefaultTypeArguments(symbol, type);
             if (type.expression.kind === ts.SyntaxKind.Identifier) {
               return (
                 printers.node.getFullyQualifiedPropertyAccessExpression(
