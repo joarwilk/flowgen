@@ -87,7 +87,7 @@ export function printPropertyAccessExpression(
     return (
       printers.relationships.namespace(
         type.expression.kind === ts.SyntaxKind.Identifier
-          ? type.expression.escapedText
+          ? type.expression.text
           : printPropertyAccessExpression(type.expression),
       ) + printPropertyAccessExpression(type.name)
     );
@@ -297,7 +297,7 @@ export function getTypeofFullyQualifiedName(
   }
 }
 
-function fixDefaultTypeArguments(symbol, type) {
+export function fixDefaultTypeArguments(symbol, type) {
   if (!symbol) return
   if (!symbol.declarations) return
   const decl = symbol.declarations[0];
@@ -377,7 +377,7 @@ export const printType = (rawType: any): string => {
     case ts.SyntaxKind.Identifier:
       //case SyntaxKind.StringLiteralType:
       return printers.relationships.namespace(
-        printers.identifiers.print(type.escapedText),
+        printers.identifiers.print(type.text),
         true,
       );
 
