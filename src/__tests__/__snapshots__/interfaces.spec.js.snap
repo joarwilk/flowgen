@@ -124,6 +124,7 @@ exports[`should support call signature 1`] = `
 
 exports[`should support omitting generic defaults in types, classes, interfaces 1`] = `
 "declare interface Foo<T = Symbol, U = number> {}
+declare type FooBar = {} & Foo<>;
 declare type Bar<T = number, U = string> = {};
 declare class Baz<T = string, U = number> {}
 declare var a: Foo<>;

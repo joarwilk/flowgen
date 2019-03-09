@@ -118,8 +118,8 @@ interface AbstractLevelDOWNConstructor {
 
 it("should support omitting generic defaults in types, classes, interfaces", () => {
   const ts = `
-interface Foo<T = symbol, U = number> {
-}  
+interface Foo<T = symbol, U = number> {}
+interface FooBar extends Foo {}
 type Bar<T = number, U = string> = {}
 class Baz<T = string, U = number> {}
 
