@@ -5,6 +5,13 @@ exports[`should handle exported interfaces and types 1`] = `
 "
 `;
 
+exports[`should handle global augmentation 1`] = `
+"declare module \\"global\\" {
+  declare interface Array<T> {}
+}
+"
+`;
+
 exports[`should handle namespace function merging 1`] = `
 "declare var npm$namespace$test: {
   test: typeof test$test

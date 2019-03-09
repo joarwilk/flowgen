@@ -112,3 +112,12 @@ declare namespace A.B.C {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+test("should handle global augmentation", () => {
+  const ts = `
+declare global {
+  interface Array<T> {}
+}`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
