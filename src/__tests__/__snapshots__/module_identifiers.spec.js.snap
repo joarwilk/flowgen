@@ -1,6 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should handle utility types 1`] = `
+exports[`should handle global types jsx 1`] = `
+"import * as React from \\"react\\";
+declare function s(node: React$Node): void;
+declare type Props = {
+  children: React$Node
+};
+declare class Component mixins React.Component<Props> {
+  render(): React$Node;
+}
+"
+`;
+
+exports[`should handle react types 1`] = `
 "import { Node } from \\"react\\";
 import * as React from \\"react\\";
 declare function s(node: Node): void;
