@@ -19,9 +19,18 @@ const collectNode = (
     case ts.SyntaxKind.ModuleDeclaration:
       if (
         node.flags === 4098 ||
-        (node.flags & ts.NodeFlags.Namespace) ===
-          ts.NodeFlags.Namespace /* TODO: Replace with namespace flag enum */
+        (node.flags & ts.NodeFlags.Namespace) === ts.NodeFlags.Namespace
       ) {
+        if (
+          (node.flags & ts.NodeFlags.GlobalAugmentation) ===
+          ts.NodeFlags.GlobalAugmentation
+        ) {
+          console.log("Flow doesn't support global augmentation");
+          const globalAugmentation = factory.createModuleNode(node.name.text);
+          context.addChild("module" + node.name.text, globalAugmentation);
+          traverseNode(node.body, globalAugmentation, factory);
+          break;
+        }
         const namespace = factory.createNamespaceNode(node.name.text);
 
         namespaceManager.setContext(node.name.text);

@@ -188,7 +188,8 @@ export function getFullyQualifiedName(
         const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
         isExternalSymbol =
           decl.kind === ts.SyntaxKind.NamespaceImport ||
-          decl.kind === ts.SyntaxKind.NamedImports;
+          decl.kind === ts.SyntaxKind.NamedImports ||
+          leftMostSymbol?.parent?.escapedName === "__global";
       }
       if (!symbol || typeChecker.isUnknownSymbol(symbol) || isExternalSymbol) {
         return printEntityName(type);
