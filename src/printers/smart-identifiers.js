@@ -75,7 +75,7 @@ export function getLeftMostEntityName(type: ts.EntityName) {
 
 function compareIdentifier(a: ts.Identifier, b: ts.Identifier) {
   if (a.kind !== b.kind) return false;
-  if (a.escapedText === b.escapedText) return true;
+  if (a.escapedText === b.escapedText && a.text === b.text) return true;
   return false;
 }
 
