@@ -4,6 +4,7 @@ import * as ts from "typescript";
 import printers from "./index";
 
 import { checker } from "../checker";
+import { renames, getLeftMostEntityName } from "./smart-identifiers";
 
 type KeywordNode =
   | { kind: typeof ts.SyntaxKind.AnyKeyword }
@@ -60,42 +61,6 @@ type PrintNode =
   | ts.PropertySignature
   | ts.MethodSignature;
 
-const specifiers = ["react"];
-const namespaces = ["React"];
-const paths = (name: string) => {
-  if (name === "react" || name === "React") {
-    return {
-      ReactNode: "Node",
-    };
-  }
-  return {};
-};
-const setName = (name: string, type, symbol, decl) => {
-  if (namespaces.includes(symbol.parent?.escapedName)) {
-    type.escapedText = paths(symbol.parent?.escapedName)[name] || name;
-  } else if (
-    specifiers.includes(decl.parent?.parent?.parent?.moduleSpecifier?.text)
-  ) {
-    type.escapedText =
-      paths(decl.parent.parent.parent.moduleSpecifier.text)[name] || name;
-  }
-};
-
-function renames(symbol: ts.Symbol | void, type) {
-  if (!symbol) return;
-  if (!symbol.declarations) return;
-  let decl = symbol.declarations[0];
-  if (type.parent.kind === ts.SyntaxKind.NamedImports) {
-    setName(decl.name.escapedText, decl.name, symbol, decl);
-  } else if (type.kind === ts.SyntaxKind.TypeReference) {
-    if (type.typeName.right) {
-      setName(symbol.escapedName, type.typeName.right, symbol, decl);
-    } else {
-      setName(symbol.escapedName, type.typeName, symbol, decl);
-    }
-  }
-}
-
 export function printEntityName(type: ts.EntityName): string {
   if (type.kind === ts.SyntaxKind.QualifiedName) {
     return (
@@ -112,16 +77,6 @@ export function printEntityName(type: ts.EntityName): string {
     );
   } else {
     return "";
-  }
-}
-
-export function getLeftMostEntityName(type: ts.EntityName) {
-  if (type.kind === ts.SyntaxKind.QualifiedName) {
-    return type.left.kind === ts.SyntaxKind.Identifier
-      ? type.left
-      : getLeftMostEntityName(type.left);
-  } else if (type.kind === ts.SyntaxKind.Identifier) {
-    return type;
   }
 }
 
