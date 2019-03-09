@@ -16,6 +16,7 @@ flow-typed
 
 [lints]
 all=warn
+dynamic-export=off
 untyped-type-import=error
 
 [options]
