@@ -126,6 +126,10 @@ class Baz<T = string, U = number> {}
 declare var a: Foo
 declare var b: Bar
 declare var c: Baz
+
+declare var d: Foo<any>
+declare var e: Bar<any>
+declare var f: Baz<any>
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
