@@ -363,7 +363,7 @@ export const printType = (rawType: any): string => {
       const line =
         "Flow doesn't support conditional types, use $Call utility type";
       console.log(line);
-      return `"${line}"`;
+      return `/* ${line} */ any`;
     }
 
     case ts.SyntaxKind.FunctionType:
