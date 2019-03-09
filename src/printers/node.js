@@ -277,7 +277,7 @@ export function getTypeofFullyQualifiedName(
           );
     } else {
       let delimiter = "$";
-      if (symbol.valueDeclaration.kind === ts.SyntaxKind.EnumMember) {
+      if (symbol.valueDeclaration?.kind === ts.SyntaxKind.EnumMember) {
         delimiter = ".";
       }
       return symbol.parent
