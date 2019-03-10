@@ -13,7 +13,9 @@ exports[`should handle global augmentation 1`] = `
 `;
 
 exports[`should handle namespace function merging 1`] = `
-"declare var npm$namespace$test: {
+"declare var test: typeof npm$namespace$test;
+
+declare var npm$namespace$test: {
   test: typeof test$test
 };
 declare function test$test(err: number): void;
@@ -23,7 +25,9 @@ declare function test$test(response: string): string;
 `;
 
 exports[`should handle namespace merging 1`] = `
-"declare var npm$namespace$test: {
+"declare var test: typeof npm$namespace$test;
+
+declare var npm$namespace$test: {
   ok: typeof test$ok,
   error: typeof test$error
 };
@@ -34,7 +38,9 @@ declare export var test$error: string;
 `;
 
 exports[`should handle namespaces 1`] = `
-"declare var npm$namespace$test: {
+"declare var test: typeof npm$namespace$test;
+
+declare var npm$namespace$test: {
   ok: typeof test$ok
 };
 declare export var test$ok: number;
@@ -43,6 +49,7 @@ declare export var test$ok: number;
 
 exports[`should handle nested namespaces 1`] = `
 "import * as external from \\"external\\";
+declare var E0: typeof npm$namespace$E0;
 
 declare var npm$namespace$E0: {
   s1: typeof E0$s1,
@@ -100,7 +107,9 @@ declare var E0$s1: string;
 `;
 
 exports[`should handle qualified namespaces 1`] = `
-"declare var npm$namespace$A: {
+"declare var A: typeof npm$namespace$A;
+
+declare var npm$namespace$A: {
   B: typeof npm$namespace$A$B
 };
 
