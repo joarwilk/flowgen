@@ -254,8 +254,8 @@ export function getTypeofFullyQualifiedName(
       return printEntityName(type);
     }
     if (
-      symbol.parent?.valueDeclaration.kind === ts.SyntaxKind.SourceFile ||
-      (symbol.parent?.valueDeclaration.kind ===
+      symbol.parent?.valueDeclaration?.kind === ts.SyntaxKind.SourceFile ||
+      (symbol.parent?.valueDeclaration?.kind ===
         ts.SyntaxKind.ModuleDeclaration &&
         (symbol.parent?.valueDeclaration.flags & ts.NodeFlags.Namespace) === 0)
     ) {
