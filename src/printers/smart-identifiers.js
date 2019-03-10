@@ -1,7 +1,7 @@
 // @flow
 
 import * as ts from "typescript";
-import {checker} from '../checker'
+import { checker } from "../checker";
 
 const setImportedName = (name: string, type, symbol, decl) => {
   const specifiers = ["react"];
@@ -16,12 +16,15 @@ const setImportedName = (name: string, type, symbol, decl) => {
   };
   if (namespaces.includes(symbol.parent?.escapedName)) {
     type.escapedText = paths(symbol.parent?.escapedName)[name] || name;
+    return true;
   } else if (
     specifiers.includes(decl.parent?.parent?.parent?.moduleSpecifier?.text)
   ) {
     type.escapedText =
       paths(decl.parent.parent.parent.moduleSpecifier.text)[name] || name;
+    return true;
   }
+  return false;
 };
 const setGlobalName = (type, symbol) => {
   const globals = [
@@ -31,11 +34,14 @@ const setGlobalName = (type, symbol) => {
     },
   ];
   if (checker.current) {
+    const bools = [];
     for (const { from, to } of globals) {
       if (compareQualifiedName(type.typeName, from)) {
         type.typeName = to;
+        bools.push(true);
       }
     }
+    return bools.length > 0;
   }
 };
 
@@ -51,14 +57,18 @@ export function renames(symbol: ts.Symbol | void, type) {
       const leftMostSymbol = checker.current.getSymbolAtLocation(leftMost);
       const isGlobal = leftMostSymbol?.parent?.escapedName === "__global";
       if (isGlobal) {
-        setGlobalName(type, symbol);
-        return;
+        return setGlobalName(type, symbol);
       }
     }
     if (type.typeName.right) {
-      setImportedName(symbol.escapedName, type.typeName.right, symbol, decl);
+      return setImportedName(
+        symbol.escapedName,
+        type.typeName.right,
+        symbol,
+        decl,
+      );
     } else {
-      setImportedName(symbol.escapedName, type.typeName, symbol, decl);
+      return setImportedName(symbol.escapedName, type.typeName, symbol, decl);
     }
   }
 }
