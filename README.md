@@ -47,6 +47,7 @@ flowgen lodash.d.ts
 ```
 --flow-typed-format: Format output so it fits in the flow-typed repo
 --compile-tests: Compile any sibling <filename>-tests.ts files found
+--add-flow-header: Add `// @flow` to generated files. Should be used for libs.
 ```
 
 

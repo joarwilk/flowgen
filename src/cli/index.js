@@ -19,6 +19,10 @@ program
   )
   .option("--no-jsdoc", "output without jsdoc")
   .option("--flow-typed-format [dirname]", "format output for flow-typed")
+  .option(
+    "--add-flow-header",
+    "adds '// @flow' to the generated files (for libs)",
+  )
   .option("--compile-tests", "compile any <filename>-tests.ts files found")
   .arguments("[files...]")
   .action((files, options) => {
@@ -27,6 +31,7 @@ program
       moduleExports: options.moduleExports,
       jsdoc: options.jsdoc,
       flowTypedFormat: options.flowTypedFormat,
+      addFlowHeader: options.addFlowHeader,
       compileTests: options.compileTests,
       out: options.outputFile,
       version: pkg.version,
