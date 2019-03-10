@@ -72,7 +72,7 @@ export function printEntityName(type: ts.EntityName): string {
     );
   } else if (type.kind === ts.SyntaxKind.Identifier) {
     return printers.relationships.namespace(
-      printers.identifiers.print(type.text),
+      type.text,
       true,
     );
   } else {
@@ -189,6 +189,7 @@ export function getFullyQualifiedName(
         isExternalSymbol =
           decl.kind === ts.SyntaxKind.NamespaceImport ||
           decl.kind === ts.SyntaxKind.NamedImports ||
+          decl.kind === ts.SyntaxKind.TypeParameter ||
           leftMostSymbol?.parent?.escapedName === "__global";
       }
       if (!symbol || typeChecker.isUnknownSymbol(symbol) || isExternalSymbol) {
@@ -298,8 +299,8 @@ export function getTypeofFullyQualifiedName(
 }
 
 export function fixDefaultTypeArguments(symbol, type) {
-  if (!symbol) return
-  if (!symbol.declarations) return
+  if (!symbol) return;
+  if (!symbol.declarations) return;
   const decl = symbol.declarations[0];
   const allTypeParametersHaveDefaults =
     !!decl?.typeParameters?.length &&
@@ -374,12 +375,13 @@ export const printType = (rawType: any): string => {
       return printers.declarations.interfaceType(type);
 
     //case SyntaxKind.IdentifierObject:
-    case ts.SyntaxKind.Identifier:
-      //case SyntaxKind.StringLiteralType:
+    //case SyntaxKind.StringLiteralType:
+    case ts.SyntaxKind.Identifier: {
       return printers.relationships.namespace(
         printers.identifiers.print(type.text),
         true,
       );
+    }
 
     case ts.SyntaxKind.BindingElement:
       return printers.common.typeParameter(type);
@@ -466,12 +468,13 @@ export const printType = (rawType: any): string => {
     case ts.SyntaxKind.StringLiteral:
       return JSON.stringify(type.text);
 
-    case ts.SyntaxKind.TypeReference:
+    case ts.SyntaxKind.TypeReference: {
+      let symbol;
       if (checker.current) {
         //$todo
-        const symbol = checker.current.getSymbolAtLocation(type.typeName);
+        symbol = checker.current.getSymbolAtLocation(type.typeName);
         fixDefaultTypeArguments(symbol, type);
-        renames(symbol, type);
+        const isRenamed = renames(symbol, type);
         if (
           symbol &&
           symbol.declarations &&
@@ -488,11 +491,13 @@ export const printType = (rawType: any): string => {
             type.typeName,
           )}>`;
         }
+        if (!isRenamed) type.typeName.escapedText = getFullyQualifiedName(symbol, type.typeName);
       }
-      return printers.declarations.typeReference(type);
+      return printers.declarations.typeReference(type, !symbol);
+    }
 
     case ts.SyntaxKind.VariableDeclaration:
-      return printers.declarations.propertyDeclaration(type, keywordPrefix);
+      return printers.declarations.propertyDeclaration(type, keywordPrefix, true);
     case ts.SyntaxKind.PropertyDeclaration:
       return printers.declarations.propertyDeclaration(type, keywordPrefix);
 
