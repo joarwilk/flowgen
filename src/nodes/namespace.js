@@ -98,6 +98,7 @@ export default class Namespace extends Node {
       classes.length ||
       enums.length
     ) {
+      let topLevel = "";
       const nsGroup = `
       declare var npm$namespace$${name}: {
         ${uniqBy(functions, child => child.name)
@@ -126,8 +127,11 @@ export default class Namespace extends Node {
           })
           .join("\n")}
       }\n`;
+      if (namespace === "") {
+        topLevel = `declare var ${name}: typeof npm$namespace$${name};\n`;
+      }
 
-      return nsGroup + children;
+      return topLevel + nsGroup + children;
     }
 
     return children;

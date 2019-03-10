@@ -8,6 +8,7 @@ Object.assign(identifiers, {
   Partial: "$Shape",
   Readonly: "$ReadOnly",
   NonNullable: "$NonMaybeType",
+  ReturnType: "$Call",
 });
 
 export const print = (kind: string): string => {
