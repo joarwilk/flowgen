@@ -6,7 +6,15 @@ import { checker } from "../checker";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
-export const propertyDeclaration = (node: RawNode, keywordPrefix: string) => {
+export const propertyDeclaration = (
+  node: RawNode,
+  keywordPrefix: string,
+  isVar: boolean = false,
+) => {
+  const symbol = checker.current.getSymbolAtLocation(node.name);
+  const name = isVar
+    ? printers.node.getFullyQualifiedName(symbol, node.name)
+    : printers.node.printType(node.name);
   if (
     node.modifiers &&
     node.modifiers.some(
@@ -19,24 +27,19 @@ export const propertyDeclaration = (node: RawNode, keywordPrefix: string) => {
   if (node.parameters) {
     return (
       keywordPrefix +
-      printers.node.printType(node.name) +
+      name +
       ": " +
       node.parameters.map(printers.common.parameter)
     );
   }
 
   if (node.type) {
-    return (
-      keywordPrefix +
-      printers.relationships.namespaceProp(printers.node.printType(node.name)) +
-      ": " +
-      printers.node.printType(node.type)
-    );
+    return keywordPrefix + name + ": " + printers.node.printType(node.type);
   }
 
   return (
     keywordPrefix +
-    printers.relationships.namespaceProp(printers.node.printType(node.name)) +
+    name +
     `: any // ${printers.node.printType(node.initializer)}`
   );
 };
@@ -215,17 +218,19 @@ declare ${exporter} var ${nodeName}: {|
 |};\n`;
 };
 
-export const typeReference = (node: RawNode): string => {
+export const typeReference = (node: RawNode, identifier: boolean): string => {
   if (node.typeName.left && node.typeName.right) {
     return (
       printers.node.printType(node.typeName) +
       printers.common.generics(node.typeArguments)
     );
   }
+  const name = identifier
+    ? printers.identifiers.print(node.typeName.text)
+    : node.typeName.text;
   return (
-    printers.relationships.namespaceProp(
-      printers.identifiers.print(node.typeName.text),
-    ) + printers.common.generics(node.typeArguments)
+    printers.relationships.namespaceProp(name) +
+    printers.common.generics(node.typeArguments)
   );
 };
 
