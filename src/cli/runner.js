@@ -1,7 +1,7 @@
 // @flow
 import path from "path";
 import fs from "fs";
-import {promisify} from "./util";
+import { promisify } from "./util";
 
 import meta from "./meta";
 import beautify from "./beautifier";
@@ -30,21 +30,18 @@ type File = {|
   intro: string,
 |};
 
-function compileFile(
-  { file, moduleName, outputFile, intro }: File,
+const readDir = promisify(fs.readdir);
+
+async function outputFile(
+  flowDefinitions: string,
+  { intro, file, moduleName, outputFile }: File,
   options: RunnerOptions,
   writeFile,
 ) {
   // Produce the flow library content
   try {
-    const flowDefinitions = compiler.compileDefinitionFile(file, {
-      jsdoc: options.jsdoc,
-      interfaceRecords: options.interfaceRecords,
-      moduleExports: options.moduleExports,
-    });
-
     // Write the output to disk
-    const absoluteOutputFilePath: string = writeFile(
+    const absoluteOutputFilePath: string = await writeFile(
       outputFile,
       beautify(intro + flowDefinitions),
     );
@@ -66,14 +63,12 @@ function compileFile(
   }
 }
 
-async function processFile(
+function getFile(
   file: string,
-  files: File[],
   options: RunnerOptions,
   rawFile: string,
   isInDir: boolean,
-) {
-  if (!file.endsWith('.d.ts')) return
+): File {
   // Get the module name from the file name
   const moduleName = getModuleNameFromFile(file);
 
@@ -90,28 +85,34 @@ async function processFile(
     options.addFlowHeader || mode === "directory",
   );
 
-  files.push({ file, outputFile, moduleName, intro, mode });
+  return { file, outputFile, moduleName, intro, mode };
 }
 
-async function processDirectory(
-  dir: string,
-  files: File[],
-  options: RunnerOptions,
-  rawFile: string,
-) {
-  const directory = await promisify(fs.readdir)(dir);
-  for (const file of directory) {
-    const isDirectory = (await promisify(fs.lstat)(
-      path.join(dir, file),
-    )).isDirectory();
-    if (isDirectory) {
-      await processDirectory(path.join(dir, file), files, options, rawFile);
-    } else {
-      await processFile(path.join(dir, file), files, options, rawFile, true);
+async function bfs(rootDir: string, options: RunnerOptions) {
+  const queue: Array<string> = [];
+  const files: Array<File> = [];
+  queue.push(rootDir);
+  let current;
+  while (queue.length) {
+    current = queue.shift();
+    try {
+      const dir: Array<any> = await readDir(current, { withFileTypes: true });
+      for (const file of dir) {
+        if (file.isDirectory()) {
+          queue.push(path.join(current, file.name));
+        } else {
+          if (!file.name.endsWith(".d.ts")) continue;
+          files.push(
+            getFile(path.join(current, file.name), options, rootDir, true),
+          );
+        }
+      }
+    } catch {
+      files.push(getFile(current, options, rootDir, false));
     }
   }
+  return files;
 }
-
 export default (options: RunnerOptions) => {
   // No real reason to return an object here instead of combining
   // the compile function into the wrapper, but I like the API it produces.
@@ -120,26 +121,46 @@ export default (options: RunnerOptions) => {
       let files = [];
       // Iterate all the files the user has passed in
       for (const rawFile of rawFiles) {
-        const isDirectory = (await promisify(fs.lstat)(rawFile)).isDirectory();
-        if (isDirectory) {
-          await processDirectory(rawFile, files, options, rawFile);
-        } else {
-          await processFile(rawFile, files, options, rawFile, false);
-        }
+        files.push(...(await bfs(rawFile, options)));
       }
-      for (const [index, file] of files.entries()) {
+      if (files.length > 1) {
+        const sources = compiler.compileDefinitionFiles(
+          files.map(v => v.file),
+          {
+            jsdoc: options.jsdoc,
+            interfaceRecords: options.interfaceRecords,
+            moduleExports: options.moduleExports,
+          },
+        );
+        for (let index = 0; index < sources.length; index++) {
+          const [, flowDefinitions] = sources[index];
+          const file = files[index];
+          let writeFile = defaultExporter;
+          if (file.mode === "flow-typed") writeFile = flowTypedExporter;
+          // Let the user know what's going on
+          if (files.length >= 3) {
+            // If we're compiling a lot of files, show more stats
+            const progress = Math.round(((index + 1) / files.length) * 100);
+            process.stdout.write("\r\x1b[K");
+            process.stdout.write(progress + "% | " + file.moduleName);
+          } else {
+            console.log("Parsing", file.moduleName);
+          }
+          outputFile(flowDefinitions, file, options, writeFile);
+        }
+      } else {
+        const file = files[0];
+        const flowDefinitions = compiler.compileDefinitionFile(file.file, {
+          jsdoc: options.jsdoc,
+          interfaceRecords: options.interfaceRecords,
+          moduleExports: options.moduleExports,
+        });
+
         let writeFile = defaultExporter;
         if (file.mode === "flow-typed") writeFile = flowTypedExporter;
         // Let the user know what's going on
-        if (files.length >= 3) {
-          // If we're compiling a lot of files, show more stats
-          const progress = Math.round(((index + 1) / files.length) * 100);
-          process.stdout.write("\r\x1b[K");
-          process.stdout.write(progress + "% | " + file.moduleName);
-        } else {
-          console.log("Parsing", file.moduleName);
-        }
-        compileFile(file, options, writeFile);
+        console.log("Parsing", file.moduleName);
+        outputFile(flowDefinitions, file, options, writeFile);
       }
       if (files.length >= 3) process.stdout.write("\n");
     },
