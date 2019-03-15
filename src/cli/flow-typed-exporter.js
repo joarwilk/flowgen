@@ -3,27 +3,28 @@
 import fs from "fs";
 import shell from "shelljs";
 import program from "commander";
+import { promisify } from "./util";
 
-export default function exportForFlowTyped(
+const exists: (filename: string) => Promise<boolean> = promisify(fs.exists);
+const writeFile: (filename: string, data: string) => Promise<void> = promisify(fs.writeFile);
+
+export default async function exportForFlowTyped(
   moduleName: string,
   output: string,
-): string {
+): Promise<string> {
   const opts = program.opts();
   const out =
     typeof opts.flowTypedFormat === "string" ? opts.flowTypedFormat : "exports";
   const folder = `./${out}/${moduleName}_v1.x.x`;
+  const flowFolder = `${folder}/flow_v0.35.x-`;
   const outputFile = `${folder}/flow_v0.35.x-/${moduleName}.js`;
 
   const testfilePath = `${folder}/test_${moduleName}.js`;
 
-  if (!fs.existsSync(folder)) {
-    shell.mkdir("-p", folder);
-    fs.existsSync(folder + "/flow_v0.35.x-") ||
-      shell.mkdir("-p", folder + "/flow_v0.35.x-");
+  if (!(await exists(flowFolder))) {
+    shell.mkdir("-p", flowFolder);
   }
-
-  fs.writeFileSync(testfilePath, "");
-  fs.writeFileSync(outputFile, output);
-
+  await writeFile(testfilePath, "");
+  await writeFile(outputFile, output);
   return testfilePath;
 }
