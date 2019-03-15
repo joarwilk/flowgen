@@ -73,6 +73,7 @@ async function processFile(
   rawFile: string,
   isInDir: boolean,
 ) {
+  if (!file.endsWith('.d.ts')) return
   // Get the module name from the file name
   const moduleName = getModuleNameFromFile(file);
 
