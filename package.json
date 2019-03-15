@@ -6,6 +6,12 @@
   "bin": {
     "flowgen": "./lib/cli/index.js"
   },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ]
+  },
   "dependencies": {
     "commander": "^2.11.0",
     "lodash": "^4.17.4",
