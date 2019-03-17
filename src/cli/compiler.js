@@ -123,4 +123,42 @@ export default {
 
     return compile(sourceFile);
   },
+
+  compileDefinitionFiles: (
+    paths: string[],
+    options?: Options,
+  ): Array<[string, string]> => {
+    const compilerOptions = {
+      noLib: true,
+      target: ScriptTarget.Latest,
+    };
+    const compilerHost = createCompilerHost({}, true);
+    const oldSourceFile = compilerHost.getSourceFile;
+    compilerHost.getSourceFile = (file, languageVersion) => {
+      if (paths.includes(file)) {
+        return transform(
+          createSourceFile(
+            file,
+            compilerHost.readFile(file),
+            languageVersion,
+            true,
+          ),
+          transformers,
+          compilerOptions,
+        ).transformed[0];
+      }
+      return oldSourceFile(file, languageVersion);
+    };
+
+    const program = createProgram(paths, compilerOptions, compilerHost);
+
+    checker.current = program.getTypeChecker();
+
+    return paths.map(path => {
+      const sourceFile = program.getSourceFile(path);
+      if (!sourceFile) return "";
+      reset(options);
+      return [path, compile(sourceFile)];
+    });
+  },
 };
