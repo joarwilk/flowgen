@@ -17,7 +17,7 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | keyof X | `keyof X` | `$Keys<X>` |
 | ✅ | X[keyof X] | `X[keyof X]` | `$ElementType<X, $Keys<X>>` |
 | ✅ | Readonly | `Readonly<X>` | `$ReadOnly<X>` |
-| ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadonlyArray<X>` |
+| ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadOnlyArray<X>` |
 | ✅ | Partial | `Partial<X>` | `$Shape<X>` |
 | ✅ | NonNullable | `NonNullable<X>` | `$NonMaybeType<X>` |
 |    | ReturnType | `ReturnType<X>` | `$Call<X>` |
