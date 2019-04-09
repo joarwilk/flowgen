@@ -24,6 +24,7 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
 | ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |
 | ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => $ElementType<Obj, K>>` |
+|    | Conditional types | `A extends B ? C : D` | `any` |
 | ✅ | typeof operator | `typeof foo` | `typeof foo` |
 | ✅ | Tuple type | `[number, string]` | `[number, string]` |
 | ✅ | Type alias | `type A = string` | `type A = string` |
