@@ -8,6 +8,10 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | Void type | `void` | `void` |
 | ✅ | Undefined type | `undefined` | `void` |
 | ✅ | Unknown type | `unknown` | `mixed` |
+| ✅ | Symbol type | `symbol` | `Symbol` |
+|    | Unique symbol type | `unique symbol` | `Symbol` |
+| ✅ | Object type | `object` | `{[key: string]: any}` |
+| ✅ | Never type | `never` | `empty` |
 | ✅ | Variance | `interface A { readonly b: B, c: C }` | `interface A { +b: B, c: C }` |
 | ✅ | Functions | `(a: A, b: B) => C` | `(a: A, b: B) => C` |
 | ✅ | Indexers | `{[k: string]: string}` | `{[k: string]: string}` |
