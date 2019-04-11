@@ -20,11 +20,18 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | Type parameter bounds | `function f<A extends string>(a:A){}` | `function f<A: string>(a:A){}` |
 | ✅ | keyof X | `keyof X` | `$Keys<X>` |
 | ✅ | X[keyof X] | `X[keyof X]` | `$ElementType<X, $Keys<X>>` |
+| ✅ | Partial | `Partial<X>` | `$Shape<X>` |
 | ✅ | Readonly | `Readonly<X>` | `$ReadOnly<X>` |
 | ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadOnlyArray<X>` |
-| ✅ | Partial | `Partial<X>` | `$Shape<X>` |
+| ✅ | Record | `Record<K, T>` | `{ [key: K]: T }` |
+|    | Pick | `Pick<T, K>` |  |
+|    | Exclude | `Exclude<T, U>` |  |
+|    | Extract | `Extract<T, U>` |  |
 | ✅ | NonNullable | `NonNullable<X>` | `$NonMaybeType<X>` |
-|    | ReturnType | `ReturnType<X>` | `$Call<X>` |
+| ✅ | ReturnType | `ReturnType<F>` | `$Call<<R>((...args: any[]) => R) => R, F>` |
+|    | InstanceType | `InstanceType<X>` |  |
+|    | Required | `Required<X>` |  |
+|    | ThisType | `ThisType<X>` |  |
 | ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
 | ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |
 | ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => $ElementType<Obj, K>>` |
