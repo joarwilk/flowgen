@@ -225,9 +225,13 @@ export const typeReference = (node: RawNode, identifier: boolean): string => {
       printers.common.generics(node.typeArguments)
     );
   }
-  const name = identifier
-    ? printers.identifiers.print(node.typeName.text)
-    : node.typeName.text;
+  let name = node.typeName.text;
+  if (identifier) {
+    name = printers.identifiers.print(node.typeName.text);
+    if (typeof name === "function") {
+      return name(node.typeArguments);
+    }
+  }
   return (
     printers.relationships.namespaceProp(name) +
     printers.common.generics(node.typeArguments)
