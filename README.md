@@ -3,6 +3,44 @@
 ## The state of the converter
 It's surprisingly robust and non-lossy as it stands right now, in big part thanks to how similar flow and typescript definition files are. Please see the output in [this flow-typed PR](https://github.com/flowtype/flow-typed/pull/590) for the state of the output.
 
+| Supported? | Syntax | TypeScript | Flow |
+|---|---|---|---|
+| ✅ | Void type | `void` | `void` |
+| ✅ | Undefined type | `undefined` | `void` |
+| ✅ | Unknown type | `unknown` | `mixed` |
+| ✅ | Symbol type | `symbol` | `Symbol` |
+|    | Unique symbol type | `unique symbol` | `Symbol` |
+| ✅ | Object type | `object` | `{[key: string]: any}` |
+| ✅ | Never type | `never` | `empty` |
+| ✅ | Variance | `interface A { readonly b: B, c: C }` | `interface A { +b: B, c: C }` |
+| ✅ | Functions | `(a: A, b: B) => C` | `(a: A, b: B) => C` |
+| ✅ | Indexers | `{[k: string]: string}` | `{[k: string]: string}` |
+|    | This type | `(this: X, a: A, b: B) => C` | `(a: A, b: B) => C` |
+|    | Type guards | `(a: X) => a is A` | `(a: X) => boolean` |
+| ✅ | Type parameter bounds | `function f<A extends string>(a:A){}` | `function f<A: string>(a:A){}` |
+| ✅ | keyof X | `keyof X` | `$Keys<X>` |
+| ✅ | X[keyof X] | `X[keyof X]` | `$ElementType<X, $Keys<X>>` |
+| ✅ | Partial | `Partial<X>` | `$Shape<X>` |
+| ✅ | Readonly | `Readonly<X>` | `$ReadOnly<X>` |
+| ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadOnlyArray<X>` |
+| ✅ | Record | `Record<K, T>` | `{ [key: K]: T }` |
+|    | Pick | `Pick<T, K>` |  |
+|    | Exclude | `Exclude<T, U>` |  |
+|    | Extract | `Extract<T, U>` |  |
+| ✅ | NonNullable | `NonNullable<X>` | `$NonMaybeType<X>` |
+| ✅ | ReturnType | `ReturnType<F>` | `$Call<<R>((...args: any[]) => R) => R, F>` |
+|    | InstanceType | `InstanceType<X>` |  |
+|    | Required | `Required<X>` |  |
+|    | ThisType | `ThisType<X>` |  |
+| ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
+| ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |
+| ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => $ElementType<Obj, K>>` |
+|    | Conditional types | `A extends B ? C : D` | `any` |
+| ✅ | typeof operator | `typeof foo` | `typeof foo` |
+| ✅ | Tuple type | `[number, string]` | `[number, string]` |
+| ✅ | Type alias | `type A = string` | `type A = string` |
+| ✅ | type/typeof import | `import A from 'module'` | `import type A from 'module'` |
+
 ## Usage
 
 Install using `npm i flowgen --save`
@@ -47,6 +85,9 @@ flowgen lodash.d.ts
 ```
 --flow-typed-format: Format output so it fits in the flow-typed repo
 --compile-tests: Compile any sibling <filename>-tests.ts files found
+--no-module-exports: Convert `export = Type` only to default export, instead of `declare module.exports: Type`
+--interface-records: Convert TypeScript interfaces to Exact Objects
+--no-jsdoc: Ignore TypeScript JSDoc
 --add-flow-header: Add `// @flow` to generated files. Should be used for libs.
 ```
 
