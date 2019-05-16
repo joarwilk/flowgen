@@ -98,13 +98,13 @@ flowgen lodash.d.ts
 Namespaces have been a big headache. What it does right now is that it splits any namespace out into prefixed global scope declarations instead. It works OK, but its not pretty and there's some drawbacks to it.
 
 ### External library imports
-Definitions in TS and flow are often quite different, and imported types from other libraries dont usually have
+Definitions in TS and flow are often quite different, and imported types from other libraries don't usually have
 a one-to-one mapping. Common cases are `React.ReactElement`, `React.CSSProps`etc.
 This might require manual processing, or we add a set of hardcoded mutations that handle common cases.
 
 ### Odd TS conventions
 [Lodash](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/9fb1696ad55c0ac54bbf6e477f21b52536211a1e/types/lodash/index.d.ts) has been one of the reference libraries i've worked with when creating the
-converter. The definition is mostly just a series of interfaces with the same name being re-declared over and over again for each function, which doesn't translate to flow at all. There's multiple ways of solving this but I dont have a great solution for it in place yet.
+converter. The definition is mostly just a series of interfaces with the same name being re-declared over and over again for each function, which doesn't translate to flow at all. There's multiple ways of solving this but I don't have a great solution for it in place yet.
 
 ## Contributing
 
