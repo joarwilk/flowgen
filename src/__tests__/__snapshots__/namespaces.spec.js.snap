@@ -12,6 +12,11 @@ exports[`should handle global augmentation 1`] = `
 "
 `;
 
+exports[`should handle import equals declaration 1`] = `
+"declare var hello: typeof A.B;
+"
+`;
+
 exports[`should handle namespace function merging 1`] = `
 "declare var test: typeof npm$namespace$test;
 

@@ -121,3 +121,11 @@ declare global {
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
 });
+
+test("should handle import equals declaration", () => {
+  const ts = `
+import hello = A.B;
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
