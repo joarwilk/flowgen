@@ -46,10 +46,11 @@ export const propertyDeclaration = (
 
 export const variableDeclaration = (node: RawNode): string => {
   const declarations = node.declarationList.declarations
-    .map(printers.node.printType)
-    .join(" ");
+    .map(printers.node.printType);
 
-  return `declare ${printers.relationships.exporter(node)}var ${declarations};`;
+  return declarations
+    .map(name => `declare ${printers.relationships.exporter(node)}var ${name};`)
+    .join("\n");
 };
 
 export const interfaceType = (
