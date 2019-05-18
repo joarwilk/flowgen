@@ -10,6 +10,8 @@ type C = NonNullable<string | null>
 type D = ReadonlyArray<string>
 type E = ReturnType<() => string>
 type F = Record<string, number>
+type G = ReadonlySet<number>
+type H = ReadonlyMap<string, number>
 
 type A1<Readonly> = Readonly
 type B1<Partial> = Partial

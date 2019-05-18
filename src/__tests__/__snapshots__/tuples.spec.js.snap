@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle tuples 1`] = `
+"declare type T1 = [number, string | void];
+declare type T2 = [number] & string[];
+"
+`;

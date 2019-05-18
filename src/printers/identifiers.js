@@ -7,9 +7,13 @@ import printers from "./index";
 const identifiers = Object.create(null);
 Object.assign(identifiers, {
   ReadonlyArray: "$ReadOnlyArray",
-  Partial: "$Shape",
+  ReadonlySet: "$ReadOnlySet",
+  ReadonlyMap: "$ReadOnlyMap",
   Readonly: "$ReadOnly",
   NonNullable: "$NonMaybeType",
+  Partial: ([type]: any[]) => {
+    return `$Rest<${printers.node.printType(type)}, {}>`;
+  },
   ReturnType: (typeArguments: any[]) => {
     return `$Call<<R>((...args: any[]) => R) => R, ${printers.node.printType(
       typeArguments[0],

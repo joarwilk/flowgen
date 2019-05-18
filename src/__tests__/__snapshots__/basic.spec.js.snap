@@ -19,7 +19,9 @@ exports[`should handle basic keywords 1`] = `
   o: empty,
   p: mixed,
   r: -1,
-  s: -2
+  s: -2,
+  t: Symbol,
+  u: Symbol
 };
 "
 `;

@@ -71,10 +71,7 @@ export function printEntityName(type: ts.EntityName): string {
       ) + printEntityName(type.right)
     );
   } else if (type.kind === ts.SyntaxKind.Identifier) {
-    return printers.relationships.namespace(
-      type.text,
-      true,
-    );
+    return printers.relationships.namespace(type.text, true);
   } else {
     return "";
   }
@@ -491,18 +488,35 @@ export const printType = (rawType: any): string => {
             type.typeName,
           )}>`;
         }
-        if (!isRenamed) type.typeName.escapedText = getFullyQualifiedName(symbol, type.typeName);
+        if (!isRenamed)
+          type.typeName.escapedText = getFullyQualifiedName(
+            symbol,
+            type.typeName,
+          );
       }
       return printers.declarations.typeReference(type, !symbol);
     }
 
     case ts.SyntaxKind.VariableDeclaration:
-      return printers.declarations.propertyDeclaration(type, keywordPrefix, true);
+      return printers.declarations.propertyDeclaration(
+        type,
+        keywordPrefix,
+        true,
+      );
     case ts.SyntaxKind.PropertyDeclaration:
       return printers.declarations.propertyDeclaration(type, keywordPrefix);
 
-    case ts.SyntaxKind.TupleType:
-      return `[${type.elementTypes.map(printType).join(", ")}]`;
+    case ts.SyntaxKind.OptionalType:
+      return `${printType(type.type)} | void`;
+    case ts.SyntaxKind.TupleType: {
+      const lastElement = type.elementTypes[type.elementTypes.length - 1];
+      if (lastElement.kind === ts.SyntaxKind.RestType) type.elementTypes.pop();
+      let tuple = `[${type.elementTypes.map(printType).join(", ")}]`;
+      if (lastElement.kind === ts.SyntaxKind.RestType) {
+        tuple += ` & ${printType(lastElement.type)}`;
+      }
+      return tuple;
+    }
 
     case ts.SyntaxKind.MethodSignature:
       return printers.common.methodSignature(type);
@@ -620,7 +634,7 @@ export const printType = (rawType: any): string => {
       return printers.relationships.importExportSpecifier(type);
   }
 
-  const output = `"NO PRINT IMPLEMENTED: ${ts.SyntaxKind[type.kind]}"`;
+  const output = `/* NO PRINT IMPLEMENTED: ${ts.SyntaxKind[type.kind]} */ any`;
   console.log(output);
   return output;
 };

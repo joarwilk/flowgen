@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle declares 1`] = `
+"declare var test: {
+  a: number
+};
+declare var foo: string;
+declare var bar: number;
+declare var baz: number;
+declare var quuz: any;
+declare var quuuz: string;
+declare var quuuuz: number;
+declare var quuuuz: string;
+declare var fox: number;
+"
+`;

@@ -20,9 +20,11 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | Type parameter bounds | `function f<A extends string>(a:A){}` | `function f<A: string>(a:A){}` |
 | ✅ | keyof X | `keyof X` | `$Keys<X>` |
 | ✅ | X[keyof X] | `X[keyof X]` | `$ElementType<X, $Keys<X>>` |
-| ✅ | Partial | `Partial<X>` | `$Shape<X>` |
+| ✅ | Partial | `Partial<X>` | `$Rest<X, {}>` |
 | ✅ | Readonly | `Readonly<X>` | `$ReadOnly<X>` |
 | ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadOnlyArray<X>` |
+| ✅ | ReadonlySet | `ReadonlySet<X>` | `$ReadOnlySet<X>` |
+| ✅ | ReadonlyMap | `ReadonlyMap<X, Y>` | `$ReadOnlyMap<X, Y>` |
 | ✅ | Record | `Record<K, T>` | `{ [key: K]: T }` |
 |    | Pick | `Pick<T, K>` |  |
 |    | Exclude | `Exclude<T, U>` |  |
