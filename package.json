@@ -2,7 +2,7 @@
   "name": "flowgen",
   "description": "Generate flowtype definition files from TypeScript",
   "typings": "index.d.ts",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "bin": {
     "flowgen": "./lib/cli/index.js"
   },
