@@ -50,11 +50,17 @@ type PropertyNode =
 
 export default class Property extends Node<PropertyNode> {
   name: string;
+  skip: boolean;
 
   constructor(node: RawNode) {
     super(node);
 
     this.name = parseNameFromNode(node);
+    this.skip = false;
+  }
+
+  skipNode() {
+    this.skip = true;
   }
 
   print(namespace: string = "", mod: string = "root"): string {
@@ -78,6 +84,8 @@ export default class Property extends Node<PropertyNode> {
     const modifier = exporter
       ? `${isDeclare ? "declare " : ""}${exporter}`
       : "declare ";
+
+    if (this.skip) return out;
 
     switch (this.raw.kind) {
       case ts.SyntaxKind.FunctionDeclaration:

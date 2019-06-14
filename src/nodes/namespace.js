@@ -1,18 +1,29 @@
 /* @flow */
 
 import * as ts from "typescript";
-import { uniqBy, flatten } from "lodash";
+import { orderBy, uniqBy, flatten } from "lodash";
+import PropertyNode from "./property";
 import Node from "./node";
 
 import namespaceManager from "../namespaceManager";
+import printers from "../printers";
 
 export default class Namespace extends Node {
   name: string;
+  functions: Array<PropertyNode>;
+  property: PropertyNode | void;
 
-  constructor(name: string) {
+  constructor(
+    name: string,
+    functions?: Array<PropertyNode>,
+    property?: PropertyNode,
+  ) {
     super(null);
 
     this.name = name;
+    this.functions = functions || [];
+    this.property = property;
+
     namespaceManager.register(name);
   }
 
@@ -59,25 +70,29 @@ export default class Namespace extends Node {
   }
 
   print = (namespace: string = "", mod: string = "root"): string => {
-    const functions = this.getChildren().filter(
+    const children = uniqBy(
+      orderBy(this.getChildren(), [a => a.isValue], ["desc"]),
+      child => child.name.text || child.name,
+    );
+    const functions = children.filter(
       child =>
         child.raw && child.raw.kind === ts.SyntaxKind.FunctionDeclaration,
     );
     const variables = flatten(
-      this.getChildren()
+      children
         .filter(
           child =>
             child.raw && child.raw.kind === ts.SyntaxKind.VariableStatement,
         )
         .map(child => child.raw.declarationList.declarations),
     );
-    const enums = this.getChildren().filter(
+    const enums = children.filter(
       child => child.raw && child.raw.kind === ts.SyntaxKind.EnumDeclaration,
     );
-    const classes = this.getChildren().filter(
+    const classes = children.filter(
       child => child.raw && child.raw.kind === ts.SyntaxKind.ClassDeclaration,
     );
-    const namespaces = this.getChildren().filter(child => {
+    const namespaces = children.filter(child => {
       return child.isValue;
     });
     let name = this.name;
@@ -85,11 +100,13 @@ export default class Namespace extends Node {
       name = namespace + "$" + this.name;
     }
 
-    const children = `${this.getChildren()
+    const childrenNode = `${this.getChildren()
       .map(child => {
         return child.print(name, mod);
       })
       .join("\n\n")}`;
+
+    //console.error(childrenNode);
 
     if (
       functions.length ||
@@ -101,7 +118,13 @@ export default class Namespace extends Node {
       let topLevel = "";
       const nsGroup = `
       declare var npm$namespace$${name}: {
-        ${uniqBy(functions, child => child.name)
+        ${this.functions
+          .map(
+            propNode =>
+              `${printers.functions.functionType(propNode.raw, true)},`,
+          )
+          .join("\n")}
+        ${functions
           .map(child => {
             return `${child.name}: typeof ${name}$${child.name},`;
           })
@@ -131,9 +154,9 @@ export default class Namespace extends Node {
         topLevel = `declare var ${name}: typeof npm$namespace$${name};\n`;
       }
 
-      return topLevel + nsGroup + children;
+      return topLevel + nsGroup + childrenNode;
     }
 
-    return children;
+    return childrenNode;
   };
 }
