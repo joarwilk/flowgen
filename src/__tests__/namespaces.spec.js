@@ -2,6 +2,49 @@
 
 import { compiler, beautify } from "..";
 
+describe("should handle merging with other types", () => {
+  test("function", () => {
+    const ts = `
+declare function test(foo: number): string;
+namespace test {
+  export const ok: number
+}
+`;
+    const result = compiler.compileDefinitionString(ts);
+    expect(beautify(result)).toMatchSnapshot();
+  });
+
+  test("class", () => {
+    const ts = `
+// TODO: implement class merging
+declare class Album {
+  label: Album.AlbumLabel;
+}
+namespace Album {
+  export declare class AlbumLabel { }
+}
+`;
+    const result = compiler.compileDefinitionString(ts);
+    expect(beautify(result)).toMatchSnapshot();
+  });
+
+  test("enum", () => {
+    const ts = `
+// TODO: implement enum merging
+enum Color {
+  red = 1,
+  green = 2,
+  blue = 4
+}
+namespace Color {
+  export declare function mixColor(colorName: string): number;
+}
+`;
+    const result = compiler.compileDefinitionString(ts);
+    expect(beautify(result)).toMatchSnapshot();
+  });
+});
+
 it("should handle namespaces", () => {
   const ts = `
 namespace test {
@@ -103,7 +146,7 @@ declare namespace A.B {
   }
   declare class D<S> {}
 }
-  
+
 declare namespace A.B.C {
   declare class N<A> extends D<A> implements S<A> {
     a: string;

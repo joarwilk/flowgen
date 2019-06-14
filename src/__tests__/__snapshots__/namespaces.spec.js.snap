@@ -17,6 +17,46 @@ exports[`should handle import equals declaration 1`] = `
 "
 `;
 
+exports[`should handle merging with other types class 1`] = `
+"declare class Album {
+  label: Album$AlbumLabel;
+}
+declare var Album: typeof npm$namespace$Album;
+
+declare var npm$namespace$Album: {
+  AlbumLabel: typeof Album$AlbumLabel
+};
+declare export class Album$AlbumLabel {}
+"
+`;
+
+exports[`should handle merging with other types enum 1`] = `
+"declare var Color: {|
+  +red: 1, // 1
+  +green: 2, // 2
+  +blue: 4 // 4
+|};
+declare var Color: typeof npm$namespace$Color;
+
+declare var npm$namespace$Color: {
+  mixColor: typeof Color$mixColor
+};
+declare export function Color$mixColor(colorName: string): number;
+"
+`;
+
+exports[`should handle merging with other types function 1`] = `
+"declare var test: typeof npm$namespace$test;
+
+declare var npm$namespace$test: {
+  (foo: number): string,
+
+  ok: typeof test$ok
+};
+declare export var test$ok: number;
+"
+`;
+
 exports[`should handle namespace function merging 1`] = `
 "declare var test: typeof npm$namespace$test;
 

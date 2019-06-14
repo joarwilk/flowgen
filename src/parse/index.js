@@ -31,7 +31,7 @@ const collectNode = (
           traverseNode(node.body, globalAugmentation, factory);
           break;
         }
-        const namespace = factory.createNamespaceNode(node.name.text);
+        const namespace = factory.createNamespaceNode(node, node.name.text, context);
 
         namespaceManager.setContext(node.name.text);
 
