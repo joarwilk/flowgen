@@ -16,7 +16,7 @@ import { getFullyQualifiedName } from "../printers/node";
 export class Factory {
   _modules: { [key: string]: ModuleNode };
   _propDeclarations: { [key: string]: PropertyNode };
-  _functionDeclarations: { [key: string]: number };
+  _functionDeclarations: { [key: string]: Array<PropertyNode> };
 
   constructor() {
     this._modules = Object.create(null);
@@ -40,18 +40,27 @@ export class Factory {
 
   createFunctionDeclaration(
     node: RawNode,
-    name: string,
+    rawName: string,
     context: Node<>,
   ): void {
+    let name = rawName;
     const propNode = new PropertyNode(node);
 
-    if (!this._functionDeclarations[name]) this._functionDeclarations[name] = 0;
-
-    if (Object.keys(this._functionDeclarations).includes(name)) {
-      this._functionDeclarations[name] += 1;
+    if (context instanceof ModuleNode) {
+      name = context.name + "$" + rawName;
+    }
+    if (context instanceof NamespaceNode && checker.current) {
+      const symbol = checker.current.getSymbolAtLocation(node.name);
+      name = getFullyQualifiedName(symbol, node, false);
     }
 
-    context.addChild(name + this._functionDeclarations[name], propNode);
+    if (!this._functionDeclarations[name]) {
+      this._functionDeclarations[name] = [propNode];
+    } else if (Object.keys(this._functionDeclarations).includes(name)) {
+      this._functionDeclarations[name].push(propNode);
+    }
+
+    context.addChild(name + this._functionDeclarations[name].length, propNode);
   }
 
   // Some definition files (like lodash) declare the same
@@ -71,7 +80,7 @@ export class Factory {
     }
     if (context instanceof NamespaceNode && checker.current) {
       const symbol = checker.current.getSymbolAtLocation(node.name);
-      name = getFullyQualifiedName(symbol, node.name, false);
+      name = getFullyQualifiedName(symbol, node, false);
     }
 
     if (Object.keys(this._propDeclarations).includes(name)) {
@@ -85,8 +94,33 @@ export class Factory {
     return propNode;
   }
 
-  createNamespaceNode = (name: string): NamespaceNode =>
-    new NamespaceNode(name);
+  createNamespaceNode = (node: RawNode, name: string, context: Node<>): NamespaceNode => {
+    let contextName
+    if (context instanceof ModuleNode) {
+      contextName = context.name + "$" + name;
+    }
+    if (context instanceof NamespaceNode && checker.current) {
+      const symbol = checker.current.getSymbolAtLocation(node.name);
+      contextName = getFullyQualifiedName(symbol, node, false);
+    }
+    if (typeof contextName !== 'undefined') {
+      if (this._functionDeclarations[contextName]) {
+        for (const prop of this._functionDeclarations[contextName]) prop.skipNode();
+      }
+      if (this._propDeclarations[contextName]) {
+        this._propDeclarations[contextName].skipNode();
+      }
+      return new NamespaceNode(
+        name,
+        this._functionDeclarations[contextName],
+        this._propDeclarations[contextName],
+      );
+    } else {
+      return new NamespaceNode(
+        name,
+      );
+    }
+  };
   createImportNode = (node: RawNode): ImportNode => new ImportNode(node);
   createExportNode = (node: RawNode): ExportNode => new ExportNode(node);
   createExportDeclarationNode = (node: RawNode): ExportDeclarationNode =>
