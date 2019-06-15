@@ -364,6 +364,22 @@ export const printType = (rawType: any): string => {
       return `/* ${line} */ any`;
     }
 
+    case ts.SyntaxKind.ComputedPropertyName: {
+      if (type.expression?.expression?.text === 'Symbol' && type.expression?.name?.text === 'iterator') {
+        return '@@iterator'
+      }
+      if (type.expression?.expression?.text === 'Symbol' && type.expression?.name?.text === 'asyncIterator') {
+        return '@@asyncIterator'
+      }
+      if (type.expression.kind === ts.SyntaxKind.StringLiteral) {
+        return printType(type.expression);
+      }
+      const line =
+        "Flow doesn't support computed property names";
+      logger.error(type.expression, line);
+      return `[typeof ${printType(type.expression)}]`;
+    }
+
     case ts.SyntaxKind.FunctionType:
       //case SyntaxKind.FunctionTypeAnnotation:
       return printers.functions.functionType(type);
@@ -592,8 +608,7 @@ export const printType = (rawType: any): string => {
 
       return (
         keywordPrefix +
-        printType(type.name) +
-        printers.functions.functionType(type, true)
+        printers.common.methodSignature(type)
       );
 
     case ts.SyntaxKind.ConstructorType:

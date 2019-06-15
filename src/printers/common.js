@@ -68,8 +68,15 @@ export const parameter = (param: RawNode): string => {
     right = printers.node.printType(param.type);
   }
 
-  if (param.questionToken) {
+  if (param.questionToken && param.name.kind !== ts.SyntaxKind.ComputedPropertyName) {
     left += "?";
+  }
+
+  if (
+    param.questionToken &&
+    param.name.kind === ts.SyntaxKind.ComputedPropertyName
+  ) {
+    right = `(${right}) | void`;
   }
 
   if (param.dotDotDotToken) {
@@ -93,12 +100,25 @@ export const methodSignature = (param: RawNode) => {
   left += printers.node.printType(param.name);
   let right;
 
-  if (param.questionToken) {
+  if (
+    param.questionToken &&
+    param.name.kind !== ts.SyntaxKind.ComputedPropertyName
+  ) {
     left += "?";
+    isMethod = false;
+  }
+  if (param.name.kind === ts.SyntaxKind.ComputedPropertyName) {
     isMethod = false;
   }
 
   right = printers.functions.functionType(param, isMethod);
+
+  if (
+    param.questionToken &&
+    param.name.kind === ts.SyntaxKind.ComputedPropertyName
+  ) {
+    right = `(${right}) | void`;
+  }
 
   return `${left}${isMethod ? "" : ": "}${right}`;
 };
