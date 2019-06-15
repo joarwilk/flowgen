@@ -4,6 +4,8 @@ import * as ts from "typescript";
 import printers from "./index";
 
 import { checker } from "../checker";
+import * as logger from '../logger';
+import {withEnv} from '../env';
 import { renames, getLeftMostEntityName } from "./smart-identifiers";
 
 type KeywordNode =
@@ -306,8 +308,7 @@ export function fixDefaultTypeArguments(symbol, type) {
     type.typeArguments = [];
   }
 }
-
-export const printType = (rawType: any): string => {
+export const printType = withEnv((env: any, rawType: any): string => {
   // debuggerif()
   //TODO: #6 No match found in SyntaxKind enum
 
@@ -351,16 +352,46 @@ export const printType = (rawType: any): string => {
       // TODO: What to print here?
       return "Symbol";
     case ts.SyntaxKind.BigIntKeyword:
-      console.log(
+      logger.error(
+        type,
         "Flow doesn't support BigInt proposal: https://github.com/facebook/flow/issues/6639",
       );
       // TODO: What to print here?
       return "number";
 
+    // JSDoc types
+    case ts.SyntaxKind.JSDocAllType:
+      return "*";
+    case ts.SyntaxKind.JSDocUnknownType:
+      return "?";
+    case ts.SyntaxKind.JSDocOptionalType:
+      return printType(type.type) + '=';
+    case ts.SyntaxKind.JSDocFunctionType: {
+      const params = type.parameters
+        .map(param => printType(param.type))
+        .join(", ");
+      const ret = type.type ? `: ${printType(type.type)}` : '';
+      return `function(${params})${ret}`
+    }
+    case ts.SyntaxKind.JSDocTypeLiteral:
+      return 'object';
+    case ts.SyntaxKind.JSDocVariadicType:
+      return '...' + printType(type.type);
+    case ts.SyntaxKind.JSDocNonNullableType:
+      return '!' + printType(type.type);
+    case ts.SyntaxKind.JSDocNullableType:
+      return '?' + printType(type.type);
+
     case ts.SyntaxKind.ConditionalType: {
       const line =
         "Flow doesn't support conditional types, use $Call utility type";
-      console.log(line);
+      logger.error(
+        type,
+        line
+      );
+      if (env && env.tsdoc) {
+        return `any`
+      }
       return `/* ${line} */ any`;
     }
 
@@ -432,7 +463,7 @@ export const printType = (rawType: any): string => {
         case ts.SyntaxKind.KeyOfKeyword:
           return `$Keys<${printType(type.type)}>`;
         case ts.SyntaxKind.UniqueKeyword:
-          console.log("Flow doesn't support `unique symbol`");
+          logger.error(type, "Flow doesn't support `unique symbol`");
           return printType(type.type);
         default:
           console.log(
@@ -652,6 +683,6 @@ export const printType = (rawType: any): string => {
   const output = `/* NO PRINT IMPLEMENTED: ${ts.SyntaxKind[type.kind]} */ any`;
   console.log(output);
   return output;
-};
+});
 
 export default printType;

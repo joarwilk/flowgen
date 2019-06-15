@@ -5,6 +5,7 @@ import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 
 import printers from "./index";
+import {withEnv} from '../env';
 
 export const literalType = (node: RawNode) => {
   if (node.literal) {
@@ -150,7 +151,44 @@ export const generics = (
   return "";
 };
 
-export const comment = (jsdoc: Array<any>): string => {
+const jsDocPrintTag = (tag): string => {
+  const typeNameValue = tag.typeExpression && tag.typeExpression.type;
+  const parameterNameValue = tag.name || tag.preParameterName;
+  const typeName = typeNameValue
+    ? ` {${printers.node.printType(typeNameValue)}}`
+    : "";
+  const parameterName = parameterNameValue
+    ? ` ${
+        tag.isBracketed
+          ? `[${printers.node.printType(parameterNameValue)}]`
+          : printers.node.printType(parameterNameValue)
+      }`
+    : "";
+  const comment = tag.comment ? ` ${tag.comment}`.replace(/\n/g, "\n * ") : "";
+  if (typeNameValue && typeNameValue.kind === ts.SyntaxKind.JSDocTypeLiteral) {
+    let output = `\n * @${
+      tag.tagName.text
+    }${typeName}${parameterName}${comment}`;
+    for (const key in typeNameValue.jsDocPropertyTags) {
+      output += jsDocPrintTag(typeNameValue.jsDocPropertyTags[key]);
+    }
+    return output;
+  }
+  if (tag && tag.kind === ts.SyntaxKind.JSDocCallbackTag) {
+    const parameterName = parameterNameValue
+      ? printers.node.printType(parameterNameValue)
+      : "";
+    let output = `\n * @${tag.tagName.text} ${parameterName}${tag.comment}`;
+    for (const param of tag.typeExpression.parameters) {
+      output += jsDocPrintTag(param);
+    }
+    if (typeNameValue) output += jsDocPrintTag(typeNameValue);
+    return output;
+  }
+  return `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
+};
+
+export const comment = withEnv((env: any, jsdoc: Array<any>): string => {
   if (!opts().jsdoc) return "";
   const blocks = jsdoc
     .map(doc => {
@@ -159,23 +197,13 @@ export const comment = (jsdoc: Array<any>): string => {
         "\n * ",
       );
 
-      const tags = (doc.tags || []).map(tag => {
-        const typeName =
-          tag.typeExpression && tag.typeExpression.type
-            ? ` {${printers.node.printType(tag.typeExpression.type)}}`
-            : "";
-        const parameterName = (tag.name || tag.preParameterName || {}).text
-          ? ` ${(tag.name || tag.preParameterName || {}).text}`
-          : "";
-        const comment = tag.comment
-          ? ` ${tag.comment}`.replace(/\n/g, "\n * ")
-          : "";
-        return `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
-      });
+      env.tsdoc = true;
+      const tags = (doc.tags || []).map(jsDocPrintTag);
+      env.tsdoc = false;
 
-      return comment + tags.join("");
+      return `/**${comment + tags.join("")}\n */\n`;
     })
     .join("");
 
-  return `\n/**${blocks}\n */\n`;
-};
+  return `\n${blocks}`;
+});
