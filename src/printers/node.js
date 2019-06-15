@@ -557,9 +557,9 @@ export const printType = withEnv((env: any, rawType: any): string => {
       return `${printType(type.type)} | void`;
     case ts.SyntaxKind.TupleType: {
       const lastElement = type.elementTypes[type.elementTypes.length - 1];
-      if (lastElement.kind === ts.SyntaxKind.RestType) type.elementTypes.pop();
+      if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) type.elementTypes.pop();
       let tuple = `[${type.elementTypes.map(printType).join(", ")}]`;
-      if (lastElement.kind === ts.SyntaxKind.RestType) {
+      if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) {
         tuple += ` & ${printType(lastElement.type)}`;
       }
       return tuple;
