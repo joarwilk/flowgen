@@ -13,6 +13,8 @@
     ]
   },
   "dependencies": {
+    "@babel/code-frame": "^7.0.0",
+    "@babel/highlight": "^7.0.0",
     "commander": "^2.11.0",
     "lodash": "^4.17.4",
     "paralleljs": "^0.2.1",
@@ -49,7 +51,8 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jest": "^22.2.2",
     "flow-bin": "^0.95.0",
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "recast": "^0.18.1"
   },
   "files": [
     "lib",
