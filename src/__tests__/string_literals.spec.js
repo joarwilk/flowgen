@@ -15,7 +15,7 @@ it("should handle string literals in function argument \"overloading\"", () => {
   }
 `;
 
-  const result = compiler.compileDefinitionString(ts);
+  const result = compiler.compileDefinitionString(ts, {quiet: true});
 
   expect(beautify(result)).toMatchSnapshot();
 });

@@ -7,7 +7,7 @@ it("handles the danger.d.ts correctly", () => {
     `${__dirname}/fixtures/danger.d.ts`,
     "utf8",
   );
-  const result = compiler.compileDefinitionString(dangerDTS);
+  const result = compiler.compileDefinitionString(dangerDTS, {quiet: true});
 
   expect(result).toMatchSnapshot();
 });

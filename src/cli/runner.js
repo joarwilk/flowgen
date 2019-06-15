@@ -13,6 +13,7 @@ import flowTypedExporter from "./flow-typed-exporter";
 
 type RunnerOptions = {
   jsdoc: boolean,
+  quiet: boolean,
   interfaceRecords: boolean,
   moduleExports: boolean,
   version: string,
@@ -128,6 +129,7 @@ export default (options: RunnerOptions) => {
           files.map(v => v.file),
           {
             jsdoc: options.jsdoc,
+            quiet: options.quiet,
             interfaceRecords: options.interfaceRecords,
             moduleExports: options.moduleExports,
           },
@@ -152,6 +154,7 @@ export default (options: RunnerOptions) => {
         const file = files[0];
         const flowDefinitions = compiler.compileDefinitionFile(file.file, {
           jsdoc: options.jsdoc,
+          quiet: options.quiet,
           interfaceRecords: options.interfaceRecords,
           moduleExports: options.moduleExports,
         });
