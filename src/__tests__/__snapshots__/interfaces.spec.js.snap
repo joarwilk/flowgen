@@ -71,6 +71,15 @@ exports[`should handle toString property name 1`] = `
 "
 `;
 
+exports[`should handle typed array binding pattern 1`] = `
+"declare interface ArrayBinding {
+  (): void;
+  (x: []): void;
+  (x: [string, number]): void;
+}
+"
+`;
+
 exports[`should handle typed object binding pattern 1`] = `
 "declare interface ObjectBinding {
   (): void;
@@ -79,6 +88,15 @@ exports[`should handle typed object binding pattern 1`] = `
     a: string,
     b: number
   }): void;
+}
+"
+`;
+
+exports[`should handle untyped array binding pattern 1`] = `
+"declare interface ArrayBinding {
+  (): void;
+  (x: any): void;
+  (x: any): void;
 }
 "
 `;

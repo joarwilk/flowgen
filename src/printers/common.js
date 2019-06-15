@@ -46,7 +46,10 @@ export const parameter = (param: RawNode): string => {
   }
   let right;
 
-  if (param.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
+  if (
+    param.name.kind === ts.SyntaxKind.ObjectBindingPattern ||
+    param.name.kind === ts.SyntaxKind.ArrayBindingPattern
+  ) {
     left = `x`;
   } else {
     left += printers.node.printType(param.name);

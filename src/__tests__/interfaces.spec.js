@@ -168,12 +168,36 @@ interface ObjectBinding {
   expect(beautify(result)).toMatchSnapshot();
 });
 
+it("should handle untyped array binding pattern", () => {
+  const ts = `
+interface ArrayBinding {
+  (): void;
+  ([]): void;
+  ([ a, b ]): void;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
 it("should handle typed object binding pattern", () => {
   const ts = `
 interface ObjectBinding {
   (): void;
   ({}: any): void;
   ({ a, b }: { a: string, b: number }): void;
+}
+`;
+  const result = compiler.compileDefinitionString(ts);
+  expect(beautify(result)).toMatchSnapshot();
+});
+
+it("should handle typed array binding pattern", () => {
+  const ts = `
+interface ArrayBinding {
+  (): void;
+  ([]: []): void;
+  ([ a, b ]: [string, number]): void;
 }
 `;
   const result = compiler.compileDefinitionString(ts);
