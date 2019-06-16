@@ -13,21 +13,25 @@ import tsc from "typescript-compiler";
 import namespaceManager from "../namespaceManager";
 import { type Options, assignOptions, resetOptions } from "../options";
 import { checker } from "../checker";
+import * as logger from "../logger";
+import { withEnv } from "../env";
 import { importEqualsTransformer, legacyModules } from "../parse/transformers";
 import { recursiveWalkTree } from "../parse";
 
-const compile = (sourceFile: SourceFile): string => {
-  const rootNode = recursiveWalkTree(sourceFile);
+const compile = withEnv(
+  (env: any, sourceFile: SourceFile): string => {
+    const rootNode = recursiveWalkTree(sourceFile);
 
-  const output = rootNode
-    .getChildren()
-    .map(child => {
-      return child.print();
-    })
-    .join("");
+    const output = rootNode
+      .getChildren()
+      .map(child => {
+        return child.print();
+      })
+      .join("");
 
-  return output;
-};
+    return output;
+  },
+);
 
 const reset = (options?: Options) => {
   resetOptions();
@@ -45,7 +49,7 @@ const transformers = [legacyModules(), importEqualsTransformer()];
 export default {
   reset,
 
-  compile,
+  compile: compile.withEnv({}),
 
   setChecker(typeChecker: any) {
     checker.current = typeChecker;
@@ -83,10 +87,11 @@ export default {
 
     checker.current = program.getTypeChecker();
     const sourceFile = program.getSourceFile("file.ts");
+    logger.setSourceFile(sourceFile);
 
     if (!sourceFile) return "";
 
-    return compile(sourceFile);
+    return compile.withEnv({})(sourceFile);
   },
 
   compileDefinitionFile: (path: string, options?: Options): string => {
@@ -118,10 +123,11 @@ export default {
 
     checker.current = program.getTypeChecker();
     const sourceFile = program.getSourceFile(path);
+    logger.setSourceFile(sourceFile);
 
     if (!sourceFile) return "";
 
-    return compile(sourceFile);
+    return compile.withEnv({})(sourceFile);
   },
 
   compileDefinitionFiles: (
@@ -156,9 +162,10 @@ export default {
 
     return paths.map(path => {
       const sourceFile = program.getSourceFile(path);
+      logger.setSourceFile(sourceFile);
       if (!sourceFile) return "";
       reset(options);
-      return [path, compile(sourceFile)];
+      return [path, compile.withEnv({})(sourceFile)];
     });
   },
 };

@@ -17,6 +17,7 @@ program
     "--interface-records",
     "exact records instead of interfaces in output",
   )
+  .option("--quiet", "output without logs")
   .option("--no-jsdoc", "output without jsdoc")
   .option("--flow-typed-format [dirname]", "format output for flow-typed")
   .option(
@@ -30,6 +31,7 @@ program
       interfaceRecords: options.interfaceRecords,
       moduleExports: options.moduleExports,
       jsdoc: options.jsdoc,
+      quiet: options.quiet,
       flowTypedFormat: options.flowTypedFormat,
       addFlowHeader: options.addFlowHeader,
       compileTests: options.compileTests,

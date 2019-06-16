@@ -3,6 +3,7 @@
 import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
 import util from "util";
+import * as logger from "../logger";
 import _ from "lodash";
 import getNodeName from "../nodename";
 
@@ -41,8 +42,17 @@ export const parseNameFromNode = (node: RawNode): string => {
     });
     return names.join(",");
   }
-
-  console.log("INVALID NAME", ts.SyntaxKind[node.kind]);
+  switch (node.kind) {
+    case ts.SyntaxKind.FunctionDeclaration:
+      logger.error(
+        node.modifiers || node,
+        "Flow doesn't support unnamed functions",
+      );
+      break;
+    default:
+      console.log("INVALID NAME", ts.SyntaxKind[node.kind]);
+      break;
+  }
   return "INVALID NAME REF";
 };
 
@@ -88,6 +98,11 @@ export const stripDetailsFromTree = (root: RawNode): any => {
     if (root.hasOwnProperty(key) && typeof val === "object") {
       if (Array.isArray(val)) {
         root[key] = root[key].map(stripDetailsFromTree);
+        root[key].pos = val.pos;
+        root[key].end = val.end;
+        root[key].assertHasRealPosition = root.assertHasRealPosition.bind(val);
+        root[key].getStart = root.getStart.bind(val);
+        root[key].getEnd = root.getEnd.bind(val);
       } else {
         root[key][inspect] = inspectFn.bind(val);
       }

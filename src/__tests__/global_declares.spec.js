@@ -9,5 +9,5 @@ declare interface ICustomMessage {
   otherMethod(literal: "A"|"B"): void;
 }
 `;
-  expect(beautify(compiler.compileDefinitionString(ts))).toMatchSnapshot();
+  expect(beautify(compiler.compileDefinitionString(ts, {quiet: true}))).toMatchSnapshot();
 });

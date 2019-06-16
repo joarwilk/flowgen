@@ -8,7 +8,7 @@ it("should handle boolean literals in type", () => {
   type MyTruthyType = true | string;
 `;
 
-  const result = compiler.compileDefinitionString(ts);
+  const result = compiler.compileDefinitionString(ts, {quiet: true});
 
   expect(beautify(result)).toMatchSnapshot();
 });

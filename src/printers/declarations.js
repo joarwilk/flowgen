@@ -11,6 +11,7 @@ export const propertyDeclaration = (
   keywordPrefix: string,
   isVar: boolean = false,
 ) => {
+  let left = keywordPrefix;
   const symbol = checker.current.getSymbolAtLocation(node.name);
   const name = isVar
     ? printers.node.getFullyQualifiedName(symbol, node.name)
@@ -23,30 +24,42 @@ export const propertyDeclaration = (
   ) {
     return "";
   }
+  if (
+    node.modifiers &&
+    node.modifiers.some(
+      modifier => modifier.kind === ts.SyntaxKind.ReadonlyKeyword,
+    )
+  ) {
+    left += "+";
+  }
+
+  left += name;
 
   if (node.parameters) {
-    return (
-      keywordPrefix +
-      name +
-      ": " +
-      node.parameters.map(printers.common.parameter)
-    );
+    return left + ": " + node.parameters.map(printers.common.parameter);
   }
 
   if (node.type) {
-    return keywordPrefix + name + ": " + printers.node.printType(node.type);
+    let right = printers.node.printType(node.type);
+    if (node.questionToken && node.name.kind !== ts.SyntaxKind.ComputedPropertyName) {
+      left += "?";
+    }
+    if (
+      node.questionToken &&
+      node.name.kind === ts.SyntaxKind.ComputedPropertyName
+    ) {
+      right = `(${right}) | void`;
+    }
+    return left + ": " + right;
   }
 
-  return (
-    keywordPrefix +
-    name +
-    `: any // ${printers.node.printType(node.initializer)}`
-  );
+  return left + `: any // ${printers.node.printType(node.initializer)}`;
 };
 
 export const variableDeclaration = (node: RawNode): string => {
-  const declarations = node.declarationList.declarations
-    .map(printers.node.printType);
+  const declarations = node.declarationList.declarations.map(
+    printers.node.printType,
+  );
 
   return declarations
     .map(name => `declare ${printers.relationships.exporter(node)}var ${name};`)

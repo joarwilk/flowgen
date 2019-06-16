@@ -14,7 +14,7 @@ export * from 'typescript';
 //export traverse, { Visitor, NodePath } from "@babel/traverse";
 //export template from "@babel/template";
 //export * as t from "@babel/types";`;
-  const result = compiler.compileDefinitionString(ts);
+  const result = compiler.compileDefinitionString(ts, {quiet: true});
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -22,6 +22,6 @@ test("should handle unnamed default export", () => {
   const ts = `
 export default function(): void;
 `;
-  const result = compiler.compileDefinitionString(ts);
+  const result = compiler.compileDefinitionString(ts, {quiet: true});
   expect(beautify(result)).toMatchSnapshot();
 });

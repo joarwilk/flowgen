@@ -6,6 +6,15 @@ exports[`should handle static methods ES6 classes 1`] = `
   static create: Function;
   lift<R>(operator: Operator<T, R>): Observable<R>;
   static lift<R>(operator: Operator<T, R>): Observable<R>;
+  +foo: number;
+  static +bar: string;
+  baz?: string;
+  +quux?: number;
+  static quick?: Symbol;
+  static +fox?: string;
+  jump?: () => void;
+  +jump?: () => void;
+  static +jump?: () => void;
 }
 "
 `;

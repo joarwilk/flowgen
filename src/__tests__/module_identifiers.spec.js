@@ -9,7 +9,7 @@ import * as React from 'react'
 declare function s(node: ReactNode): void;
 declare function s(node: React.ReactNode): void;
 `;
-  const result = compiler.compileDefinitionString(ts);
+  const result = compiler.compileDefinitionString(ts, {quiet: true});
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -25,7 +25,7 @@ declare class Component extends React.Component<Props> {
   render(): JSX.Element
 }
 `;
-    const result = compiler.compileDefinitionString(ts);
+    const result = compiler.compileDefinitionString(ts, {quiet: true});
     expect(beautify(result)).toMatchSnapshot();
   });
 });
