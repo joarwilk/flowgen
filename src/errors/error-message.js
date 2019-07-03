@@ -14,6 +14,9 @@ export type ErrorMessage =
       +type: "UnsupportedConditionalType",
     |}
   | {|
+      +type: "UnsupportedGlobalAugmentation",
+    |}
+  | {|
       +type: "MissingFunctionName",
     |};
 
@@ -33,6 +36,9 @@ export function printErrorMessage(error: ErrorMessage): string {
 
     case "MissingFunctionName":
       return "Flow doesn't support unnamed functions";
+
+    case "UnsupportedGlobalAugmentation":
+      return "Flow doesn't support global augmentation";
 
     default:
       (error.type: empty);
