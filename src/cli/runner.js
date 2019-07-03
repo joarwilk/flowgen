@@ -89,7 +89,10 @@ function getFile(
   return { file, outputFile, moduleName, intro, mode };
 }
 
-async function bfs(rootDir: string, options: RunnerOptions): Promise<Array<File>> {
+async function bfs(
+  rootDir: string,
+  options: RunnerOptions,
+): Promise<Array<File>> {
   const queue: Array<string> = [];
   const files: Array<File> = [];
   queue.push(rootDir);
