@@ -10,7 +10,7 @@ function updatePos<T: ts.Node>(node: T) {
 }
 
 export function importEqualsTransformer(/*opts?: Opts*/) {
-  function visitor(ctx: ts.TransformationContext, sf: ts.SourceFile) {
+  function visitor(ctx: ts.TransformationContext) {
     const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
       switch (node.kind) {
         case ts.SyntaxKind.ImportEqualsDeclaration: {
@@ -25,10 +25,13 @@ export function importEqualsTransformer(/*opts?: Opts*/) {
               node.moduleReference.expression.text,
             );
             const importNode = updatePos(
+              //$todo Flow has problems when switching variables instead of literals
               ts.createImportDeclaration(
                 undefined,
                 undefined,
+                //$todo Flow has problems when switching variables instead of literals
                 updatePos(importClause),
+                //$todo Flow has problems when switching variables instead of literals
                 updatePos(moduleSpecifier),
               ),
             );
@@ -37,9 +40,11 @@ export function importEqualsTransformer(/*opts?: Opts*/) {
             node.moduleReference.kind === ts.SyntaxKind.QualifiedName
           ) {
             const varNode = updatePos(
+              //$todo Flow has problems when switching variables instead of literals
               ts.createVariableStatement(node.modifiers, [
                 ts.createVariableDeclaration(
                   node.name,
+                  //$todo Flow has problems when switching variables instead of literals
                   ts.createTypeQueryNode(node.moduleReference),
                   undefined,
                 ),
@@ -60,7 +65,7 @@ export function importEqualsTransformer(/*opts?: Opts*/) {
 }
 
 export function legacyModules() {
-  function visitor(ctx: ts.TransformationContext, sf: ts.SourceFile) {
+  function visitor(ctx: ts.TransformationContext) {
     const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
       stripDetailsFromTree(node);
       switch (node.kind) {
