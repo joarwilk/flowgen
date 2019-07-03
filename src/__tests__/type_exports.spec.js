@@ -7,5 +7,7 @@ it("should handle exported types", () => {
 export declare type FactoryOrValue<T> = T | (() => T);
 export type Maybe<T> = {type: 'just', value: T} | {type: 'nothing'}
 `;
-  expect(beautify(compiler.compileDefinitionString(ts, {quiet: true}))).toMatchSnapshot();
+  expect(
+    beautify(compiler.compileDefinitionString(ts, { quiet: true })),
+  ).toMatchSnapshot();
 });

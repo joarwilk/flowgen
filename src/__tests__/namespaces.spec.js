@@ -3,15 +3,43 @@
 import { compiler, beautify } from "..";
 
 describe("should handle merging with other types", () => {
-  test("function", () => {
-    const ts = `
+  describe("function", () => {
+    test("interface", () => {
+      const ts = `
+declare function test(foo: number): string;
+namespace test {
+  export interface Foo {
+    bar: number
+  }
+}
+`;
+      const result = compiler.compileDefinitionString(ts);
+      expect(beautify(result)).toMatchSnapshot();
+    })
+
+    test("type", () => {
+      const ts = `
+declare function test(foo: number): string;
+namespace test {
+  export type Foo = {
+    bar: number
+  }
+}
+`;
+      const result = compiler.compileDefinitionString(ts);
+      expect(beautify(result)).toMatchSnapshot();
+    })
+
+    test("const", () => {
+      const ts = `
 declare function test(foo: number): string;
 namespace test {
   export const ok: number
 }
 `;
-    const result = compiler.compileDefinitionString(ts);
-    expect(beautify(result)).toMatchSnapshot();
+      const result = compiler.compileDefinitionString(ts);
+      expect(beautify(result)).toMatchSnapshot();
+    })
   });
 
   test("class", () => {
@@ -51,7 +79,7 @@ namespace test {
   export const ok: number
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -64,7 +92,7 @@ namespace test {
   export const error: string
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -77,7 +105,7 @@ namespace test {
   declare function test(response: string): string
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -87,7 +115,7 @@ namespace Example {
   export interface StoreModel<S> {}
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -133,7 +161,7 @@ declare namespace E0 {
   declare var s1: string;
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -152,7 +180,7 @@ declare namespace A.B.C {
     a: string;
   }
 }`;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -161,7 +189,7 @@ test("should handle global augmentation", () => {
 declare global {
   interface Array<T> {}
 }`;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -169,6 +197,6 @@ test("should handle import equals declaration", () => {
   const ts = `
 import hello = A.B;
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });

@@ -60,7 +60,7 @@ it("should handle computed Symbol.iterator and Symbol.asyncIterator", () => {
   }
 `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
 });
@@ -99,7 +99,7 @@ it("should handle string literals", () => {
   }
 `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
 });
@@ -138,7 +138,7 @@ it("should approximate unsupported keys", () => {
   }
 `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
 });

@@ -1,6 +1,6 @@
 // @flow
 
-import {compiler, beautify} from "..";
+import { compiler, beautify } from "..";
 
 it("should handle static methods ES6 classes", () => {
   const ts = `class Observable<T> implements Subscribable<T> {
@@ -18,6 +18,6 @@ it("should handle static methods ES6 classes", () => {
     readonly jump?(): void;
     static readonly jump?(): void;
   }`;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });

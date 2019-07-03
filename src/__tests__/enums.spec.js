@@ -4,7 +4,7 @@ import { compiler, beautify } from "..";
 
 it("should handle empty enums", () => {
   const ts = `enum Empty { }`;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
 });
 
@@ -17,7 +17,7 @@ it("should handle basic enums", () => {
 type A = Label
 type B = Label.LABEL_OPTIONAL
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
 });
 
@@ -32,7 +32,7 @@ it("should handle number enums", () => {
 type A = Label
 type B = Label.TWO
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
 });
 
@@ -45,6 +45,6 @@ it("should handle string enums", () => {
 type A = Label
 type B = Label.LABEL_REQUIRED
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
 });

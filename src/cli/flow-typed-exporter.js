@@ -6,7 +6,9 @@ import program from "commander";
 import { promisify } from "./util";
 
 const exists: (filename: string) => Promise<boolean> = promisify(fs.exists);
-const writeFile: (filename: string, data: string) => Promise<void> = promisify(fs.writeFile);
+const writeFile: (filename: string, data: string) => Promise<void> = promisify(
+  fs.writeFile,
+);
 
 export default async function exportForFlowTyped(
   moduleName: string,

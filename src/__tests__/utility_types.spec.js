@@ -27,6 +27,6 @@ type D2<T> = ReadonlyArray<T>
 type E2<T> = ReturnType<() => T>
 type F2<T, U> = Record<T, U>
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });

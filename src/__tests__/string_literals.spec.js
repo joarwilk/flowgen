@@ -1,8 +1,8 @@
 // @flow
 
-import {compiler, beautify} from "..";
+import { compiler, beautify } from "..";
 
-it("should handle string literals in function argument \"overloading\"", () => {
+it('should handle string literals in function argument "overloading"', () => {
   const ts = `
   interface MyObj {
       on(event: 'error', cb: (err: Error) => void): this;
@@ -15,7 +15,7 @@ it("should handle string literals in function argument \"overloading\"", () => {
   }
 `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
 });
@@ -26,7 +26,7 @@ it("should handle exported constant string literals", () => {
   export declare const SET_STAGE = "my/lib/SET_STAGE";
   `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
 });

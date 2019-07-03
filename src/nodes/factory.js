@@ -94,8 +94,12 @@ export class Factory {
     return propNode;
   }
 
-  createNamespaceNode = (node: RawNode, name: string, context: Node<>): NamespaceNode => {
-    let contextName
+  createNamespaceNode = (
+    node: RawNode,
+    name: string,
+    context: Node<>,
+  ): NamespaceNode => {
+    let contextName;
     if (context instanceof ModuleNode) {
       contextName = context.name + "$" + name;
     }
@@ -103,9 +107,10 @@ export class Factory {
       const symbol = checker.current.getSymbolAtLocation(node.name);
       contextName = getFullyQualifiedName(symbol, node, false);
     }
-    if (typeof contextName !== 'undefined') {
+    if (typeof contextName !== "undefined") {
       if (this._functionDeclarations[contextName]) {
-        for (const prop of this._functionDeclarations[contextName]) prop.skipNode();
+        for (const prop of this._functionDeclarations[contextName])
+          prop.skipNode();
       }
       if (this._propDeclarations[contextName]) {
         this._propDeclarations[contextName].skipNode();
@@ -116,9 +121,7 @@ export class Factory {
         this._propDeclarations[contextName],
       );
     } else {
-      return new NamespaceNode(
-        name,
-      );
+      return new NamespaceNode(name);
     }
   };
   createImportNode = (node: RawNode): ImportNode => new ImportNode(node);

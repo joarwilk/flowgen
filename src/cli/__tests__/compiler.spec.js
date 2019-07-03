@@ -4,7 +4,7 @@ import compiler from "../compiler";
 it("should handle maybe & nullable type", () => {
   const result = compiler.compileDefinitionString(
     "let a: string | null | undefined",
-    {quiet: true}
+    { quiet: true },
   );
 
   expect(result).toMatchSnapshot();
@@ -18,7 +18,7 @@ it("should handle bounded polymorphism", () => {
     }
   `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(result).toMatchSnapshot();
 });
