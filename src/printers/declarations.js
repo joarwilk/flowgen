@@ -41,7 +41,10 @@ export const propertyDeclaration = (
 
   if (node.type) {
     let right = printers.node.printType(node.type);
-    if (node.questionToken && node.name.kind !== ts.SyntaxKind.ComputedPropertyName) {
+    if (
+      node.questionToken &&
+      node.name.kind !== ts.SyntaxKind.ComputedPropertyName
+    ) {
       left += "?";
     }
     if (

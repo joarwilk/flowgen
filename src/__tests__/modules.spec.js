@@ -13,7 +13,7 @@ declare module 'test' {
   export const ok: number
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -32,7 +32,7 @@ declare module 'test' {
   export const error: string
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -52,7 +52,7 @@ export interface A {
   bar: string
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -65,6 +65,6 @@ declare module 'test' {
   declare function test(response: string): string
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });

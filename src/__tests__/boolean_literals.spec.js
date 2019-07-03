@@ -1,6 +1,6 @@
 // @flow
 
-import {compiler, beautify} from "..";
+import { compiler, beautify } from "..";
 
 it("should handle boolean literals in type", () => {
   const ts = `
@@ -8,7 +8,7 @@ it("should handle boolean literals in type", () => {
   type MyTruthyType = true | string;
 `;
 
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
 });

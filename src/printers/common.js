@@ -5,7 +5,7 @@ import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 
 import printers from "./index";
-import {withEnv} from '../env';
+import { withEnv } from "../env";
 
 export const literalType = (node: RawNode) => {
   if (node.literal) {
@@ -72,7 +72,10 @@ export const parameter = (param: RawNode): string => {
     right = printers.node.printType(param.type);
   }
 
-  if (param.questionToken && param.name.kind !== ts.SyntaxKind.ComputedPropertyName) {
+  if (
+    param.questionToken &&
+    param.name.kind !== ts.SyntaxKind.ComputedPropertyName
+  ) {
     left += "?";
   }
 
@@ -188,22 +191,24 @@ const jsDocPrintTag = (tag): string => {
   return `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
 };
 
-export const comment = withEnv((env: any, jsdoc: Array<any>): string => {
-  if (!opts().jsdoc) return "";
-  const blocks = jsdoc
-    .map(doc => {
-      const comment = (doc.comment ? `\n${doc.comment}` : "").replace(
-        /\n/g,
-        "\n * ",
-      );
+export const comment = withEnv(
+  (env: any, jsdoc: Array<any>): string => {
+    if (!opts().jsdoc) return "";
+    const blocks = jsdoc
+      .map(doc => {
+        const comment = (doc.comment ? `\n${doc.comment}` : "").replace(
+          /\n/g,
+          "\n * ",
+        );
 
-      env.tsdoc = true;
-      const tags = (doc.tags || []).map(jsDocPrintTag);
-      env.tsdoc = false;
+        env.tsdoc = true;
+        const tags = (doc.tags || []).map(jsDocPrintTag);
+        env.tsdoc = false;
 
-      return `/**${comment + tags.join("")}\n */\n`;
-    })
-    .join("");
+        return `/**${comment + tags.join("")}\n */\n`;
+      })
+      .join("");
 
-  return `\n${blocks}`;
-});
+    return `\n${blocks}`;
+  },
+);

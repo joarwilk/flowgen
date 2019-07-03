@@ -9,7 +9,7 @@ import { Visitor as NewVisitor } from "@babel/traverse";
 import template from "@babel/template";
 import * as t from "@babel/types";
 import v, * as d from 'typescript';`;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -24,7 +24,7 @@ declare module '@babel/core' {
   import v, * as d from 'typescript';
 }
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -32,6 +32,6 @@ it("should handle import type", () => {
   const ts = `
 type S = typeof import('http')
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });

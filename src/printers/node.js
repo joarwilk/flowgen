@@ -4,8 +4,8 @@ import * as ts from "typescript";
 import printers from "./index";
 
 import { checker } from "../checker";
-import * as logger from '../logger';
-import {withEnv} from '../env';
+import * as logger from "../logger";
+import { withEnv } from "../env";
 import { renames, getLeftMostEntityName } from "./smart-identifiers";
 
 type KeywordNode =
@@ -308,381 +308,388 @@ export function fixDefaultTypeArguments(symbol, type) {
     type.typeArguments = [];
   }
 }
-export const printType = withEnv((env: any, rawType: any): string => {
-  // debuggerif()
-  //TODO: #6 No match found in SyntaxKind enum
+export const printType = withEnv(
+  (env: any, rawType: any): string => {
+    // debuggerif()
+    //TODO: #6 No match found in SyntaxKind enum
 
-  const type: PrintNode = rawType;
+    const type: PrintNode = rawType;
 
-  const keywordPrefix: string =
-    type.modifiers &&
-    type.modifiers.some(
-      modifier => modifier.kind === ts.SyntaxKind.StaticKeyword,
-    )
-      ? "static "
-      : "";
+    const keywordPrefix: string =
+      type.modifiers &&
+      type.modifiers.some(
+        modifier => modifier.kind === ts.SyntaxKind.StaticKeyword,
+      )
+        ? "static "
+        : "";
 
-  const kind = ts.SyntaxKind[type.kind].toString();
-  switch (type.kind) {
-    case ts.SyntaxKind.VoidKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.StringKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.AnyKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.NumberKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.BooleanKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.NullKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.UndefinedKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.ObjectKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.FalseKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.TrueKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.NeverKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.UnknownKeyword:
-      return printers.basics.print(kind);
-    case ts.SyntaxKind.SymbolKeyword:
-      // TODO: What to print here?
-      return "Symbol";
-    case ts.SyntaxKind.BigIntKeyword:
-      logger.error(
-        type,
-        "Flow doesn't support BigInt proposal: https://github.com/facebook/flow/issues/6639",
-      );
-      // TODO: What to print here?
-      return "number";
+    const kind = ts.SyntaxKind[type.kind].toString();
+    switch (type.kind) {
+      case ts.SyntaxKind.VoidKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.StringKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.AnyKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.NumberKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.BooleanKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.NullKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.UndefinedKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.ObjectKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.FalseKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.TrueKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.NeverKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.UnknownKeyword:
+        return printers.basics.print(kind);
+      case ts.SyntaxKind.SymbolKeyword:
+        // TODO: What to print here?
+        return "Symbol";
+      case ts.SyntaxKind.BigIntKeyword:
+        logger.error(
+          type,
+          "Flow doesn't support BigInt proposal: https://github.com/facebook/flow/issues/6639",
+        );
+        // TODO: What to print here?
+        return "number";
 
-    // JSDoc types
-    case ts.SyntaxKind.JSDocAllType:
-      return "*";
-    case ts.SyntaxKind.JSDocUnknownType:
-      return "?";
-    case ts.SyntaxKind.JSDocOptionalType:
-      return printType(type.type) + '=';
-    case ts.SyntaxKind.JSDocFunctionType: {
-      const params = type.parameters
-        .map(param => printType(param.type))
-        .join(", ");
-      const ret = type.type ? `: ${printType(type.type)}` : '';
-      return `function(${params})${ret}`
-    }
-    case ts.SyntaxKind.JSDocTypeLiteral:
-      return 'object';
-    case ts.SyntaxKind.JSDocVariadicType:
-      return '...' + printType(type.type);
-    case ts.SyntaxKind.JSDocNonNullableType:
-      return '!' + printType(type.type);
-    case ts.SyntaxKind.JSDocNullableType:
-      return '?' + printType(type.type);
-
-    case ts.SyntaxKind.ConditionalType: {
-      const line =
-        "Flow doesn't support conditional types, use $Call utility type";
-      logger.error(
-        type,
-        line
-      );
-      if (env && env.tsdoc) {
-        return `any`
+      // JSDoc types
+      case ts.SyntaxKind.JSDocAllType:
+        return "*";
+      case ts.SyntaxKind.JSDocUnknownType:
+        return "?";
+      case ts.SyntaxKind.JSDocOptionalType:
+        return printType(type.type) + "=";
+      case ts.SyntaxKind.JSDocFunctionType: {
+        const params = type.parameters
+          .map(param => printType(param.type))
+          .join(", ");
+        const ret = type.type ? `: ${printType(type.type)}` : "";
+        return `function(${params})${ret}`;
       }
-      return `/* ${line} */ any`;
-    }
+      case ts.SyntaxKind.JSDocTypeLiteral:
+        return "object";
+      case ts.SyntaxKind.JSDocVariadicType:
+        return "..." + printType(type.type);
+      case ts.SyntaxKind.JSDocNonNullableType:
+        return "!" + printType(type.type);
+      case ts.SyntaxKind.JSDocNullableType:
+        return "?" + printType(type.type);
 
-    case ts.SyntaxKind.ComputedPropertyName: {
-      if (type.expression?.expression?.text === 'Symbol' && type.expression?.name?.text === 'iterator') {
-        return '@@iterator'
-      }
-      if (type.expression?.expression?.text === 'Symbol' && type.expression?.name?.text === 'asyncIterator') {
-        return '@@asyncIterator'
-      }
-      if (type.expression.kind === ts.SyntaxKind.StringLiteral) {
-        return printType(type.expression);
-      }
-      const line =
-        "Flow doesn't support computed property names";
-      logger.error(type.expression, line);
-      return `[typeof ${printType(type.expression)}]`;
-    }
-
-    case ts.SyntaxKind.FunctionType:
-      //case SyntaxKind.FunctionTypeAnnotation:
-      return printers.functions.functionType(type);
-
-    case ts.SyntaxKind.TypeLiteral:
-      return printers.declarations.interfaceType(type);
-
-    //case SyntaxKind.IdentifierObject:
-    //case SyntaxKind.StringLiteralType:
-    case ts.SyntaxKind.Identifier: {
-      return printers.relationships.namespace(
-        printers.identifiers.print(type.text),
-        true,
-      );
-    }
-
-    case ts.SyntaxKind.BindingElement:
-      return printers.common.typeParameter(type);
-    case ts.SyntaxKind.TypeParameter:
-      return printers.common.typeParameter(type);
-
-    case ts.SyntaxKind.PrefixUnaryExpression:
-      switch (type.operator) {
-        case ts.SyntaxKind.MinusToken:
-          return `-${type.operand.text}`;
-        default:
-          console.log('"NO PRINT IMPLEMENTED: PrefixUnaryExpression"');
-          return '"NO PRINT IMPLEMENTED: PrefixUnaryExpression"';
-      }
-
-    case ts.SyntaxKind.TypePredicate:
-      //TODO: replace with boolean %checks when supported in class declarations
-      return "boolean";
-
-    case ts.SyntaxKind.IndexedAccessType: {
-      let fn = "$ElementType";
-      if (
-        type.indexType.kind === ts.SyntaxKind.LiteralType &&
-        type.indexType.literal.kind === ts.SyntaxKind.StringLiteral
-      ) {
-        fn = "$PropertyType";
-      }
-      return `${fn}<${printType(type.objectType)}, ${printType(
-        type.indexType,
-      )}>`;
-    }
-
-    case ts.SyntaxKind.TypeOperator:
-      switch (type.operator) {
-        case ts.SyntaxKind.KeyOfKeyword:
-          return `$Keys<${printType(type.type)}>`;
-        case ts.SyntaxKind.UniqueKeyword:
-          logger.error(type, "Flow doesn't support `unique symbol`");
-          return printType(type.type);
-        default:
-          console.log(
-            `"NO PRINT IMPLEMENTED: TypeOperator ${
-              ts.SyntaxKind[type.operator]
-            }"`,
-          );
-          return `"NO PRINT IMPLEMENTED: TypeOperator ${
-            ts.SyntaxKind[type.operator]
-          }"`;
-      }
-
-    case ts.SyntaxKind.MappedType: {
-      const constraint = type.typeParameter.constraint;
-      const typeName = printType(type.typeParameter.name);
-      const value = printType(type.type);
-      let source = `{[k: ${printType(constraint)}]: any}`;
-      if (constraint.operator === ts.SyntaxKind.KeyOfKeyword) {
-        source = printType(constraint.type);
-      }
-      return `$ObjMapi<${source}, <${typeName}>(${typeName}) => ${value}>`;
-    }
-
-    case ts.SyntaxKind.FirstLiteralToken:
-      return type.text;
-
-    case ts.SyntaxKind.ImportType:
-      return `$Exports<${printType(type.argument)}>`;
-
-    case ts.SyntaxKind.FirstTypeNode:
-      return printers.common.literalType(type);
-    case ts.SyntaxKind.LastTypeNode:
-      return printers.common.literalType(type);
-    case ts.SyntaxKind.LiteralType:
-      return printers.common.literalType(type);
-
-    case ts.SyntaxKind.QualifiedName: {
-      let symbol;
-      if (checker.current) {
-        //$todo
-        symbol = checker.current.getSymbolAtLocation(type);
-      }
-      return getFullyQualifiedName(symbol, type);
-    }
-
-    case ts.SyntaxKind.StringLiteral:
-      return JSON.stringify(type.text);
-
-    case ts.SyntaxKind.TypeReference: {
-      let symbol;
-      if (checker.current) {
-        //$todo
-        symbol = checker.current.getSymbolAtLocation(type.typeName);
-        fixDefaultTypeArguments(symbol, type);
-        const isRenamed = renames(symbol, type);
-        if (
-          symbol &&
-          symbol.declarations &&
-          symbol.declarations[0].kind === ts.SyntaxKind.EnumMember
-        ) {
-          return `typeof ${getTypeofFullyQualifiedName(symbol, type.typeName)}`;
-        } else if (
-          symbol &&
-          symbol.declarations &&
-          symbol.declarations[0].kind === ts.SyntaxKind.EnumDeclaration
-        ) {
-          return `$Values<typeof ${getTypeofFullyQualifiedName(
-            symbol,
-            type.typeName,
-          )}>`;
+      case ts.SyntaxKind.ConditionalType: {
+        const line =
+          "Flow doesn't support conditional types, use $Call utility type";
+        logger.error(type, line);
+        if (env && env.tsdoc) {
+          return `any`;
         }
-        if (!isRenamed)
-          type.typeName.escapedText = getFullyQualifiedName(
-            symbol,
-            type.typeName,
-          );
+        return `/* ${line} */ any`;
       }
-      return printers.declarations.typeReference(type, !symbol);
-    }
 
-    case ts.SyntaxKind.VariableDeclaration:
-      return printers.declarations.propertyDeclaration(
-        type,
-        keywordPrefix,
-        true,
-      );
-    case ts.SyntaxKind.PropertyDeclaration:
-      return printers.declarations.propertyDeclaration(type, keywordPrefix);
-
-    case ts.SyntaxKind.OptionalType:
-      return `${printType(type.type)} | void`;
-    case ts.SyntaxKind.TupleType: {
-      const lastElement = type.elementTypes[type.elementTypes.length - 1];
-      if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) type.elementTypes.pop();
-      let tuple = `[${type.elementTypes.map(printType).join(", ")}]`;
-      if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) {
-        tuple += ` & ${printType(lastElement.type)}`;
+      case ts.SyntaxKind.ComputedPropertyName: {
+        if (
+          type.expression?.expression?.text === "Symbol" &&
+          type.expression?.name?.text === "iterator"
+        ) {
+          return "@@iterator";
+        }
+        if (
+          type.expression?.expression?.text === "Symbol" &&
+          type.expression?.name?.text === "asyncIterator"
+        ) {
+          return "@@asyncIterator";
+        }
+        if (type.expression.kind === ts.SyntaxKind.StringLiteral) {
+          return printType(type.expression);
+        }
+        const line = "Flow doesn't support computed property names";
+        logger.error(type.expression, line);
+        return `[typeof ${printType(type.expression)}]`;
       }
-      return tuple;
-    }
 
-    case ts.SyntaxKind.MethodSignature:
-      return printers.common.methodSignature(type);
+      case ts.SyntaxKind.FunctionType:
+        //case SyntaxKind.FunctionTypeAnnotation:
+        return printers.functions.functionType(type);
 
-    case ts.SyntaxKind.ExpressionWithTypeArguments:
-      return (
-        printType(type.expression) +
-        printers.common.generics(type.typeArguments)
-      );
+      case ts.SyntaxKind.TypeLiteral:
+        return printers.declarations.interfaceType(type);
 
-    case ts.SyntaxKind.PropertyAccessExpression:
-      return getFullyQualifiedPropertyAccessExpression(
-        checker.current.getSymbolAtLocation(type),
-        type,
-      );
+      //case SyntaxKind.IdentifierObject:
+      //case SyntaxKind.StringLiteralType:
+      case ts.SyntaxKind.Identifier: {
+        return printers.relationships.namespace(
+          printers.identifiers.print(type.text),
+          true,
+        );
+      }
 
-    // case SyntaxKind.NodeObject:
-    //   return (
-    //     printers.relationships.namespace(type.expression.text) +
-    //     printType(type.name)
-    //   );
+      case ts.SyntaxKind.BindingElement:
+        return printers.common.typeParameter(type);
+      case ts.SyntaxKind.TypeParameter:
+        return printers.common.typeParameter(type);
 
-    case ts.SyntaxKind.PropertySignature:
-      return printers.common.parameter(type);
+      case ts.SyntaxKind.PrefixUnaryExpression:
+        switch (type.operator) {
+          case ts.SyntaxKind.MinusToken:
+            return `-${type.operand.text}`;
+          default:
+            console.log('"NO PRINT IMPLEMENTED: PrefixUnaryExpression"');
+            return '"NO PRINT IMPLEMENTED: PrefixUnaryExpression"';
+        }
 
-    case ts.SyntaxKind.CallSignature: {
-      // TODO: rewrite to printers.functions.functionType
-      const generics = printers.common.generics(type.typeParameters, node => {
-        node.withoutDefault = true;
-        return node;
-      });
-      const str = `${generics}(${type.parameters
-        .filter(param => param.name.text !== "this")
-        .map(printers.common.parameter)
-        .join(", ")})`;
-      // TODO: I can't understand this
-      return type.type ? `${str}: ${printType(type.type)}` : `${str}: any`;
-    }
+      case ts.SyntaxKind.TypePredicate:
+        //TODO: replace with boolean %checks when supported in class declarations
+        return "boolean";
 
-    case ts.SyntaxKind.UnionType: {
-      const join = type.types.length >= 5 ? "\n" : " ";
-      // debugger
-      return type.types.map(printType).join(`${join}| `);
-    }
+      case ts.SyntaxKind.IndexedAccessType: {
+        let fn = "$ElementType";
+        if (
+          type.indexType.kind === ts.SyntaxKind.LiteralType &&
+          type.indexType.literal.kind === ts.SyntaxKind.StringLiteral
+        ) {
+          fn = "$PropertyType";
+        }
+        return `${fn}<${printType(type.objectType)}, ${printType(
+          type.indexType,
+        )}>`;
+      }
 
-    case ts.SyntaxKind.ArrayType:
-      return printType(type.elementType) + "[]";
+      case ts.SyntaxKind.TypeOperator:
+        switch (type.operator) {
+          case ts.SyntaxKind.KeyOfKeyword:
+            return `$Keys<${printType(type.type)}>`;
+          case ts.SyntaxKind.UniqueKeyword:
+            logger.error(type, "Flow doesn't support `unique symbol`");
+            return printType(type.type);
+          default:
+            console.log(
+              `"NO PRINT IMPLEMENTED: TypeOperator ${
+                ts.SyntaxKind[type.operator]
+              }"`,
+            );
+            return `"NO PRINT IMPLEMENTED: TypeOperator ${
+              ts.SyntaxKind[type.operator]
+            }"`;
+        }
 
-    case ts.SyntaxKind.ThisType:
-      return "this";
+      case ts.SyntaxKind.MappedType: {
+        const constraint = type.typeParameter.constraint;
+        const typeName = printType(type.typeParameter.name);
+        const value = printType(type.type);
+        let source = `{[k: ${printType(constraint)}]: any}`;
+        if (constraint.operator === ts.SyntaxKind.KeyOfKeyword) {
+          source = printType(constraint.type);
+        }
+        return `$ObjMapi<${source}, <${typeName}>(${typeName}) => ${value}>`;
+      }
 
-    case ts.SyntaxKind.IndexSignature:
-      if (type.type) {
-        return `[${type.parameters
+      case ts.SyntaxKind.FirstLiteralToken:
+        return type.text;
+
+      case ts.SyntaxKind.ImportType:
+        return `$Exports<${printType(type.argument)}>`;
+
+      case ts.SyntaxKind.FirstTypeNode:
+        return printers.common.literalType(type);
+      case ts.SyntaxKind.LastTypeNode:
+        return printers.common.literalType(type);
+      case ts.SyntaxKind.LiteralType:
+        return printers.common.literalType(type);
+
+      case ts.SyntaxKind.QualifiedName: {
+        let symbol;
+        if (checker.current) {
+          //$todo
+          symbol = checker.current.getSymbolAtLocation(type);
+        }
+        return getFullyQualifiedName(symbol, type);
+      }
+
+      case ts.SyntaxKind.StringLiteral:
+        return JSON.stringify(type.text);
+
+      case ts.SyntaxKind.TypeReference: {
+        let symbol;
+        if (checker.current) {
+          //$todo
+          symbol = checker.current.getSymbolAtLocation(type.typeName);
+          fixDefaultTypeArguments(symbol, type);
+          const isRenamed = renames(symbol, type);
+          if (
+            symbol &&
+            symbol.declarations &&
+            symbol.declarations[0].kind === ts.SyntaxKind.EnumMember
+          ) {
+            return `typeof ${getTypeofFullyQualifiedName(
+              symbol,
+              type.typeName,
+            )}`;
+          } else if (
+            symbol &&
+            symbol.declarations &&
+            symbol.declarations[0].kind === ts.SyntaxKind.EnumDeclaration
+          ) {
+            return `$Values<typeof ${getTypeofFullyQualifiedName(
+              symbol,
+              type.typeName,
+            )}>`;
+          }
+          if (!isRenamed)
+            type.typeName.escapedText = getFullyQualifiedName(
+              symbol,
+              type.typeName,
+            );
+        }
+        return printers.declarations.typeReference(type, !symbol);
+      }
+
+      case ts.SyntaxKind.VariableDeclaration:
+        return printers.declarations.propertyDeclaration(
+          type,
+          keywordPrefix,
+          true,
+        );
+      case ts.SyntaxKind.PropertyDeclaration:
+        return printers.declarations.propertyDeclaration(type, keywordPrefix);
+
+      case ts.SyntaxKind.OptionalType:
+        return `${printType(type.type)} | void`;
+      case ts.SyntaxKind.TupleType: {
+        const lastElement = type.elementTypes[type.elementTypes.length - 1];
+        if (lastElement && lastElement.kind === ts.SyntaxKind.RestType)
+          type.elementTypes.pop();
+        let tuple = `[${type.elementTypes.map(printType).join(", ")}]`;
+        if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) {
+          tuple += ` & ${printType(lastElement.type)}`;
+        }
+        return tuple;
+      }
+
+      case ts.SyntaxKind.MethodSignature:
+        return printers.common.methodSignature(type);
+
+      case ts.SyntaxKind.ExpressionWithTypeArguments:
+        return (
+          printType(type.expression) +
+          printers.common.generics(type.typeArguments)
+        );
+
+      case ts.SyntaxKind.PropertyAccessExpression:
+        return getFullyQualifiedPropertyAccessExpression(
+          checker.current.getSymbolAtLocation(type),
+          type,
+        );
+
+      // case SyntaxKind.NodeObject:
+      //   return (
+      //     printers.relationships.namespace(type.expression.text) +
+      //     printType(type.name)
+      //   );
+
+      case ts.SyntaxKind.PropertySignature:
+        return printers.common.parameter(type);
+
+      case ts.SyntaxKind.CallSignature: {
+        // TODO: rewrite to printers.functions.functionType
+        const generics = printers.common.generics(type.typeParameters, node => {
+          node.withoutDefault = true;
+          return node;
+        });
+        const str = `${generics}(${type.parameters
+          .filter(param => param.name.text !== "this")
           .map(printers.common.parameter)
-          .join(", ")}]: ${printType(type.type)}`;
+          .join(", ")})`;
+        // TODO: I can't understand this
+        return type.type ? `${str}: ${printType(type.type)}` : `${str}: any`;
       }
-      return "";
 
-    case ts.SyntaxKind.IntersectionType:
-      return type.types.map(printType).join(" & ");
+      case ts.SyntaxKind.UnionType: {
+        const join = type.types.length >= 5 ? "\n" : " ";
+        // debugger
+        return type.types.map(printType).join(`${join}| `);
+      }
 
-    case ts.SyntaxKind.MethodDeclaration:
-      // Skip methods marked as private
-      if (
-        type.modifiers &&
-        type.modifiers.some(
-          modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword,
-        )
-      ) {
+      case ts.SyntaxKind.ArrayType:
+        return printType(type.elementType) + "[]";
+
+      case ts.SyntaxKind.ThisType:
+        return "this";
+
+      case ts.SyntaxKind.IndexSignature:
+        if (type.type) {
+          return `[${type.parameters
+            .map(printers.common.parameter)
+            .join(", ")}]: ${printType(type.type)}`;
+        }
         return "";
+
+      case ts.SyntaxKind.IntersectionType:
+        return type.types.map(printType).join(" & ");
+
+      case ts.SyntaxKind.MethodDeclaration:
+        // Skip methods marked as private
+        if (
+          type.modifiers &&
+          type.modifiers.some(
+            modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword,
+          )
+        ) {
+          return "";
+        }
+
+        return keywordPrefix + printers.common.methodSignature(type);
+
+      case ts.SyntaxKind.ConstructorType:
+        // Not implemented. The return is just a guess.
+        return (
+          "(" +
+          type.parameters.map(printers.common.parameter).join(", ") +
+          ") => " +
+          printType(type.type)
+        );
+
+      case ts.SyntaxKind.ConstructSignature:
+        return "new " + printers.functions.functionType(type, true);
+
+      case ts.SyntaxKind.TypeQuery: {
+        const symbol = checker.current.getSymbolAtLocation(type.exprName);
+        return "typeof " + getTypeofFullyQualifiedName(symbol, type.exprName);
       }
 
-      return (
-        keywordPrefix +
-        printers.common.methodSignature(type)
-      );
+      case ts.SyntaxKind.Constructor:
+        return (
+          "constructor(" +
+          type.parameters.map(printers.common.parameter).join(", ") +
+          "): this"
+        );
 
-    case ts.SyntaxKind.ConstructorType:
-      // Not implemented. The return is just a guess.
-      return (
-        "(" +
-        type.parameters.map(printers.common.parameter).join(", ") +
-        ") => " +
-        printType(type.type)
-      );
+      case ts.SyntaxKind.ParenthesizedType:
+        return `(${printType(type.type)})`;
 
-    case ts.SyntaxKind.ConstructSignature:
-      return "new " + printers.functions.functionType(type, true);
+      case ts.SyntaxKind.ImportSpecifier:
+        if (checker.current) {
+          const symbol = checker.current.getSymbolAtLocation(type.name);
+          renames(symbol, type);
+        }
+        return printers.relationships.importExportSpecifier(type);
 
-    case ts.SyntaxKind.TypeQuery: {
-      const symbol = checker.current.getSymbolAtLocation(type.exprName);
-      return "typeof " + getTypeofFullyQualifiedName(symbol, type.exprName);
+      case ts.SyntaxKind.ExportSpecifier:
+        return printers.relationships.importExportSpecifier(type);
     }
 
-    case ts.SyntaxKind.Constructor:
-      return (
-        "constructor(" +
-        type.parameters.map(printers.common.parameter).join(", ") +
-        "): this"
-      );
-
-    case ts.SyntaxKind.ParenthesizedType:
-      return `(${printType(type.type)})`;
-
-    case ts.SyntaxKind.ImportSpecifier:
-      if (checker.current) {
-        const symbol = checker.current.getSymbolAtLocation(type.name);
-        renames(symbol, type);
-      }
-      return printers.relationships.importExportSpecifier(type);
-
-    case ts.SyntaxKind.ExportSpecifier:
-      return printers.relationships.importExportSpecifier(type);
-  }
-
-  const output = `/* NO PRINT IMPLEMENTED: ${ts.SyntaxKind[type.kind]} */ any`;
-  console.log(output);
-  return output;
-});
+    const output = `/* NO PRINT IMPLEMENTED: ${
+      ts.SyntaxKind[type.kind]
+    } */ any`;
+    console.log(output);
+    return output;
+  },
+);
 
 export default printType;

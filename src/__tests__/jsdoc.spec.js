@@ -88,7 +88,7 @@ function init(
  */
 declare function test(): Promise<void>
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
 
@@ -100,6 +100,9 @@ it("should remove jsdoc", () => {
  */
 declare function authorize(userToken: string): Promise<void>
 `;
-  const result = compiler.compileDefinitionString(ts, { quiet: true, jsdoc: false });
+  const result = compiler.compileDefinitionString(ts, {
+    quiet: true,
+    jsdoc: false,
+  });
   expect(beautify(result)).toMatchSnapshot();
 });

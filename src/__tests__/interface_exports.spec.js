@@ -7,5 +7,7 @@ it("should handle exported interfaces", () => {
     (source: T): R;
   }
 `;
-  expect(beautify(compiler.compileDefinitionString(ts, {quiet: true}))).toMatchSnapshot();
+  expect(
+    beautify(compiler.compileDefinitionString(ts, { quiet: true })),
+  ).toMatchSnapshot();
 });

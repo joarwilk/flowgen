@@ -18,6 +18,6 @@ type MappedObj = {
 }
 type ConstantKey = MappedObj["a"]
 `;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });

@@ -25,6 +25,6 @@ it("should handle basic keywords", () => {
     t: symbol,
     u: unique symbol,
   }`;
-  const result = compiler.compileDefinitionString(ts, {quiet: true});
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
