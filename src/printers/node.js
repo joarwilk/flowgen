@@ -305,7 +305,7 @@ export function getTypeofFullyQualifiedName(
   }
 }
 
-export function fixDefaultTypeArguments(symbol: ts.Symbol | void, type: *) {
+export function fixDefaultTypeArguments(symbol: ts.Symbol | void, type: *): void {
   if (!symbol) return;
   if (!symbol.declarations) return;
   const decl = symbol.declarations[0];

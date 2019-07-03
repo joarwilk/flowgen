@@ -59,7 +59,7 @@ export function importEqualsTransformer(/*opts?: Opts*/) {
     };
     return visitor;
   }
-  return (ctx: ts.TransformationContext): ts.Transformer => {
+  return (ctx: ts.TransformationContext): ts.Transformer<any> => {
     return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx, sf));
   };
 }
@@ -82,7 +82,7 @@ export function legacyModules() {
     };
     return visitor;
   }
-  return (ctx: ts.TransformationContext): ts.Transformer => {
+  return (ctx: ts.TransformationContext): ts.Transformer<any> => {
     return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx, sf));
   };
 }

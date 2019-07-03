@@ -42,7 +42,7 @@ export const exporter = (node: RawNode): string => {
 
 export const importExportSpecifier = (
   node: ts.ImportSpecifier | ts.ExportSpecifier,
-) => {
+): string => {
   if (node.propertyName) {
     return `${printers.node.printType(
       node.propertyName,

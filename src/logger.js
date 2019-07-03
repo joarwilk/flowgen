@@ -10,11 +10,11 @@ import { type ErrorMessage, printErrorMessage } from "./errors/error-message";
 
 const sourceFile: { current: SourceFile | null } = { current: null };
 
-export function setSourceFile(file: SourceFile) {
+export function setSourceFile(file: SourceFile): void {
   sourceFile.current = file;
 }
 
-export function error(node: any, message: ErrorMessage) {
+export function error(node: any, message: ErrorMessage): void {
   if (opts().quiet) return;
   const options = {
     highlightCode: true,

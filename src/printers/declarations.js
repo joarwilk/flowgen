@@ -10,7 +10,7 @@ export const propertyDeclaration = (
   node: RawNode,
   keywordPrefix: string,
   isVar: boolean = false,
-) => {
+): string => {
   let left = keywordPrefix;
   const symbol = checker.current.getSymbolAtLocation(node.name);
   const name = isVar

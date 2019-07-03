@@ -7,7 +7,7 @@ import type { RawNode } from "../nodes/node";
 import printers from "./index";
 import { withEnv } from "../env";
 
-export const literalType = (node: RawNode) => {
+export const literalType = (node: RawNode): string => {
   if (node.literal) {
     if (node.literal.kind === ts.SyntaxKind.StringLiteral) {
       return printers.node.printType(node.literal);
@@ -26,7 +26,7 @@ export const literalType = (node: RawNode) => {
 
 export const typeParameter = (
   node: ts.TypeParameterDeclaration & { withoutDefault: boolean },
-) => {
+): string => {
   let defaultType = "";
   let constraint = "";
   if (node.constraint) {
@@ -93,7 +93,7 @@ export const parameter = (param: RawNode): string => {
   return `${left}: ${right}`;
 };
 
-export const methodSignature = (param: RawNode) => {
+export const methodSignature = (param: RawNode): string => {
   let left = "";
   let isMethod = true;
   if (param.modifiers) {
@@ -191,7 +191,7 @@ const jsDocPrintTag = (tag): string => {
   return `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
 };
 
-export const comment = withEnv(
+export const comment = withEnv<any, any[], string>(
   (env: any, jsdoc: Array<any>): string => {
     if (!opts().jsdoc) return "";
     const blocks = jsdoc

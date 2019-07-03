@@ -17,7 +17,7 @@ export type ErrorMessage =
       +type: "MissingFunctionName",
     |};
 
-export function printErrorMessage(error: ErrorMessage) {
+export function printErrorMessage(error: ErrorMessage): string {
   switch (error.type) {
     case "UnsupportedComputedProperty":
       return "Flow doesn't support computed property names";

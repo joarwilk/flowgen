@@ -30,7 +30,7 @@ export default class Module extends Node {
     }
   }
 
-  print = () => {
+  print = (): string => {
     return `declare module '${this.name}' {
         ${this.getChildren()
           .map(child => {

@@ -3,7 +3,12 @@
 import * as ts from "typescript";
 import { checker } from "../checker";
 
-const setImportedName = (name: string, type, symbol, decl) => {
+const setImportedName = (
+  name: string,
+  type: *,
+  symbol: ts.Symbol,
+  decl: ts.Declaration,
+): boolean => {
   const specifiers = ["react"];
   const namespaces = ["React"];
   const paths = (name: string) => {
@@ -26,7 +31,8 @@ const setImportedName = (name: string, type, symbol, decl) => {
   }
   return false;
 };
-const setGlobalName = (type, symbol) => {
+
+const setGlobalName = (type: *, _symbol): boolean => {
   const globals = [
     {
       from: ts.createQualifiedName(ts.createIdentifier("JSX"), "Element"),
@@ -43,11 +49,12 @@ const setGlobalName = (type, symbol) => {
     }
     return bools.length > 0;
   }
+  return false;
 };
 
-export function renames(symbol: ts.Symbol | void, type) {
-  if (!symbol) return;
-  if (!symbol.declarations) return;
+export function renames(symbol: ts.Symbol | void, type: *): boolean {
+  if (!symbol) return false;
+  if (!symbol.declarations) return false;
   let decl = symbol.declarations[0];
   if (type.parent.kind === ts.SyntaxKind.NamedImports) {
     setImportedName(decl.name.escapedText, decl.name, symbol, decl);
@@ -71,6 +78,7 @@ export function renames(symbol: ts.Symbol | void, type) {
       return setImportedName(symbol.escapedName, type.typeName, symbol, decl);
     }
   }
+  return false;
 }
 
 export function getLeftMostEntityName(type: ts.EntityName) {
@@ -83,13 +91,13 @@ export function getLeftMostEntityName(type: ts.EntityName) {
   }
 }
 
-function compareIdentifier(a: ts.Identifier, b: ts.Identifier) {
+function compareIdentifier(a: ts.Identifier, b: ts.Identifier): boolean {
   if (a.kind !== b.kind) return false;
   if (a.escapedText === b.escapedText && a.text === b.text) return true;
   return false;
 }
 
-function compareEntityName(a: ts.EntityName, b: ts.EntityName) {
+function compareEntityName(a: ts.EntityName, b: ts.EntityName): boolean {
   if (
     a.kind === ts.SyntaxKind.Identifier &&
     b.kind === ts.SyntaxKind.Identifier
@@ -105,7 +113,10 @@ function compareEntityName(a: ts.EntityName, b: ts.EntityName) {
   return false;
 }
 
-function compareQualifiedName(a: ts.QualifiedName, b: ts.QualifiedName) {
+function compareQualifiedName(
+  a: ts.QualifiedName,
+  b: ts.QualifiedName,
+): boolean {
   if (a.kind !== b.kind) return false;
   return (
     compareEntityName(a.left, b.left) && compareIdentifier(a.right, b.right)

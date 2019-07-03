@@ -32,7 +32,7 @@ const compile = withEnv<any, [SourceFile], string>(
   },
 );
 
-const reset = (options?: Options) => {
+const reset = (options?: Options): void => {
   resetOptions();
   if (options) {
     assignOptions(options);
