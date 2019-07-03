@@ -13,7 +13,7 @@ import * as ts from "typescript";
 import Node from "./node";
 
 import printers from "../printers";
-import namespaceManager from "../namespaceManager";
+import namespaceManager from "../namespace-manager";
 import { parseNameFromNode } from "../parse/ast";
 
 type PropertyNode =

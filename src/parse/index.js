@@ -6,7 +6,7 @@ import * as ts from "typescript";
 import Node from "../nodes/node";
 import type ModuleNode from "../nodes/module";
 import NodeFactory, { type Factory } from "../nodes/factory";
-import namespaceManager from "../namespaceManager";
+import namespaceManager from "../namespace-manager";
 import { parseNameFromNode, stripDetailsFromTree } from "./ast";
 
 const collectNode = (
