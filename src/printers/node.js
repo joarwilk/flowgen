@@ -7,6 +7,7 @@ import { checker } from "../checker";
 import * as logger from "../logger";
 import { withEnv } from "../env";
 import { renames, getLeftMostEntityName } from "./smart-identifiers";
+import { printErrorMessage } from "../errors/error-message";
 
 type KeywordNode =
   | { kind: typeof ts.SyntaxKind.AnyKeyword }
@@ -115,13 +116,14 @@ export function getLeftMostPropertyAccessExpression(
 export function getFullyQualifiedPropertyAccessExpression(
   symbol: ts.Symbol | void,
   type: *,
-  delimiter = "$",
+  delimiter: string = "$",
 ): string {
   if (checker.current) {
     const typeChecker = checker.current;
     let isExternalSymbol = false;
     const leftMost = getLeftMostPropertyAccessExpression(type);
     if (leftMost) {
+      //$todo Flow has problems when switching variables instead of literals
       const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
       const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
       isExternalSymbol =
@@ -163,6 +165,7 @@ export function getFullyQualifiedPropertyAccessExpression(
           symbol,
           undefined,
           /*meaning*/ undefined,
+          //$todo Some problem about TypeScript enums conversion and bitwise operators
           ts.SymbolFormatFlags.DoNotIncludeSymbolChain |
             ts.SymbolFormatFlags.AllowAnyNodeKind,
         );
@@ -175,7 +178,7 @@ export function getFullyQualifiedName(
   symbol: ts.Symbol | void,
   type: *,
   checks: boolean = true,
-  delimiter = "$",
+  delimiter: string = "$",
 ): string {
   if (checker.current) {
     const typeChecker = checker.current;
@@ -183,6 +186,7 @@ export function getFullyQualifiedName(
       let isExternalSymbol = false;
       const leftMost = getLeftMostEntityName(type);
       if (leftMost) {
+        //$todo Flow has problems when switching variables instead of literals
         const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
         const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
         isExternalSymbol =
@@ -225,6 +229,7 @@ export function getFullyQualifiedName(
           symbol,
           undefined,
           /*meaning*/ undefined,
+          //$todo Some problem about TypeScript enums conversion and bitwise operators
           ts.SymbolFormatFlags.DoNotIncludeSymbolChain |
             ts.SymbolFormatFlags.AllowAnyNodeKind,
         );
@@ -236,13 +241,14 @@ export function getFullyQualifiedName(
 export function getTypeofFullyQualifiedName(
   symbol: ts.Symbol | void,
   type: *,
-  delimiter = ".",
+  delimiter: string = ".",
 ): string {
   if (checker.current) {
     const typeChecker = checker.current;
     let isExternalSymbol = false;
     const leftMost = getLeftMostEntityName(type);
     if (leftMost) {
+      //$todo Flow has problems when switching variables instead of literals
       const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
       const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
       isExternalSymbol =
@@ -272,6 +278,7 @@ export function getTypeofFullyQualifiedName(
             symbol,
             undefined,
             /*meaning*/ undefined,
+            //$todo Some problem about TypeScript enums conversion and bitwise operators
             ts.SymbolFormatFlags.DoNotIncludeSymbolChain |
               ts.SymbolFormatFlags.AllowAnyNodeKind,
           );
@@ -288,6 +295,7 @@ export function getTypeofFullyQualifiedName(
             symbol,
             undefined,
             /*meaning*/ undefined,
+            //$todo Some problem about TypeScript enums conversion and bitwise operators
             ts.SymbolFormatFlags.DoNotIncludeSymbolChain |
               ts.SymbolFormatFlags.AllowAnyNodeKind,
           );
@@ -297,7 +305,7 @@ export function getTypeofFullyQualifiedName(
   }
 }
 
-export function fixDefaultTypeArguments(symbol, type) {
+export function fixDefaultTypeArguments(symbol: ts.Symbol | void, type: *) {
   if (!symbol) return;
   if (!symbol.declarations) return;
   const decl = symbol.declarations[0];
@@ -308,7 +316,7 @@ export function fixDefaultTypeArguments(symbol, type) {
     type.typeArguments = [];
   }
 }
-export const printType = withEnv(
+export const printType = withEnv<any, [any], string>(
   (env: any, rawType: any): string => {
     // debuggerif()
     //TODO: #6 No match found in SyntaxKind enum
@@ -353,20 +361,21 @@ export const printType = withEnv(
         // TODO: What to print here?
         return "Symbol";
       case ts.SyntaxKind.BigIntKeyword:
-        logger.error(
-          type,
-          "Flow doesn't support BigInt proposal: https://github.com/facebook/flow/issues/6639",
-        );
+        logger.error(type, { type: "UnsupportedBigInt" });
         // TODO: What to print here?
         return "number";
 
       // JSDoc types
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocAllType:
         return "*";
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocUnknownType:
         return "?";
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocOptionalType:
         return printType(type.type) + "=";
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocFunctionType: {
         const params = type.parameters
           .map(param => printType(param.type))
@@ -374,25 +383,29 @@ export const printType = withEnv(
         const ret = type.type ? `: ${printType(type.type)}` : "";
         return `function(${params})${ret}`;
       }
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocTypeLiteral:
         return "object";
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocVariadicType:
         return "..." + printType(type.type);
+      //$todo some weird union error
       case ts.SyntaxKind.JSDocNonNullableType:
         return "!" + printType(type.type);
+      //$todo some weird union errors
       case ts.SyntaxKind.JSDocNullableType:
         return "?" + printType(type.type);
 
       case ts.SyntaxKind.ConditionalType: {
-        const line =
-          "Flow doesn't support conditional types, use $Call utility type";
-        logger.error(type, line);
+        const error = { type: "UnsupportedConditionalType" };
+        logger.error(type, error);
         if (env && env.tsdoc) {
           return `any`;
         }
-        return `/* ${line} */ any`;
+        return `/* ${printErrorMessage(error)} */ any`;
       }
 
+      //$todo some weird union errors
       case ts.SyntaxKind.ComputedPropertyName: {
         if (
           type.expression?.expression?.text === "Symbol" &&
@@ -409,8 +422,7 @@ export const printType = withEnv(
         if (type.expression.kind === ts.SyntaxKind.StringLiteral) {
           return printType(type.expression);
         }
-        const line = "Flow doesn't support computed property names";
-        logger.error(type.expression, line);
+        logger.error(type.expression, { type: "UnsupportedComputedProperty" });
         return `[typeof ${printType(type.expression)}]`;
       }
 
@@ -466,7 +478,7 @@ export const printType = withEnv(
           case ts.SyntaxKind.KeyOfKeyword:
             return `$Keys<${printType(type.type)}>`;
           case ts.SyntaxKind.UniqueKeyword:
-            logger.error(type, "Flow doesn't support `unique symbol`");
+            logger.error(type, { type: "UnsupportedUniqueSymbol" });
             return printType(type.type);
           default:
             console.log(
@@ -541,11 +553,13 @@ export const printType = withEnv(
               type.typeName,
             )}>`;
           }
-          if (!isRenamed)
+          if (!isRenamed) {
+            //$todo weird union errors
             type.typeName.escapedText = getFullyQualifiedName(
               symbol,
               type.typeName,
             );
+          }
         }
         return printers.declarations.typeReference(type, !symbol);
       }
@@ -559,6 +573,7 @@ export const printType = withEnv(
       case ts.SyntaxKind.PropertyDeclaration:
         return printers.declarations.propertyDeclaration(type, keywordPrefix);
 
+      //$todo some weird union errors
       case ts.SyntaxKind.OptionalType:
         return `${printType(type.type)} | void`;
       case ts.SyntaxKind.TupleType: {
@@ -583,6 +598,7 @@ export const printType = withEnv(
 
       case ts.SyntaxKind.PropertyAccessExpression:
         return getFullyQualifiedPropertyAccessExpression(
+          //$todo some weird union errors
           checker.current.getSymbolAtLocation(type),
           type,
         );
@@ -659,6 +675,7 @@ export const printType = withEnv(
         return "new " + printers.functions.functionType(type, true);
 
       case ts.SyntaxKind.TypeQuery: {
+        //$todo some weird union errors
         const symbol = checker.current.getSymbolAtLocation(type.exprName);
         return "typeof " + getTypeofFullyQualifiedName(symbol, type.exprName);
       }
@@ -675,6 +692,7 @@ export const printType = withEnv(
 
       case ts.SyntaxKind.ImportSpecifier:
         if (checker.current) {
+          //$todo some weird union errors
           const symbol = checker.current.getSymbolAtLocation(type.name);
           renames(symbol, type);
         }
@@ -682,6 +700,9 @@ export const printType = withEnv(
 
       case ts.SyntaxKind.ExportSpecifier:
         return printers.relationships.importExportSpecifier(type);
+
+      default:
+        (type.kind: empty);
     }
 
     const output = `/* NO PRINT IMPLEMENTED: ${

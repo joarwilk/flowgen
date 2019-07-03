@@ -6,25 +6,28 @@ import path from "path";
 import { codeFrameColumns } from "@babel/code-frame";
 import { getChalk } from "@babel/highlight";
 
+import { type ErrorMessage, printErrorMessage } from "./errors/error-message";
+
 const sourceFile: { current: SourceFile | null } = { current: null };
 
 export function setSourceFile(file: SourceFile) {
   sourceFile.current = file;
 }
 
-export function error(node: any, message: string) {
+export function error(node: any, message: ErrorMessage) {
   if (opts().quiet) return;
-  if (sourceFile.current) {
-    const options = {
-      highlightCode: true,
-      message,
-    };
-    const chalk = getChalk(options);
-    const code = sourceFile.current.text;
-    const tsStartLocation = sourceFile.current.getLineAndCharacterOfPosition(
+  const options = {
+    highlightCode: true,
+    message: printErrorMessage(message),
+  };
+  const chalk = getChalk(options);
+  if (sourceFile.current !== null) {
+    const currentSourceFile = sourceFile.current;
+    const code = currentSourceFile.text;
+    const tsStartLocation = currentSourceFile.getLineAndCharacterOfPosition(
       node.getStart(sourceFile.current),
     );
-    const tsEndLocation = sourceFile.current.getLineAndCharacterOfPosition(
+    const tsEndLocation = currentSourceFile.getLineAndCharacterOfPosition(
       node.getEnd(),
     );
     const babelLocation = {
@@ -41,7 +44,7 @@ export function error(node: any, message: string) {
     const position = `:${babelLocation.start.line}:${
       babelLocation.start.column
     }`;
-    const fileName = path.relative(process.cwd(), sourceFile.current.fileName);
+    const fileName = path.relative(process.cwd(), currentSourceFile.fileName);
     console.log(
       chalk.red.bold(
         `Error ${"-".repeat(
@@ -53,6 +56,6 @@ export function error(node: any, message: string) {
     console.log(result);
     console.log("\n");
   } else {
-    console.log(message);
+    console.log(printErrorMessage(message));
   }
 }

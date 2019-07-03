@@ -44,10 +44,7 @@ export const parseNameFromNode = (node: RawNode): string => {
   }
   switch (node.kind) {
     case ts.SyntaxKind.FunctionDeclaration:
-      logger.error(
-        node.modifiers || node,
-        "Flow doesn't support unnamed functions",
-      );
+      logger.error(node.modifiers || node, { type: "MissingFunctionName" });
       break;
     default:
       console.log("INVALID NAME", ts.SyntaxKind[node.kind]);
