@@ -45,7 +45,7 @@ declare export function Color$mixColor(colorName: string): number;
 "
 `;
 
-exports[`should handle merging with other types function 1`] = `
+exports[`should handle merging with other types function const 1`] = `
 "declare var test: typeof npm$namespace$test;
 
 declare var npm$namespace$test: {
@@ -54,6 +54,30 @@ declare var npm$namespace$test: {
   ok: typeof test$ok
 };
 declare export var test$ok: number;
+"
+`;
+
+exports[`should handle merging with other types function interface 1`] = `
+"declare var test: typeof npm$namespace$test;
+
+declare var npm$namespace$test: {
+  (foo: number): string
+};
+export interface test$Foo {
+  bar: number;
+}
+"
+`;
+
+exports[`should handle merging with other types function type 1`] = `
+"declare var test: typeof npm$namespace$test;
+
+declare var npm$namespace$test: {
+  (foo: number): string
+};
+export type test$Foo = {
+  bar: number
+};
 "
 `;
 

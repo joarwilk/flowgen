@@ -3,15 +3,43 @@
 import { compiler, beautify } from "..";
 
 describe("should handle merging with other types", () => {
-  test("function", () => {
-    const ts = `
+  describe("function", () => {
+    test("interface", () => {
+      const ts = `
+declare function test(foo: number): string;
+namespace test {
+  export interface Foo {
+    bar: number
+  }
+}
+`;
+      const result = compiler.compileDefinitionString(ts);
+      expect(beautify(result)).toMatchSnapshot();
+    })
+
+    test("type", () => {
+      const ts = `
+declare function test(foo: number): string;
+namespace test {
+  export type Foo = {
+    bar: number
+  }
+}
+`;
+      const result = compiler.compileDefinitionString(ts);
+      expect(beautify(result)).toMatchSnapshot();
+    })
+
+    test("const", () => {
+      const ts = `
 declare function test(foo: number): string;
 namespace test {
   export const ok: number
 }
 `;
-    const result = compiler.compileDefinitionString(ts);
-    expect(beautify(result)).toMatchSnapshot();
+      const result = compiler.compileDefinitionString(ts);
+      expect(beautify(result)).toMatchSnapshot();
+    })
   });
 
   test("class", () => {

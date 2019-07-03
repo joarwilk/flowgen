@@ -106,9 +106,8 @@ export default class Namespace extends Node {
       })
       .join("\n\n")}`;
 
-    //console.error(childrenNode);
-
     if (
+      this.functions.length ||
       functions.length ||
       variables.length ||
       namespaces.length ||
