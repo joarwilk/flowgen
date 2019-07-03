@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle exported constant string literals 1`] = `
+"declare export var SET_NAME: any; // \\"my/lib/SET_NAME\\"
+declare export var SET_STAGE: any; // \\"my/lib/SET_STAGE\\"
+"
+`;
+
 exports[`should handle string literals in function argument "overloading" 1`] = `
 "declare interface MyObj {
   on(event: \\"error\\", cb: (err: Error) => void): this;
