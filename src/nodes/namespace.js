@@ -5,7 +5,7 @@ import { orderBy, uniqBy, flatten } from "lodash";
 import PropertyNode from "./property";
 import Node from "./node";
 
-import namespaceManager from "../namespaceManager";
+import namespaceManager from "../namespace-manager";
 import printers from "../printers";
 
 export default class Namespace extends Node {

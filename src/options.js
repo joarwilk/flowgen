@@ -16,11 +16,11 @@ const defaultOptions: Options = Object.freeze({
 
 let options: Options = { ...defaultOptions };
 
-export function assignOptions(newOptions: $Shape<Options>) {
+export function assignOptions(newOptions: $Shape<Options>): void {
   Object.assign(options, newOptions);
 }
 
-export function resetOptions() {
+export function resetOptions(): void {
   Object.assign(options, defaultOptions);
 }
 

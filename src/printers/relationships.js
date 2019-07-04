@@ -4,7 +4,7 @@ import * as ts from "typescript";
 import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 
-import namespaceManager from "../namespaceManager";
+import namespaceManager from "../namespace-manager";
 import printers from "./index";
 
 export const moduleExports = (node: RawNode): string => {
@@ -42,7 +42,7 @@ export const exporter = (node: RawNode): string => {
 
 export const importExportSpecifier = (
   node: ts.ImportSpecifier | ts.ExportSpecifier,
-) => {
+): string => {
   if (node.propertyName) {
     return `${printers.node.printType(
       node.propertyName,

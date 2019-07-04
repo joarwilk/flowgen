@@ -44,10 +44,7 @@ export const parseNameFromNode = (node: RawNode): string => {
   }
   switch (node.kind) {
     case ts.SyntaxKind.FunctionDeclaration:
-      logger.error(
-        node.modifiers || node,
-        "Flow doesn't support unnamed functions",
-      );
+      logger.error(node.modifiers || node, { type: "MissingFunctionName" });
       break;
     default:
       console.log("INVALID NAME", ts.SyntaxKind[node.kind]);
@@ -56,9 +53,9 @@ export const parseNameFromNode = (node: RawNode): string => {
   return "INVALID NAME REF";
 };
 
-function inspectFn(depth, options) {
+function inspectFn(depth: number, options: util$InspectOptions): string {
   const newOptions = Object.assign({}, options, {
-    depth: options.depth === null ? null : options.depth - 1,
+    depth: options.depth == null ? null : options.depth - 1,
   });
   if (depth < 0) {
     const { parent, symbol, localSymbol, ...rest } = this;

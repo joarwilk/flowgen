@@ -15,7 +15,7 @@ namespace test {
 `;
       const result = compiler.compileDefinitionString(ts);
       expect(beautify(result)).toMatchSnapshot();
-    })
+    });
 
     test("type", () => {
       const ts = `
@@ -28,7 +28,7 @@ namespace test {
 `;
       const result = compiler.compileDefinitionString(ts);
       expect(beautify(result)).toMatchSnapshot();
-    })
+    });
 
     test("const", () => {
       const ts = `
@@ -39,7 +39,7 @@ namespace test {
 `;
       const result = compiler.compileDefinitionString(ts);
       expect(beautify(result)).toMatchSnapshot();
-    })
+    });
   });
 
   test("class", () => {

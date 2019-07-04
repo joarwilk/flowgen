@@ -6,8 +6,9 @@ import * as ts from "typescript";
 import Node from "../nodes/node";
 import type ModuleNode from "../nodes/module";
 import NodeFactory, { type Factory } from "../nodes/factory";
-import namespaceManager from "../namespaceManager";
+import namespaceManager from "../namespace-manager";
 import { parseNameFromNode, stripDetailsFromTree } from "./ast";
+import * as logger from "../logger";
 
 const collectNode = (
   node: RawNode,
@@ -25,7 +26,7 @@ const collectNode = (
           (node.flags & ts.NodeFlags.GlobalAugmentation) ===
           ts.NodeFlags.GlobalAugmentation
         ) {
-          console.log("Flow doesn't support global augmentation");
+          logger.error(node, { type: "UnsupportedGlobalAugmentation" });
           const globalAugmentation = factory.createModuleNode(node.name.text);
           context.addChild("module" + node.name.text, globalAugmentation);
           traverseNode(node.body, globalAugmentation, factory);

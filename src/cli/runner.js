@@ -38,7 +38,7 @@ async function outputFile(
   { intro, file, moduleName, outputFile }: File,
   options: RunnerOptions,
   writeFile,
-) {
+): Promise<void> {
   // Produce the flow library content
   try {
     // Write the output to disk
@@ -89,7 +89,10 @@ function getFile(
   return { file, outputFile, moduleName, intro, mode };
 }
 
-async function bfs(rootDir: string, options: RunnerOptions) {
+async function bfs(
+  rootDir: string,
+  options: RunnerOptions,
+): Promise<Array<File>> {
   const queue: Array<string> = [];
   const files: Array<File> = [];
   queue.push(rootDir);
@@ -174,7 +177,11 @@ function getModuleNameFromFile(fileName: string): string {
   return path.basename(fileName).replace(".d.ts", "");
 }
 
-function getMode(options: RunnerOptions, file: string, isDir: boolean) {
+function getMode(
+  options: RunnerOptions,
+  file: string,
+  isDir: boolean,
+): "directory" | "flow-typed" | "file" {
   if (isDir) return "directory";
   if (options.flowTypedFormat) return "flow-typed";
   return "file";
@@ -185,7 +192,7 @@ function getOutputFile(
   file: string,
   prefix: string,
   isDir: boolean,
-) {
+): string {
   if (isDir) {
     return path.normalize(
       file.replace(prefix, `exports${path.sep}`).replace(".d.ts", ".js.flow"),
