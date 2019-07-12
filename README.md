@@ -72,7 +72,7 @@ const readableDef = beautify(generatedFlowdef);
 
 ### CLI
 
-Standard usage (will produce `export.flow.js`):
+Standard usage (will produce `export.js.flow`):
 ```
 npm i -g flowgen
 flowgen lodash.d.ts
@@ -80,7 +80,7 @@ flowgen lodash.d.ts
 
 ### Options
 ```
--o / --output-file [outputFile]: Specifies the filename of the exported file, defaults to export.flow.js
+-o / --output-file [outputFile]: Specifies the filename of the exported file, defaults to export.js.flow
 ```
 
 ### Flags for specific cases

@@ -9,8 +9,8 @@ program
   .version(pkg.version)
   .option(
     "-o --output-file [outputFile]",
-    "name for output file, defaults to export.flow.js",
-    "export.flow.js",
+    "name for output file, defaults to export.js.flow",
+    "export.js.flow",
   )
   .option("--no-module-exports", "use only default exports")
   .option(
