@@ -521,6 +521,9 @@ export const printType = withEnv<any, [any], string>(
         return type.text;
 
       case ts.SyntaxKind.ImportType:
+        if (type.qualifier?.escapedText) {
+          return `$PropertyType<$Exports<${printType(type.argument)}>, ${JSON.stringify(type.qualifier.escapedText)}>`;
+        }
         return `$Exports<${printType(type.argument)}>`;
 
       case ts.SyntaxKind.FirstTypeNode:

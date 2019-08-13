@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle dynamic imports 1`] = `
+"declare type A = $Exports<\\"react\\">;
+declare type B = $PropertyType<$Exports<\\"react\\">, \\"ReactNode\\">;
+"
+`;
