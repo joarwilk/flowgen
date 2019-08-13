@@ -17,6 +17,9 @@ export type ErrorMessage =
       +type: "UnsupportedGlobalAugmentation",
     |}
   | {|
+      +type: "UnsupportedNestedModule",
+    |}
+  | {|
       +type: "MissingFunctionName",
     |};
 
@@ -39,6 +42,9 @@ export function printErrorMessage(error: ErrorMessage): string {
 
     case "UnsupportedGlobalAugmentation":
       return "Flow doesn't support global augmentation";
+
+    case "UnsupportedNestedModule":
+        return "Flow doesn't support nested modules";
 
     default:
       (error.type: empty);

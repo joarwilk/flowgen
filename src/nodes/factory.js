@@ -29,12 +29,12 @@ export class Factory {
 
   // If multiple declarations are found for the same module name
   // return the memoized instance of the module instead
-  createModuleNode(name: string): ModuleNode {
+  createModuleNode(node: RawNode, name: string): ModuleNode {
     if (Object.keys(this._modules).includes(name)) {
       return this._modules[name];
     }
 
-    const module = new ModuleNode(name);
+    const module = new ModuleNode(node, name);
 
     this._modules[name] = module;
 

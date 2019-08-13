@@ -1,12 +1,13 @@
 /* @flow */
 import type { RawNode } from "./node";
+import * as logger from "../logger";
 import Node from "./node";
 
 export default class Module extends Node {
   name: string;
 
-  constructor(name: string) {
-    super(null);
+  constructor(node: ?RawNode, name: string) {
+    super(node);
 
     this.name = name;
   }
@@ -30,13 +31,21 @@ export default class Module extends Node {
     }
   }
 
-  print = (): string => {
-    return `declare module '${this.name}' {
-        ${this.getChildren()
-          .map(child => {
-            return child.print(undefined, this.name);
-          })
-          .join("\n\t")}
-    }\n`;
-  };
+  print(namespace?: string, module?: string, depth?: number = 0): string {
+    const children = this.getChildren()
+      .map(child => {
+        return child.print(undefined, this.name, depth + 1);
+      })
+      .join("\n\t");
+    const node = `
+    declare module '${this.name}' {
+      ${children}
+    }
+    `;
+    if (module !== undefined && depth === 1) {
+      logger.error(this.raw, { type: "UnsupportedNestedModule" });
+      return `/* ${node} */\n`;
+    }
+    return `${node}\n`;
+  }
 }

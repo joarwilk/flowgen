@@ -69,7 +69,7 @@ export default class Namespace extends Node {
     }
   }
 
-  print = (namespace: string = "", mod: string = "root"): string => {
+  print = (namespace: string = "", mod: string = "root", depth?: number): string => {
     const children = uniqBy(
       orderBy(this.getChildren(), [a => a.isValue], ["desc"]),
       child => child.name.text || child.name,
@@ -102,7 +102,7 @@ export default class Namespace extends Node {
 
     const childrenNode = `${this.getChildren()
       .map(child => {
-        return child.print(name, mod);
+        return child.print(name, mod, depth);
       })
       .join("\n\n")}`;
 
