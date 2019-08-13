@@ -19,6 +19,7 @@ const writeFile: (fd: number, output: string) => Promise<void> = promisify(
 export default async function exportDefault(
   fileName: string,
   output: string,
+  _index: number,
 ): Promise<string> {
   const folderName = path.dirname(fileName);
   let handle;
