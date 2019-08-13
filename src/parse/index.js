@@ -27,7 +27,10 @@ const collectNode = (
           ts.NodeFlags.GlobalAugmentation
         ) {
           logger.error(node, { type: "UnsupportedGlobalAugmentation" });
-          const globalAugmentation = factory.createModuleNode(node.name.text);
+          const globalAugmentation = factory.createModuleNode(
+            node,
+            node.name.text,
+          );
           context.addChild("module" + node.name.text, globalAugmentation);
           traverseNode(node.body, globalAugmentation, factory);
           break;
@@ -45,7 +48,7 @@ const collectNode = (
         context.addChildren("namespace" + node.name.text, namespace);
         break;
       } else {
-        const module = factory.createModuleNode(node.name.text);
+        const module = factory.createModuleNode(node, node.name.text);
 
         context.addChild("module" + node.name.text, module);
 
@@ -140,7 +143,7 @@ const traverseNode = (node, context: Node<>, factory: Factory): void => {
 export function recursiveWalkTree(ast: any): ModuleNode {
   const factory = NodeFactory.create();
 
-  const root = factory.createModuleNode("root");
+  const root = factory.createModuleNode(null, "root");
 
   traverseNode(ast, root, factory);
 

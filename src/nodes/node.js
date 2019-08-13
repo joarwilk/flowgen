@@ -68,7 +68,7 @@ export default class Node<NodeType = RawNode> {
   }
 
   //eslint-disable-next-line
-  print(namespace?: string, module?: string): string {
+  print(namespace?: string, module?: string, depth?: number): string {
     return printers.node.printType(this.raw);
   }
 }

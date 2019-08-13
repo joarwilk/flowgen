@@ -5,10 +5,12 @@ exports[`should handle exported types 1`] = `
 export type Maybe<T> =
   | {
       type: \\"just\\",
-      value: T
+      value: T,
+      ...
     }
   | {
-      type: \\"nothing\\"
+      type: \\"nothing\\",
+      ...
     };
 "
 `;

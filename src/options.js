@@ -5,6 +5,7 @@ export type Options = {|
   interfaceRecords?: boolean,
   moduleExports?: boolean,
   quiet?: boolean,
+  inexact?: boolean,
 |};
 
 const defaultOptions: Options = Object.freeze({
@@ -12,6 +13,7 @@ const defaultOptions: Options = Object.freeze({
   interfaceRecords: false,
   moduleExports: true,
   quiet: false,
+  inexact: true,
 });
 
 let options: Options = { ...defaultOptions };

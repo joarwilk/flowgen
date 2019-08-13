@@ -8,8 +8,16 @@ export type Options = {
 
 export type Compiler = {
   compileTest(path: string, target: string): void;
-  compileDefinitionString(string: string, options?: Options): string;
-  compileDefinitionFile(path: string, options?: Options): string;
+  compileDefinitionString(
+    string: string,
+    options?: Options,
+    mapSourceCode?: (source: string | void, fileName: string) => string | void,
+  ): string;
+  compileDefinitionFile(
+    path: string,
+    options?: Options,
+    mapSourceCode?: (source: string | void, fileName: string) => string | void,
+  ): string;
 
   // Low-level exports
   reset(options?: Options): void;

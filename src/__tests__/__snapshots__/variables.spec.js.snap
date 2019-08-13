@@ -2,7 +2,8 @@
 
 exports[`should handle declares 1`] = `
 "declare var test: {
-  a: number
+  a: number,
+  ...
 };
 declare var foo: string;
 declare var bar: number;

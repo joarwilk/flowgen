@@ -95,7 +95,14 @@ export default {
     return compile.withEnv({})(sourceFile);
   },
 
-  compileDefinitionFile: (path: string, options?: Options): string => {
+  compileDefinitionFile: (
+    path: string,
+    options?: Options,
+    mapSourceCode?: (
+      source: string | void,
+      fileName: string,
+    ) => string | void = a => a,
+  ): string => {
     reset(options);
 
     const compilerOptions = {
@@ -104,6 +111,9 @@ export default {
     };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
+    const oldReadFile = compilerHost.readFile;
+    compilerHost.readFile = fileName =>
+      mapSourceCode(oldReadFile(fileName), fileName);
     compilerHost.getSourceFile = (file, languageVersion) => {
       if (file === path) {
         return transform(
@@ -136,6 +146,10 @@ export default {
   compileDefinitionFiles: (
     paths: string[],
     options?: Options,
+    mapSourceCode?: (
+      source: string | void,
+      fileName: string,
+    ) => string | void = a => a,
   ): Array<[string, string]> => {
     const compilerOptions = {
       noLib: true,
@@ -143,6 +157,9 @@ export default {
     };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
+    const oldReadFile = compilerHost.readFile;
+    compilerHost.readFile = fileName =>
+      mapSourceCode(oldReadFile(fileName), fileName);
     compilerHost.getSourceFile = (file, languageVersion) => {
       if (paths.includes(file)) {
         return transform(

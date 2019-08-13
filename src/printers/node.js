@@ -434,7 +434,7 @@ export const printType = withEnv<any, [any], string>(
         return printers.functions.functionType(type);
 
       case ts.SyntaxKind.TypeLiteral:
-        return printers.declarations.interfaceType(type);
+        return printers.declarations.interfaceType(type, false, true);
 
       //case SyntaxKind.IdentifierObject:
       //case SyntaxKind.StringLiteralType:
@@ -483,15 +483,27 @@ export const printType = withEnv<any, [any], string>(
           case ts.SyntaxKind.UniqueKeyword:
             logger.error(type, { type: "UnsupportedUniqueSymbol" });
             return printType(type.type);
-          default:
-            console.log(
-              `"NO PRINT IMPLEMENTED: TypeOperator ${
-                ts.SyntaxKind[type.operator]
-              }"`,
-            );
-            return `"NO PRINT IMPLEMENTED: TypeOperator ${
-              ts.SyntaxKind[type.operator]
-            }"`;
+          case ts.SyntaxKind.ReadonlyKeyword:
+            if (type.type.kind === ts.SyntaxKind.ArrayType) {
+              return `$ReadOnlyArray<${printType(type.type.elementType)}>`;
+            } else if (type.type.kind === ts.SyntaxKind.TupleType) {
+              return printType(type.type);
+            } else {
+              const error = {
+                type: "UnsupportedTypeOperator",
+                operator: type.operator,
+              };
+              logger.error(type, error);
+              return `/* ${printErrorMessage(error)} */ any`;
+            }
+          default: {
+            const error = {
+              type: "UnsupportedTypeOperator",
+              operator: type.operator,
+            };
+            logger.error(type, error);
+            return `/* ${printErrorMessage(error)} */ any`;
+          }
         }
 
       case ts.SyntaxKind.MappedType: {
@@ -509,6 +521,9 @@ export const printType = withEnv<any, [any], string>(
         return type.text;
 
       case ts.SyntaxKind.ImportType:
+        if (type.qualifier?.escapedText) {
+          return `$PropertyType<$Exports<${printType(type.argument)}>, ${JSON.stringify(type.qualifier.escapedText)}>`;
+        }
         return `$Exports<${printType(type.argument)}>`;
 
       case ts.SyntaxKind.FirstTypeNode:

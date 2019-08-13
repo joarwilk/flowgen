@@ -28,7 +28,8 @@ declare type F = {
    * @param {number=} opt_idx - The index where the new entry should be inserted; if omitted or greater then the current size of the list, the entry is added at the end of the list;
    * a negative index is treated as being relative from the end of the list
    */
-  add(entry: any, opt_idx?: number): void
+  add(entry: any, opt_idx?: number): void,
+  ...
 };
 /**
  * Patches an Element with the the provided function. Exactly one top level
@@ -74,7 +75,8 @@ declare function init(
     devicePixelRatio?: number,
     renderer?: string,
     width?: number | string,
-    height?: number | string
+    height?: number | string,
+    ...
   }
 ): ECharts;
 

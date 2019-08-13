@@ -21,7 +21,10 @@ exports[`should handle basic keywords 1`] = `
   r: -1,
   s: -2,
   t: Symbol,
-  u: Symbol
+  u: Symbol,
+  v: [1, 2, 3],
+  w: $ReadOnlyArray<string>,
+  ...
 };
 "
 `;

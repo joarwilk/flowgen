@@ -19,6 +19,7 @@ program
   )
   .option("--quiet", "output without logs")
   .option("--no-jsdoc", "output without jsdoc")
+  .option("--no-inexact", "output without inexact types")
   .option("--flow-typed-format [dirname]", "format output for flow-typed")
   .option(
     "--add-flow-header",
@@ -32,6 +33,7 @@ program
       moduleExports: options.moduleExports,
       jsdoc: options.jsdoc,
       quiet: options.quiet,
+      inexact: options.inexact,
       flowTypedFormat: options.flowTypedFormat,
       addFlowHeader: options.addFlowHeader,
       compileTests: options.compileTests,

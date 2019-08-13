@@ -24,6 +24,8 @@ it("should handle basic keywords", () => {
     s: -2,
     t: symbol,
     u: unique symbol,
+    v: readonly [1, 2, 3],
+    w: readonly string[],
   }`;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();

@@ -1,5 +1,6 @@
 /* @flow */
 import compiler from "../compiler";
+import beautify from "../beautifier";
 import fs from "fs";
 
 it("handles the danger.d.ts correctly", () => {
@@ -9,5 +10,5 @@ it("handles the danger.d.ts correctly", () => {
   );
   const result = compiler.compileDefinitionString(dangerDTS, { quiet: true });
 
-  expect(result).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot();
 });

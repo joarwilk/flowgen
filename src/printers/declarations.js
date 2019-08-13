@@ -5,6 +5,7 @@ import { opts } from "../options";
 import { checker } from "../checker";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
+import { withEnv } from "../env";
 
 export const propertyDeclaration = (
   node: RawNode,
@@ -72,31 +73,34 @@ export const variableDeclaration = (node: RawNode): string => {
 export const interfaceType = (
   node: RawNode,
   withSemicolons: boolean = false,
+  isType: boolean = false,
 ): string => {
-  let members = node.members
-    .map(member => {
-      const printed = printers.node.printType(member);
+  const isInexact = opts().inexact;
+  let members = node.members.map(member => {
+    const printed = printers.node.printType(member);
 
-      if (!printed) {
-        return null;
-      }
+    if (!printed) {
+      return null;
+    }
 
-      let str = "\n";
+    let str = "\n";
 
-      if (member.jsDoc) {
-        str += printers.common.comment(member.jsDoc);
-      }
+    if (member.jsDoc) {
+      str += printers.common.comment(member.jsDoc);
+    }
 
-      return str + printed;
-    })
-    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
-    .join(withSemicolons ? ";" : ",");
+    return str + printed;
+  });
 
-  if (members.length > 0) {
-    members += "\n";
+  if (isType && isInexact) {
+    members.push("...\n");
+  } else if (members.length > 0) {
+    members.push("\n");
   }
 
-  return `{${members}}`;
+  return `{${members
+    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
+    .join(withSemicolons ? ";" : ",")}}`;
 };
 
 const interfaceRecordType = (
@@ -130,6 +134,45 @@ const interfaceRecordType = (
   return `{${heritage}${members}}`;
 };
 
+const classHeritageClause = withEnv<any, _, string>((env, type) => {
+  let ret;
+  env.classHeritage = true;
+  // TODO: refactor this
+  const symbol = checker.current.getSymbolAtLocation(type.expression);
+  printers.node.fixDefaultTypeArguments(symbol, type);
+  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+    ret =
+      printers.node.getFullyQualifiedPropertyAccessExpression(
+        symbol,
+        type.expression,
+      ) + printers.common.generics(type.typeArguments);
+  } else {
+    ret = printers.node.printType(type);
+  }
+  env.classHeritage = false;
+  return ret;
+});
+
+const interfaceHeritageClause = type => {
+  // TODO: refactor this
+  const symbol = checker.current.getSymbolAtLocation(type.expression);
+  printers.node.fixDefaultTypeArguments(symbol, type);
+  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+    const name = printers.node.getFullyQualifiedPropertyAccessExpression(
+      symbol,
+      type.expression,
+    );
+    return name + printers.common.generics(type.typeArguments);
+  } else if (type.expression.kind === ts.SyntaxKind.Identifier) {
+    const name = printers.identifiers.print(type.expression.text);
+    if (typeof name === "function") {
+      return name(type.typeArguments);
+    }
+  } else {
+    return printers.node.printType(type);
+  }
+};
+
 const interfaceRecordDeclaration = (
   nodeName: string,
   node: RawNode,
@@ -142,7 +185,7 @@ const interfaceRecordDeclaration = (
     heritage = node.heritageClauses
       .map(clause => {
         return clause.types
-          .map(type => printers.node.printType(type))
+          .map(interfaceHeritageClause)
           .map(type => `...$Exact<${type}>`)
           .join(",\n");
       })
@@ -172,23 +215,7 @@ export const interfaceDeclaration = (
   if (node.heritageClauses) {
     heritage = node.heritageClauses
       .map(clause => {
-        return clause.types
-          .map(type => {
-            // TODO: refactor this
-            const symbol = checker.current.getSymbolAtLocation(type.expression);
-            printers.node.fixDefaultTypeArguments(symbol, type);
-            if (type.expression.kind === ts.SyntaxKind.Identifier) {
-              return (
-                printers.node.getFullyQualifiedPropertyAccessExpression(
-                  symbol,
-                  type.expression,
-                ) + printers.common.generics(type.typeArguments)
-              );
-            } else {
-              return printers.node.printType(type);
-            }
-          })
-          .join(" & ");
+        return clause.types.map(interfaceHeritageClause).join(" & ");
       })
       .join("");
     heritage = heritage.length > 0 ? `& ${heritage}\n` : "";
@@ -198,7 +225,11 @@ export const interfaceDeclaration = (
 
   let str = `${modifier}${type} ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} ${type === "type" ? "= " : ""}${interfaceType(node)} ${heritage}`;
+  )} ${type === "type" ? "= " : ""}${interfaceType(
+    node,
+    false,
+    type === "type",
+  )} ${heritage}`;
 
   return str;
 };
@@ -262,23 +293,7 @@ export const classDeclaration = (nodeName: string, node: RawNode): string => {
   if (node.heritageClauses) {
     heritage = node.heritageClauses
       .map(clause => {
-        return clause.types
-          .map(type => {
-            // TODO: refactor this
-            const symbol = checker.current.getSymbolAtLocation(type.expression);
-            printers.node.fixDefaultTypeArguments(symbol, type);
-            if (type.expression.kind === ts.SyntaxKind.Identifier) {
-              return (
-                printers.node.getFullyQualifiedPropertyAccessExpression(
-                  symbol,
-                  type.expression,
-                ) + printers.common.generics(type.typeArguments)
-              );
-            } else {
-              return printers.node.printType(type);
-            }
-          })
-          .join(", ");
+        return clause.types.map(classHeritageClause).join(", ");
       })
       .join(", ");
     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
