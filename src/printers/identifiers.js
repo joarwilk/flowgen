@@ -3,6 +3,7 @@
 // Please add only built-in type references
 
 import printers from "./index";
+import { withEnv } from "../env";
 
 const identifiers = Object.create(null);
 Object.assign(identifiers, {
@@ -25,6 +26,9 @@ Object.assign(identifiers, {
     )}}`,
 });
 
-export const print = (kind: string): string => {
-  return identifiers[kind] || kind;
-};
+export const print = withEnv<any, [string], string>(
+  (env, kind: string): string => {
+    if (env.classHeritage) return kind;
+    return identifiers[kind] || kind;
+  },
+);

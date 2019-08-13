@@ -5,6 +5,7 @@ import { opts } from "../options";
 import { checker } from "../checker";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
+import { withEnv } from "../env";
 
 export const propertyDeclaration = (
   node: RawNode,
@@ -130,6 +131,45 @@ const interfaceRecordType = (
   return `{${heritage}${members}}`;
 };
 
+const classHeritageClause = withEnv<any, _, string>((env, type) => {
+  let ret;
+  env.classHeritage = true;
+  // TODO: refactor this
+  const symbol = checker.current.getSymbolAtLocation(type.expression);
+  printers.node.fixDefaultTypeArguments(symbol, type);
+  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+    ret =
+      printers.node.getFullyQualifiedPropertyAccessExpression(
+        symbol,
+        type.expression,
+      ) + printers.common.generics(type.typeArguments);
+  } else {
+    ret = printers.node.printType(type);
+  }
+  env.classHeritage = false;
+  return ret;
+});
+
+const interfaceHeritageClause = type => {
+  // TODO: refactor this
+  const symbol = checker.current.getSymbolAtLocation(type.expression);
+  printers.node.fixDefaultTypeArguments(symbol, type);
+  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+    const name = printers.node.getFullyQualifiedPropertyAccessExpression(
+      symbol,
+      type.expression,
+    );
+    return name + printers.common.generics(type.typeArguments);
+  } else if (type.expression.kind === ts.SyntaxKind.Identifier) {
+    const name = printers.identifiers.print(type.expression.text);
+    if (typeof name === "function") {
+      return name(type.typeArguments);
+    }
+  } else {
+    return printers.node.printType(type);
+  }
+};
+
 const interfaceRecordDeclaration = (
   nodeName: string,
   node: RawNode,
@@ -142,7 +182,7 @@ const interfaceRecordDeclaration = (
     heritage = node.heritageClauses
       .map(clause => {
         return clause.types
-          .map(type => printers.node.printType(type))
+          .map(interfaceHeritageClause)
           .map(type => `...$Exact<${type}>`)
           .join(",\n");
       })
@@ -172,23 +212,7 @@ export const interfaceDeclaration = (
   if (node.heritageClauses) {
     heritage = node.heritageClauses
       .map(clause => {
-        return clause.types
-          .map(type => {
-            // TODO: refactor this
-            const symbol = checker.current.getSymbolAtLocation(type.expression);
-            printers.node.fixDefaultTypeArguments(symbol, type);
-            if (type.expression.kind === ts.SyntaxKind.Identifier) {
-              return (
-                printers.node.getFullyQualifiedPropertyAccessExpression(
-                  symbol,
-                  type.expression,
-                ) + printers.common.generics(type.typeArguments)
-              );
-            } else {
-              return printers.node.printType(type);
-            }
-          })
-          .join(" & ");
+        return clause.types.map(interfaceHeritageClause).join(" & ");
       })
       .join("");
     heritage = heritage.length > 0 ? `& ${heritage}\n` : "";
@@ -262,23 +286,7 @@ export const classDeclaration = (nodeName: string, node: RawNode): string => {
   if (node.heritageClauses) {
     heritage = node.heritageClauses
       .map(clause => {
-        return clause.types
-          .map(type => {
-            // TODO: refactor this
-            const symbol = checker.current.getSymbolAtLocation(type.expression);
-            printers.node.fixDefaultTypeArguments(symbol, type);
-            if (type.expression.kind === ts.SyntaxKind.Identifier) {
-              return (
-                printers.node.getFullyQualifiedPropertyAccessExpression(
-                  symbol,
-                  type.expression,
-                ) + printers.common.generics(type.typeArguments)
-              );
-            } else {
-              return printers.node.printType(type);
-            }
-          })
-          .join(", ");
+        return clause.types.map(classHeritageClause).join(", ");
       })
       .join(", ");
     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
