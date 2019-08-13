@@ -1,5 +1,6 @@
 /* @flow */
-import { compiler, beautify } from "../compiler";
+import compiler from "../compiler";
+import beautify from "../beautifier";
 import fs from "fs";
 
 it("handles the danger.d.ts correctly", () => {

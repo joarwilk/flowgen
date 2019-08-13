@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle bounded polymorphism 1`] = `
-"declare function fooGood<T: {
-x: number,...
-}>(obj: T): T
+"declare function fooGood<
+  T: {
+    x: number,
+    ...
+  }
+>(
+  obj: T
+): T;
 "
 `;
 

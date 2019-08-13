@@ -1,5 +1,6 @@
 /* @flow */
 import compiler from "../compiler";
+import beautify from "../beautifier";
 
 it("should handle maybe & nullable type", () => {
   const result = compiler.compileDefinitionString(
@@ -20,5 +21,5 @@ it("should handle bounded polymorphism", () => {
 
   const result = compiler.compileDefinitionString(ts, { quiet: true });
 
-  expect(result).toMatchSnapshot();
+  expect(beautify(result)).toMatchSnapshot();
 });
