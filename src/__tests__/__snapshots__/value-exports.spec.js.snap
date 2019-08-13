@@ -2,7 +2,8 @@
 
 exports[`should handle default exported es module values 1`] = `
 "declare var test: {
-  a: number
+  a: number,
+  ...
 };
 declare export default typeof test;
 "
@@ -10,7 +11,8 @@ declare export default typeof test;
 
 exports[`should handle exported es module values 1`] = `
 "declare var test: {
-  a: number
+  a: number,
+  ...
 };
 declare export { test };
 "

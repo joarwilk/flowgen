@@ -2,7 +2,7 @@
 
 exports[`should handle bounded polymorphism 1`] = `
 "declare function fooGood<T: {
-x: number
+x: number,...
 }>(obj: T): T
 "
 `;

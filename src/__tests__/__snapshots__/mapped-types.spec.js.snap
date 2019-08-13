@@ -2,12 +2,14 @@
 
 exports[`should handle mapped types 1`] = `
 "declare type Ref<T> = {
-  current: T | null
+  current: T | null,
+  ...
 };
 declare type SourceUnion = \\"a\\" | \\"b\\" | \\"c\\";
 declare type SourceObject = {
   a: number,
-  d: string
+  d: string,
+  ...
 };
 declare type MappedUnion = $ObjMapi<
   { [k: SourceUnion]: any },

@@ -2,11 +2,13 @@
 
 exports[`should handle utility types 1`] = `
 "declare type A = $ReadOnly<{
-  a: number
+  a: number,
+  ...
 }>;
 declare type B = $Rest<
   {
-    a: number
+    a: number,
+    ...
   },
   {}
 >;

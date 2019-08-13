@@ -15,7 +15,8 @@ exports[`should handle string literals in function argument "overloading" 1`] = 
     cb: (
       data: any,
       flags: {
-        binary: boolean
+        binary: boolean,
+        ...
       }
     ) => void
   ): this;
@@ -24,7 +25,8 @@ exports[`should handle string literals in function argument "overloading" 1`] = 
     cb: (
       data: any,
       flags: {
-        binary: boolean
+        binary: boolean,
+        ...
       }
     ) => void
   ): this;
@@ -33,7 +35,8 @@ exports[`should handle string literals in function argument "overloading" 1`] = 
     cb: (
       data: any,
       flags: {
-        binary: boolean
+        binary: boolean,
+        ...
       }
     ) => void
   ): this;

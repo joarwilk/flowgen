@@ -7,13 +7,16 @@ exports[`should handle module 1`] = `
   declare type Maybe<T> =
     | {
         type: \\"just\\",
-        value: T
+        value: T,
+        ...
       }
     | {
-        type: \\"nothing\\"
+        type: \\"nothing\\",
+        ...
       };
   declare export type Ref<T> = {
-    current: T
+    current: T,
+    ...
   };
   declare export var ok: number;
 }
@@ -47,11 +50,13 @@ exports[`should not merge distinct modules 1`] = `
     foo: string;
   }
 }
+
 declare module \\"B\\" {
   declare export interface A {
     baz: string;
   }
 }
+
 export interface A {
   bar: string;
 }

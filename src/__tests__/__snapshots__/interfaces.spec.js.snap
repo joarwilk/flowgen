@@ -15,7 +15,8 @@ exports[`should handle interface inheritance 1`] = `
   firstName: string;
 }
 declare type SpecialUser = {
-  nice: number
+  nice: number,
+  ...
 } & User;
 "
 `;
@@ -86,7 +87,8 @@ exports[`should handle typed object binding pattern 1`] = `
   (x: any): void;
   (x: {
     a: string,
-    b: number
+    b: number,
+    ...
   }): void;
 }
 "
@@ -135,15 +137,15 @@ exports[`should support call signature 1`] = `
   <T: { [key: string]: any }>(
     fields?: ObjectSchemaDefinition<T>
   ): ObjectSchema<T>;
-  new(): ObjectSchema<{}>;
+  new(): ObjectSchema<{ ... }>;
 }
 "
 `;
 
 exports[`should support omitting generic defaults in types, classes, interfaces 1`] = `
 "declare interface Foo<T = Symbol, U = number> {}
-declare type FooBar = {} & Foo<>;
-declare type Bar<T = number, U = string> = {};
+declare type FooBar = { ... } & Foo<>;
+declare type Bar<T = number, U = string> = { ... };
 declare class Baz<T = string, U = number> {}
 declare var a: Foo<>;
 declare var b: Bar<>;

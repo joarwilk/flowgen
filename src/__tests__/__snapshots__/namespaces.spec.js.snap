@@ -76,7 +76,8 @@ declare var npm$namespace$test: {
   (foo: number): string
 };
 export type test$Foo = {
-  bar: number
+  bar: number,
+  ...
 };
 "
 `;
