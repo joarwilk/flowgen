@@ -14,7 +14,7 @@ declare export default {|
   declarations: {|
     propertyDeclaration(node: RawNode, keywordPrefix: string): string,
     variableDeclaration(node: RawNode): string,
-    interfaceType(node: RawNode, withSemicolons?: boolean): string,
+    interfaceType(node: RawNode, withSemicolons?: boolean, isType?: boolean): string,
     interfaceDeclaration(
       nodeName: string,
       node: RawNode,

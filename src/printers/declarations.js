@@ -73,31 +73,34 @@ export const variableDeclaration = (node: RawNode): string => {
 export const interfaceType = (
   node: RawNode,
   withSemicolons: boolean = false,
+  isType: boolean = false,
 ): string => {
-  let members = node.members
-    .map(member => {
-      const printed = printers.node.printType(member);
+  const isInexact = opts().inexact;
+  let members = node.members.map(member => {
+    const printed = printers.node.printType(member);
 
-      if (!printed) {
-        return null;
-      }
+    if (!printed) {
+      return null;
+    }
 
-      let str = "\n";
+    let str = "\n";
 
-      if (member.jsDoc) {
-        str += printers.common.comment(member.jsDoc);
-      }
+    if (member.jsDoc) {
+      str += printers.common.comment(member.jsDoc);
+    }
 
-      return str + printed;
-    })
-    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
-    .join(withSemicolons ? ";" : ",");
+    return str + printed;
+  });
 
-  if (members.length > 0) {
-    members += "\n";
+  if (isType && isInexact) {
+    members.push("...\n");
+  } else if (members.length > 0) {
+    members.push("\n");
   }
 
-  return `{${members}}`;
+  return `{${members
+    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
+    .join(withSemicolons ? ";" : ",")}}`;
 };
 
 const interfaceRecordType = (
@@ -222,7 +225,11 @@ export const interfaceDeclaration = (
 
   let str = `${modifier}${type} ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} ${type === "type" ? "= " : ""}${interfaceType(node)} ${heritage}`;
+  )} ${type === "type" ? "= " : ""}${interfaceType(
+    node,
+    false,
+    type === "type",
+  )} ${heritage}`;
 
   return str;
 };
