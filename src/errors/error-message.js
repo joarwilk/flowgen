@@ -1,5 +1,7 @@
 // @flow
 
+import {SyntaxKind} from 'typescript'
+
 export type ErrorMessage =
   | {|
       +type: "UnsupportedComputedProperty",
@@ -18,6 +20,10 @@ export type ErrorMessage =
     |}
   | {|
       +type: "UnsupportedNestedModule",
+    |}
+  | {|
+      +type: "UnsupportedTypeOperator",
+      +operator: $Values<typeof SyntaxKind>
     |}
   | {|
       +type: "MissingFunctionName",
@@ -45,6 +51,9 @@ export function printErrorMessage(error: ErrorMessage): string {
 
     case "UnsupportedNestedModule":
         return "Flow doesn't support nested modules";
+
+    case "UnsupportedTypeOperator":
+        return `Unsupported type operator: ${SyntaxKind[error.operator]}`
 
     default:
       (error.type: empty);

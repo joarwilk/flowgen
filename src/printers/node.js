@@ -483,15 +483,27 @@ export const printType = withEnv<any, [any], string>(
           case ts.SyntaxKind.UniqueKeyword:
             logger.error(type, { type: "UnsupportedUniqueSymbol" });
             return printType(type.type);
-          default:
-            console.log(
-              `"NO PRINT IMPLEMENTED: TypeOperator ${
-                ts.SyntaxKind[type.operator]
-              }"`,
-            );
-            return `"NO PRINT IMPLEMENTED: TypeOperator ${
-              ts.SyntaxKind[type.operator]
-            }"`;
+          case ts.SyntaxKind.ReadonlyKeyword:
+            if (type.type.kind === ts.SyntaxKind.ArrayType) {
+              return `$ReadOnlyArray<${printType(type.type.elementType)}>`;
+            } else if (type.type.kind === ts.SyntaxKind.TupleType) {
+              return printType(type.type);
+            } else {
+              const error = {
+                type: "UnsupportedTypeOperator",
+                operator: type.operator,
+              };
+              logger.error(type, error);
+              return `/* ${printErrorMessage(error)} */ any`;
+            }
+          default: {
+            const error = {
+              type: "UnsupportedTypeOperator",
+              operator: type.operator,
+            };
+            logger.error(type, error);
+            return `/* ${printErrorMessage(error)} */ any`;
+          }
         }
 
       case ts.SyntaxKind.MappedType: {
