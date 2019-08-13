@@ -116,7 +116,7 @@ export default class Namespace extends Node {
     ) {
       let topLevel = "";
       const nsGroup = `
-      declare var npm$namespace$${name}: {
+      declare var npm$namespace$${name}: {|
         ${this.functions
           .map(
             propNode =>
@@ -148,7 +148,7 @@ export default class Namespace extends Node {
             return `${child.name}: typeof npm$namespace$${name}$${child.name},`;
           })
           .join("\n")}
-      }\n`;
+      |}\n`;
       if (namespace === "") {
         topLevel = `declare var ${name}: typeof npm$namespace$${name};\n`;
       }
