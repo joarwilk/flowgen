@@ -9,42 +9,34 @@ import beautify from "./beautifier";
 import compiler from "./compiler";
 
 import defaultExporter from "./default-exporter";
-import flowTypedExporter from "./flow-typed-exporter";
-
-type RunnerOptions = {
-  jsdoc: boolean,
-  quiet: boolean,
-  interfaceRecords: boolean,
-  moduleExports: boolean,
-  version: string,
-  out: string,
-  flowTypedFormat: boolean,
-  addFlowHeader: boolean,
-  compileTests: boolean,
-};
-
-type File = {|
-  mode: "file" | "directory" | "flow-typed",
-  moduleName: string,
-  file: string,
-  outputFile: string,
-  intro: string,
-|};
+import {
+  flowTypedExporter,
+  flowTypedDirectoryExporter,
+} from "./flow-typed-exporter";
+import type { File, RunnerOptions, Mode, OutputFile } from "./runner.h";
 
 const readDir = promisify(fs.readdir);
+const readFile = promisify(fs.readFile);
 
 async function outputFile(
   flowDefinitions: string,
-  { intro, file, moduleName, outputFile }: File,
+  { intro, index, file, moduleName, outputFile }: File,
   options: RunnerOptions,
   writeFile,
 ): Promise<void> {
   // Produce the flow library content
   try {
     // Write the output to disk
+    let code = intro + flowDefinitions;
+    try {
+      code = beautify(code);
+    } catch (e) {
+      console.error(e);
+    }
     const absoluteOutputFilePath: string = await writeFile(
       outputFile,
-      beautify(intro + flowDefinitions),
+      code,
+      index,
     );
 
     // Check if we should compile tests as well
@@ -59,7 +51,7 @@ async function outputFile(
       compiler.compileTest(testFileName, testFileOutput);
     }
   } catch (e) {
-    console.error("Parsing", moduleName, "failed");
+    console.error("Parsing", file, "failed");
     console.error(e);
   }
 }
@@ -69,15 +61,19 @@ function getFile(
   options: RunnerOptions,
   rawFile: string,
   isInDir: boolean,
+  index: number,
+  pkg?: { [key: string]: any },
 ): File {
   // Get the module name from the file name
-  const moduleName = getModuleNameFromFile(file);
+  const moduleName = getModuleNameFromFile(file, pkg);
+  const mode = getMode(options, file, isInDir);
+  const mainTypes: string = pkg ? pkg.typings || pkg.types || "" : "";
+  const isMain = path.join(rawFile, mainTypes) === file;
 
   // The format of the output argument varies a bit based on which
   // exporting format we're using. For flow-typed, only the module name
   // is required, otherwise we use the cli arg.
-  const outputFile = getOutputFile(options, file, rawFile, isInDir);
-  const mode = getMode(options, file, isInDir);
+  const outputFile = getOutputFile(options, file, rawFile, mode, moduleName);
 
   // Get the intro text
   let intro = meta(
@@ -86,7 +82,9 @@ function getFile(
     options.addFlowHeader || mode === "directory",
   );
 
-  return { file, outputFile, moduleName, intro, mode };
+  if (mode === "directory-flow-typed") intro = "";
+
+  return { file, index, isMain, outputFile, moduleName, intro, mode };
 }
 
 async function bfs(
@@ -95,6 +93,12 @@ async function bfs(
 ): Promise<Array<File>> {
   const queue: Array<string> = [];
   const files: Array<File> = [];
+  let pkg;
+  try {
+    pkg = JSON.parse(
+      (await readFile(path.join(rootDir, "package.json"))).toString(),
+    );
+  } catch (err) {}
   queue.push(rootDir);
   let current;
   while (queue.length) {
@@ -103,21 +107,37 @@ async function bfs(
       const dir: Array<any> = await readDir(current, { withFileTypes: true });
       for (const file of dir) {
         if (file.isDirectory()) {
+          if (file.name === "node_modules") continue;
           queue.push(path.join(current, file.name));
         } else {
           if (!file.name.endsWith(".d.ts")) continue;
           files.push(
-            getFile(path.join(current, file.name), options, rootDir, true),
+            getFile(
+              path.join(current, file.name),
+              options,
+              rootDir,
+              true,
+              files.length,
+              pkg,
+            ),
           );
         }
       }
     } catch {
-      files.push(getFile(current, options, rootDir, false));
+      files.push(getFile(current, options, rootDir, false, files.length, pkg));
     }
   }
   return files;
 }
+
 export default (options: RunnerOptions) => {
+  const fileOptions = {
+    jsdoc: options.jsdoc,
+    quiet: options.quiet,
+    interfaceRecords: options.interfaceRecords,
+    moduleExports: options.moduleExports,
+    inexact: options.inexact,
+  };
   // No real reason to return an object here instead of combining
   // the compile function into the wrapper, but I like the API it produces.
   return {
@@ -127,21 +147,37 @@ export default (options: RunnerOptions) => {
       for (const rawFile of rawFiles) {
         files.push(...(await bfs(rawFile, options)));
       }
+      const filesByPath = files.reduce((acc, file) => {
+        acc.set(file.file, file);
+        return acc;
+      }, new Map());
+      const fileMapper = (sourceCode, fileName) => {
+        if (!sourceCode) return;
+        const file = filesByPath.get(fileName);
+        if (!file) return sourceCode;
+        if (file.mode !== "directory-flow-typed") return sourceCode;
+        if (file.isMain) {
+          return `declare module "${file.outputFile.moduleName}" {${sourceCode}}
+          declare module "${file.outputFile.rootModuleName}" {
+            declare export * from "${file.outputFile.moduleName}";
+          }
+          `;
+        }
+        return `declare module "${file.outputFile.moduleName}" {${sourceCode}}`;
+      };
       if (files.length > 1) {
         const sources = compiler.compileDefinitionFiles(
           files.map(v => v.file),
-          {
-            jsdoc: options.jsdoc,
-            quiet: options.quiet,
-            interfaceRecords: options.interfaceRecords,
-            moduleExports: options.moduleExports,
-          },
+          fileOptions,
+          fileMapper,
         );
         for (let index = 0; index < sources.length; index++) {
           const [, flowDefinitions] = sources[index];
           const file = files[index];
           let writeFile = defaultExporter;
           if (file.mode === "flow-typed") writeFile = flowTypedExporter;
+          if (file.mode === "directory-flow-typed")
+            writeFile = flowTypedDirectoryExporter;
           // Let the user know what's going on
           if (files.length >= 3) {
             // If we're compiling a lot of files, show more stats
@@ -155,15 +191,16 @@ export default (options: RunnerOptions) => {
         }
       } else {
         const file = files[0];
-        const flowDefinitions = compiler.compileDefinitionFile(file.file, {
-          jsdoc: options.jsdoc,
-          quiet: options.quiet,
-          interfaceRecords: options.interfaceRecords,
-          moduleExports: options.moduleExports,
-        });
+        const flowDefinitions = compiler.compileDefinitionFile(
+          file.file,
+          fileOptions,
+          fileMapper,
+        );
 
         let writeFile = defaultExporter;
         if (file.mode === "flow-typed") writeFile = flowTypedExporter;
+        if (file.mode === "directory-flow-typed")
+          writeFile = flowTypedDirectoryExporter;
         // Let the user know what's going on
         console.log("Parsing", file.moduleName);
         outputFile(flowDefinitions, file, options, writeFile);
@@ -173,15 +210,16 @@ export default (options: RunnerOptions) => {
   };
 };
 
-function getModuleNameFromFile(fileName: string): string {
+function getModuleNameFromFile(
+  fileName: string,
+  pkg?: { [key: string]: any },
+): string {
+  if (pkg) return pkg.name;
   return path.basename(fileName).replace(".d.ts", "");
 }
 
-function getMode(
-  options: RunnerOptions,
-  file: string,
-  isDir: boolean,
-): "directory" | "flow-typed" | "file" {
+function getMode(options: RunnerOptions, file: string, isDir: boolean): Mode {
+  if (isDir && options.flowTypedFormat) return "directory-flow-typed";
   if (isDir) return "directory";
   if (options.flowTypedFormat) return "flow-typed";
   return "file";
@@ -191,16 +229,26 @@ function getOutputFile(
   options: RunnerOptions,
   file: string,
   prefix: string,
-  isDir: boolean,
-): string {
-  if (isDir) {
-    return path.normalize(
-      file.replace(prefix, `exports${path.sep}`).replace(".d.ts", ".js.flow"),
-    );
-  }
-  if (options.flowTypedFormat) {
-    return getModuleNameFromFile(file);
-  } else {
-    return options.out;
+  mode: Mode,
+  moduleName: string,
+): OutputFile {
+  switch (mode) {
+    case "directory-flow-typed":
+      return {
+        rootModuleName: moduleName,
+        moduleName: path.join(
+          moduleName,
+          path.relative(prefix, file).replace(".d.ts", ""),
+        ),
+        filename: path.normalize(file.replace(prefix, "").replace(".d.ts", "")),
+      };
+    case "directory":
+      return path.normalize(
+        file.replace(prefix, `exports${path.sep}`).replace(".d.ts", ".js.flow"),
+      );
+    case "flow-typed":
+      return moduleName;
+    default:
+      return options.out;
   }
 }
