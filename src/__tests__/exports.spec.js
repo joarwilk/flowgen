@@ -25,3 +25,16 @@ export default function(): void;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
+
+test("should handle export declare const", () => {
+  const ts = `
+export declare const foo: {
+  foo: {
+    bar: 'thing',
+    baz: 'thing',
+  }
+};
+  `;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+});

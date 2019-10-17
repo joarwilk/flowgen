@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle export declare const 1`] = `
+"declare export var foo: {
+  foo: {
+    bar: \\"thing\\",
+    baz: \\"thing\\",
+    ...
+  },
+  ...
+};
+"
+`;
+
 exports[`should handle exports 1`] = `
 "declare export default typeof module;
 declare export { module };
