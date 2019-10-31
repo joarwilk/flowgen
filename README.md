@@ -87,12 +87,12 @@ flowgen lodash.d.ts
 ```
 --flow-typed-format: Format output so it fits in the flow-typed repo
 --compile-tests: Compile any sibling <filename>-tests.ts files found
+--no-inexact: Do not mark object types as inexact (using `...`)
 --no-module-exports: Convert `export = Type` only to default export, instead of `declare module.exports: Type`
 --interface-records: Convert TypeScript interfaces to Exact Objects
 --no-jsdoc: Ignore TypeScript JSDoc
 --add-flow-header: Add `// @flow` to generated files. Should be used for libs.
 ```
-
 
 ## The difficult parts
 
