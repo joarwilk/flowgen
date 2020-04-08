@@ -718,6 +718,12 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.ExportSpecifier:
         return printers.relationships.importExportSpecifier(type);
+      
+      case ts.SyntaxKind.GetAccessor:
+        return printers.common.parameter(type);
+ 
+      case ts.SyntaxKind.SetAccessor:
+        return printers.common.parameter(type);
 
       default:
         (type.kind: empty);

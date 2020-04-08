@@ -45,6 +45,9 @@ export const parameter = (param: RawNode): string => {
       if (modifier.kind === ts.SyntaxKind.ReadonlyKeyword) left += "+";
     }
   }
+  if (param.kind === ts.SyntaxKind.SetAccessor) {
+    left += "-";
+  }
   let right;
 
   if (
