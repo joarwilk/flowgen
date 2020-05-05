@@ -13,6 +13,8 @@ export default {
   nsPropExists: (name: string): boolean =>
     Object.keys(namespaceProps).includes(name),
   getNSForProp: (name: string): any => namespaceProps[name],
+  // todo: remove this and setContext method
+  // eslint-disable-next-line no-unused-vars
   setContext: (namespace: string): string => (context = namespace),
 
   reset: (): void => {
