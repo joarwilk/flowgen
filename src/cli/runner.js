@@ -98,7 +98,9 @@ async function bfs(
     pkg = JSON.parse(
       (await readFile(path.join(rootDir, "package.json"))).toString(),
     );
-  } catch (err) {}
+  } catch (err) {
+    // ignored
+  }
   queue.push(rootDir);
   let current;
   while (queue.length) {
