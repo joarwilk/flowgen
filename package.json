@@ -53,6 +53,7 @@
     "prepublishOnly": "npm run compile",
     "compile": "babel ./src --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.js'",
     "compile:watch": "npm run compile -- -w",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint '**/*.js' --quiet"
   }
 }
