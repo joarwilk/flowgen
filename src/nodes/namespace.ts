@@ -67,11 +67,7 @@ export default class Namespace extends Node {
     }
   }
 
-  print = (
-    namespace: string = "",
-    mod: string = "root",
-    depth?: number,
-  ): string => {
+  print = (namespace = "", mod = "root", depth?: number): string => {
     const children = uniqBy(
       orderBy(this.getChildren(), [a => a.isValue], ["desc"]),
       child => child.name.text || child.name,

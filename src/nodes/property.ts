@@ -56,7 +56,7 @@ export default class Property extends Node<PropertyNode> {
     this.skip = true;
   }
 
-  print(namespace: string = "", mod: string = "root"): string {
+  print(namespace = "", mod = "root"): string {
     let out = "";
     let name = this.name;
 

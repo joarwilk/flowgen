@@ -1,5 +1,5 @@
 import type { TypeChecker } from "typescript";
 
-export let checker: {
+export const checker: {
   current: TypeChecker | null;
 } = { current: null };

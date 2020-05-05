@@ -13,7 +13,7 @@ export const parseNameFromNode = (node: RawNode): string => {
   } else if (node.type && node.type.typeName) {
     return node.type.typeName.text;
   } else if (node.exportClause) {
-    let names = [];
+    const names = [];
     ts.forEachChild(node.exportClause, child => {
       names.push(parseNameFromNode(child));
     });
@@ -32,7 +32,7 @@ export const parseNameFromNode = (node: RawNode): string => {
 
     return declarations;
   } else if (node.kind === ts.SyntaxKind.NamedImports) {
-    let names = [];
+    const names = [];
     ts.forEachChild(node, child => {
       names.push(parseNameFromNode(child));
     });

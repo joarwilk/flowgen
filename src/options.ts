@@ -14,7 +14,7 @@ const defaultOptions: Options = Object.freeze({
   inexact: true,
 });
 
-let options: Options = { ...defaultOptions };
+const options: Options = { ...defaultOptions };
 
 export function assignOptions(newOptions: Partial<Options>): void {
   Object.assign(options, newOptions);

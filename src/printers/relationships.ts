@@ -6,7 +6,7 @@ import namespaceManager from "../namespace-manager";
 import printers from "./index";
 
 export const moduleExports = (node: RawNode): string => {
-  let name = printers.node.printType(node.expression);
+  const name = printers.node.printType(node.expression);
   if (node.isExportEquals && opts().moduleExports) {
     return `declare module.exports: typeof ${name}\n`;
   } else {
@@ -70,10 +70,7 @@ export const importExportSpecifier = (
 //   return str;
 // };
 
-export const namespace = (
-  name: string,
-  hidePunctuation: boolean = false,
-): string => {
+export const namespace = (name: string, hidePunctuation = false): string => {
   if (namespaceManager.nsExists(name)) {
     return `${name}${hidePunctuation ? "" : "$"}`;
   }
@@ -83,7 +80,7 @@ export const namespace = (
 
 export const namespaceProp = (
   name: string,
-  hidePunctuation: boolean = false,
+  hidePunctuation = false,
 ): string => {
   if (namespaceManager.nsPropExists(name)) {
     return `${namespaceManager.getNSForProp(name)}${

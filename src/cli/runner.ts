@@ -145,7 +145,7 @@ export default (options: RunnerOptions) => {
   // the compile function into the wrapper, but I like the API it produces.
   return {
     compile: async (rawFiles: Array<string>): Promise<void> => {
-      let files = [];
+      const files = [];
       // Iterate all the files the user has passed in
       for (const rawFile of rawFiles) {
         files.push(...(await bfs(rawFile, options)));

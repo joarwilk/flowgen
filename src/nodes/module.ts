@@ -30,7 +30,7 @@ export default class Module extends Node {
     }
   }
 
-  print(namespace?: string, module?: string, depth: number = 0): string {
+  print(namespace?: string, module?: string, depth = 0): string {
     const children = this.getChildren()
       .map(child => {
         return child.print(undefined, this.name, depth + 1);

@@ -145,7 +145,7 @@ export function getLeftMostPropertyAccessExpression(
 export function getFullyQualifiedPropertyAccessExpression(
   symbol: ts.Symbol | void,
   type: any,
-  delimiter: string = "$",
+  delimiter = "$",
 ): string {
   if (checker.current) {
     const typeChecker = checker.current;
@@ -206,8 +206,8 @@ export function getFullyQualifiedPropertyAccessExpression(
 export function getFullyQualifiedName(
   symbol: ts.Symbol | void,
   type: any,
-  checks: boolean = true,
-  delimiter: string = "$",
+  checks = true,
+  delimiter = "$",
 ): string {
   if (checker.current) {
     const typeChecker = checker.current;
@@ -273,7 +273,7 @@ export function getFullyQualifiedName(
 export function getTypeofFullyQualifiedName(
   symbol: ts.Symbol | void,
   type: any,
-  delimiter: string = ".",
+  delimiter = ".",
 ): string {
   if (checker.current) {
     const typeChecker = checker.current;

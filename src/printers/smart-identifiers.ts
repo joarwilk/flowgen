@@ -53,7 +53,7 @@ const setGlobalName = (type: any, _symbol): boolean => {
 export function renames(symbol: ts.Symbol | void, type: any): boolean {
   if (!symbol) return false;
   if (!symbol.declarations) return false;
-  let decl = symbol.declarations[0];
+  const decl = symbol.declarations[0];
   if (type.parent.kind === ts.SyntaxKind.NamedImports) {
     setImportedName(decl.name.escapedText, decl.name, symbol, decl);
   } else if (type.kind === ts.SyntaxKind.TypeReference) {

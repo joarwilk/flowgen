@@ -8,7 +8,7 @@ import { withEnv } from "../env";
 export const propertyDeclaration = (
   node: RawNode,
   keywordPrefix: string,
-  isVar: boolean = false,
+  isVar = false,
 ): string => {
   let left = keywordPrefix;
   const symbol = checker.current.getSymbolAtLocation(node.name);
@@ -70,11 +70,11 @@ export const variableDeclaration = (node: RawNode): string => {
 
 export const interfaceType = (
   node: RawNode,
-  withSemicolons: boolean = false,
-  isType: boolean = false,
+  withSemicolons = false,
+  isType = false,
 ): string => {
   const isInexact = opts().inexact;
-  let members = node.members.map(member => {
+  const members = node.members.map(member => {
     const printed = printers.node.printType(member);
 
     if (!printed) {
@@ -104,7 +104,7 @@ export const interfaceType = (
 const interfaceRecordType = (
   node: RawNode,
   heritage: string,
-  withSemicolons: boolean = false,
+  withSemicolons = false,
 ): string => {
   let members = node.members
     .map(member => {
@@ -191,7 +191,7 @@ const interfaceRecordDeclaration = (
     heritage = heritage.length > 0 ? `${heritage},\n` : "";
   }
 
-  let str = `${modifier}type ${nodeName}${printers.common.generics(
+  const str = `${modifier}type ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} = ${interfaceRecordType(node, heritage)}\n`;
 
@@ -221,7 +221,7 @@ export const interfaceDeclaration = (
 
   const type = node.heritageClauses ? "type" : "interface";
 
-  let str = `${modifier}${type} ${nodeName}${printers.common.generics(
+  const str = `${modifier}${type} ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} ${type === "type" ? "= " : ""}${interfaceType(
     node,
@@ -237,7 +237,7 @@ export const typeDeclaration = (
   node: RawNode,
   modifier: string,
 ): string => {
-  let str = `${modifier}type ${nodeName}${printers.common.generics(
+  const str = `${modifier}type ${nodeName}${printers.common.generics(
     node.typeParameters,
   )} = ${printers.node.printType(node.type)};`;
 
@@ -296,7 +296,7 @@ export const classDeclaration = (nodeName: string, node: RawNode): string => {
     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
   }
 
-  let str = `declare ${printers.relationships.exporter(
+  const str = `declare ${printers.relationships.exporter(
     node,
   )}class ${nodeName}${printers.common.generics(
     node.typeParameters,

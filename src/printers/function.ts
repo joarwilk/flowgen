@@ -2,10 +2,7 @@ import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
 import printers from "./index";
 
-export const functionType = (
-  func: RawNode,
-  dotAsReturn: boolean = false,
-): string => {
+export const functionType = (func: RawNode, dotAsReturn = false): string => {
   const params = func.parameters
     .filter(param => param.name.text !== "this")
     .map(printers.common.parameter);
@@ -47,7 +44,10 @@ export const functionDeclaration = (
     name = nodeName === "INVALID NAME REF" ? "fn" : nodeName;
   }
   // each functionDeclaration gets it's own line
-  let str = `declare ${exporter}function ${name}${functionType(node, true)}\n`;
+  const str = `declare ${exporter}function ${name}${functionType(
+    node,
+    true,
+  )}\n`;
 
   return str;
 };

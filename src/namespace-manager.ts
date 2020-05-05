@@ -3,7 +3,7 @@ let namespaces: Array<string> = [];
 
 // todo: remove this and setContext method
 // eslint-disable-next-line no-unused-vars
-let context: string = "";
+let context = "";
 
 export default {
   register: (name: string): number => namespaces.push(name),

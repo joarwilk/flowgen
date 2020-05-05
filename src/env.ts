@@ -1,5 +1,5 @@
 let i = 0;
-let envs = {};
+const envs = {};
 
 export function withEnv<Env, A extends ReadonlyArray<any>, B>(
   callback: (env: Env, ...args: A) => B,
