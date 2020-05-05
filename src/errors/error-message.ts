@@ -54,7 +54,7 @@ export function printErrorMessage(error: ErrorMessage): string {
       return `Unsupported type operator: ${SyntaxKind[error.operator]}`;
 
     default:
-      error.type as never;
+      error as never;
       return "Unknown error. Please report this in https://github.com/joarwilk/flowgen/issues";
   }
 }

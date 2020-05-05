@@ -49,7 +49,7 @@ export const parseNameFromNode = (node: RawNode): string => {
   return "INVALID NAME REF";
 };
 
-function inspectFn(depth: number, options: util$InspectOptions): string {
+function inspectFn(depth: number, options: util.InspectOptions): string {
   const newOptions = Object.assign({}, options, {
     depth: options.depth == null ? null : options.depth - 1,
   });
