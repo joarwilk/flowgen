@@ -1,11 +1,12 @@
-/* @flow */
 import type { RawNode } from "./node";
 import type { Expression, ExportDeclaration as RawExport } from "typescript";
 import printers from "../printers";
 import Node from "./node";
 
 type ExportDeclarationType = RawExport & {
-  moduleSpecifier?: Expression & { text: string },
+  moduleSpecifier?: Expression & {
+    text: string;
+  };
 };
 
 export default class ExportDeclaration extends Node<ExportDeclarationType> {

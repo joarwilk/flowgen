@@ -1,20 +1,16 @@
-/* @flow */
 import type { RawNode } from "../nodes/node";
 
 import * as ts from "typescript";
 
 import Node from "../nodes/node";
 import type ModuleNode from "../nodes/module";
-import NodeFactory, { type Factory } from "../nodes/factory";
+import NodeFactory from "../nodes/factory";
+import type { Factory } from "../nodes/factory";
 import namespaceManager from "../namespace-manager";
 import { parseNameFromNode, stripDetailsFromTree } from "./ast";
 import * as logger from "../logger";
 
-const collectNode = (
-  node: RawNode,
-  context: Node<>,
-  factory: Factory,
-): void => {
+const collectNode = (node: RawNode, context: Node, factory: Factory): void => {
   stripDetailsFromTree(node);
   switch (node.kind) {
     case ts.SyntaxKind.ModuleDeclaration:
@@ -132,7 +128,7 @@ const collectNode = (
 };
 
 // Walk the AST and extract all the definitions we care about
-const traverseNode = (node, context: Node<>, factory: Factory): void => {
+const traverseNode = (node, context: Node, factory: Factory): void => {
   if (!node.statements) {
     collectNode(node, context, factory);
   } else {

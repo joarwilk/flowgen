@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as ts from "typescript";
 import util from "util";
 import printers from "./index";
@@ -11,24 +9,54 @@ import { renames, getLeftMostEntityName } from "./smart-identifiers";
 import { printErrorMessage } from "../errors/error-message";
 
 type KeywordNode =
-  | { kind: typeof ts.SyntaxKind.AnyKeyword }
-  | { kind: typeof ts.SyntaxKind.UnknownKeyword }
-  | { kind: typeof ts.SyntaxKind.NumberKeyword }
-  | { kind: typeof ts.SyntaxKind.BigIntKeyword }
-  | { kind: typeof ts.SyntaxKind.ObjectKeyword }
-  | { kind: typeof ts.SyntaxKind.BooleanKeyword }
-  | { kind: typeof ts.SyntaxKind.StringKeyword }
-  | { kind: typeof ts.SyntaxKind.SymbolKeyword }
-  | { kind: typeof ts.SyntaxKind.VoidKeyword }
-  | { kind: typeof ts.SyntaxKind.UndefinedKeyword }
-  | { kind: typeof ts.SyntaxKind.NullKeyword }
-  | { kind: typeof ts.SyntaxKind.NeverKeyword }
-  | { kind: typeof ts.SyntaxKind.FalseKeyword }
-  | { kind: typeof ts.SyntaxKind.TrueKeyword };
+  | {
+      kind: typeof ts.SyntaxKind.AnyKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.UnknownKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.NumberKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.BigIntKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.ObjectKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.BooleanKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.StringKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.SymbolKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.VoidKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.UndefinedKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.NullKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.NeverKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.FalseKeyword;
+    }
+  | {
+      kind: typeof ts.SyntaxKind.TrueKeyword;
+    };
 
 type PrintNode =
   | KeywordNode
-  | { kind: typeof ts.SyntaxKind.FirstLiteralToken }
+  | {
+      kind: typeof ts.SyntaxKind.FirstLiteralToken;
+    }
   | ts.CallSignatureDeclaration
   | ts.ConstructorDeclaration
   | ts.TypeParameterDeclaration
@@ -116,7 +144,7 @@ export function getLeftMostPropertyAccessExpression(
 
 export function getFullyQualifiedPropertyAccessExpression(
   symbol: ts.Symbol | void,
-  type: *,
+  type: any,
   delimiter: string = "$",
 ): string {
   if (checker.current) {
@@ -177,7 +205,7 @@ export function getFullyQualifiedPropertyAccessExpression(
 
 export function getFullyQualifiedName(
   symbol: ts.Symbol | void,
-  type: *,
+  type: any,
   checks: boolean = true,
   delimiter: string = "$",
 ): string {
@@ -189,9 +217,10 @@ export function getFullyQualifiedName(
       if (leftMost) {
         //$todo Flow has problems when switching variables instead of literals
         const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
-        const decl = (leftMostSymbol && leftMostSymbol.declarations.length)
-          ? leftMostSymbol.declarations[0]
-          : {};
+        const decl =
+          leftMostSymbol && leftMostSymbol.declarations.length
+            ? leftMostSymbol.declarations[0]
+            : {};
         isExternalSymbol =
           decl.kind === ts.SyntaxKind.NamespaceImport ||
           decl.kind === ts.SyntaxKind.NamedImports ||
@@ -243,7 +272,7 @@ export function getFullyQualifiedName(
 
 export function getTypeofFullyQualifiedName(
   symbol: ts.Symbol | void,
-  type: *,
+  type: any,
   delimiter: string = ".",
 ): string {
   if (checker.current) {
@@ -310,7 +339,7 @@ export function getTypeofFullyQualifiedName(
 
 export function fixDefaultTypeArguments(
   symbol: ts.Symbol | void,
-  type: *,
+  type: any,
 ): void {
   if (!symbol) return;
   if (!symbol.declarations) return;
@@ -723,26 +752,24 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.ExportSpecifier:
         return printers.relationships.importExportSpecifier(type);
-      
+
       case ts.SyntaxKind.GetAccessor:
         return printers.common.parameter(type);
- 
+
       case ts.SyntaxKind.SetAccessor:
         return printers.common.parameter(type);
 
       default:
-        (type.kind: empty);
+        type.kind as never;
     }
     console.log(`
     ts.SyntaxKind[type.kind]: ${ts.SyntaxKind[type.kind]}
     name: ${type.name.escapedText}
     kind: ${type.kind}
     type: ${util.inspect(type)}
-    `)
+    `);
 
-    const output = `${
-      type.name.escapedText
-    }: /* NO PRINT IMPLEMENTED: ${
+    const output = `${type.name.escapedText}: /* NO PRINT IMPLEMENTED: ${
       ts.SyntaxKind[type.kind]
     } */ any`;
     console.log(output);

@@ -1,5 +1,3 @@
-/* @flow */
-
 // Please add only built-in type references
 
 import printers from "./index";

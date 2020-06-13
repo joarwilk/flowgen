@@ -1,16 +1,16 @@
-/* @flow */
 import {
   createProgram,
   createCompilerHost,
   createSourceFile,
   ScriptTarget,
-  type SourceFile,
   transform,
 } from "typescript";
+import type { SourceFile } from "typescript";
 import tsc from "typescript-compiler";
 
 import namespaceManager from "../namespace-manager";
-import { type Options, assignOptions, resetOptions } from "../options";
+import { assignOptions, resetOptions } from "../options";
+import type { Options } from "../options";
 import { checker } from "../checker";
 import * as logger from "../logger";
 import { withEnv } from "../env";
@@ -98,7 +98,7 @@ export default {
   compileDefinitionFile: (
     path: string,
     options?: Options,
-    mapSourceCode?: (
+    mapSourceCode: (
       source: string | void,
       fileName: string,
     ) => string | void = a => a,
@@ -146,7 +146,7 @@ export default {
   compileDefinitionFiles: (
     paths: string[],
     options?: Options,
-    mapSourceCode?: (
+    mapSourceCode: (
       source: string | void,
       fileName: string,
     ) => string | void = a => a,

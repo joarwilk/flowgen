@@ -1,5 +1,3 @@
-/* @flow */
-
 import fs from "fs";
 import shell from "shelljs";
 import path from "path";

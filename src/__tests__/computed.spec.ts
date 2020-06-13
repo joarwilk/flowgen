@@ -1,5 +1,3 @@
-// @flow
-
 import { compiler, beautify } from "..";
 
 it("should handle computed Symbol.iterator and Symbol.asyncIterator", () => {

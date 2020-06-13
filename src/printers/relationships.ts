@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as ts from "typescript";
 import { opts } from "../options";
 import type { RawNode } from "../nodes/node";

@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as ts from "typescript";
 import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
@@ -25,7 +23,9 @@ export const literalType = (node: RawNode): string => {
 };
 
 export const typeParameter = (
-  node: ts.TypeParameterDeclaration & { withoutDefault: boolean },
+  node: ts.TypeParameterDeclaration & {
+    withoutDefault: boolean;
+  },
 ): string => {
   let defaultType = "";
   let constraint = "";
@@ -144,8 +144,8 @@ export const parseTypeReference = (node: RawNode): string => {
 };
 
 export const generics = (
-  types: ?$ReadOnlyArray<RawNode>,
-  map?: (node: RawNode) => RawNode = node => node,
+  types?: ReadonlyArray<RawNode> | null,
+  map: (node: RawNode) => RawNode = node => node,
 ): string => {
   if (types && typeof types.length !== "undefined") {
     return `<${types.map(map).map(printers.node.printType).join(", ")}>`;

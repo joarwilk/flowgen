@@ -1,13 +1,11 @@
-//@flow
-
 let i = 0;
 let envs = {};
 
-export function withEnv<Env, A: $ReadOnlyArray<any>, B>(
+export function withEnv<Env, A extends ReadonlyArray<any>, B>(
   callback: (env: Env, ...args: A) => B,
 ): {
-  (...args: A): B,
-  withEnv<T>(env: T): (...args: A) => B,
+  withEnv<T>(env: T): (...args: A) => B;
+  (...args: A): B;
 } {
   function fn(...args) {
     return callback(envs[i - 1], ...args);

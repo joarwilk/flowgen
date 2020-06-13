@@ -1,5 +1,3 @@
-// @flow
-
 import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
 import util from "util";

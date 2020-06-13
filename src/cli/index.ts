@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* @flow */
 import runner from "./runner";
 import pkg from "../../package.json";
 

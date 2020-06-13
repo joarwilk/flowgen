@@ -1,4 +1,3 @@
-/* @flow */
 import type { RawNode } from "./node";
 import type {
   FunctionDeclaration,
@@ -17,36 +16,30 @@ import namespaceManager from "../namespace-manager";
 import { parseNameFromNode } from "../parse/ast";
 
 type PropertyNode =
-  | {
-      ...$Exact<FunctionDeclaration>,
+  | ({
       //kind: "FunctionDeclaration",
-      jsDoc: Array<JSDoc>,
-    }
-  | {
-      ...$Exact<ClassDeclaration>,
+      jsDoc: Array<JSDoc>;
+    } & FunctionDeclaration)
+  | ({
       //kind: "ClassDeclaration",
-      jsDoc: Array<JSDoc>,
-    }
-  | {
-      ...$Exact<InterfaceDeclaration>,
+      jsDoc: Array<JSDoc>;
+    } & ClassDeclaration)
+  | ({
       //kind: "InterfaceDeclaration",
-      jsDoc: Array<JSDoc>,
-    }
-  | {
-      ...$Exact<TypeAliasDeclaration>,
+      jsDoc: Array<JSDoc>;
+    } & InterfaceDeclaration)
+  | ({
       //kind: "TypeAliasDeclaration",
-      jsDoc: Array<JSDoc>,
-    }
-  | {
-      ...$Exact<EnumDeclaration>,
+      jsDoc: Array<JSDoc>;
+    } & TypeAliasDeclaration)
+  | ({
       //kind: "EnumDeclaration",
-      jsDoc: Array<JSDoc>,
-    }
-  | {
-      ...$Exact<VariableStatement>,
+      jsDoc: Array<JSDoc>;
+    } & EnumDeclaration)
+  | ({
       //kind: "VariableStatement",
-      jsDoc: Array<JSDoc>,
-    };
+      jsDoc: Array<JSDoc>;
+    } & VariableStatement);
 
 export default class Property extends Node<PropertyNode> {
   name: string;
@@ -110,7 +103,7 @@ export default class Property extends Node<PropertyNode> {
       case ts.SyntaxKind.VariableStatement:
         for (const decl of this.raw.declarationList.declarations) {
           if (namespace && decl.name.kind === ts.SyntaxKind.Identifier) {
-            const text = (decl.name: any).text;
+            const text = (decl.name as any).text;
             namespaceManager.registerProp(namespace, text);
           }
         }

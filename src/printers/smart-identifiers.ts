@@ -1,11 +1,9 @@
-// @flow
-
 import * as ts from "typescript";
 import { checker } from "../checker";
 
 const setImportedName = (
   name: string,
-  type: *,
+  type: any,
   symbol: ts.Symbol,
   decl: ts.Declaration,
 ): boolean => {
@@ -32,7 +30,7 @@ const setImportedName = (
   return false;
 };
 
-const setGlobalName = (type: *, _symbol): boolean => {
+const setGlobalName = (type: any, _symbol): boolean => {
   const globals = [
     {
       from: ts.createQualifiedName(ts.createIdentifier("JSX"), "Element"),
@@ -52,7 +50,7 @@ const setGlobalName = (type: *, _symbol): boolean => {
   return false;
 };
 
-export function renames(symbol: ts.Symbol | void, type: *): boolean {
+export function renames(symbol: ts.Symbol | void, type: any): boolean {
   if (!symbol) return false;
   if (!symbol.declarations) return false;
   let decl = symbol.declarations[0];

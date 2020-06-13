@@ -1,14 +1,16 @@
-//@flow
-
 import type { SourceFile } from "typescript";
 import { opts } from "./options";
 import path from "path";
 import { codeFrameColumns } from "@babel/code-frame";
 import { getChalk } from "@babel/highlight";
 
-import { type ErrorMessage, printErrorMessage } from "./errors/error-message";
+import { printErrorMessage } from "./errors/error-message";
 
-const sourceFile: { current: SourceFile | null } = { current: null };
+import type { ErrorMessage } from "./errors/error-message";
+
+const sourceFile: {
+  current: SourceFile | null;
+} = { current: null };
 
 export function setSourceFile(file: SourceFile): void {
   sourceFile.current = file;

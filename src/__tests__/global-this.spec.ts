@@ -1,5 +1,3 @@
-// @flow
-
 import { compiler, beautify } from "..";
 
 it("should not crash when getting globalThis in code", () => {

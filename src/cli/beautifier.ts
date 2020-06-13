@@ -1,4 +1,3 @@
-/* @flow */
 import prettier from "prettier";
 
 export default function beautify(str: string): string {

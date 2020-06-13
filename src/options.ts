@@ -1,12 +1,10 @@
-//@flow
-
-export type Options = {|
-  jsdoc?: boolean,
-  interfaceRecords?: boolean,
-  moduleExports?: boolean,
-  quiet?: boolean,
-  inexact?: boolean,
-|};
+export type Options = {
+  jsdoc?: boolean;
+  interfaceRecords?: boolean;
+  moduleExports?: boolean;
+  quiet?: boolean;
+  inexact?: boolean;
+};
 
 const defaultOptions: Options = Object.freeze({
   jsdoc: true,
@@ -18,7 +16,7 @@ const defaultOptions: Options = Object.freeze({
 
 let options: Options = { ...defaultOptions };
 
-export function assignOptions(newOptions: $Shape<Options>): void {
+export function assignOptions(newOptions: Partial<Options>): void {
   Object.assign(options, newOptions);
 }
 

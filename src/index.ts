@@ -1,5 +1,3 @@
-// @flow
-
 import compiler from "./cli/compiler";
 import beautify from "./cli/beautifier";
 

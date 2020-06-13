@@ -1,4 +1,3 @@
-/* @flow */
 import type { RawNode } from "./node";
 
 import type Node from "./node";
@@ -14,9 +13,15 @@ import { checker } from "../checker";
 import { getFullyQualifiedName } from "../printers/node";
 
 export class Factory {
-  _modules: { [key: string]: ModuleNode };
-  _propDeclarations: { [key: string]: PropertyNode };
-  _functionDeclarations: { [key: string]: Array<PropertyNode> };
+  _modules: {
+    [key: string]: ModuleNode;
+  };
+  _propDeclarations: {
+    [key: string]: PropertyNode;
+  };
+  _functionDeclarations: {
+    [key: string]: Array<PropertyNode>;
+  };
 
   constructor() {
     //$todo
@@ -44,7 +49,7 @@ export class Factory {
   createFunctionDeclaration(
     node: RawNode,
     rawName: string,
-    context: Node<>,
+    context: Node,
   ): void {
     let name = rawName;
     const propNode = new PropertyNode(node);
@@ -72,7 +77,7 @@ export class Factory {
   createPropertyNode(
     node: RawNode,
     name?: string,
-    context?: Node<>,
+    context?: Node,
   ): PropertyNode {
     if (typeof name === "undefined") {
       return new PropertyNode(node);
@@ -100,7 +105,7 @@ export class Factory {
   createNamespaceNode = (
     node: RawNode,
     name: string,
-    context: Node<>,
+    context: Node,
   ): NamespaceNode => {
     let contextName;
     if (context instanceof ModuleNode) {

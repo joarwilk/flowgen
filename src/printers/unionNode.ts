@@ -1,5 +1,3 @@
-/* @flow */
-
 import type Node from "../nodes/node";
 
 /**
@@ -10,15 +8,15 @@ import type Node from "../nodes/node";
  * which flow does not. This is a representation of that data.
  */
 export default class UnionNode {
-  _nodes: Array<Node<>>;
+  _nodes: Array<Node>;
 
-  constructor(nodes: Node<> | Node<>[]) {
+  constructor(nodes: Node | Node[]) {
     this._nodes = [];
 
     this.add(nodes);
   }
 
-  add(nodes: Node<> | Node<>[]) {
+  add(nodes: Node | Node[]) {
     if (Array.isArray(nodes)) {
       nodes.forEach(node => {
         this._nodes.push(node);

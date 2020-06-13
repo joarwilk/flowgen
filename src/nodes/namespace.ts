@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as ts from "typescript";
 import { orderBy, uniqBy, flatten } from "lodash";
 import PropertyNode from "./property";
@@ -27,7 +25,7 @@ export default class Namespace extends Node {
     namespaceManager.register(name);
   }
 
-  addChild(name: string, child: Node<>): void {
+  addChild(name: string, child: Node): void {
     child.namespace = this.name;
     child.isValue = child.getChildren().some(node => {
       return (
@@ -43,7 +41,7 @@ export default class Namespace extends Node {
     this.children[name] = child;
   }
 
-  addChildren(name: string, child: Node<>): void {
+  addChildren(name: string, child: Node): void {
     child.namespace = this.name;
     child.isValue = child
       .getChildren()

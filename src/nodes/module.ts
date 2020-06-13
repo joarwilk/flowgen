@@ -1,4 +1,3 @@
-/* @flow */
 import type { RawNode } from "./node";
 import * as logger from "../logger";
 import Node from "./node";
@@ -6,18 +5,18 @@ import Node from "./node";
 export default class Module extends Node {
   name: string;
 
-  constructor(node: ?RawNode, name: string) {
+  constructor(node: RawNode | undefined | null, name: string) {
     super(node);
 
     this.name = name;
   }
 
-  addChild(name: string, child: Node<>): void {
+  addChild(name: string, child: Node): void {
     child.module = this.name;
     this.children[name] = child;
   }
 
-  addChildren(name: string, child: Node<>): void {
+  addChildren(name: string, child: Node): void {
     child.module = this.name;
     if (!this.children[name]) {
       this.children[name] = child;
@@ -31,7 +30,7 @@ export default class Module extends Node {
     }
   }
 
-  print(namespace?: string, module?: string, depth?: number = 0): string {
+  print(namespace?: string, module?: string, depth: number = 0): string {
     const children = this.getChildren()
       .map(child => {
         return child.print(undefined, this.name, depth + 1);

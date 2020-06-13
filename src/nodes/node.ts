@@ -1,5 +1,3 @@
-/* @flow */
-
 import _ from "lodash";
 import type { Node as TSNode } from "typescript";
 import { parseNameFromNode, stripDetailsFromTree } from "../parse/ast";
@@ -10,15 +8,15 @@ export type RawNode = any;
 
 export default class Node<NodeType = RawNode> {
   children: {
-    [key: string]: Node<>,
+    [key: string]: Node;
   };
   kind: string;
   name: string;
   raw: NodeType;
-  namespace: ?string;
-  module: ?string;
+  namespace: string | undefined | null;
+  module: string | undefined | null;
 
-  constructor(node: ?NodeType) {
+  constructor(node?: NodeType | null) {
     //$off
     this.children = Object.create(null);
 
@@ -28,12 +26,12 @@ export default class Node<NodeType = RawNode> {
     }
   }
 
-  addChild(name: string, node: Node<>): void {
+  addChild(name: string, node: Node): void {
     this.children[name] = node;
   }
 
   //TODO: remove this
-  addChildren(name: string, node: Node<>): void {
+  addChildren(name: string, node: Node): void {
     if (!this.children[name]) {
       this.children[name] = node;
       return;
@@ -49,8 +47,8 @@ export default class Node<NodeType = RawNode> {
   /**
    * Used for overloading the props of some types
    */
-  maybeAddMember(members: Object | $ReadOnlyArray<Object>): void {
-    const rawMembers: Array<TSNode> | void = (this.raw: any).members;
+  maybeAddMember(members: any | ReadonlyArray<any>): void {
+    const rawMembers: Array<TSNode> | void = (this.raw as any).members;
     if (!rawMembers) {
       return;
     }
@@ -63,7 +61,7 @@ export default class Node<NodeType = RawNode> {
     }
   }
 
-  getChildren(): $ReadOnlyArray<Node<>> {
+  getChildren(): ReadonlyArray<Node> {
     return _.toArray(this.children);
   }
 

@@ -1,5 +1,3 @@
-/* @flow */
-
 export default (
   moduleName: string,
   version: string,

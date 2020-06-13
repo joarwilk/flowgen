@@ -1,4 +1,3 @@
-// @flow
 import path from "path";
 import fs from "fs";
 import { promisify } from "./util";
@@ -62,7 +61,9 @@ function getFile(
   rawFile: string,
   isInDir: boolean,
   index: number,
-  pkg?: { [key: string]: any },
+  pkg?: {
+    [key: string]: any;
+  },
 ): File {
   // Get the module name from the file name
   const moduleName = getModuleNameFromFile(file, pkg);
@@ -214,7 +215,9 @@ export default (options: RunnerOptions) => {
 
 function getModuleNameFromFile(
   fileName: string,
-  pkg?: { [key: string]: any },
+  pkg?: {
+    [key: string]: any;
+  },
 ): string {
   if (pkg) return pkg.name;
   return path.basename(fileName).replace(".d.ts", "");

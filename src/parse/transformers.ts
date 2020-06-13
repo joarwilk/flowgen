@@ -1,15 +1,13 @@
-// @flow
-
 import * as ts from "typescript";
 import { stripDetailsFromTree } from "./ast";
 
-function updatePos<T: ts.Node>(node: T) {
+function updatePos<T extends ts.Node>(node: T) {
   node.pos = 1;
   node.end = 2;
   return node;
 }
 
-export function importEqualsTransformer(/*opts?: Opts*/) {
+export function importEqualsTransformer /*opts?: Opts*/() {
   function visitor(ctx: ts.TransformationContext) {
     const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
       switch (node.kind) {

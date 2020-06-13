@@ -1,4 +1,3 @@
-/* @flow */
 import compiler from "../compiler";
 import beautify from "../beautifier";
 

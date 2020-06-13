@@ -1,5 +1,3 @@
-// @flow
-
 import { compiler, beautify } from "..";
 
 it('should handle string literals in function argument "overloading"', () => {

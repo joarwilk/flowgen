@@ -1,5 +1,3 @@
-// @flow
-
 import { compiler, beautify } from "..";
 
 describe("should handle merging with other types", () => {

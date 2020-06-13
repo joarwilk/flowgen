@@ -1,5 +1,3 @@
-/* @flow */
-
 let namespaceProps = Object.create(null);
 let namespaces: Array<string> = [];
 

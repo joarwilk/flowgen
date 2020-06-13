@@ -1,4 +1,3 @@
-/* @flow */
 import type { RawNode } from "./node";
 import Node from "./node";
 
