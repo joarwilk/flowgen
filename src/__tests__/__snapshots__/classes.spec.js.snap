@@ -15,6 +15,10 @@ exports[`should handle static methods ES6 classes 1`] = `
   jump?: () => void;
   +jump?: () => void;
   static +jump?: () => void;
+  cfnProperties: {
+    [key: string]: any,
+    ...
+  };
 }
 "
 `;
