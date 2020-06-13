@@ -41,9 +41,7 @@ export function error(node: any, message: ErrorMessage): void {
       },
     };
     const result = codeFrameColumns(code, babelLocation, options);
-    const position = `:${babelLocation.start.line}:${
-      babelLocation.start.column
-    }`;
+    const position = `:${babelLocation.start.line}:${babelLocation.start.column}`;
     const fileName = path.relative(process.cwd(), currentSourceFile.fileName);
     console.log(
       chalk.red.bold(

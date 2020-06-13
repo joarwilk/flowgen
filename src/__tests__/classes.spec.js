@@ -17,6 +17,9 @@ it("should handle static methods ES6 classes", () => {
     jump?(): void;
     readonly jump?(): void;
     static readonly jump?(): void;
+    protected get cfnProperties(): {
+      [key: string]: any;
+    };
   }`;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();

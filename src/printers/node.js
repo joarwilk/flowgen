@@ -1,6 +1,7 @@
 /* @flow */
 
 import * as ts from "typescript";
+import util from "util";
 import printers from "./index";
 
 import { checker } from "../checker";
@@ -524,7 +525,9 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.ImportType:
         if (type.qualifier?.escapedText) {
-          return `$PropertyType<$Exports<${printType(type.argument)}>, ${JSON.stringify(type.qualifier.escapedText)}>`;
+          return `$PropertyType<$Exports<${printType(
+            type.argument,
+          )}>, ${JSON.stringify(type.qualifier.escapedText)}>`;
         }
         return `$Exports<${printType(type.argument)}>`;
 
@@ -720,12 +723,26 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.ExportSpecifier:
         return printers.relationships.importExportSpecifier(type);
+      
+      case ts.SyntaxKind.GetAccessor:
+        return printers.common.parameter(type);
+ 
+      case ts.SyntaxKind.SetAccessor:
+        return printers.common.parameter(type);
 
       default:
         (type.kind: empty);
     }
+    console.log(`
+    ts.SyntaxKind[type.kind]: ${ts.SyntaxKind[type.kind]}
+    name: ${type.name.escapedText}
+    kind: ${type.kind}
+    type: ${util.inspect(type)}
+    `)
 
-    const output = `/* NO PRINT IMPLEMENTED: ${
+    const output = `${
+      type.name.escapedText
+    }: /* NO PRINT IMPLEMENTED: ${
       ts.SyntaxKind[type.kind]
     } */ any`;
     console.log(output);

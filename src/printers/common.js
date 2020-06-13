@@ -45,6 +45,9 @@ export const parameter = (param: RawNode): string => {
       if (modifier.kind === ts.SyntaxKind.ReadonlyKeyword) left += "+";
     }
   }
+  if (param.kind === ts.SyntaxKind.SetAccessor) {
+    left += "-";
+  }
   let right;
 
   if (
@@ -145,10 +148,7 @@ export const generics = (
   map?: (node: RawNode) => RawNode = node => node,
 ): string => {
   if (types && typeof types.length !== "undefined") {
-    return `<${types
-      .map(map)
-      .map(printers.node.printType)
-      .join(", ")}>`;
+    return `<${types.map(map).map(printers.node.printType).join(", ")}>`;
   }
 
   return "";
@@ -169,9 +169,7 @@ const jsDocPrintTag = (tag): string => {
     : "";
   const comment = tag.comment ? ` ${tag.comment}`.replace(/\n/g, "\n * ") : "";
   if (typeNameValue && typeNameValue.kind === ts.SyntaxKind.JSDocTypeLiteral) {
-    let output = `\n * @${
-      tag.tagName.text
-    }${typeName}${parameterName}${comment}`;
+    let output = `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
     for (const key in typeNameValue.jsDocPropertyTags) {
       output += jsDocPrintTag(typeNameValue.jsDocPropertyTags[key]);
     }
