@@ -1,6 +1,6 @@
 // @flow
 
-import {SyntaxKind} from 'typescript'
+import { SyntaxKind } from "typescript";
 
 export type ErrorMessage =
   | {|
@@ -23,7 +23,7 @@ export type ErrorMessage =
     |}
   | {|
       +type: "UnsupportedTypeOperator",
-      +operator: $Values<typeof SyntaxKind>
+      +operator: $Values<typeof SyntaxKind>,
     |}
   | {|
       +type: "MissingFunctionName",
@@ -50,10 +50,10 @@ export function printErrorMessage(error: ErrorMessage): string {
       return "Flow doesn't support global augmentation";
 
     case "UnsupportedNestedModule":
-        return "Flow doesn't support nested modules";
+      return "Flow doesn't support nested modules";
 
     case "UnsupportedTypeOperator":
-        return `Unsupported type operator: ${SyntaxKind[error.operator]}`
+      return `Unsupported type operator: ${SyntaxKind[error.operator]}`;
 
     default:
       (error.type: empty);

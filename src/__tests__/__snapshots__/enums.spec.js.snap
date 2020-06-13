@@ -4,7 +4,7 @@ exports[`should handle basic enums: class 1`] = `
 "declare var Label: {|
   +LABEL_OPTIONAL: 0, // 0
   +LABEL_REQUIRED: 1, // 1
-  +LABEL_REPEATED: 2 // 2
+  +LABEL_REPEATED: 2, // 2
 |};
 declare type A = $Values<typeof Label>;
 declare type B = typeof Label.LABEL_OPTIONAL;
@@ -22,7 +22,7 @@ exports[`should handle number enums: class 1`] = `
   +TWO: 2, // 2
   +THREE: 3, // 3
   +NEGATIVE: -123, // -123
-  +DECIMAL: 3.14 // 3.14
+  +DECIMAL: 3.14, // 3.14
 |};
 declare type A = $Values<typeof Label>;
 declare type B = typeof Label.TWO;
@@ -33,7 +33,7 @@ exports[`should handle string enums: class 1`] = `
 "declare var Label: {|
   +LABEL_OPTIONAL: \\"LABEL_OPTIONAL\\", // \\"LABEL_OPTIONAL\\"
   +LABEL_REQUIRED: \\"LABEL_REQUIRED\\", // \\"LABEL_REQUIRED\\"
-  +LABEL_REPEATED: \\"LABEL_REPEATED\\" // \\"LABEL_REPEATED\\"
+  +LABEL_REPEATED: \\"LABEL_REPEATED\\", // \\"LABEL_REPEATED\\"
 |};
 declare type A = $Values<typeof Label>;
 declare type B = typeof Label.LABEL_REQUIRED;

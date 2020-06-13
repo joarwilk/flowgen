@@ -251,7 +251,6 @@ export const enumDeclaration = (nodeName: string, node: RawNode): string => {
   let members = "";
   for (const [index, member] of node.members.entries()) {
     let value;
-    const name = `${nodeName}__${member.name.text}`;
     if (typeof member.initializer !== "undefined") {
       value = printers.node.printType(member.initializer);
     } else {

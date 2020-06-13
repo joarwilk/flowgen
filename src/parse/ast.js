@@ -4,8 +4,6 @@ import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
 import util from "util";
 import * as logger from "../logger";
-import _ from "lodash";
-import getNodeName from "../nodename";
 
 import printers from "../printers";
 
@@ -58,6 +56,7 @@ function inspectFn(depth: number, options: util$InspectOptions): string {
     depth: options.depth == null ? null : options.depth - 1,
   });
   if (depth < 0) {
+    // eslint-disable-next-line no-unused-vars
     const { parent, symbol, localSymbol, ...rest } = this;
     delete rest[inspect];
     if (rest.kind) {
@@ -66,9 +65,13 @@ function inspectFn(depth: number, options: util$InspectOptions): string {
       return util.inspect(rest, newOptions);
     }
   }
+  // eslint-disable-next-line no-unused-vars
   const { parent, symbol, localSymbol, ...rest } = this;
   for (const key in rest) {
-    if (rest.hasOwnProperty(key) && typeof rest[key] === "object") {
+    if (
+      Object.prototype.hasOwnProperty.call(rest, key) &&
+      typeof rest[key] === "object"
+    ) {
       rest[key][inspect] = inspectFn.bind(rest[key]);
     }
   }
@@ -92,7 +95,10 @@ export const stripDetailsFromTree = (root: RawNode): any => {
     if (typeof val === "function") continue;
     if (typeof val !== "object") continue;
 
-    if (root.hasOwnProperty(key) && typeof val === "object") {
+    if (
+      Object.prototype.hasOwnProperty.call(root, key) &&
+      typeof val === "object"
+    ) {
       if (Array.isArray(val)) {
         root[key] = root[key].map(stripDetailsFromTree);
         root[key].pos = val.pos;

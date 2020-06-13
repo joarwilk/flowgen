@@ -2,7 +2,6 @@
 
 import fs from "fs";
 import shell from "shelljs";
-import path from "path";
 import program from "commander";
 import { promisify } from "./util";
 
