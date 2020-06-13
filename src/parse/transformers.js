@@ -53,7 +53,6 @@ export function importEqualsTransformer(/*opts?: Opts*/) {
             return varNode;
           }
         }
-        default:
       }
       return ts.visitEachChild(node, visitor, ctx);
     };

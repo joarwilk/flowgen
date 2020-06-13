@@ -1,1 +1,3 @@
-flow-typed/npm/**/*.js
+/flow-typed/npm/**/*.js
+/node_modules
+/lib

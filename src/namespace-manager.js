@@ -3,6 +3,8 @@
 let namespaceProps = Object.create(null);
 let namespaces: Array<string> = [];
 
+// todo: remove this and setContext method
+// eslint-disable-next-line no-unused-vars
 let context: string = "";
 
 export default {
