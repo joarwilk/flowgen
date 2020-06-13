@@ -110,12 +110,13 @@ converter. The definition is mostly just a series of interfaces with the same na
 
 ### Sample of finding all typescript definition files and generate flow file with shell script
 If your typescript definition files are built in `lib` add below shell script and run it.
-```
+
+```sh
 for i in $(find lib -type f -name "*.d.ts");
   do sh -c "flowgen $i -o ${i%.*.*}.js.flow";
 done;
 ```
-Above is in [gist](https://gist.github.com/hyochan/1afad0d9cd585c48f6e2d56442c2b156).
+
 So if you have definition files in different dir, you can rename `lib` and run the script.
 
 
