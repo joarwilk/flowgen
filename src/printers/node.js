@@ -189,7 +189,9 @@ export function getFullyQualifiedName(
       if (leftMost) {
         //$todo Flow has problems when switching variables instead of literals
         const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
-        const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
+        const decl = (leftMostSymbol && leftMostSymbol.declarations.length)
+          ? leftMostSymbol.declarations[0]
+          : {};
         isExternalSymbol =
           decl.kind === ts.SyntaxKind.NamespaceImport ||
           decl.kind === ts.SyntaxKind.NamedImports ||
