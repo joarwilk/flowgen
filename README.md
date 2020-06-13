@@ -108,6 +108,17 @@ This might require manual processing, or we add a set of hardcoded mutations tha
 [Lodash](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/9fb1696ad55c0ac54bbf6e477f21b52536211a1e/types/lodash/index.d.ts) has been one of the reference libraries i've worked with when creating the
 converter. The definition is mostly just a series of interfaces with the same name being re-declared over and over again for each function, which doesn't translate to flow at all. There's multiple ways of solving this but I don't have a great solution for it in place yet.
 
+### Sample of finding all typescript definition files and generate flow file with shell script
+If your typescript definition files are built in `lib` add below shell script and run it.
+```
+for i in $(find lib -type f -name "*.d.ts");
+  do sh -c "flowgen $i -o ${i%.*.*}.js.flow";
+done;
+```
+Above is in [gist](https://gist.github.com/hyochan/1afad0d9cd585c48f6e2d56442c2b156).
+So if you have definition files in different dir, you can rename `lib` and run the script.
+
+
 ## Contributing
 
 All help is appreciated. Please [tweet at me](https://twitter.com/joarwilk) if you want some help getting started, or just want to discuss ideas on how to solve the trickier parts.
