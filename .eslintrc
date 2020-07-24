@@ -19,6 +19,7 @@
       { "vars": "all", "args": "after-used", "argsIgnorePattern": "^_" }
     ],
     "@typescript-eslint/no-use-before-define": 0,
-    "@typescript-eslint/ban-types": 0
+    "@typescript-eslint/ban-types": 0,
+    "@typescript-eslint/ban-ts-comment": 0
   }
 }

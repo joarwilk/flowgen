@@ -177,7 +177,7 @@ export default (options: RunnerOptions) => {
         for (let index = 0; index < sources.length; index++) {
           const [, flowDefinitions] = sources[index];
           const file = files[index];
-          let writeFile = defaultExporter;
+          let writeFile: any = defaultExporter;
           if (file.mode === "flow-typed") writeFile = flowTypedExporter;
           if (file.mode === "directory-flow-typed")
             writeFile = flowTypedDirectoryExporter;
@@ -200,7 +200,7 @@ export default (options: RunnerOptions) => {
           fileMapper,
         );
 
-        let writeFile = defaultExporter;
+        let writeFile: any = defaultExporter;
         if (file.mode === "flow-typed") writeFile = flowTypedExporter;
         if (file.mode === "directory-flow-typed")
           writeFile = flowTypedDirectoryExporter;

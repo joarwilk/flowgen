@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
-import printers from "./index";
+import * as printers from "./index";
 
 export const functionType = (func: RawNode, dotAsReturn = false): string => {
   const params = func.parameters

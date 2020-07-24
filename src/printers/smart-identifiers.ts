@@ -2,7 +2,7 @@ import * as ts from "typescript";
 import { checker } from "../checker";
 
 const setImportedName = (
-  name: string,
+  name: ts.__String,
   type: any,
   symbol: ts.Symbol,
   decl: ts.Declaration,
@@ -17,13 +17,17 @@ const setImportedName = (
     }
     return {};
   };
+  // @ts-ignore todo(flow->ts)
   if (namespaces.includes(symbol.parent?.escapedName)) {
+    // @ts-ignore todo(flow->ts)
     type.escapedText = paths(symbol.parent?.escapedName)[name] || name;
     return true;
   } else if (
+    // @ts-ignore todo(flow->ts)
     specifiers.includes(decl.parent?.parent?.parent?.moduleSpecifier?.text)
   ) {
     type.escapedText =
+      // @ts-ignore todo(flow->ts)
       paths(decl.parent.parent.parent.moduleSpecifier.text)[name] || name;
     return true;
   }
@@ -53,8 +57,9 @@ const setGlobalName = (type: any, _symbol): boolean => {
 export function renames(symbol: ts.Symbol | void, type: any): boolean {
   if (!symbol) return false;
   if (!symbol.declarations) return false;
-  const decl = symbol.declarations[0];
-  if (type.parent.kind === ts.SyntaxKind.NamedImports) {
+  // todo(flow->ts)
+  const decl: any = symbol.declarations[0];
+  if (ts.isNamedImports(type.parent)) {
     setImportedName(decl.name.escapedText, decl.name, symbol, decl);
   } else if (type.kind === ts.SyntaxKind.TypeReference) {
     const leftMost = getLeftMostEntityName(type.typeName);

@@ -2,7 +2,7 @@ import * as ts from "typescript";
 import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 
-import printers from "./index";
+import * as printers from "./index";
 import { withEnv } from "../env";
 
 export const literalType = (node: RawNode): string => {

@@ -10,46 +10,43 @@ function updatePos<T extends ts.Node>(node: T) {
 export function importEqualsTransformer /*opts?: Opts*/() {
   function visitor(ctx: ts.TransformationContext) {
     const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
-      switch (node.kind) {
-        case ts.SyntaxKind.ImportEqualsDeclaration: {
-          if (
-            node.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference
-          ) {
-            const importClause = ts.createImportClause(
+      if (ts.isImportEqualsDeclaration(node)) {
+        if (
+          node.moduleReference.kind === ts.SyntaxKind.ExternalModuleReference
+        ) {
+          const importClause = ts.createImportClause(
+            undefined,
+            ts.createNamespaceImport(ts.createIdentifier(node.name.text)),
+          );
+          const moduleSpecifier = ts.createLiteral(
+            // @ts-ignore todo(flow->ts)
+            node.moduleReference.expression.text,
+          );
+          const importNode = updatePos(
+            //$todo Flow has problems when switching variables instead of literals
+            ts.createImportDeclaration(
               undefined,
-              ts.createNamespaceImport(ts.createIdentifier(node.name.text)),
-            );
-            const moduleSpecifier = ts.createLiteral(
-              node.moduleReference.expression.text,
-            );
-            const importNode = updatePos(
+              undefined,
               //$todo Flow has problems when switching variables instead of literals
-              ts.createImportDeclaration(
-                undefined,
-                undefined,
+              updatePos(importClause),
+              //$todo Flow has problems when switching variables instead of literals
+              updatePos(moduleSpecifier),
+            ),
+          );
+          return importNode;
+        } else if (node.moduleReference.kind === ts.SyntaxKind.QualifiedName) {
+          const varNode = updatePos(
+            //$todo Flow has problems when switching variables instead of literals
+            ts.createVariableStatement(node.modifiers, [
+              ts.createVariableDeclaration(
+                node.name,
                 //$todo Flow has problems when switching variables instead of literals
-                updatePos(importClause),
-                //$todo Flow has problems when switching variables instead of literals
-                updatePos(moduleSpecifier),
+                ts.createTypeQueryNode(node.moduleReference),
+                undefined,
               ),
-            );
-            return importNode;
-          } else if (
-            node.moduleReference.kind === ts.SyntaxKind.QualifiedName
-          ) {
-            const varNode = updatePos(
-              //$todo Flow has problems when switching variables instead of literals
-              ts.createVariableStatement(node.modifiers, [
-                ts.createVariableDeclaration(
-                  node.name,
-                  //$todo Flow has problems when switching variables instead of literals
-                  ts.createTypeQueryNode(node.moduleReference),
-                  undefined,
-                ),
-              ]),
-            );
-            return varNode;
-          }
+            ]),
+          );
+          return varNode;
         }
       }
       return ts.visitEachChild(node, visitor, ctx);
@@ -57,7 +54,7 @@ export function importEqualsTransformer /*opts?: Opts*/() {
     return visitor;
   }
   return (ctx: ts.TransformationContext): ts.Transformer<any> => {
-    return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx, sf));
+    return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx));
   };
 }
 
@@ -65,21 +62,18 @@ export function legacyModules() {
   function visitor(ctx: ts.TransformationContext) {
     const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
       stripDetailsFromTree(node);
-      switch (node.kind) {
-        case ts.SyntaxKind.ModuleDeclaration: {
-          if (node.name.kind === ts.SyntaxKind.Identifier) {
-            node.flags |= ts.NodeFlags.Namespace;
-          }
-          visitor(node.body);
-          return node;
+      if (ts.isModuleDeclaration(node)) {
+        if (node.name.kind === ts.SyntaxKind.Identifier) {
+          node.flags |= ts.NodeFlags.Namespace;
         }
-        default:
+        visitor(node.body);
+        return node;
       }
       return ts.visitEachChild(node, visitor, ctx);
     };
     return visitor;
   }
   return (ctx: ts.TransformationContext): ts.Transformer<any> => {
-    return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx, sf));
+    return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx));
   };
 }

@@ -3,7 +3,7 @@ import { opts } from "../options";
 import type { RawNode } from "../nodes/node";
 
 import namespaceManager from "../namespace-manager";
-import printers from "./index";
+import * as printers from "./index";
 
 export const moduleExports = (node: RawNode): string => {
   const name = printers.node.printType(node.expression);

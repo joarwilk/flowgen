@@ -1,6 +1,6 @@
 // Please add only built-in type references
 
-import printers from "./index";
+import * as printers from "./index";
 import { opts } from "../options";
 import { withEnv } from "../env";
 

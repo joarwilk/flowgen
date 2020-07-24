@@ -2,11 +2,11 @@ import _ from "lodash";
 import type { Node as TSNode } from "typescript";
 import { parseNameFromNode, stripDetailsFromTree } from "../parse/ast";
 
-import printers from "../printers";
+import * as printers from "../printers";
 
 export type RawNode = any;
 
-export default class Node<NodeType = RawNode> {
+class Node<NodeType = RawNode> {
   children: {
     [key: string]: Node;
   };
@@ -70,3 +70,8 @@ export default class Node<NodeType = RawNode> {
     return printers.node.printType(this.raw);
   }
 }
+interface Node {
+  [k: string]: any;
+}
+
+export default Node;

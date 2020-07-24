@@ -2,7 +2,7 @@ import * as ts from "typescript";
 import { opts } from "../options";
 import { checker } from "../checker";
 import type { RawNode } from "../nodes/node";
-import printers from "./index";
+import * as printers from "./index";
 import { withEnv } from "../env";
 
 export const propertyDeclaration = (
@@ -132,7 +132,7 @@ const interfaceRecordType = (
   return `{${heritage}${members}}`;
 };
 
-const classHeritageClause = withEnv<any, _, string>((env, type) => {
+const classHeritageClause = withEnv<any, any, string>((env, type) => {
   let ret;
   env.classHeritage = true;
   // TODO: refactor this
@@ -164,6 +164,7 @@ const interfaceHeritageClause = type => {
   } else if (type.expression.kind === ts.SyntaxKind.Identifier) {
     const name = printers.identifiers.print(type.expression.text);
     if (typeof name === "function") {
+      // @ts-ignore todo(flow->ts)
       return name(type.typeArguments);
     }
   } else {

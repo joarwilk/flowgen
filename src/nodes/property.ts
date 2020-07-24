@@ -11,7 +11,7 @@ import type {
 import * as ts from "typescript";
 import Node from "./node";
 
-import printers from "../printers";
+import * as printers from "../printers";
 import namespaceManager from "../namespace-manager";
 import { parseNameFromNode } from "../parse/ast";
 

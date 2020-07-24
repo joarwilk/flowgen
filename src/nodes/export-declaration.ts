@@ -1,6 +1,6 @@
 import type { RawNode } from "./node";
 import type { Expression, ExportDeclaration as RawExport } from "typescript";
-import printers from "../printers";
+import * as printers from "../printers";
 import Node from "./node";
 
 type ExportDeclarationType = RawExport & {
@@ -17,6 +17,7 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
   print(): string {
     //TODO: move to printers
     if (this.raw.exportClause) {
+      // @ts-ignore todo(flow->ts)
       const elements = this.raw.exportClause.elements;
       let specifier = "";
       if (this.raw.moduleSpecifier)

@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import util from "util";
-import printers from "./index";
+import * as printers from "./index";
 
 import { checker } from "../checker";
 import * as logger from "../logger";
@@ -91,7 +91,19 @@ type PrintNode =
   | ts.QualifiedName
   | ts.TypeReferenceType
   | ts.PropertySignature
-  | ts.MethodSignature;
+  | ts.MethodSignature
+  | ts.JSDocAllType
+  | ts.JSDocUnknownType
+  | ts.JSDocOptionalType
+  | ts.JSDocFunctionType
+  | ts.JSDocTypeLiteral
+  | ts.JSDocVariadicType
+  | ts.JSDocNonNullableType
+  | ts.JSDocNullableType
+  | ts.ComputedPropertyName
+  | ts.OptionalTypeNode
+  | ts.GetAccessorDeclaration
+  | ts.SetAccessorDeclaration;
 
 export function printEntityName(type: ts.EntityName): string {
   if (type.kind === ts.SyntaxKind.QualifiedName) {
@@ -110,14 +122,15 @@ export function printEntityName(type: ts.EntityName): string {
 }
 
 export function printPropertyAccessExpression(
-  type: ts.PropertyAccessExpression | ts.Identifier,
+  type: ts.PropertyAccessExpression | ts.Identifier | ts.PrivateIdentifier,
 ): string {
   if (type.kind === ts.SyntaxKind.PropertyAccessExpression) {
     return (
       printers.relationships.namespace(
-        type.expression.kind === ts.SyntaxKind.Identifier
+        ts.isIdentifier(type.expression)
           ? type.expression.text
-          : printPropertyAccessExpression(type.expression),
+          : // @ts-ignore todo(flow->ts)
+            printPropertyAccessExpression(type.expression),
       ) + printPropertyAccessExpression(type.name)
     );
   } else if (type.kind === ts.SyntaxKind.Identifier) {
@@ -134,16 +147,17 @@ export function getLeftMostPropertyAccessExpression(
   type: ts.PropertyAccessExpression | ts.Identifier,
 ) {
   if (type.kind === ts.SyntaxKind.PropertyAccessExpression) {
-    return type.expression.kind === ts.SyntaxKind.Identifier
+    return ts.isIdentifier(type.expression)
       ? type.expression
-      : getLeftMostPropertyAccessExpression(type.expression);
+      : // @ts-ignore todo(flow->ts)
+        getLeftMostPropertyAccessExpression(type.expression);
   } else if (type.kind === ts.SyntaxKind.Identifier) {
     return type;
   }
 }
 
 export function getFullyQualifiedPropertyAccessExpression(
-  symbol: ts.Symbol | void,
+  symbol: ts.Symbol | undefined,
   type: any,
   delimiter = "$",
 ): string {
@@ -154,7 +168,7 @@ export function getFullyQualifiedPropertyAccessExpression(
     if (leftMost) {
       //$todo Flow has problems when switching variables instead of literals
       const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
-      const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
+      const decl: any = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
       isExternalSymbol =
         decl.kind === ts.SyntaxKind.NamespaceImport ||
         decl.kind === ts.SyntaxKind.NamedImports;
@@ -204,7 +218,7 @@ export function getFullyQualifiedPropertyAccessExpression(
 }
 
 export function getFullyQualifiedName(
-  symbol: ts.Symbol | void,
+  symbol: ts.Symbol | undefined,
   type: any,
   checks = true,
   delimiter = "$",
@@ -217,7 +231,7 @@ export function getFullyQualifiedName(
       if (leftMost) {
         //$todo Flow has problems when switching variables instead of literals
         const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
-        const decl =
+        const decl: any =
           leftMostSymbol && leftMostSymbol.declarations.length
             ? leftMostSymbol.declarations[0]
             : {};
@@ -271,7 +285,7 @@ export function getFullyQualifiedName(
 }
 
 export function getTypeofFullyQualifiedName(
-  symbol: ts.Symbol | void,
+  symbol: ts.Symbol | undefined,
   type: any,
   delimiter = ".",
 ): string {
@@ -282,7 +296,7 @@ export function getTypeofFullyQualifiedName(
     if (leftMost) {
       //$todo Flow has problems when switching variables instead of literals
       const leftMostSymbol = typeChecker.getSymbolAtLocation(leftMost);
-      const decl = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
+      const decl: any = leftMostSymbol ? leftMostSymbol.declarations[0] : {};
       isExternalSymbol =
         decl.kind === ts.SyntaxKind.NamespaceImport ||
         decl.kind === ts.SyntaxKind.NamedImports;
@@ -301,6 +315,7 @@ export function getTypeofFullyQualifiedName(
     if (symbol.parent?.escapedName === "__type") {
       return symbol.parent
         ? getTypeofFullyQualifiedName(
+            // @ts-ignore todo(flow->ts)
             symbol.parent.declarations[0].parent.symbol,
             type,
           ) +
@@ -338,19 +353,22 @@ export function getTypeofFullyQualifiedName(
 }
 
 export function fixDefaultTypeArguments(
-  symbol: ts.Symbol | void,
+  symbol: ts.Symbol | undefined,
   type: any,
 ): void {
   if (!symbol) return;
   if (!symbol.declarations) return;
   const decl = symbol.declarations[0];
   const allTypeParametersHaveDefaults =
+    // @ts-ignore todo(flow->ts)
     !!decl?.typeParameters?.length &&
+    // @ts-ignore todo(flow->ts)
     decl.typeParameters.every(param => !!param.default);
   if (allTypeParametersHaveDefaults && !type.typeArguments) {
     type.typeArguments = [];
   }
 }
+
 export const printType = withEnv<any, [any], string>(
   (env: any, rawType: any): string => {
     // debuggerif()
@@ -359,7 +377,9 @@ export const printType = withEnv<any, [any], string>(
     const type: PrintNode = rawType;
 
     const keywordPrefix: string =
+      // @ts-ignore todo(flow->ts)
       type.modifiers &&
+      // @ts-ignore todo(flow->ts)
       type.modifiers.some(
         modifier => modifier.kind === ts.SyntaxKind.StaticKeyword,
       )
@@ -401,16 +421,12 @@ export const printType = withEnv<any, [any], string>(
         return "number";
 
       // JSDoc types
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocAllType:
         return "*";
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocUnknownType:
         return "?";
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocOptionalType:
         return printType(type.type) + "=";
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocFunctionType: {
         const params = type.parameters
           .map(param => printType(param.type))
@@ -418,21 +434,17 @@ export const printType = withEnv<any, [any], string>(
         const ret = type.type ? `: ${printType(type.type)}` : "";
         return `function(${params})${ret}`;
       }
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocTypeLiteral:
         return "object";
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocVariadicType:
         return "..." + printType(type.type);
-      //$todo some weird union error
       case ts.SyntaxKind.JSDocNonNullableType:
         return "!" + printType(type.type);
-      //$todo some weird union errors
       case ts.SyntaxKind.JSDocNullableType:
         return "?" + printType(type.type);
 
       case ts.SyntaxKind.ConditionalType: {
-        const error = { type: "UnsupportedConditionalType" };
+        const error = { type: "UnsupportedConditionalType" as const };
         logger.error(type, error);
         if (env && env.tsdoc) {
           return `any`;
@@ -440,16 +452,19 @@ export const printType = withEnv<any, [any], string>(
         return `/* ${printErrorMessage(error)} */ any`;
       }
 
-      //$todo some weird union errors
       case ts.SyntaxKind.ComputedPropertyName: {
         if (
+          // @ts-ignore todo(flow->ts)
           type.expression?.expression?.text === "Symbol" &&
+          // @ts-ignore todo(flow->ts)
           type.expression?.name?.text === "iterator"
         ) {
           return "@@iterator";
         }
         if (
+          // @ts-ignore todo(flow->ts)
           type.expression?.expression?.text === "Symbol" &&
+          // @ts-ignore todo(flow->ts)
           type.expression?.name?.text === "asyncIterator"
         ) {
           return "@@asyncIterator";
@@ -478,13 +493,16 @@ export const printType = withEnv<any, [any], string>(
       }
 
       case ts.SyntaxKind.BindingElement:
+        // @ts-ignore todo(flow->ts)
         return printers.common.typeParameter(type);
       case ts.SyntaxKind.TypeParameter:
+        // @ts-ignore todo(flow->ts)
         return printers.common.typeParameter(type);
 
       case ts.SyntaxKind.PrefixUnaryExpression:
         switch (type.operator) {
           case ts.SyntaxKind.MinusToken:
+            // @ts-ignore todo(flow->ts)
             return `-${type.operand.text}`;
           default:
             console.log('"NO PRINT IMPLEMENTED: PrefixUnaryExpression"');
@@ -498,7 +516,7 @@ export const printType = withEnv<any, [any], string>(
       case ts.SyntaxKind.IndexedAccessType: {
         let fn = "$ElementType";
         if (
-          type.indexType.kind === ts.SyntaxKind.LiteralType &&
+          ts.isLiteralTypeNode(type.indexType) &&
           type.indexType.literal.kind === ts.SyntaxKind.StringLiteral
         ) {
           fn = "$PropertyType";
@@ -516,13 +534,13 @@ export const printType = withEnv<any, [any], string>(
             logger.error(type, { type: "UnsupportedUniqueSymbol" });
             return printType(type.type);
           case ts.SyntaxKind.ReadonlyKeyword:
-            if (type.type.kind === ts.SyntaxKind.ArrayType) {
+            if (ts.isArrayTypeNode(type.type)) {
               return `$ReadOnlyArray<${printType(type.type.elementType)}>`;
             } else if (type.type.kind === ts.SyntaxKind.TupleType) {
               return printType(type.type);
             } else {
               const error = {
-                type: "UnsupportedTypeOperator",
+                type: "UnsupportedTypeOperator" as const,
                 operator: type.operator,
               };
               logger.error(type, error);
@@ -530,7 +548,7 @@ export const printType = withEnv<any, [any], string>(
             }
           default: {
             const error = {
-              type: "UnsupportedTypeOperator",
+              type: "UnsupportedTypeOperator" as const,
               operator: type.operator,
             };
             logger.error(type, error);
@@ -543,19 +561,24 @@ export const printType = withEnv<any, [any], string>(
         const typeName = printType(type.typeParameter.name);
         const value = printType(type.type);
         let source = `{[k: ${printType(constraint)}]: any}`;
+        // @ts-ignore todo(flow->ts)
         if (constraint.operator === ts.SyntaxKind.KeyOfKeyword) {
+          // @ts-ignore todo(flow->ts)
           source = printType(constraint.type);
         }
         return `$ObjMapi<${source}, <${typeName}>(${typeName}) => ${value}>`;
       }
 
       case ts.SyntaxKind.FirstLiteralToken:
+        // @ts-ignore todo(flow->ts)
         return type.text;
 
       case ts.SyntaxKind.ImportType:
+        // @ts-ignore todo(flow->ts)
         if (type.qualifier?.escapedText) {
           return `$PropertyType<$Exports<${printType(
             type.argument,
+            // @ts-ignore todo(flow->ts)
           )}>, ${JSON.stringify(type.qualifier.escapedText)}>`;
         }
         return `$Exports<${printType(type.argument)}>`;
@@ -607,6 +630,7 @@ export const printType = withEnv<any, [any], string>(
           }
           if (!isRenamed) {
             //$todo weird union errors
+            // @ts-ignore todo(flow->ts)
             type.typeName.escapedText = getFullyQualifiedName(
               symbol,
               type.typeName,
@@ -631,9 +655,11 @@ export const printType = withEnv<any, [any], string>(
       case ts.SyntaxKind.TupleType: {
         const lastElement = type.elementTypes[type.elementTypes.length - 1];
         if (lastElement && lastElement.kind === ts.SyntaxKind.RestType)
+          // @ts-ignore todo(flow->ts)
           type.elementTypes.pop();
         let tuple = `[${type.elementTypes.map(printType).join(", ")}]`;
         if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) {
+          // @ts-ignore todo(flow->ts)
           tuple += ` & ${printType(lastElement.type)}`;
         }
         return tuple;
@@ -671,6 +697,7 @@ export const printType = withEnv<any, [any], string>(
           return node;
         });
         const str = `${generics}(${type.parameters
+          // @ts-ignore todo(flow->ts)
           .filter(param => param.name.text !== "this")
           .map(printers.common.parameter)
           .join(", ")})`;
@@ -760,16 +787,17 @@ export const printType = withEnv<any, [any], string>(
         return printers.common.parameter(type);
 
       default:
-        type.kind as never;
     }
     console.log(`
-    ts.SyntaxKind[type.kind]: ${ts.SyntaxKind[type.kind]}
-    name: ${type.name.escapedText}
-    kind: ${type.kind}
+    ts.SyntaxKind[type.kind]: ${ts.SyntaxKind[(type as any).kind]}
+    name: ${(type as any).name.escapedText}
+    kind: ${(type as any).kind}
     type: ${util.inspect(type)}
     `);
 
+    // @ts-ignore todo(flow->ts)
     const output = `${type.name.escapedText}: /* NO PRINT IMPLEMENTED: ${
+      // @ts-ignore todo(flow->ts)
       ts.SyntaxKind[type.kind]
     } */ any`;
     console.log(output);

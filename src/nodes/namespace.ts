@@ -4,12 +4,12 @@ import PropertyNode from "./property";
 import Node from "./node";
 
 import namespaceManager from "../namespace-manager";
-import printers from "../printers";
+import * as printers from "../printers";
 
 export default class Namespace extends Node {
   name: string;
   functions: Array<PropertyNode>;
-  property: PropertyNode | void;
+  property: PropertyNode | undefined;
 
   constructor(
     name: string,
@@ -70,6 +70,7 @@ export default class Namespace extends Node {
   print = (namespace = "", mod = "root", depth?: number): string => {
     const children = uniqBy(
       orderBy(this.getChildren(), [a => a.isValue], ["desc"]),
+      // @ts-ignore todo(flow->ts)
       child => child.name.text || child.name,
     );
     const functions = children.filter(

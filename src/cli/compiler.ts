@@ -99,9 +99,9 @@ export default {
     path: string,
     options?: Options,
     mapSourceCode: (
-      source: string | void,
+      source: string | undefined,
       fileName: string,
-    ) => string | void = a => a,
+    ) => string | undefined = a => a,
   ): string => {
     reset(options);
 
@@ -147,9 +147,9 @@ export default {
     paths: string[],
     options?: Options,
     mapSourceCode: (
-      source: string | void,
+      source: string | undefined,
       fileName: string,
-    ) => string | void = a => a,
+    ) => string | undefined = a => a,
   ): Array<[string, string]> => {
     const compilerOptions = {
       noLib: true,

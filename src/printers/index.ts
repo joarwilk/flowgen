@@ -6,7 +6,7 @@ import * as common from "./common";
 import * as node from "./node";
 import * as functions from "./function";
 
-export default {
+export {
   basics,
   identifiers,
   declarations,

@@ -3,7 +3,7 @@ import type { RawNode } from "../nodes/node";
 import util from "util";
 import * as logger from "../logger";
 
-import printers from "../printers";
+import * as printers from "../printers";
 
 const inspect = Symbol.for("nodejs.util.inspect.custom");
 
@@ -99,7 +99,9 @@ export const stripDetailsFromTree = (root: RawNode): any => {
     ) {
       if (Array.isArray(val)) {
         root[key] = root[key].map(stripDetailsFromTree);
+        // @ts-ignore todo(flow->ts)
         root[key].pos = val.pos;
+        // @ts-ignore todo(flow->ts)
         root[key].end = val.end;
         root[key].assertHasRealPosition = root.assertHasRealPosition.bind(val);
         root[key].getStart = root.getStart.bind(val);
