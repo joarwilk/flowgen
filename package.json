@@ -58,7 +58,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm run compile",
-    "compile": "babel ./src --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.ts'",
+    "compile": "babel ./src --extensions '.ts,.tsx,.js' --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.ts'",
     "compile:watch": "npm run compile -- -w",
     "test": "jest",
     "lint": "eslint '**/*.{js,ts,tsx}' --quiet"
