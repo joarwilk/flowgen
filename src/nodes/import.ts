@@ -12,10 +12,13 @@ export default class Import extends Node {
     if (this.raw.importClause) {
       const bindings = this.raw.importClause.namedBindings;
       const name = this.raw.importClause.name;
+      const isTypeImport = this.raw.importClause.isTypeOnly;
       if (name && bindings) {
         const elements = bindings.elements;
         if (elements) {
-          return `import${this.module === "root" ? "" : " type"} ${name.text}, {
+          return `import${
+            this.module === "root" && !isTypeImport ? "" : " type"
+          } ${name.text}, {
           ${elements.map(node => printers.node.printType(node))}
         } from '${this.raw.moduleSpecifier.text}';\n`;
         } else {
@@ -33,7 +36,9 @@ export default class Import extends Node {
       if (bindings) {
         const elements = bindings.elements;
         if (elements) {
-          return `import${this.module === "root" ? "" : " type"} {
+          return `import${
+            this.module === "root" && !isTypeImport ? "" : " type"
+          } {
           ${elements.map(node => printers.node.printType(node))}
         } from '${this.raw.moduleSpecifier.text}';\n`;
         } else {
