@@ -164,7 +164,7 @@ const interfaceHeritageClause = type => {
   } else if (type.expression.kind === ts.SyntaxKind.Identifier) {
     const name = printers.identifiers.print(type.expression.text);
     if (typeof name === "function") {
-      // @ts-ignore todo(flow->ts)
+      // @ts-expect-error todo(flow->ts)
       return name(type.typeArguments);
     }
   } else {

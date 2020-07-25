@@ -17,7 +17,7 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
   print(): string {
     //TODO: move to printers
     if (this.raw.exportClause) {
-      // @ts-ignore todo(flow->ts)
+      // @ts-expect-error todo(flow->ts)
       const elements = this.raw.exportClause.elements;
       let specifier = "";
       if (this.raw.moduleSpecifier)

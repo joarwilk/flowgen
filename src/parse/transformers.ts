@@ -19,7 +19,7 @@ export function importEqualsTransformer /*opts?: Opts*/() {
             ts.createNamespaceImport(ts.createIdentifier(node.name.text)),
           );
           const moduleSpecifier = ts.createLiteral(
-            // @ts-ignore todo(flow->ts)
+            // @ts-expect-error todo(flow->ts)
             node.moduleReference.expression.text,
           );
           const importNode = updatePos(

@@ -70,7 +70,7 @@ export default class Namespace extends Node {
   print = (namespace = "", mod = "root", depth?: number): string => {
     const children = uniqBy(
       orderBy(this.getChildren(), [a => a.isValue], ["desc"]),
-      // @ts-ignore todo(flow->ts)
+      // @ts-expect-error todo(flow->ts)
       child => child.name.text || child.name,
     );
     const functions = children.filter(

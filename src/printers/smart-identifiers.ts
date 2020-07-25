@@ -17,17 +17,17 @@ const setImportedName = (
     }
     return {};
   };
-  // @ts-ignore todo(flow->ts)
+  // @ts-expect-error todo(flow->ts)
   if (namespaces.includes(symbol.parent?.escapedName)) {
-    // @ts-ignore todo(flow->ts)
+    // @ts-expect-error todo(flow->ts)
     type.escapedText = paths(symbol.parent?.escapedName)[name] || name;
     return true;
   } else if (
-    // @ts-ignore todo(flow->ts)
+    // @ts-expect-error todo(flow->ts)
     specifiers.includes(decl.parent?.parent?.parent?.moduleSpecifier?.text)
   ) {
     type.escapedText =
-      // @ts-ignore todo(flow->ts)
+      // @ts-expect-error todo(flow->ts)
       paths(decl.parent.parent.parent.moduleSpecifier.text)[name] || name;
     return true;
   }
