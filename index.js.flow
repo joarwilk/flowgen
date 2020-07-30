@@ -4,6 +4,8 @@ export type Options = {|
   jsdoc?: boolean,
   interfaceRecords?: boolean,
   moduleExports?: boolean,
+  quiet?: boolean,
+  inexact?: boolean,
 |};
 
 export type Compiler = {|
@@ -30,4 +32,6 @@ declare type Flowgen = {|
   compiler: Compiler,
 |};
 
-declare export default Flowgen;
+declare export const flowgen: Flowgen;
+
+declare export default flowgen;
