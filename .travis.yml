@@ -4,4 +4,4 @@ node_js:
   - "lts/*"
 
 script:
-  - yarn run lint && yarn run test
+  - yarn run lint && yarn tsc && yarn run test
