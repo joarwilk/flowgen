@@ -1,3 +1,4 @@
 /flow-typed/npm/**/*.js
 /node_modules
 /lib
+/src/cli/__tests__/fixtures/**/*
