@@ -8,38 +8,45 @@
   },
   "jest": {
     "testMatch": [
-      "**/__tests__/**/*.js",
-      "**/?(*.)+(spec|test).js"
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts",
+      "!**/*.d.ts"
     ]
   },
   "dependencies": {
-    "@babel/code-frame": "^7.8.3",
-    "@babel/highlight": "^7.9.0",
-    "commander": "^5.1.0",
-    "lodash": "^4.17.15",
-    "prettier": "^2.0.5",
+    "@babel/code-frame": "^7.10.4",
+    "@babel/highlight": "^7.10.4",
+    "commander": "^6.1.0",
+    "lodash": "^4.17.20",
+    "prettier": "^2.1.1",
     "shelljs": "^0.8.4",
-    "typescript": "^3.4",
+    "typescript": "^3.9.7",
     "typescript-compiler": "^1.4.1-2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.9.6",
-    "@babel/preset-flow": "^7.9.0",
-    "@types/node": "^13.13.5",
-    "@types/react": "^16.9.34",
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/babel__code-frame": "^7.0.1",
+    "@types/jest": "^26.0.13",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^14.10.0",
+    "@types/prettier": "^2.1.0",
+    "@types/react": "^16.9.49",
+    "@types/shelljs": "^0.8.7",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.0.1",
-    "eslint": "^6.8.0",
+    "babel-jest": "^26.3.0",
+    "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-flowtype": "^4.7.0",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jest": "^23.9.0",
-    "flow-bin": "^0.102.0",
-    "jest": "^26.0.1"
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.4.2"
   },
   "files": [
     "lib",
@@ -48,12 +55,12 @@
   ],
   "license": "ISC",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "prettier": "prettier  --write \"{src,types}/**/*.js\"",
     "prepublishOnly": "npm run compile",
-    "compile": "babel ./src --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.js'",
+    "compile": "babel ./src --extensions '.ts,.tsx,.js' --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.ts'",
     "compile:watch": "npm run compile -- -w",
     "test": "jest",
-    "lint": "eslint '**/*.js' --quiet"
+    "lint": "eslint '**/*.{js,ts,tsx}' --quiet"
   }
 }
