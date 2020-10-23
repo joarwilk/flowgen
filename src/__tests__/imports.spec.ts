@@ -33,3 +33,12 @@ type S = typeof import('http')
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
 });
+
+it("should handle type imports", () => {
+  const ts = `import type { GeneratorOptions } from "@babel/generator";
+import type traverse from "@babel/traverse";
+import type { Visitor as NewVisitor } from "@babel/traverse";
+`;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+});

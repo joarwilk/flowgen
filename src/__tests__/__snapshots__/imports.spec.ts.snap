@@ -31,3 +31,10 @@ exports[`should handle imports inside module 1`] = `
 }
 "
 `;
+
+exports[`should handle type imports 1`] = `
+"import type { GeneratorOptions } from \\"@babel/generator\\";
+import traverse from \\"@babel/traverse\\";
+import type { Visitor as NewVisitor } from \\"@babel/traverse\\";
+"
+`;
