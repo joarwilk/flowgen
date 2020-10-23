@@ -551,6 +551,7 @@ export const printType = withEnv<any, [any], string>(
           default: {
             const error = {
               type: "UnsupportedTypeOperator" as const,
+              // @ts-expect-error
               operator: type.operator,
             };
             logger.error(type, error);
@@ -655,13 +656,12 @@ export const printType = withEnv<any, [any], string>(
       case ts.SyntaxKind.OptionalType:
         return `${printType(type.type)} | void`;
       case ts.SyntaxKind.TupleType: {
-        const lastElement = type.elementTypes[type.elementTypes.length - 1];
-        if (lastElement && lastElement.kind === ts.SyntaxKind.RestType)
+        const lastElement = type.elements[type.elements.length - 1];
+        if (lastElement && ts.isRestTypeNode(lastElement))
           // @ts-expect-error todo(flow->ts)
-          type.elementTypes.pop();
-        let tuple = `[${type.elementTypes.map(printType).join(", ")}]`;
-        if (lastElement && lastElement.kind === ts.SyntaxKind.RestType) {
-          // @ts-expect-error todo(flow->ts)
+          type.elements.pop();
+        let tuple = `[${type.elements.map(printType).join(", ")}]`;
+        if (lastElement && ts.isRestTypeNode(lastElement)) {
           tuple += ` & ${printType(lastElement.type)}`;
         }
         return tuple;
@@ -792,13 +792,13 @@ export const printType = withEnv<any, [any], string>(
     }
     console.log(`
     ts.SyntaxKind[type.kind]: ${ts.SyntaxKind[(type as any).kind]}
-    name: ${(type as any).name.escapedText}
+    name: ${(type as any)?.name?.escapedText}
     kind: ${(type as any).kind}
     type: ${util.inspect(type)}
     `);
 
     // @ts-expect-error todo(flow->ts)
-    const output = `${type.name.escapedText}: /* NO PRINT IMPLEMENTED: ${
+    const output = `${type.name?.escapedText}: /* NO PRINT IMPLEMENTED: ${
       // @ts-expect-error todo(flow->ts)
       ts.SyntaxKind[type.kind]
     } */ any`;

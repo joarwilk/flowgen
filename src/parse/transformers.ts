@@ -2,7 +2,9 @@ import * as ts from "typescript";
 import { stripDetailsFromTree } from "./ast";
 
 function updatePos<T extends ts.Node>(node: T) {
+  // @ts-expect-error todo: modifying "readonly" property
   node.pos = 1;
+  // @ts-expect-error todo: modifying "readonly" property
   node.end = 2;
   return node;
 }
@@ -64,6 +66,7 @@ export function legacyModules() {
       stripDetailsFromTree(node);
       if (ts.isModuleDeclaration(node)) {
         if (node.name.kind === ts.SyntaxKind.Identifier) {
+          // @ts-expect-error todo: modifying "readonly" property
           node.flags |= ts.NodeFlags.Namespace;
         }
         visitor(node.body);

@@ -170,8 +170,8 @@ const jsDocPrintTag = (tag): string => {
   const comment = tag.comment ? ` ${tag.comment}`.replace(/\n/g, "\n * ") : "";
   if (typeNameValue && typeNameValue.kind === ts.SyntaxKind.JSDocTypeLiteral) {
     let output = `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
-    for (const key in typeNameValue.jsDocPropertyTags) {
-      output += jsDocPrintTag(typeNameValue.jsDocPropertyTags[key]);
+    for (const jsDocPropertyTag of typeNameValue.jsDocPropertyTags) {
+      output += jsDocPrintTag(jsDocPropertyTag);
     }
     return output;
   }
