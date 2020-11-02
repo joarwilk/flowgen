@@ -32,6 +32,4 @@ declare type Flowgen = {|
   compiler: Compiler,
 |};
 
-declare export const flowgen: Flowgen;
-
-declare export default flowgen;
+declare export default Flowgen;
