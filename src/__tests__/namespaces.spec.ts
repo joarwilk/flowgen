@@ -222,9 +222,8 @@ namespace ns {
   test("class", () => {
     const ts = `
 namespace ns {
-  // TODO: implement class merging inside namespaces
   declare class Album {
-    label: Album.AlbumLabel;
+    label: ns.Album.AlbumLabel;
   }
   namespace Album {
     export declare class AlbumLabel { }

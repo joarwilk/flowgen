@@ -118,15 +118,13 @@ exports[`should handle nested namespace merging class 1`] = `
 "declare var ns: typeof npm$namespace$ns;
 
 declare var npm$namespace$ns: {|
-  Album: typeof npm$namespace$ns$Album,
+  Album: typeof ns$Album,
 |};
 declare class ns$Album {
-  label: Album$AlbumLabel;
+  label: ns$Album.AlbumLabel;
+  static AlbumLabel: typeof ns$Album$AlbumLabel;
 }
 
-declare var npm$namespace$ns$Album: {|
-  AlbumLabel: typeof ns$Album$AlbumLabel,
-|};
 declare export class ns$Album$AlbumLabel {}
 "
 `;

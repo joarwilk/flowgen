@@ -53,6 +53,15 @@ export default class Namespace extends Node {
           node.raw.kind === ts.SyntaxKind.FunctionDeclaration ||
           node.raw.kind === ts.SyntaxKind.EnumDeclaration,
       );
+
+    if (
+      child instanceof Namespace &&
+      this.children[child.name] &&
+      this.children[child.name].raw &&
+      this.children[child.name].raw.kind === ts.SyntaxKind.ClassDeclaration
+    ) {
+      name = child.name;
+    }
     namespaceManager.registerProp(this.name, child.name);
 
     if (!this.children[name]) {
