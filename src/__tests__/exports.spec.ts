@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle exports", () => {
   const ts = `
@@ -14,6 +15,7 @@ export * from 'typescript';
 //export * as t from "@babel/types";`;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).not.toBeValidFlowTypeDeclarations(); // cannot-resolve-module
 });
 
 test("should handle unnamed default export", () => {
@@ -22,4 +24,5 @@ export default function(): void;
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

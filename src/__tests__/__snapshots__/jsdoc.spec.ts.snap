@@ -47,6 +47,7 @@ declare var patchOuter: <T>(
   fn: (data: T) => void,
   data?: T
 ) => Node | null;
+declare class ECharts {}
 /**
  * Creates an ECharts instance, and returns an echartsInstance. You shall
  *      not initialize multiple ECharts instances on a single container.

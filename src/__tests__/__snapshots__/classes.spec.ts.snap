@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle static methods ES6 classes 1`] = `
-"declare class Observable<T> mixins Subscribable<T> {
+"declare class Subscribable<T> {}
+declare class Operator<T, R> {}
+declare class Observable<T> mixins Subscribable<T> {
   create: Function;
   static create: Function;
   lift<R>(operator: Operator<T, R>): Observable<R>;

@@ -11,7 +11,7 @@ declare var baz: number;
 declare var quuz: any;
 declare var quuuz: string;
 declare var quuuuz: number;
-declare var quuuuz: string;
+declare var quuuuuz: string;
 declare var fox: number;
 "
 `;

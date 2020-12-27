@@ -1,7 +1,11 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle static methods ES6 classes", () => {
-  const ts = `class Observable<T> implements Subscribable<T> {
+  const ts = `
+  class Subscribable<T> {}
+  class Operator<T, R> {}
+  class Observable<T> implements Subscribable<T> {
     create: Function;
     static create: Function;
     lift<R>(operator: Operator<T, R>): Observable<R>;
@@ -18,7 +22,9 @@ it("should handle static methods ES6 classes", () => {
     protected get cfnProperties(): {
       [key: string]: any;
     };
-  }`;
+  }
+  `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

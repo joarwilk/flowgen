@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle default exported es module functions 1`] = `
-"declare export default function routerReducer(
+"declare class Action {}
+declare class RouterState {}
+declare export default function routerReducer(
   state?: RouterState,
   action?: Action
 ): RouterState;
@@ -9,7 +11,12 @@ exports[`should handle default exported es module functions 1`] = `
 `;
 
 exports[`should handle exported es module functions 1`] = `
-"declare export function routerReducer(
+"declare class Action {}
+declare class RouterState {}
+declare class Store<T> {}
+declare class SyncHistoryWithStoreOptions {}
+declare class HistoryUnsubscribe {}
+declare export function routerReducer(
   state?: RouterState,
   action?: Action
 ): RouterState;
@@ -22,7 +29,9 @@ declare export function syncHistoryWithStore(
 `;
 
 exports[`should handle function overload es module functions 1`] = `
-"declare export function routerReducer(
+"declare class Action {}
+declare class RouterState {}
+declare export function routerReducer(
   state?: RouterState,
   action?: Action
 ): RouterState;

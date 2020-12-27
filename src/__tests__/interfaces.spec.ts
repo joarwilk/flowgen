@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle single interface", () => {
   const ts = `
@@ -8,10 +9,12 @@ interface User {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
   const result2 = compiler.compileDefinitionString(ts, {
     interfaceRecords: true,
   });
   expect(beautify(result2)).toMatchSnapshot();
+  expect(result2).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle interface inheritance", () => {
@@ -25,10 +28,12 @@ interface SpecialUser extends User {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
   const result2 = compiler.compileDefinitionString(ts, {
     interfaceRecords: true,
   });
   expect(beautify(result2)).toMatchSnapshot();
+  expect(result2).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle interface merging", () => {
@@ -45,10 +50,12 @@ interface User {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
   const result2 = compiler.compileDefinitionString(ts, {
     interfaceRecords: true,
   });
   expect(beautify(result2)).toMatchSnapshot();
+  expect(result2).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle all properties", () => {
@@ -62,6 +69,7 @@ interface Props {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).not.toBeValidFlowTypeDeclarations(); // unsupported-syntax
 });
 
 it("should support readonly modifier", () => {
@@ -73,10 +81,13 @@ interface Helper {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should support call signature", () => {
   const ts = `
+  interface ObjectSchema<T> {}
+  interface ObjectSchemaDefinition<T> {}
   declare interface ObjectSchemaConstructor {
     <T extends object>(fields?: ObjectSchemaDefinition<T>): ObjectSchema<T>;
     new (): ObjectSchema<{}>;
@@ -84,6 +95,7 @@ it("should support call signature", () => {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should remove this in call signature", () => {
@@ -102,16 +114,19 @@ interface C<This, Datum> {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should remove generic defaults in call signature", () => {
   const ts = `
+interface AbstractLevelDOWN<K, V> {}
 interface AbstractLevelDOWNConstructor {
     <K = any, V = any>(location: string): AbstractLevelDOWN<K, V>;
 }  
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should support omitting generic defaults in types, classes, interfaces", () => {
@@ -131,6 +146,7 @@ declare var f: Baz<any>
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should support optional methods", () => {
@@ -142,6 +158,7 @@ interface Example<State> {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle toString property name", () => {
@@ -152,6 +169,7 @@ interface A {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle untyped object binding pattern", () => {
@@ -164,6 +182,7 @@ interface ObjectBinding {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle untyped array binding pattern", () => {
@@ -176,6 +195,7 @@ interface ArrayBinding {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle typed object binding pattern", () => {
@@ -188,6 +208,7 @@ interface ObjectBinding {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle typed array binding pattern", () => {
@@ -200,4 +221,5 @@ interface ArrayBinding {
 `;
   const result = compiler.compileDefinitionString(ts);
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

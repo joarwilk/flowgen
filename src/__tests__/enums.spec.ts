@@ -1,9 +1,11 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle empty enums", () => {
   const ts = `enum Empty { }`;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle basic enums", () => {
@@ -17,6 +19,7 @@ type B = Label.LABEL_OPTIONAL
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle number enums", () => {
@@ -32,6 +35,7 @@ type B = Label.TWO
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle string enums", () => {
@@ -45,4 +49,5 @@ type B = Label.LABEL_REQUIRED
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot("class");
+  expect(result).toBeValidFlowTypeDeclarations();
 });
