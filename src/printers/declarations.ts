@@ -106,6 +106,7 @@ const interfaceRecordType = (
   heritage: string,
   withSemicolons = false,
 ): string => {
+  const isInexact = opts().inexact;
   let members = node.members
     .map(member => {
       const printed = printers.node.printType(member);
@@ -129,7 +130,11 @@ const interfaceRecordType = (
     members += "\n";
   }
 
-  return `{${heritage}${members}}`;
+  if (isInexact) {
+    return `{${heritage}${members}}`;
+  } else {
+    return `{|${heritage}${members}|}`;
+  }
 };
 
 const classHeritageClause = withEnv<any, any, string>((env, type) => {
