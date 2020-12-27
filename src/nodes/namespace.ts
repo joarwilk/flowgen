@@ -88,6 +88,13 @@ export default class Namespace extends Node {
     const enums = children.filter(
       child => child.raw && child.raw.kind === ts.SyntaxKind.EnumDeclaration,
     );
+    // Interfaces with type parameters are not expressible inside namespaces.
+    const interfaces = children.filter(
+      child =>
+        child.raw &&
+        child.raw.kind === ts.SyntaxKind.InterfaceDeclaration &&
+        !(child.raw.typeParameters && child.raw.typeParameters.length),
+    );
     const classes = children.filter(
       child => child.raw && child.raw.kind === ts.SyntaxKind.ClassDeclaration,
     );
@@ -135,6 +142,11 @@ export default class Namespace extends Node {
         ${enums
           .map(child => {
             return `${child.name}: typeof ${name}$${child.name},`;
+          })
+          .join("\n")}
+        ${interfaces
+          .map(child => {
+            return `${child.name}: Class<${name}$${child.name}>,`;
           })
           .join("\n")}
         ${classes
