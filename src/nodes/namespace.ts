@@ -73,6 +73,41 @@ export default class Namespace extends Node {
       // @ts-expect-error todo(flow->ts)
       child => child.name.text || child.name,
     );
+    let name = this.name;
+    if (namespace) {
+      name = namespace + "$" + this.name;
+    }
+
+    const childrenDeclarations = this.functions
+      .map(propNode => printers.functions.functionType(propNode.raw, true))
+      .concat(Namespace.formatChildren(children, name));
+
+    const childrenNode = `${this.getChildren()
+      .map(child => {
+        return child.print(name, mod, depth);
+      })
+      .join("\n\n")}`;
+
+    if (childrenDeclarations.length > 0) {
+      let topLevel = "";
+      const nsGroup = `
+      declare var npm$namespace$${name}: {|
+        ${childrenDeclarations.map(declaration => `${declaration},`).join("\n")}
+      |}\n`;
+      if (namespace === "") {
+        topLevel = `declare var ${name}: typeof npm$namespace$${name};\n`;
+      }
+
+      return topLevel + nsGroup + childrenNode;
+    }
+
+    return childrenNode;
+  };
+
+  static formatChildren(
+    children: ReadonlyArray<Node>,
+    childrenNamespace: string,
+  ): string[] {
     const functions = children.filter(
       child =>
         child.raw && child.raw.kind === ts.SyntaxKind.FunctionDeclaration,
@@ -101,72 +136,26 @@ export default class Namespace extends Node {
     const namespaces = children.filter(child => {
       return child.isValue;
     });
-    let name = this.name;
-    if (namespace) {
-      name = namespace + "$" + this.name;
-    }
 
-    const childrenNode = `${this.getChildren()
-      .map(child => {
-        return child.print(name, mod, depth);
-      })
-      .join("\n\n")}`;
-
-    if (
-      this.functions.length ||
-      functions.length ||
-      variables.length ||
-      namespaces.length ||
-      classes.length ||
-      enums.length
-    ) {
-      let topLevel = "";
-      const nsGroup = `
-      declare var npm$namespace$${name}: {|
-        ${this.functions
-          .map(
-            propNode =>
-              `${printers.functions.functionType(propNode.raw, true)},`,
-          )
-          .join("\n")}
-        ${functions
-          .map(child => {
-            return `${child.name}: typeof ${name}$${child.name},`;
-          })
-          .join("\n")}
-        ${variables
-          .map(child => {
-            return `${child.name.text}: typeof ${name}$${child.name.text},`;
-          })
-          .join("\n")}
-        ${enums
-          .map(child => {
-            return `${child.name}: typeof ${name}$${child.name},`;
-          })
-          .join("\n")}
-        ${interfaces
-          .map(child => {
-            return `${child.name}: Class<${name}$${child.name}>,`;
-          })
-          .join("\n")}
-        ${classes
-          .map(child => {
-            return `${child.name}: typeof ${name}$${child.name},`;
-          })
-          .join("\n")}
-        ${namespaces
-          .map(child => {
-            return `${child.name}: typeof npm$namespace$${name}$${child.name},`;
-          })
-          .join("\n")}
-      |}\n`;
-      if (namespace === "") {
-        topLevel = `declare var ${name}: typeof npm$namespace$${name};\n`;
-      }
-
-      return topLevel + nsGroup + childrenNode;
-    }
-
-    return childrenNode;
-  };
+    return [].concat(
+      functions.map(child => {
+        return `${child.name}: typeof ${childrenNamespace}$${child.name}`;
+      }),
+      variables.map(child => {
+        return `${child.name.text}: typeof ${childrenNamespace}$${child.name.text}`;
+      }),
+      enums.map(child => {
+        return `${child.name}: typeof ${childrenNamespace}$${child.name}`;
+      }),
+      interfaces.map(child => {
+        return `${child.name}: Class<${childrenNamespace}$${child.name}>`;
+      }),
+      classes.map(child => {
+        return `${child.name}: typeof ${childrenNamespace}$${child.name}`;
+      }),
+      namespaces.map(child => {
+        return `${child.name}: typeof npm$namespace$${childrenNamespace}$${child.name}`;
+      }),
+    );
+  }
 }

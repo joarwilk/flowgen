@@ -20,12 +20,9 @@ exports[`should handle import equals declaration 1`] = `
 exports[`should handle merging with other types class 1`] = `
 "declare class Album {
   label: Album$AlbumLabel;
+  static AlbumLabel: typeof Album$AlbumLabel;
 }
-declare var Album: typeof npm$namespace$Album;
 
-declare var npm$namespace$Album: {|
-  AlbumLabel: typeof Album$AlbumLabel,
-|};
 declare export class Album$AlbumLabel {}
 "
 `;
@@ -50,7 +47,6 @@ exports[`should handle merging with other types function const 1`] = `
 
 declare var npm$namespace$test: {|
   (foo: number): string,
-
   ok: typeof test$ok,
 |};
 declare export var test$ok: number;
@@ -62,7 +58,6 @@ exports[`should handle merging with other types function interface 1`] = `
 
 declare var npm$namespace$test: {|
   (foo: number): string,
-
   Foo: Class<test$Foo>,
 |};
 export interface test$Foo {
@@ -119,13 +114,98 @@ declare export var test$ok: number;
 "
 `;
 
+exports[`should handle nested namespace merging class 1`] = `
+"declare var ns: typeof npm$namespace$ns;
+
+declare var npm$namespace$ns: {|
+  Album: typeof npm$namespace$ns$Album,
+|};
+declare class ns$Album {
+  label: Album$AlbumLabel;
+}
+
+declare var npm$namespace$ns$Album: {|
+  AlbumLabel: typeof ns$Album$AlbumLabel,
+|};
+declare export class ns$Album$AlbumLabel {}
+"
+`;
+
+exports[`should handle nested namespace merging enum 1`] = `
+"declare var ns: typeof npm$namespace$ns;
+
+declare var npm$namespace$ns: {|
+  Color: typeof npm$namespace$ns$Color,
+|};
+
+declare var ns$Color: {|
+  +red: 1, // 1
+  +green: 2, // 2
+  +blue: 4, // 4
+|};
+
+declare var npm$namespace$ns$Color: {|
+  mixColor: typeof ns$Color$mixColor,
+|};
+declare export function ns$Color$mixColor(colorName: string): number;
+"
+`;
+
+exports[`should handle nested namespace merging function const 1`] = `
+"declare var ns: typeof npm$namespace$ns;
+
+declare var npm$namespace$ns: {|
+  test: typeof npm$namespace$ns$test,
+|};
+
+declare var npm$namespace$ns$test: {|
+  (foo: number): string,
+  ok: typeof ns$test$ok,
+|};
+declare export var test$ok: number;
+"
+`;
+
+exports[`should handle nested namespace merging function interface 1`] = `
+"declare var ns: typeof npm$namespace$ns;
+
+declare var npm$namespace$ns: {|
+  test: typeof ns$test,
+|};
+
+declare var npm$namespace$ns$test: {|
+  (foo: number): string,
+  Foo: Class<ns$test$Foo>,
+|};
+export interface ns$test$Foo {
+  bar: number;
+}
+"
+`;
+
+exports[`should handle nested namespace merging function type 1`] = `
+"declare var ns: typeof npm$namespace$ns;
+
+declare var npm$namespace$ns: {|
+  test: typeof ns$test,
+|};
+
+declare var npm$namespace$ns$test: {|
+  (foo: number): string,
+|};
+export type ns$test$Foo = {
+  bar: number,
+  ...
+};
+"
+`;
+
 exports[`should handle nested namespaces 1`] = `
 "import * as external from \\"external\\";
 declare var E0: typeof npm$namespace$E0;
 
 declare var npm$namespace$E0: {|
   s1: typeof E0$s1,
-
   S1: typeof npm$namespace$E0$S1,
 |};
 declare type E0$A = external.type;
@@ -134,7 +214,6 @@ declare var npm$namespace$E0$U1: {|
   e2: typeof E0$U1$e2,
   E2: typeof E0$U1$E2,
   S3: Class<E0$U1$S3>,
-
   D1: typeof npm$namespace$E0$U1$D1,
   DD1: typeof npm$namespace$E0$U1$DD1,
 |};
@@ -155,7 +234,6 @@ declare var npm$namespace$E0$U1$D1: {|
 
 declare var npm$namespace$E0$U1$D1$S2: {|
   n3: typeof E0$U1$D1$S2$n3,
-
   S3: Class<E0$U1$D1$S2$S3>,
   N3: typeof E0$U1$D1$S2$N3,
 |};
@@ -167,6 +245,9 @@ declare var E0$U1$D1$S2$n3: Symbol;
 
 declare class E0$U1$D1$S2$N3 {}
 
+declare var npm$namespace$E0$U1$DD1$S2: {|
+  S3: Class<E0$U1$DD1$S2$S3>,
+|};
 declare interface E0$U1$DD1$S2$S3 {
   e: number;
 }

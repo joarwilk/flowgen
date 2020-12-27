@@ -1,7 +1,9 @@
 import * as ts from "typescript";
 import { opts } from "../options";
 import { checker } from "../checker";
+import type Node from "../nodes/node";
 import type { RawNode } from "../nodes/node";
+import Namespace from "../nodes/namespace";
 import * as printers from "./index";
 import { withEnv } from "../env";
 
@@ -68,8 +70,10 @@ export const variableDeclaration = (node: RawNode): string => {
     .join("\n");
 };
 
-export const interfaceType = (
+export const interfaceType = <T>(
   node: RawNode,
+  nodeName: string,
+  mergedNamespaceChildren: ReadonlyArray<Node<T>>,
   withSemicolons = false,
   isType = false,
 ): string => {
@@ -89,6 +93,15 @@ export const interfaceType = (
 
     return str + printed;
   });
+
+  if (mergedNamespaceChildren.length > 0) {
+    for (const child of Namespace.formatChildren(
+      mergedNamespaceChildren,
+      nodeName,
+    )) {
+      members.push(`static ${child}\n`);
+    }
+  }
 
   if (isType && isInexact) {
     members.push("...\n");
@@ -231,6 +244,8 @@ export const interfaceDeclaration = (
     node.typeParameters,
   )} ${type === "type" ? "= " : ""}${interfaceType(
     node,
+    nodeName,
+    [],
     false,
     type === "type",
   )} ${heritage}`;
@@ -289,7 +304,11 @@ export const typeReference = (node: RawNode, identifier: boolean): string => {
   );
 };
 
-export const classDeclaration = (nodeName: string, node: RawNode): string => {
+export const classDeclaration = <T>(
+  nodeName: string,
+  node: RawNode,
+  mergedNamespaceChildren: ReadonlyArray<Node<T>>,
+): string => {
   let heritage = "";
 
   // If the class is extending something
@@ -306,7 +325,12 @@ export const classDeclaration = (nodeName: string, node: RawNode): string => {
     node,
   )}class ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} ${heritage} ${interfaceType(node, true)}`;
+  )} ${heritage} ${interfaceType(
+    node,
+    nodeName,
+    mergedNamespaceChildren,
+    true,
+  )}`;
 
   return str;
 };
