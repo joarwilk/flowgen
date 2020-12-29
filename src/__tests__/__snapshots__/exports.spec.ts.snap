@@ -7,6 +7,7 @@ declare export { module as newModule };
 declare export { GeneratorOptions } from \\"@babel/generator\\";
 declare export { GeneratorOptions as NewGeneratorOptions } from \\"@babel/generator\\";
 declare export * from \\"typescript\\"
+declare export * as t from \\"@babel/types\\";
 "
 `;
 

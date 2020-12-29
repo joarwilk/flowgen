@@ -1,5 +1,6 @@
 import type { RawNode } from "./node";
 import type { Expression, ExportDeclaration as RawExport } from "typescript";
+import { isNamespaceExport } from "typescript";
 import * as printers from "../printers";
 import Node from "./node";
 
@@ -17,13 +18,16 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
   print(): string {
     //TODO: move to printers
     if (this.raw.exportClause) {
-      // @ts-expect-error todo(flow->ts)
-      const elements = this.raw.exportClause.elements;
       const isTypeImport = this.raw.isTypeOnly;
 
       let specifier = "";
       if (this.raw.moduleSpecifier)
         specifier = `from '${this.raw.moduleSpecifier.text}';`;
+
+      if (isNamespaceExport(this.raw.exportClause)) {
+        return `declare export * as ${this.raw.exportClause.name.escapedText} ${specifier}\n`;
+      }
+      const elements = this.raw.exportClause.elements;
 
       const generateOutput = prefix => {
         return `${prefix} {
