@@ -62,6 +62,8 @@ exports[`should handle merging with other types function interface 1`] = `
 
 declare var npm$namespace$test: {|
   (foo: number): string,
+
+  Foo: Class<test$Foo>,
 |};
 export interface test$Foo {
   bar: number;
@@ -131,6 +133,7 @@ declare type E0$A = external.type;
 declare var npm$namespace$E0$U1: {|
   e2: typeof E0$U1$e2,
   E2: typeof E0$U1$E2,
+  S3: Class<E0$U1$S3>,
 
   D1: typeof npm$namespace$E0$U1$D1,
   DD1: typeof npm$namespace$E0$U1$DD1,
@@ -153,6 +156,7 @@ declare var npm$namespace$E0$U1$D1: {|
 declare var npm$namespace$E0$U1$D1$S2: {|
   n3: typeof E0$U1$D1$S2$n3,
 
+  S3: Class<E0$U1$D1$S2$S3>,
   N3: typeof E0$U1$D1$S2$N3,
 |};
 declare interface E0$U1$D1$S2$S3 {
