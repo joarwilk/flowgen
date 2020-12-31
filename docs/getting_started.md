@@ -22,8 +22,8 @@ Hey so you want to take a look at fixing your bug, we have three steps:
 From there you should add a new test file with a chunk of your TypeScript interface. For example, I created the file `src/__tests__/union_strings.spec.js` and added
 
 ```js
-import compiler from '../cli/compiler';
-import beautify from '../cli/beautifier';
+import { compiler, beautify } from "..";
+import "./matchers";
 
 it('should handle union strings', () => {
   const ts = `
@@ -33,8 +33,9 @@ it('should handle union strings', () => {
 `;
 
   const result = compiler.compileDefinitionString(ts);
-  
+
   expect(beautify(result)).toMatchSnapshot()
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 ```
 

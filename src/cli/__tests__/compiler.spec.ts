@@ -1,5 +1,6 @@
 import compiler from "../compiler";
 import beautify from "../beautifier";
+import "../../test-matchers";
 
 it("should handle maybe & nullable type", () => {
   const result = compiler.compileDefinitionString(
@@ -8,6 +9,7 @@ it("should handle maybe & nullable type", () => {
   );
 
   expect(result).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle bounded polymorphism", () => {
@@ -21,4 +23,5 @@ it("should handle bounded polymorphism", () => {
   const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

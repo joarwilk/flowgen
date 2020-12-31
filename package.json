@@ -41,11 +41,13 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.3.0",
+    "chalk": "^4.1.0",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^24.0.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "flow-bin": "^0.141.0",
     "jest": "^26.4.2"
   },
   "files": [
@@ -60,7 +62,8 @@
     "prepublishOnly": "npm run compile",
     "compile": "babel ./src --extensions '.ts,.tsx,.js' --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.ts'",
     "compile:watch": "npm run compile -- -w",
-    "test": "jest",
+    "test": "jest src/**/*.spec.ts",
+    "test:watch": "jest src/**/*.spec.ts --watch",
     "lint": "eslint '**/*.{js,ts,tsx}' --quiet"
   }
 }

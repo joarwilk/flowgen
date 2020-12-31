@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle union strings", () => {
   const ts = `
@@ -11,4 +12,5 @@ it("should handle union strings", () => {
   const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

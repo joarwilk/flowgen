@@ -1,14 +1,16 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle react types", () => {
   const ts = `
-import {ReactNode} from 'react'
+import type {ReactNode} from 'react'
 import * as React from 'react'
 declare function s(node: ReactNode): void;
 declare function s(node: React.ReactNode): void;
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 describe("should handle global types", () => {
@@ -25,5 +27,6 @@ declare class Component extends React.Component<Props> {
 `;
     const result = compiler.compileDefinitionString(ts, { quiet: true });
     expect(beautify(result)).toMatchSnapshot();
+    expect(result).toBeValidFlowTypeDeclarations();
   });
 });

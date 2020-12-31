@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle basic keywords", () => {
   const ts = `type A = {
@@ -27,4 +28,5 @@ it("should handle basic keywords", () => {
   }`;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

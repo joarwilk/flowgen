@@ -1,5 +1,6 @@
 import compiler from "../compiler";
 import beautify from "../beautifier";
+import "../../test-matchers";
 import fs from "fs";
 
 it("handles the danger.d.ts correctly", () => {
@@ -10,4 +11,5 @@ it("handles the danger.d.ts correctly", () => {
   const result = compiler.compileDefinitionString(dangerDTS, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).not.toBeValidFlowTypeDeclarations(); // cannot-resolve-module
 });

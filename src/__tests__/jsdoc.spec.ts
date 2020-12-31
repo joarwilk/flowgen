@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle basic jsdoc", () => {
   const ts = `const skip: number
@@ -48,6 +49,8 @@ declare var patchOuter: <T>(
   data?: T,
 ) => Node | null;
 
+declare class ECharts {}
+
 /**
  * Creates an ECharts instance, and returns an echartsInstance. You shall
  *     not initialize multiple ECharts instances on a single container.
@@ -88,6 +91,7 @@ declare function test(): Promise<void>
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
 
 it("should remove jsdoc", () => {
@@ -103,4 +107,5 @@ declare function authorize(userToken: string): Promise<void>
     jsdoc: false,
   });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

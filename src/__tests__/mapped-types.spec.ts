@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle mapped types", () => {
   const ts = `
@@ -18,4 +19,5 @@ type ConstantKey = MappedObj["a"]
 `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

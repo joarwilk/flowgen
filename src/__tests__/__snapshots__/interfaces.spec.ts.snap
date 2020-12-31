@@ -125,7 +125,8 @@ exports[`should handle untyped object binding pattern 1`] = `
 `;
 
 exports[`should remove generic defaults in call signature 1`] = `
-"declare interface AbstractLevelDOWNConstructor {
+"declare interface AbstractLevelDOWN<K, V> {}
+declare interface AbstractLevelDOWNConstructor {
   <K, V>(location: string): AbstractLevelDOWN<K, V>;
 }
 "
@@ -145,7 +146,9 @@ declare interface C<This, Datum> {
 `;
 
 exports[`should support call signature 1`] = `
-"declare interface ObjectSchemaConstructor {
+"declare interface ObjectSchema<T> {}
+declare interface ObjectSchemaDefinition<T> {}
+declare interface ObjectSchemaConstructor {
   <T: { [key: string]: any }>(
     fields?: ObjectSchemaDefinition<T>
   ): ObjectSchema<T>;

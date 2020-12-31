@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle declared interfaces", () => {
   const ts = `
@@ -7,7 +8,7 @@ declare interface ICustomMessage {
   otherMethod(literal: "A"|"B"): void;
 }
 `;
-  expect(
-    beautify(compiler.compileDefinitionString(ts, { quiet: true })),
-  ).toMatchSnapshot();
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });

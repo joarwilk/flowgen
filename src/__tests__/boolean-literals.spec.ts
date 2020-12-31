@@ -1,4 +1,5 @@
 import { compiler, beautify } from "..";
+import "../test-matchers";
 
 it("should handle boolean literals in type", () => {
   const ts = `
@@ -9,4 +10,5 @@ it("should handle boolean literals in type", () => {
   const result = compiler.compileDefinitionString(ts, { quiet: true });
 
   expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
 });
