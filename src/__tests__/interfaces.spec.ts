@@ -29,6 +29,11 @@ interface SpecialUser extends User {
     interfaceRecords: true,
   });
   expect(beautify(result2)).toMatchSnapshot();
+  const result3 = compiler.compileDefinitionString(ts, {
+    interfaceRecords: true,
+    inexact: false,
+  });
+  expect(beautify(result3)).toMatchSnapshot();
 });
 
 it("should handle interface merging", () => {
