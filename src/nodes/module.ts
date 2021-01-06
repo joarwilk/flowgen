@@ -1,6 +1,8 @@
+import * as ts from "typescript";
 import type { RawNode } from "./node";
 import * as logger from "../logger";
 import Node from "./node";
+import Namespace from "./namespace";
 
 export default class Module extends Node {
   name: string;
@@ -18,6 +20,14 @@ export default class Module extends Node {
 
   addChildren(name: string, child: Node): void {
     child.module = this.name;
+    if (
+      child instanceof Namespace &&
+      this.children[child.name] &&
+      this.children[child.name].raw &&
+      this.children[child.name].raw.kind === ts.SyntaxKind.ClassDeclaration
+    ) {
+      name = child.name;
+    }
     if (!this.children[name]) {
       this.children[name] = child;
       return;

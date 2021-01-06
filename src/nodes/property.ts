@@ -84,9 +84,22 @@ export default class Property extends Node<PropertyNode> {
       case ts.SyntaxKind.FunctionDeclaration:
         out += printers.functions.functionDeclaration(name, this.raw);
         break;
-      case ts.SyntaxKind.ClassDeclaration:
-        out += printers.declarations.classDeclaration(name, this.raw);
+      case ts.SyntaxKind.ClassDeclaration: {
+        const classChildren = this.getChildren();
+        out += printers.declarations.classDeclaration(
+          name,
+          this.raw,
+          classChildren,
+        );
+        if (classChildren.length) {
+          out += `\n\n${classChildren
+            .map(child => {
+              return child.print(name, mod);
+            })
+            .join("\n\n")}`;
+        }
         break;
+      }
       case ts.SyntaxKind.InterfaceDeclaration:
         out += printers.declarations.interfaceDeclaration(
           name,
