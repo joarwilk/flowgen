@@ -37,6 +37,10 @@ export const parseNameFromNode = (node: RawNode): string => {
       names.push(parseNameFromNode(child));
     });
     return names.join(",");
+  } else if (ts.isIdentifier(node)) {
+    if (node.escapedText && typeof node.escapedText === "string") {
+      return node.escapedText;
+    }
   }
   switch (node.kind) {
     case ts.SyntaxKind.FunctionDeclaration:
