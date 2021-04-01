@@ -119,6 +119,14 @@ done;
 
 So if you have definition files in different dir, you can rename `lib` and run the script.
 
+Here’s an example of the above as an npm script in `package.json` that excludes any typescript definition files found inside `node_modules`:
+```json
+  "scripts": {
+    "build:flowtypes": "find . -type f -not -path './node_modules/*' -name '*.d.ts' -exec sh -c 'yarn flowgen --add-flow-header $1 -o ${1%.*.*}.js.flow' _ '{}' \\;"
+  }
+```
+
+You can then have a `build` script that generates flow types along the lines of `tsc --build && npm run build:flowtypes`.
 
 ## Contributing
 
