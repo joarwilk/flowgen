@@ -3,6 +3,6 @@
 exports[`should handle boolean literals in type 1`] = `
 "declare type MyFalsyType = string | false;
 declare type MyTruthyType = true | string;
-declar var foo: true;
+declare var foo: true;
 "
 `;
