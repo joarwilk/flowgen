@@ -113,7 +113,7 @@ export const interfaceType = <T>(
     .filter(Boolean) // Filter rows which didn't print properly (private fields et al)
     .join(withSemicolons ? ";" : ",");
 
-  return isInexact
+  return isInexact || !ts.isTypeLiteralNode(node)
     ? `{${inner}}`
     : `{|${inner}|}`;
 };
