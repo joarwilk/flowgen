@@ -109,9 +109,13 @@ export const interfaceType = <T>(
     members.push("\n");
   }
 
-  return `{${members
-    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
-    .join(withSemicolons ? ";" : ",")}}`;
+  const inner = members
+    .filter(Boolean) // Filter rows which didn't print properly (private fields et al)
+    .join(withSemicolons ? ";" : ",");
+
+  return isInexact
+    ? `{${inner}}`
+    : `{|${inner}|}`;
 };
 
 const interfaceRecordType = (
