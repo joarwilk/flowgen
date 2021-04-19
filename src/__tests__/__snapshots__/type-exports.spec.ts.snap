@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle export list syntax 1`] = `
+"declare type ComplexType =
+  | {
+      type: number,
+      ...
+    }
+  | {
+      type: string,
+      ...
+    };
+export type { ComplexType };
+declare var foo: 5;
+declare export { foo };
+"
+`;
+
 exports[`should handle exported types 1`] = `
 "export type FactoryOrValue<T> = T | (() => T);
 export type Maybe<T> =
