@@ -56,3 +56,13 @@ exports[`should handle basic keywords 2`] = `
 |};
 "
 `;
+
+exports[`should handle class types 1`] = `
+"declare export class Foo {}
+"
+`;
+
+exports[`should handle class types 2`] = `
+"declare export class Foo {}
+"
+`;
