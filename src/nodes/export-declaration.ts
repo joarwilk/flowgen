@@ -1,9 +1,7 @@
 import type { RawNode } from "./node";
-import * as ts from "typescript";
 import type { Expression, ExportDeclaration as RawExport } from "typescript";
 import * as printers from "../printers";
 import Node from "./node";
-import { checker } from "../checker";
 
 type ExportDeclarationType = RawExport & {
   moduleSpecifier?: Expression & {
@@ -27,11 +25,11 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
       if (this.raw.moduleSpecifier)
         specifier = `from '${this.raw.moduleSpecifier.text}';`;
 
-      const generateOutput = (prefix) => {
+      const generateOutput = prefix => {
         return `${prefix} {
           ${elements.map(node => printers.node.printType(node))}
         }${specifier}\n`;
-      }
+      };
 
       return isTypeImport
         ? generateOutput(`export type`)
