@@ -117,9 +117,7 @@ export const interfaceType = <T>(
   if (!ts.isTypeLiteralNode(node)) {
     return `{${inner}}`;
   }
-  return isInexact
-    ? `{${inner}}`
-    : `{|${inner}|}`;
+  return isInexact ? `{${inner}}` : `{|${inner}|}`;
 };
 
 const interfaceRecordType = (

@@ -63,4 +63,3 @@ it("should handle class types", () => {
     expect(result).toBeValidFlowTypeDeclarations();
   }
 });
-
