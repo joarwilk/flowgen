@@ -749,7 +749,7 @@ export const printType = withEnv<any, [any], string>(
         }
         return "";
 
-      case ts.SyntaxKind.IntersectionType:
+      case ts.SyntaxKind.IntersectionType: {
         // for non-class types, we can't easily just merge types together using &
         // this is because in Typescript
         // { a: number } & { b: string}
@@ -766,13 +766,14 @@ export const printType = withEnv<any, [any], string>(
           return type.types.map(printType).join(" & ");
         }
 
-        const spreadType = type.types.map(type => `...${printType(type)}`).join(",");
+        const spreadType = type.types
+          .map(type => `...${printType(type)}`)
+          .join(",");
 
         const isInexact = opts().inexact;
 
-        return isInexact
-          ? `{ ${spreadType} }`
-          : `{| ${spreadType} |}`;
+        return isInexact ? `{ ${spreadType} }` : `{| ${spreadType} |}`;
+      }
 
       case ts.SyntaxKind.MethodDeclaration:
         // Skip methods marked as private

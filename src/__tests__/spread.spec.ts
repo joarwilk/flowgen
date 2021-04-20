@@ -15,12 +15,14 @@ const combination: Foo & Bar;
   }
 
   {
-    const result = compiler.compileDefinitionString(ts, { quiet: true, inexact: false });
+    const result = compiler.compileDefinitionString(ts, {
+      quiet: true,
+      inexact: false,
+    });
     expect(beautify(result)).toMatchSnapshot();
     expect(result).toBeValidFlowTypeDeclarations();
   }
 });
-
 
 it("should not insert spread when performing union of class types", () => {
   const ts = `
