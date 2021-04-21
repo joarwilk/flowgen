@@ -19,12 +19,21 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
     if (this.raw.exportClause) {
       // @ts-expect-error todo(flow->ts)
       const elements = this.raw.exportClause.elements;
+      const isTypeImport = this.raw.isTypeOnly;
+
       let specifier = "";
       if (this.raw.moduleSpecifier)
         specifier = `from '${this.raw.moduleSpecifier.text}';`;
-      return `declare export {
-        ${elements.map(node => printers.node.printType(node))}
-      }${specifier}\n`;
+
+      const generateOutput = prefix => {
+        return `${prefix} {
+          ${elements.map(node => printers.node.printType(node))}
+        }${specifier}\n`;
+      };
+
+      return isTypeImport
+        ? generateOutput(`export type`)
+        : generateOutput(`declare export`);
     } else {
       return `declare export * from '${this.raw.moduleSpecifier.text}';\n`;
     }
