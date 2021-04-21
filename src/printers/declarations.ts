@@ -57,7 +57,7 @@ export const propertyDeclaration = (
     return left + ": " + right;
   }
 
-  return left + `: any // ${printers.node.printType(node.initializer)}\n`;
+  return left + `: ${printers.node.printType(node.initializer)}\n`;
 };
 
 export const variableDeclaration = (node: RawNode): string => {
