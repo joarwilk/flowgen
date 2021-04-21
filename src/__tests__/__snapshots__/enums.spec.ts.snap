@@ -16,6 +16,34 @@ exports[`should handle empty enums: class 1`] = `
 "
 `;
 
+exports[`should handle importing enum types: class 1`] = `
+"declare export var Label: {|
+  +A: \\"A\\", // \\"A\\"
+  +B: \\"B\\", // \\"B\\"
+|};
+"
+`;
+
+exports[`should handle importing enum types: class 2`] = `
+"import typeof { Label } from \\"./export-enum-file\\";
+declare export function foo(label: $Values<Label>): void;
+"
+`;
+
+exports[`should handle importing enums: class 1`] = `
+"declare export var Label: {|
+  +A: \\"A\\", // \\"A\\"
+  +B: \\"B\\", // \\"B\\"
+|};
+"
+`;
+
+exports[`should handle importing enums: class 2`] = `
+"import { Label } from \\"./export-enum-file\\";
+declare export function foo(label: $Values<typeof Label>): void;
+"
+`;
+
 exports[`should handle number enums: class 1`] = `
 "declare var Label: {|
   +ONE: 1, // 1
