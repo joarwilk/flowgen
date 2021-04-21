@@ -109,9 +109,15 @@ export const interfaceType = <T>(
     members.push("\n");
   }
 
-  return `{${members
-    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
-    .join(withSemicolons ? ";" : ",")}}`;
+  const inner = members
+    .filter(Boolean) // Filter rows which didn't print properly (private fields et al)
+    .join(withSemicolons ? ";" : ",");
+
+  // we only want type literals to be exact. i.e. class Foo {} should not be class Foo {||}
+  if (!ts.isTypeLiteralNode(node)) {
+    return `{${inner}}`;
+  }
+  return isInexact ? `{${inner}}` : `{|${inner}|}`;
 };
 
 const interfaceRecordType = (

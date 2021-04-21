@@ -26,7 +26,40 @@ it("should handle basic keywords", () => {
     v: readonly [1, 2, 3],
     w: readonly string[],
   }`;
-  const result = compiler.compileDefinitionString(ts, { quiet: true });
-  expect(beautify(result)).toMatchSnapshot();
-  expect(result).toBeValidFlowTypeDeclarations();
+
+  {
+    const result = compiler.compileDefinitionString(ts, { quiet: true });
+    expect(beautify(result)).toMatchSnapshot();
+    expect(result).toBeValidFlowTypeDeclarations();
+  }
+
+  {
+    const result = compiler.compileDefinitionString(ts, {
+      quiet: true,
+      inexact: false,
+    });
+    expect(beautify(result)).toMatchSnapshot();
+    expect(result).toBeValidFlowTypeDeclarations();
+  }
+});
+
+it("should handle class types", () => {
+  const ts = `
+  declare export class Foo {
+  }`;
+
+  {
+    const result = compiler.compileDefinitionString(ts, { quiet: true });
+    expect(beautify(result)).toMatchSnapshot();
+    expect(result).toBeValidFlowTypeDeclarations();
+  }
+
+  {
+    const result = compiler.compileDefinitionString(ts, {
+      quiet: true,
+      inexact: false,
+    });
+    expect(beautify(result)).toMatchSnapshot();
+    expect(result).toBeValidFlowTypeDeclarations();
+  }
 });
