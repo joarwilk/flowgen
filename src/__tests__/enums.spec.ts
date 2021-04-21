@@ -51,3 +51,37 @@ type B = Label.LABEL_REQUIRED
   expect(beautify(result)).toMatchSnapshot("class");
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should handle importing enum types", () => {
+  const results = compiler.compileDefinitionFiles(
+    [
+      "src/__tests__/snippet/export-enum-file.ts",
+      "src/__tests__/snippet/import-enum-type-file.ts",
+    ],
+    {
+      quiet: false,
+    },
+  );
+  for (const result of results) {
+    expect(beautify(result[1])).toMatchSnapshot("class");
+    // TODO: this function only runs flow on one file at a time, so it errors when trying to import
+    // expect(result[1]).toBeValidFlowTypeDeclarations();
+  }
+});
+
+it("should handle importing enums", () => {
+  const results = compiler.compileDefinitionFiles(
+    [
+      "src/__tests__/snippet/export-enum-file.ts",
+      "src/__tests__/snippet/import-enum-file.ts",
+    ],
+    {
+      quiet: false,
+    },
+  );
+  for (const result of results) {
+    expect(beautify(result[1])).toMatchSnapshot("class");
+    // TODO: this function only runs flow on one file at a time, so it errors when trying to import
+    // expect(result[1]).toBeValidFlowTypeDeclarations();
+  }
+});

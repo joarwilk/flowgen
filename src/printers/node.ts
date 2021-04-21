@@ -608,29 +608,11 @@ export const printType = withEnv<any, [any], string>(
       case ts.SyntaxKind.TypeReference: {
         let symbol;
         if (checker.current) {
-          //$todo
           symbol = checker.current.getSymbolAtLocation(type.typeName);
+
+          //$todo
           fixDefaultTypeArguments(symbol, type);
           const isRenamed = renames(symbol, type);
-          if (
-            symbol &&
-            symbol.declarations &&
-            symbol.declarations[0].kind === ts.SyntaxKind.EnumMember
-          ) {
-            return `typeof ${getTypeofFullyQualifiedName(
-              symbol,
-              type.typeName,
-            )}`;
-          } else if (
-            symbol &&
-            symbol.declarations &&
-            symbol.declarations[0].kind === ts.SyntaxKind.EnumDeclaration
-          ) {
-            return `$Values<typeof ${getTypeofFullyQualifiedName(
-              symbol,
-              type.typeName,
-            )}>`;
-          }
           if (!isRenamed) {
             //$todo weird union errors
             // @ts-expect-error todo(flow->ts)
@@ -638,6 +620,45 @@ export const printType = withEnv<any, [any], string>(
               symbol,
               type.typeName,
             );
+          }
+
+          const getAdjustedType = targetSymbol => {
+            const isTypeImport =
+              symbol &&
+              symbol.declarations &&
+              symbol.declarations[0] &&
+              ts.isTypeOnlyImportOrExportDeclaration(symbol.declarations[0]);
+            if (
+              targetSymbol &&
+              targetSymbol.declarations &&
+              targetSymbol.declarations[0].kind === ts.SyntaxKind.EnumMember
+            ) {
+              return `${isTypeImport ? "" : "typeof"}
+                ${getTypeofFullyQualifiedName(targetSymbol, type.typeName)}`;
+            } else if (
+              targetSymbol &&
+              targetSymbol.declarations &&
+              targetSymbol.declarations[0].kind ===
+                ts.SyntaxKind.EnumDeclaration
+            ) {
+              return `$Values<
+                ${isTypeImport ? "" : "typeof "}
+                ${getTypeofFullyQualifiedName(targetSymbol, type.typeName)}>`;
+            }
+            return printers.declarations.typeReference(type, !targetSymbol);
+          };
+
+          // if importing an enum, we have to change how the type is used across the file
+          if (
+            symbol &&
+            symbol.declarations &&
+            symbol.declarations[0].kind === ts.SyntaxKind.ImportSpecifier
+          ) {
+            return getAdjustedType(
+              checker.current.getTypeAtLocation(type).symbol,
+            );
+          } else {
+            return getAdjustedType(symbol);
           }
         }
         return printers.declarations.typeReference(type, !symbol);
