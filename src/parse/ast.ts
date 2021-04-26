@@ -38,6 +38,11 @@ export const parseNameFromNode = (node: RawNode): string => {
     });
     return names.join(",");
   } else if (ts.isIdentifier(node)) {
+    /*
+     * Parse name for NamespaceExport, please refer to the PR: https://github.com/joarwilk/flowgen/pull/131
+     * Based on the test, seems it only affects NamespaceExport
+     * May need someone to update the implementation later if there are any issues
+     */
     if (node.escapedText && typeof node.escapedText === "string") {
       return node.escapedText;
     }
