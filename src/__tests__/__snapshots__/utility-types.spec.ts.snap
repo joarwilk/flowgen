@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle Omit type 1`] = `
+"declare type A = $Diff<
+  {
+    a: string,
+    b: number,
+    ...
+  },
+  { a: any }
+>;
+declare type B = $Diff<
+  {
+    a: string,
+    b: number,
+    ...
+  },
+  { a: any, b: any }
+>;
+declare type O = {
+  a: string,
+  b: number,
+  ...
+};
+declare type U = \\"a\\";
+declare type C = $Diff<O, { [key: U]: any }>;
+"
+`;
+
 exports[`should handle utility types 1`] = `
 "declare type A = $ReadOnly<{
   a: number,

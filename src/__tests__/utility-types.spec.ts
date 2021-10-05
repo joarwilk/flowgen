@@ -30,3 +30,17 @@ type F2<T, U> = Record<T, U>
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should handle Omit type", () => {
+  const ts = `
+type A = Omit<{ a: string, b: number }, "a">
+type B = Omit<{ a: string, b: number }, "a" | "b">
+
+type O = { a: string, b: number };
+type U = "a";
+type C = Omit<O, U>;
+`;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});
