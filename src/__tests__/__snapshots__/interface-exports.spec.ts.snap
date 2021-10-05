@@ -6,3 +6,12 @@ exports[`should handle exported interfaces 1`] = `
 }
 "
 `;
+
+exports[`should handle exported interfaces within a module 1`] = `
+"declare module \\"my-module\\" {
+  declare export interface UnaryFunction<T, R> {
+    (source: T): R;
+  }
+}
+"
+`;
