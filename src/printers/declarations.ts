@@ -190,6 +190,8 @@ const interfaceHeritageClause = type => {
     if (typeof name === "function") {
       // @ts-expect-error todo(flow->ts)
       return name(type.typeArguments);
+    } else {
+      return name;
     }
   } else {
     return printers.node.printType(type);
