@@ -63,6 +63,21 @@ exports[`should handle interface merging 2`] = `
 "
 `;
 
+exports[`should handle mutli-extends pattern 1`] = `
+"declare interface Shape {
+  color: string;
+}
+declare interface PenStroke {
+  penWidth: number;
+}
+declare type Square = {
+  sideLength: number,
+  ...
+} & Shape &
+  PenStroke;
+"
+`;
+
 exports[`should handle single interface 1`] = `
 "declare interface User {
   firstName: string;
