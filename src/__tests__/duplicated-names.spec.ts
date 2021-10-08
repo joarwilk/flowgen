@@ -27,4 +27,3 @@ it("should generate unique names", () => {
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
-
