@@ -146,7 +146,7 @@ function findDuplicatedSymbolsAndUsedNames(
       return [[], []];
     }
 
-    if (s.declarations && s.declarations.length > 1) {
+    if (ts.isTypeAliasDeclaration(node.parent) && s.declarations.length > 1) {
       return [[s], [s.getName()]];
     } else {
       return [[], [s.getName()]];

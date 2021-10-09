@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should be scoped to main file 1`] = `
+"import { Buffer } from \\"buffer\\";
+export type BufferAlias = Buffer;
+"
+`;
+
 exports[`should generate unique names 1`] = `
 "export type AuthMechanismType = string;
 declare export var AuthMechanism: {

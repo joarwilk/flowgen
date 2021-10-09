@@ -27,3 +27,14 @@ it("should generate unique names", () => {
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should be scoped to main file", () => {
+  const ts = `
+  import { Buffer } from 'buffer';
+  export declare type BufferAlias = Buffer;
+`;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  // FlowJs is not valid due to `import` not transpiled to typeof
+  // expect(result).toBeValidFlowTypeDeclarations();
+});
