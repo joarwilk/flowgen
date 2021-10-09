@@ -32,3 +32,17 @@ export type AuthMechanismType = $ElementType<
 >;
 "
 `;
+
+exports[`should support generic type rename 1`] = `
+"declare export var ProfilingLevel: $ReadOnly<{
+  +off: \\"off\\",
+  ...
+}>;
+export type ProfilingLevelType = $ElementType<
+  typeof ProfilingLevel,
+  $Keys<typeof ProfilingLevel>
+>;
+export type Callback<T = any> = (error?: Error, result?: T) => void;
+declare export var callback: Callback<ProfilingLevelType>;
+"
+`;
