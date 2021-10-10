@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle basic keywords  cll 1`] = `
+"declare module \\"test\\" {
+  declare interface A {
+    bar: string;
+  }
+  declare export var ok: number;
+}
+"
+`;
+
+exports[`should handle basic keywords 1`] = `
+"declare module \\"test\\" {
+  declare interface A {
+    bar: string;
+  }
+  declare var ok: number;
+}
+"
+`;

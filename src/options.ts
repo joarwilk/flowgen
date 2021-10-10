@@ -4,6 +4,7 @@ export type Options = {
   moduleExports?: boolean;
   quiet?: boolean;
   inexact?: boolean;
+  asModule?: string;
 };
 
 const defaultOptions: Options = Object.freeze({
