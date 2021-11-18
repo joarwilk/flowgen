@@ -82,10 +82,10 @@ export function legacyModules() {
   };
 }
 
-export function declarationFileTransform(options: Options) {
+export function declarationFileTransform(options?: Options) {
   function visitor(ctx: ts.TransformationContext) {
     const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
-      if (!options.asModule || !ts.isSourceFile(node)) {
+      if (!options?.asModule || !ts.isSourceFile(node)) {
         return node;
       }
 

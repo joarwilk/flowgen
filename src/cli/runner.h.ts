@@ -9,6 +9,7 @@ export type RunnerOptions = {
   flowTypedFormat: boolean;
   addFlowHeader: boolean;
   compileTests: boolean;
+  asModule: string;
 };
 
 export type Mode = "directory" | "directory-flow-typed" | "flow-typed" | "file";
