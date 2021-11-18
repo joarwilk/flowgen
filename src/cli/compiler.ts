@@ -4,7 +4,6 @@ import {
   createSourceFile,
   ScriptTarget,
   transform,
-  ModuleResolutionKind,
 } from "typescript";
 import type { SourceFile } from "typescript";
 import tsc from "typescript-compiler";
