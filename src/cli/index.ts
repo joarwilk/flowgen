@@ -27,6 +27,10 @@ program
     "adds '// @flow' to the generated files (for libs)",
   )
   .option("--compile-tests", "compile any <filename>-tests.ts files found")
+  .option(
+    "--as-module [asModule]",
+    "wrap the output as a module declaration (for libs)",
+  )
   .arguments("[files...]")
   .action((files, options) => {
     runner({
@@ -40,6 +44,7 @@ program
       compileTests: options.compileTests,
       out: options.outputFile,
       version: pkg.version,
+      asModule: options.asModule,
     }).compile(files);
   });
 

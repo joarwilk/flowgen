@@ -140,6 +140,7 @@ export default (options: RunnerOptions) => {
     interfaceRecords: options.interfaceRecords,
     moduleExports: options.moduleExports,
     inexact: options.inexact,
+    asModule: options.asModule,
   };
   // No real reason to return an object here instead of combining
   // the compile function into the wrapper, but I like the API it produces.

@@ -9,6 +9,7 @@ import type { Factory } from "../nodes/factory";
 import namespaceManager from "../namespace-manager";
 import { parseNameFromNode, stripDetailsFromTree } from "./ast";
 import * as logger from "../logger";
+import { checker } from "../checker";
 
 const collectNode = (node: RawNode, context: Node, factory: Factory): void => {
   stripDetailsFromTree(node);
@@ -136,12 +137,129 @@ const traverseNode = (node, context: Node, factory: Factory): void => {
   }
 };
 
+function findDuplicatedSymbolsAndUsedNames(
+  node: ts.Node,
+): [ts.Symbol[], string[]] {
+  if (ts.isIdentifier(node)) {
+    const s = checker.current.getSymbolAtLocation(node);
+    if (!s) {
+      return [[], []];
+    }
+
+    if (ts.isTypeAliasDeclaration(node.parent) && s.declarations.length > 1) {
+      return [[s], [s.getName()]];
+    } else {
+      return [[], [s.getName()]];
+    }
+  }
+
+  const childResult: [ts.Symbol[], string[]] = [[], []];
+  ts.forEachChild(node, child => {
+    ts.visitNode(child, (n: ts.Node) => {
+      const r = findDuplicatedSymbolsAndUsedNames(n);
+      const duplicatedSymbols = r[0];
+      const names = r[1];
+      childResult[0].push(...duplicatedSymbols);
+      childResult[1].push(...names);
+      return n;
+    });
+  });
+
+  return childResult;
+}
+
+function generateUniqueName(name: string, usedNames: Set<string>): string {
+  if (!usedNames.has(name)) {
+    return name;
+  }
+  let i = 1;
+  // Just make sure we won't endup with infinite loop
+  while (i < 10_000) {
+    const r = `${name}${i}`;
+    if (!usedNames.has(r)) {
+      return r;
+    }
+    i++;
+  }
+
+  return name;
+}
+
+function createMakeNameCompatibleWithFlowTransformer(
+  duplicatedSymbols: Set<ts.Symbol>,
+  usedNames: Set<string>,
+) {
+  const renameMap = new Map();
+
+  function makeNameCompatibleWithFlowTransformer(
+    context: ts.TransformationContext,
+  ) {
+    const { factory } = context;
+    const visitor = (node: ts.Node): ts.Node | ts.Node[] => {
+      if (ts.isTypeAliasDeclaration(node)) {
+        const s = checker.current.getSymbolAtLocation(node.name);
+        if (duplicatedSymbols.has(s)) {
+          const id =
+            renameMap.get(s) ??
+            factory.createIdentifier(
+              generateUniqueName(`${s.getName()}Type`, usedNames),
+            );
+          renameMap.set(s, id);
+          return factory.createTypeAliasDeclaration(
+            node.decorators,
+            node.modifiers,
+            id,
+            node.typeParameters,
+            node.type,
+          );
+        }
+      }
+
+      if (ts.isTypeReferenceNode(node)) {
+        if (ts.isIdentifier(node.typeName)) {
+          const s = checker.current.getSymbolAtLocation(node.typeName);
+          if (duplicatedSymbols.has(s)) {
+            const id =
+              renameMap.get(s) ??
+              factory.createIdentifier(
+                generateUniqueName(`${s.getName()}Type`, usedNames),
+              );
+            renameMap.set(s, id);
+            return factory.createTypeReferenceNode(id.text, node.typeArguments);
+          }
+        }
+      }
+
+      if (!ts.isIdentifier(node)) {
+        return ts.visitEachChild(node, visitor, context);
+      }
+
+      return node;
+    };
+
+    return visitor;
+  }
+
+  return makeNameCompatibleWithFlowTransformer;
+}
+
+// In TypeScript you can have the same name for a variable and a type but not in FlowJs
+function makeNameCompatibleWithFlow(ast: any) {
+  const [duplicatedSymbols, usedNames] = findDuplicatedSymbolsAndUsedNames(ast);
+  return ts.transform(ast, [
+    createMakeNameCompatibleWithFlowTransformer(
+      new Set(duplicatedSymbols),
+      new Set(usedNames),
+    ),
+  ]).transformed[0];
+}
+
 export function recursiveWalkTree(ast: any): ModuleNode {
   const factory = NodeFactory.create();
 
   const root = factory.createModuleNode(null, "root");
 
-  traverseNode(ast, root, factory);
+  traverseNode(makeNameCompatibleWithFlow(ast), root, factory);
 
   return root;
 }

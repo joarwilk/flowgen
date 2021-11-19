@@ -14,8 +14,13 @@ import type { Options } from "../options";
 import { checker } from "../checker";
 import * as logger from "../logger";
 import { withEnv } from "../env";
-import { importEqualsTransformer, legacyModules } from "../parse/transformers";
+import {
+  importEqualsTransformer,
+  legacyModules,
+  declarationFileTransform,
+} from "../parse/transformers";
 import { recursiveWalkTree } from "../parse";
+import { printFlowGenHelper } from "../printers/node";
 
 const compile = withEnv<any, [SourceFile], string>(
   (env: any, sourceFile: SourceFile): string => {
@@ -28,7 +33,9 @@ const compile = withEnv<any, [SourceFile], string>(
       })
       .join("");
 
-    return output;
+    const helpersOutputs = printFlowGenHelper(env);
+
+    return `${helpersOutputs}\n\n${output}`;
   },
 );
 
@@ -40,7 +47,11 @@ const reset = (options?: Options): void => {
   namespaceManager.reset();
 };
 
-const transformers = [legacyModules(), importEqualsTransformer()];
+const getTransformers = (options?: Options) => [
+  legacyModules(),
+  importEqualsTransformer(),
+  declarationFileTransform(options),
+];
 
 /**
  * Compiles typescript files
@@ -54,8 +65,8 @@ export default {
     checker.current = typeChecker;
   },
 
-  getTransformers() {
-    return transformers;
+  getTransformers(options?: Options) {
+    return getTransformers(options);
   },
 
   compileTest: (path: string, target: string): void => {
@@ -76,7 +87,7 @@ export default {
         return transform(
           //$todo Flow has problems when switching variables instead of literals
           createSourceFile("/dev/null", string, languageVersion, true),
-          transformers,
+          getTransformers(options),
           compilerOptions,
         ).transformed[0];
       }
@@ -124,7 +135,7 @@ export default {
             languageVersion,
             true,
           ),
-          transformers,
+          getTransformers(options),
           compilerOptions,
         ).transformed[0];
       }
@@ -170,7 +181,7 @@ export default {
             languageVersion,
             true,
           ),
-          transformers,
+          getTransformers(options),
           compilerOptions,
         ).transformed[0];
       }

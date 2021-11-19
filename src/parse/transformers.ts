@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import { stripDetailsFromTree } from "./ast";
+import type { Options } from "../options";
 
 function updatePos<T extends ts.Node>(node: T) {
   // @ts-expect-error todo: modifying "readonly" property
@@ -73,6 +74,46 @@ export function legacyModules() {
         return node;
       }
       return ts.visitEachChild(node, visitor, ctx);
+    };
+    return visitor;
+  }
+  return (ctx: ts.TransformationContext): ts.Transformer<any> => {
+    return (sf: ts.SourceFile) => ts.visitNode(sf, visitor(ctx));
+  };
+}
+
+export function declarationFileTransform(options?: Options) {
+  function visitor(ctx: ts.TransformationContext) {
+    const visitor: ts.Visitor = (node: ts.Node): ts.VisitResult<ts.Node> => {
+      if (!options?.asModule || !ts.isSourceFile(node)) {
+        return node;
+      }
+
+      if (
+        node.statements.some(statement => ts.isModuleDeclaration(statement))
+      ) {
+        return node;
+      }
+
+      return ctx.factory.updateSourceFile(node, [
+        ctx.factory.createModuleDeclaration(
+          undefined,
+          undefined,
+          ctx.factory.createIdentifier(options.asModule),
+          ctx.factory.createModuleBlock(
+            node.statements.map(statement => {
+              if (statement.modifiers) {
+                // @ts-expect-error
+                statement.modifiers = statement.modifiers.filter(
+                  modifier => modifier.kind === ts.SyntaxKind.DeclareKeyword,
+                );
+              }
+
+              return statement;
+            }),
+          ),
+        ),
+      ]);
     };
     return visitor;
   }

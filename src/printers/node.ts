@@ -104,7 +104,8 @@ type PrintNode =
   | ts.ComputedPropertyName
   | ts.OptionalTypeNode
   | ts.GetAccessorDeclaration
-  | ts.SetAccessorDeclaration;
+  | ts.SetAccessorDeclaration
+  | ts.InferTypeNode;
 
 export function printEntityName(type: ts.EntityName): string {
   if (type.kind === ts.SyntaxKind.QualifiedName) {
@@ -355,6 +356,29 @@ export function getTypeofFullyQualifiedName(
   }
 }
 
+export function printFlowGenHelper(env): string {
+  let helpers = "";
+  if (env.conditionalHelpers) {
+    helpers += `
+// see https://gist.github.com/thecotne/6e5969f4aaf8f253985ed36b30ac9fe0
+type $FlowGen$If<X: boolean, Then, Else = empty> = $Call<
+  & ((true, Then, Else) => Then)
+  & ((false, Then, Else) => Else),
+  X,
+  Then,
+  Else,
+>;
+
+type $FlowGen$Assignable<A, B> = $Call<
+  & ((...r: [B]) => true)
+  & ((...r: [A]) => false),
+  A,
+>;`;
+  }
+
+  return helpers;
+}
+
 export function fixDefaultTypeArguments(
   symbol: ts.Symbol | undefined,
   type: any,
@@ -447,12 +471,12 @@ export const printType = withEnv<any, [any], string>(
         return "?" + printType(type.type);
 
       case ts.SyntaxKind.ConditionalType: {
-        const error = { type: "UnsupportedConditionalType" as const };
-        logger.error(type, error);
-        if (env && env.tsdoc) {
-          return `any`;
-        }
-        return `/* ${printErrorMessage(error)} */ any`;
+        env.conditionalHelpers = true;
+        return `$FlowGen$If<$FlowGen$Assignable<${printType(
+          type.checkType,
+        )},${printType(type.extendsType)}>,${printType(
+          type.trueType,
+        )},${printType(type.falseType)}>`;
       }
 
       case ts.SyntaxKind.ComputedPropertyName: {
@@ -832,6 +856,9 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.SetAccessor:
         return printers.common.parameter(type);
+
+      case ts.SyntaxKind.InferType:
+        return printType(type.typeParameter);
 
       default:
     }
