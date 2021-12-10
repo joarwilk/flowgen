@@ -46,6 +46,11 @@ declare export function toString(b: string): void;
 "
 `;
 
+exports[`should not break with Promise return types - https://github.com/joarwilk/flowgen/issues/156 1`] = `
+"declare export var fn: () => Promise<void>;
+"
+`;
+
 exports[`should remove default parameters from functions 1`] = `
 "declare function addClickListener<T>(onclick: (e: Event) => void): T;
 "
