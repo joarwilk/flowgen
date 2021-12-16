@@ -66,3 +66,10 @@ it("should remove default parameters from functions", () => {
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should not break with Promise return types - issue 156", () => {
+  const ts = "export declare const fn: () => Promise<void>;";
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});
