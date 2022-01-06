@@ -9,9 +9,7 @@
         }
       }
     ],
-    "@babel/preset-typescript"
+    ["@babel/preset-typescript", { "loose": true }]
   ],
-  "plugins": [
-    "@babel/plugin-proposal-class-properties",
-  ]
+  "plugins": [["@babel/plugin-proposal-class-properties", { "loose": true }]]
 }
