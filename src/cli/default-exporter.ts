@@ -3,10 +3,8 @@ import shell from "shelljs";
 import path from "path";
 import { promisify } from "./util";
 
-const open: (
-  filename: string,
-  flags: string | number,
-) => Promise<number> = promisify(fs.open);
+const open: (filename: string, flags: string | number) => Promise<number> =
+  promisify(fs.open);
 const writeFile: (fd: number, output: string) => Promise<void> = promisify(
   fs.writeFile,
 );
