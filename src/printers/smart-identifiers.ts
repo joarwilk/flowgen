@@ -13,6 +13,7 @@ const setImportedName = (
     if (name === "react" || name === "React") {
       return {
         ReactNode: "Node",
+        ReactElement: "Element",
       };
     }
     return {};
