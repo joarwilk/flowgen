@@ -2,7 +2,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
+    "prettier",
     "plugin:prettier/recommended",
     "plugin:jest/recommended"
   ],
@@ -14,9 +14,14 @@
   "rules": {
     "no-redeclare": "off",
     "no-console": "off",
-    "no-unused-vars": [
+    "@typescript-eslint/no-unused-vars": [
       2,
-      { "vars": "all", "args": "after-used", "argsIgnorePattern": "^_" }
+      {
+        "vars": "all",
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
     ],
     "@typescript-eslint/no-use-before-define": 0,
     "@typescript-eslint/ban-types": 0,

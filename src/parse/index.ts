@@ -6,7 +6,6 @@ import Node from "../nodes/node";
 import type ModuleNode from "../nodes/module";
 import NodeFactory from "../nodes/factory";
 import type { Factory } from "../nodes/factory";
-import namespaceManager from "../namespace-manager";
 import { parseNameFromNode, stripDetailsFromTree } from "./ast";
 import * as logger from "../logger";
 import { checker } from "../checker";
@@ -37,8 +36,6 @@ const collectNode = (node: RawNode, context: Node, factory: Factory): void => {
           node.name.text,
           context,
         );
-
-        namespaceManager.setContext(node.name.text);
 
         traverseNode(node.body, namespace, factory);
 

@@ -50,7 +50,7 @@ declare var patchOuter: <T>(
 declare class ECharts {}
 /**
  * Creates an ECharts instance, and returns an echartsInstance. You shall
- *      not initialize multiple ECharts instances on a single container.
+ *     not initialize multiple ECharts instances on a single container.
  * @param {HTMLDivElement | HTMLCanvasElement} dom Instance container,
  * usually is a \`div\` element with height and width defined.
  * @param {{[key: string]: any} | string} [theme] Theme to be applied.

@@ -14,9 +14,11 @@ declare class Component mixins React.Component<Props> {
 `;
 
 exports[`should handle react types 1`] = `
-"import type { Node } from \\"react\\";
+"import type { Node, Element } from \\"react\\";
 import * as React from \\"react\\";
 declare function s(node: Node): void;
 declare function s(node: React.Node): void;
+declare function s(node: Element<\\"div\\">): void;
+declare function s(node: React.Element<\\"div\\">): void;
 "
 `;
