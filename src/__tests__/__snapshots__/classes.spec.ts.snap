@@ -21,6 +21,7 @@ declare class Observable<T> mixins Subscribable<T> {
     [key: string]: any,
     ...
   };
+  static fooGet: string;
 }
 "
 `;
