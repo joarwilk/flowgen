@@ -22,6 +22,7 @@ it("should handle static methods ES6 classes", () => {
     protected get cfnProperties(): {
       [key: string]: any;
     };
+    static get fooGet(): string;
   }
   `;
   const result = compiler.compileDefinitionString(ts, { quiet: true });

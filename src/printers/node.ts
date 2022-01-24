@@ -854,7 +854,7 @@ export const printType = withEnv<any, [any], string>(
         return printers.relationships.importExportSpecifier(type);
 
       case ts.SyntaxKind.GetAccessor:
-        return printers.common.parameter(type);
+        return keywordPrefix + printers.common.parameter(type);
 
       case ts.SyntaxKind.SetAccessor:
         return printers.common.parameter(type);
