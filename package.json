@@ -1,7 +1,6 @@
 {
   "name": "flowgen",
   "description": "Generate flowtype definition files from TypeScript",
-  "typings": "index.d.ts",
   "version": "1.16.2",
   "bin": {
     "flowgen": "./lib/cli/index.js"
@@ -57,14 +56,14 @@
   },
   "files": [
     "lib",
-    "index.d.ts",
     "index.js.flow"
   ],
   "license": "ISC",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "prepublishOnly": "npm run compile",
+    "prepublishOnly": "npm run compile & npm run type",
+    "type": "tsc -p tsconfig.declaration.json",
     "compile": "babel ./src --extensions '.ts,.tsx,.js' --out-dir lib --delete-dir-on-start --ignore 'src/**/*.spec.ts' --ignore 'src/__tests__/'",
     "compile:watch": "npm run compile -- -w",
     "test": "jest src/**/*.spec.ts",

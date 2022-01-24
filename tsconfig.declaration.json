@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true
+  },
+  "exclude": [
+    "src/**/*.spec.ts",
+    "**/__tests__/**/*.*",
+    "src/cli/__tests__/fixtures/**/*.ts"
+  ]
+}
