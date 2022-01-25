@@ -35,6 +35,7 @@ Object.assign(identifiers, {
   ReadonlySet: "$ReadOnlySet",
   ReadonlyMap: "$ReadOnlyMap",
   Readonly: "$ReadOnly",
+  RegExpMatchArray: "RegExp$matchResult",
   NonNullable: "$NonMaybeType",
   Partial: ([type]: any[]) => {
     const isInexact = opts().inexact;
