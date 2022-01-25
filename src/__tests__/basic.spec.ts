@@ -25,6 +25,7 @@ it("should handle basic keywords", () => {
     u: unique symbol,
     v: readonly [1, 2, 3],
     w: readonly string[],
+    x: RegExpMatchArray
   }`;
 
   {

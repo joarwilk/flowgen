@@ -24,6 +24,7 @@ exports[`should handle basic keywords 1`] = `
   u: Symbol,
   v: [1, 2, 3],
   w: $ReadOnlyArray<string>,
+  x: RegExp$matchResult,
   ...
 };
 "
@@ -53,6 +54,7 @@ exports[`should handle basic keywords 2`] = `
   u: Symbol,
   v: [1, 2, 3],
   w: $ReadOnlyArray<string>,
+  x: RegExp$matchResult,
 |};
 "
 `;
