@@ -42,6 +42,8 @@ type F = {
  * @return {?Node} The node if it was updated, its replacedment or null if it
  *     was removed.
  * @template T
+ * @see https://thereShouldNotBeASpaceAfterHttps.com
+ * @see HelloWorld
  */
 declare var patchOuter: <T>(
   node: Element,

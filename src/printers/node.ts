@@ -101,6 +101,7 @@ type PrintNode =
   | ts.JSDocVariadicType
   | ts.JSDocNonNullableType
   | ts.JSDocNullableType
+  | ts.JSDocNameReference
   | ts.ComputedPropertyName
   | ts.OptionalTypeNode
   | ts.GetAccessorDeclaration
@@ -471,7 +472,9 @@ export const printType = withEnv<any, [any], string>(
         return "!" + printType(type.type);
       case ts.SyntaxKind.JSDocNullableType:
         return "?" + printType(type.type);
-
+      case ts.SyntaxKind.JSDocNameReference:
+        // @ts-expect-error todo(flow->ts) - 'escapedText' does not exist on type 'EntityName | JSDocMemberName'
+        return type?.name?.escapedText || "";
       case ts.SyntaxKind.ConditionalType: {
         env.conditionalHelpers = true;
         return `$FlowGen$If<$FlowGen$Assignable<${printType(
