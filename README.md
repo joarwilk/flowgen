@@ -34,7 +34,7 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 |    | InstanceType | `InstanceType<X>` |  |
 |    | Required | `Required<X>` |  |
 |    | ThisType | `ThisType<X>` |  |
-| ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
+| ✅ | T['string'] | `T['string']` | `T['k']` |
 | ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |
 | ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => $ElementType<Obj, K>>` |
 |    | Conditional types | `A extends B ? C : D` | `any` |
