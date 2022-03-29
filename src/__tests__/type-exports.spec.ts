@@ -26,3 +26,18 @@ export { foo };
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should handle inline export list syntax", () => {
+  const ts = `
+declare type ComplexType = {
+    type: number
+} | {
+    type: string
+};
+const foo = 5;
+export { type ComplexType, foo };
+`;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});
