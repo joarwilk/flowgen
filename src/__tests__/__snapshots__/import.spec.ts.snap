@@ -1,7 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle dynamic imports 1`] = `
-"declare type A = $Exports<\\"react\\">;
-declare type B = $PropertyType<$Exports<\\"react\\">, \\"ReactNode\\">;
+"import * as $Flowgen$Import$react from \\"react\\";
+import * as $Flowgen$Import$zlib from \\"zlib\\";
+declare type A = typeof $Flowgen$Import$react;
+declare type B = $Flowgen$Import$react.Node;
+declare type C = $Flowgen$Import$react.ComponentType<{ ... }>;
+declare type D = $Flowgen$Import$zlib.Zlib;
+"
+`;
+
+exports[`should handle import nested in type arguments of import 1`] = `
+"import * as $Flowgen$Import$react from \\"react\\";
+declare type A = $Flowgen$Import$react.ComponentType<
+  $Flowgen$Import$react.ComponentType<any>
+>;
+"
+`;
+
+exports[`should handle imports from odd names 1`] = `
+"import * as $Flowgen$Import$_2e__2e_ from \\"..\\";
+import * as $Flowgen$Import$_40__21__2d__2f__2e__2f_ from \\"@!-/./\\";
+declare type A = typeof $Flowgen$Import$_2e__2e_;
+declare type B = typeof $Flowgen$Import$_40__21__2d__2f__2e__2f_;
 "
 `;

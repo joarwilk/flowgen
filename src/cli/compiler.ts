@@ -18,6 +18,7 @@ import {
   importEqualsTransformer,
   legacyModules,
   declarationFileTransform,
+  importTypeToImportDeclaration,
 } from "../parse/transformers";
 import { recursiveWalkTree } from "../parse";
 import { printFlowGenHelper } from "../printers/node";
@@ -56,6 +57,7 @@ const getTransformers = (options?: Options) => [
   legacyModules(),
   importEqualsTransformer(),
   declarationFileTransform(options),
+  importTypeToImportDeclaration(),
 ];
 
 const transformFile = (
