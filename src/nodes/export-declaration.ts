@@ -27,17 +27,43 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
       if (isNamespaceExport(this.raw.exportClause)) {
         return `declare export * as ${this.raw.exportClause.name.escapedText} ${specifier}\n`;
       }
-      const elements = this.raw.exportClause.elements;
 
-      const generateOutput = prefix => {
+      // split exports into type and value exports
+      const rawElements = this.raw.exportClause.elements;
+      let typeExports, valueExports;
+      if (isTypeImport) {
+        typeExports = rawElements;
+        valueExports = [];
+      } else {
+        typeExports = [];
+        valueExports = [];
+        let nextIsType = false;
+        for (const node of rawElements) {
+          if (nextIsType) {
+            typeExports.push(node);
+            nextIsType = false;
+          } else if (node.name.originalKeywordKind === 150) {
+            nextIsType = true;
+          } else {
+            valueExports.push(node);
+          }
+        }
+      }
+
+      const generateOutput = (prefix, elems) => {
         return `${prefix} {
-          ${elements.map(node => printers.node.printType(node))}
+          ${elems.map(node => printers.node.printType(node))}
         }${specifier}\n`;
       };
 
-      return isTypeImport
-        ? generateOutput(`export type`)
-        : generateOutput(`declare export`);
+      let result = "";
+      if (typeExports.length) {
+        result += generateOutput(`export type`, typeExports);
+      }
+      if (valueExports.length) {
+        result += generateOutput(`declare export`, valueExports);
+      }
+      return result;
     } else {
       return `declare export * from '${this.raw.moduleSpecifier.text}';\n`;
     }

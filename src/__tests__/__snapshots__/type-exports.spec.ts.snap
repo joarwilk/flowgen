@@ -30,3 +30,19 @@ export type Maybe<T> =
     };
 "
 `;
+
+exports[`should handle inline export list syntax 1`] = `
+"declare type ComplexType =
+  | {
+      type: number,
+      ...
+    }
+  | {
+      type: string,
+      ...
+    };
+declare var foo: 5;
+export type { ComplexType };
+declare export { foo };
+"
+`;
