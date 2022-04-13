@@ -1,4 +1,4 @@
-import {
+import ts, {
   createProgram,
   createCompilerHost,
   createSourceFile,
@@ -64,12 +64,14 @@ const transformFile = (
   languageVersion: ScriptTarget,
   options?: Options,
 ) => {
-  return transform(
+  const transformedAst = transform(
     //$todo Flow has problems when switching variables instead of literals
     createSourceFile(fileName, sourceText, languageVersion, true),
     getTransformers(options),
     compilerOptions,
   ).transformed[0];
+  const transformedText = ts.createPrinter().printFile(transformedAst);
+  return createSourceFile(fileName, transformedText, languageVersion, true);
 };
 
 /**
