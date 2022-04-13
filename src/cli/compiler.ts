@@ -47,6 +47,11 @@ const reset = (options?: Options): void => {
   namespaceManager.reset();
 };
 
+const compilerOptions = {
+  noLib: true,
+  target: ScriptTarget.Latest,
+};
+
 const getTransformers = (options?: Options) => [
   legacyModules(),
   importEqualsTransformer(),
@@ -76,10 +81,6 @@ export default {
   compileDefinitionString: (string: string, options?: Options): string => {
     reset(options);
 
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
-    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     compilerHost.getSourceFile = (file, languageVersion) => {
@@ -116,10 +117,6 @@ export default {
   ): string => {
     reset(options);
 
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
-    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     const oldReadFile = compilerHost.readFile;
@@ -162,10 +159,6 @@ export default {
       fileName: string,
     ) => string | undefined = a => a,
   ): Array<[string, string]> => {
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
-    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     const oldReadFile = compilerHost.readFile;
