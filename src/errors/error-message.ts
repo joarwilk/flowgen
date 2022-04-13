@@ -24,6 +24,10 @@ export type ErrorMessage =
       readonly operator: typeof SyntaxKind[keyof typeof SyntaxKind];
     }
   | {
+      readonly type: "UnexpectedTsSyntax";
+      readonly description: string;
+    }
+  | {
       readonly type: "MissingFunctionName";
     };
 
@@ -52,6 +56,9 @@ export function printErrorMessage(error: ErrorMessage): string {
 
     case "UnsupportedTypeOperator":
       return `Unsupported type operator: ${SyntaxKind[error.operator]}`;
+
+    case "UnexpectedTsSyntax":
+      return `Unexpected TypeScript syntax: ${error.description}. Please report this at https://github.com/joarwilk/flowgen/issues`;
 
     default:
       error as never;
