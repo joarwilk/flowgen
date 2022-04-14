@@ -70,18 +70,10 @@ export const interfaceType = <T>(
   const isInexact = opts().inexact;
   const members = node.members.map(member => {
     const printed = printers.node.printType(member);
-
     if (!printed) {
       return null;
     }
-
-    let str = "\n";
-
-    if (member.jsDoc) {
-      str += printers.common.comment(member.jsDoc);
-    }
-
-    return str + printed;
+    return "\n" + printers.common.jsdoc(member) + printed;
   });
 
   if (mergedNamespaceChildren.length > 0) {
@@ -119,18 +111,10 @@ const interfaceRecordType = (
   let members = node.members
     .map(member => {
       const printed = printers.node.printType(member);
-
       if (!printed) {
         return null;
       }
-
-      let str = "\n";
-
-      if (member.jsDoc) {
-        str += printers.common.comment(member.jsDoc);
-      }
-
-      return str + printed;
+      return "\n" + printers.common.jsdoc(member) + printed;
     })
     .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
     .join(withSemicolons ? ";" : ",");

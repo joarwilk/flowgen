@@ -68,9 +68,7 @@ export default class Property extends Node<PropertyNode> {
       name = namespace + "$" + name;
     }
 
-    if (this.raw.jsDoc) {
-      out += printers.common.comment(this.raw.jsDoc);
-    }
+    out += printers.common.jsdoc(this.raw);
 
     const isDeclare = mod !== "root";
     const exporter = printers.relationships.exporter(this.raw);
