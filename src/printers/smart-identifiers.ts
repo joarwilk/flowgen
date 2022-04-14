@@ -68,9 +68,9 @@ export function renames(
 ): boolean {
   if (!symbol) return false;
   if (!symbol.declarations) return false;
-  // todo(flow->ts)
-  const decl: any = symbol.declarations[0];
+  const decl = symbol.declarations[0];
   if (ts.isImportSpecifier(type)) {
+    // @ts-expect-error todo(flow->ts)
     setImportedName(decl.name.escapedText, decl.name, symbol, decl);
   } else if (type.kind === ts.SyntaxKind.TypeReference) {
     const leftMost = getLeftMostEntityName(type.typeName);
