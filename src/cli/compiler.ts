@@ -1,3 +1,4 @@
+import path from "path";
 import ts, {
   createProgram,
   createCompilerHost,
@@ -135,8 +136,9 @@ export default {
     const oldReadFile = compilerHost.readFile;
     compilerHost.readFile = fileName =>
       mapSourceCode(oldReadFile(fileName), fileName);
+    const absolutePath = path.resolve(definitionPath);
     compilerHost.getSourceFile = (file, languageVersion) => {
-      if (file === definitionPath) {
+      if (path.resolve(file) === absolutePath) {
         const sourceText = compilerHost.readFile(file);
         return transformFile(file, sourceText, languageVersion, options);
       }
@@ -172,8 +174,9 @@ export default {
     const oldReadFile = compilerHost.readFile;
     compilerHost.readFile = fileName =>
       mapSourceCode(oldReadFile(fileName), fileName);
+    const absolutePaths = new Set(definitionPaths.map(p => path.resolve(p)));
     compilerHost.getSourceFile = (file, languageVersion) => {
-      if (definitionPaths.includes(file)) {
+      if (absolutePaths.has(path.resolve(file))) {
         const sourceText = compilerHost.readFile(file);
         return transformFile(file, sourceText, languageVersion, options);
       }
