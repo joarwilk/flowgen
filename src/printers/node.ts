@@ -108,6 +108,7 @@ export function printPropertyAccessExpression(
     );
   } else if (type.kind === ts.SyntaxKind.Identifier) {
     return printers.relationships.namespace(
+      // @ts-expect-error todo(flow->ts)
       printers.identifiers.print(type.text),
       true,
     );
@@ -504,6 +505,7 @@ export const printType = withEnv<any, [any], string>(
       //case SyntaxKind.StringLiteralType:
       case ts.SyntaxKind.Identifier: {
         return printers.relationships.namespace(
+          // @ts-expect-error todo(flow->ts)
           printers.identifiers.print(type.text),
           true,
         );
