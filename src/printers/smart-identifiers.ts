@@ -95,7 +95,7 @@ export function renames(
   return false;
 }
 
-export function getLeftMostEntityName(type: ts.EntityName) {
+export function getLeftMostEntityName(type: ts.EntityName): ts.Identifier {
   if (type.kind === ts.SyntaxKind.QualifiedName) {
     return type.left.kind === ts.SyntaxKind.Identifier
       ? type.left
