@@ -55,12 +55,15 @@ const setGlobalName = (type: any, _symbol): boolean => {
   return false;
 };
 
-export function renames(symbol: ts.Symbol | void, type: any): boolean {
+export function renames(
+  symbol: ts.Symbol | void,
+  type: ts.TypeReferenceNode | ts.ImportSpecifier,
+): boolean {
   if (!symbol) return false;
   if (!symbol.declarations) return false;
   // todo(flow->ts)
   const decl: any = symbol.declarations[0];
-  if (type.parent && ts.isNamedImports(type.parent)) {
+  if (ts.isImportSpecifier(type)) {
     setImportedName(decl.name.escapedText, decl.name, symbol, decl);
   } else if (type.kind === ts.SyntaxKind.TypeReference) {
     const leftMost = getLeftMostEntityName(type.typeName);
@@ -71,7 +74,7 @@ export function renames(symbol: ts.Symbol | void, type: any): boolean {
         return setGlobalName(type, symbol);
       }
     }
-    if (type.typeName.right) {
+    if (ts.isQualifiedName(type.typeName)) {
       return setImportedName(
         symbol.escapedName,
         type.typeName.right,
