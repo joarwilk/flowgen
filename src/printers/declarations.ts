@@ -156,13 +156,17 @@ const interfaceRecordType = (
   }
 };
 
-const classHeritageClause = withEnv<any, any, string>((env, type) => {
-  let ret;
+const classHeritageClause = withEnv<
+  any,
+  [ts.ExpressionWithTypeArguments],
+  string
+>((env, type) => {
+  let ret: string;
   env.classHeritage = true;
   // TODO: refactor this
   const symbol = checker.current.getSymbolAtLocation(type.expression);
   printers.node.fixDefaultTypeArguments(symbol, type);
-  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+  if (ts.isIdentifier(type.expression) && symbol) {
     ret =
       printers.node.getFullyQualifiedPropertyAccessExpression(
         symbol,
@@ -314,7 +318,7 @@ export const typeReference = (node: RawNode, identifier: boolean): string => {
 
 export const classDeclaration = <T>(
   nodeName: string,
-  node: RawNode,
+  node: ts.ClassDeclaration,
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
 ): string => {
   let heritage = "";
