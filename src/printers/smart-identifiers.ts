@@ -35,7 +35,10 @@ const setImportedName = (
   return false;
 };
 
-const setGlobalName = (type: any, _symbol): boolean => {
+const setGlobalName = (
+  type: ts.TypeReferenceNode,
+  _symbol: ts.Symbol,
+): boolean => {
   const globals = [
     {
       from: ts.createQualifiedName(ts.createIdentifier("JSX"), "Element"),
@@ -45,7 +48,11 @@ const setGlobalName = (type: any, _symbol): boolean => {
   if (checker.current) {
     const bools = [];
     for (const { from, to } of globals) {
-      if (compareQualifiedName(type.typeName, from)) {
+      if (
+        ts.isQualifiedName(type.typeName) &&
+        compareQualifiedName(type.typeName, from)
+      ) {
+        // @ts-expect-error readonly property, but we write to it
         type.typeName = to;
         bools.push(true);
       }
@@ -124,7 +131,6 @@ function compareQualifiedName(
   a: ts.QualifiedName,
   b: ts.QualifiedName,
 ): boolean {
-  if (a.kind !== b.kind) return false;
   return (
     compareEntityName(a.left, b.left) && compareIdentifier(a.right, b.right)
   );
