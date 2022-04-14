@@ -16,6 +16,10 @@ export function setSourceFile(file: SourceFile): void {
   sourceFile.current = file;
 }
 
+function padDashes(consumedWidth: number) {
+  return "-".repeat(Math.max(4, process.stdout.columns - consumedWidth));
+}
+
 export function error(node: any, message: ErrorMessage): void {
   if (opts().quiet) return;
   const options = {
@@ -47,8 +51,8 @@ export function error(node: any, message: ErrorMessage): void {
     const fileName = path.relative(process.cwd(), currentSourceFile.fileName);
     console.log(
       chalk.red.bold(
-        `Error ${"-".repeat(
-          process.stdout.columns - 7 - fileName.length - position.length,
+        `Error ${padDashes(
+          7 + fileName.length + position.length,
         )} ${fileName}${position}`,
       ),
     );
