@@ -2,7 +2,6 @@ import * as ts from "typescript";
 import { opts } from "../options";
 import { checker } from "../checker";
 import type Node from "../nodes/node";
-import type { RawNode } from "../nodes/node";
 import Namespace from "../nodes/namespace";
 import * as printers from "./index";
 import { withEnv } from "../env";
@@ -50,7 +49,7 @@ export const propertyDeclaration = (
   return left + `: ${printers.node.printType(node.initializer)}\n`;
 };
 
-export const variableDeclaration = (node: RawNode): string => {
+export const variableDeclaration = (node: ts.VariableStatement): string => {
   const declarations = node.declarationList.declarations.map(
     printers.node.printType,
   );
@@ -61,7 +60,7 @@ export const variableDeclaration = (node: RawNode): string => {
 };
 
 export const interfaceType = <T>(
-  node: RawNode,
+  node: ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeLiteralNode,
   nodeName: string,
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
   withSemicolons = false,
@@ -103,7 +102,7 @@ export const interfaceType = <T>(
 };
 
 const interfaceRecordType = (
-  node: RawNode,
+  node: ts.InterfaceDeclaration,
   heritage: string,
   withSemicolons = false,
 ): string => {
@@ -131,7 +130,7 @@ const interfaceRecordType = (
 };
 
 const classHeritageClause = withEnv<
-  any,
+  { classHeritage?: boolean },
   [ts.ExpressionWithTypeArguments],
   string
 >((env, type) => {
@@ -177,7 +176,7 @@ const interfaceHeritageClause = type => {
 
 const interfaceRecordDeclaration = (
   nodeName: string,
-  node: RawNode,
+  node: ts.InterfaceDeclaration,
   modifier: string,
 ): string => {
   let heritage = "";
@@ -204,7 +203,7 @@ const interfaceRecordDeclaration = (
 
 export const interfaceDeclaration = (
   nodeName: string,
-  node: RawNode,
+  node: ts.InterfaceDeclaration,
   modifier: string,
 ): string => {
   const isRecord = opts().interfaceRecords;
@@ -240,7 +239,7 @@ export const interfaceDeclaration = (
 
 export const typeDeclaration = (
   nodeName: string,
-  node: RawNode,
+  node: ts.TypeAliasDeclaration,
   modifier: string,
 ): string => {
   const str = `${modifier}type ${nodeName}${printers.common.generics(
@@ -250,9 +249,13 @@ export const typeDeclaration = (
   return str;
 };
 
-export const enumDeclaration = (nodeName: string, node: RawNode): string => {
+export const enumDeclaration = (
+  nodeName: string,
+  node: ts.EnumDeclaration,
+): string => {
   const exporter = printers.relationships.exporter(node);
   let members = "";
+  // @ts-expect-error iterating over an iterator
   for (const [index, member] of node.members.entries()) {
     let value;
     if (typeof member.initializer !== "undefined") {
@@ -269,8 +272,11 @@ declare ${exporter} var ${nodeName}: {|
 |};\n`;
 };
 
-export const typeReference = (node: RawNode, identifier: boolean): string => {
-  if (node.typeName.left && node.typeName.right) {
+export const typeReference = (
+  node: ts.TypeReferenceNode,
+  identifier: boolean,
+): string => {
+  if (ts.isQualifiedName(node.typeName)) {
     return (
       printers.node.printType(node.typeName) +
       printers.common.generics(node.typeArguments)
@@ -278,10 +284,11 @@ export const typeReference = (node: RawNode, identifier: boolean): string => {
   }
   let name = node.typeName.text;
   if (identifier) {
-    name = printers.identifiers.print(node.typeName.text);
-    if (typeof name === "function") {
-      return name(node.typeArguments);
+    const replaced = printers.identifiers.print(node.typeName.text);
+    if (typeof replaced === "function") {
+      return replaced(node.typeArguments);
     }
+    name = replaced;
   }
   return (
     printers.relationships.namespaceProp(name) +
