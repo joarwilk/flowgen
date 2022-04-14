@@ -673,11 +673,8 @@ export const printType = withEnv<any, [any], string>(
       }
 
       case ts.SyntaxKind.VariableDeclaration:
-        return printers.declarations.propertyDeclaration(
-          type,
-          keywordPrefix,
-          true,
-        );
+        return printers.declarations.propertyDeclaration(type, keywordPrefix);
+
       case ts.SyntaxKind.PropertyDeclaration:
         return printers.declarations.propertyDeclaration(type, keywordPrefix);
 

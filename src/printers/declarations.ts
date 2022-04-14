@@ -8,13 +8,12 @@ import * as printers from "./index";
 import { withEnv } from "../env";
 
 export const propertyDeclaration = (
-  node: RawNode,
+  node: ts.VariableDeclaration | ts.PropertyDeclaration,
   keywordPrefix: string,
-  isVar = false,
 ): string => {
   let left = keywordPrefix;
   const symbol = checker.current.getSymbolAtLocation(node.name);
-  const name = isVar
+  const name = ts.isVariableDeclaration(node)
     ? printers.node.getFullyQualifiedName(symbol, node.name)
     : printers.node.printType(node.name);
   if (
@@ -36,23 +35,14 @@ export const propertyDeclaration = (
 
   left += name;
 
-  if (node.parameters) {
-    return left + ": " + node.parameters.map(printers.common.parameter);
-  }
-
   if (node.type) {
     let right = printers.node.printType(node.type);
-    if (
-      node.questionToken &&
-      node.name.kind !== ts.SyntaxKind.ComputedPropertyName
-    ) {
-      left += "?";
-    }
-    if (
-      node.questionToken &&
-      node.name.kind === ts.SyntaxKind.ComputedPropertyName
-    ) {
-      right = `(${right}) | void`;
+    if (ts.isPropertyDeclaration(node) && node.questionToken) {
+      if (node.name.kind !== ts.SyntaxKind.ComputedPropertyName) {
+        left += "?";
+      } else {
+        right = `(${right}) | void`;
+      }
     }
     return left + ": " + right;
   }
