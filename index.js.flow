@@ -23,8 +23,8 @@ export type Compiler = {|
 
   // Low-level exports
   reset(options?: Options): void,
-  setChecker(checker: any): void,
-  compile(sourceFile: any): string,
+  setChecker(checker: $FlowFixMe /* ts.TypeChecker */): void,
+  compile(sourceFile: $FlowFixMe /* ts.SourceFile */): string,
 |};
 
 declare type Flowgen = {|

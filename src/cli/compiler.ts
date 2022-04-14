@@ -1,4 +1,4 @@
-import {
+import ts, {
   createProgram,
   createCompilerHost,
   createSourceFile,
@@ -61,7 +61,7 @@ export default {
 
   compile: compile.withEnv({}),
 
-  setChecker(typeChecker: any) {
+  setChecker(typeChecker: ts.TypeChecker) {
     checker.current = typeChecker;
   },
 
