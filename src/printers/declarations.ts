@@ -152,17 +152,17 @@ const classHeritageClause = withEnv<
   return ret;
 });
 
-const interfaceHeritageClause = type => {
+const interfaceHeritageClause = (type: ts.ExpressionWithTypeArguments) => {
   // TODO: refactor this
   const symbol = checker.current.getSymbolAtLocation(type.expression);
   printers.node.fixDefaultTypeArguments(symbol, type);
-  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+  if (ts.isIdentifier(type.expression) && symbol) {
     const name = printers.node.getFullyQualifiedPropertyAccessExpression(
       symbol,
       type.expression,
     );
     return name + printers.common.generics(type.typeArguments);
-  } else if (type.expression.kind === ts.SyntaxKind.Identifier) {
+  } else if (ts.isIdentifier(type.expression)) {
     const name = printers.identifiers.print(type.expression.text);
     if (typeof name === "function") {
       return name(type.typeArguments);
