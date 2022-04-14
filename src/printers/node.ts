@@ -26,7 +26,7 @@ type ExpectedKeywordKind =
   | ts.SyntaxKind.TrueKeyword;
 
 type PrintNode =
-  | { kind: ExpectedKeywordKind }
+  | ts.KeywordToken<ExpectedKeywordKind>
   | { kind: typeof ts.SyntaxKind.FirstLiteralToken }
   | ts.CallSignatureDeclaration
   | ts.ConstructorDeclaration
