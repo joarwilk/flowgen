@@ -1,7 +1,7 @@
 let i = 0;
 const envs = {};
 
-export function withEnv<Env, A extends ReadonlyArray<any>, B>(
+export function withEnv<Env, A extends ReadonlyArray<unknown>, B>(
   callback: (env: Env, ...args: A) => B,
 ): {
   withEnv<T>(env: T): (...args: A) => B;
