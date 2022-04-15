@@ -38,7 +38,13 @@ export const typeParameter = (
   return `${node.name.text}${constraint}${defaultType}`;
 };
 
-export const parameter = (param: RawNode): string => {
+export const parameter = (
+  param:
+    | ts.ParameterDeclaration
+    | ts.PropertySignature
+    | ts.GetAccessorDeclaration
+    | ts.SetAccessorDeclaration,
+): string => {
   let left = "";
   if (param.modifiers) {
     for (const modifier of param.modifiers) {
@@ -48,7 +54,7 @@ export const parameter = (param: RawNode): string => {
   if (param.kind === ts.SyntaxKind.SetAccessor) {
     left += "-";
   }
-  let right;
+  let right: string;
 
   if (
     param.name.kind === ts.SyntaxKind.ObjectBindingPattern ||
@@ -89,7 +95,7 @@ export const parameter = (param: RawNode): string => {
     right = `(${right}) | void`;
   }
 
-  if (param.dotDotDotToken) {
+  if (ts.isParameter(param) && param.dotDotDotToken) {
     left = "..." + left;
   }
 
