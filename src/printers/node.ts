@@ -399,6 +399,21 @@ export function fixDefaultTypeArguments(
   }
 }
 
+/**
+ * Log an error, while returning a commented FlowFixMe type.
+ *
+ * This is appropriate for error conditions that indicate a bug within
+ * Flowgen.
+ *
+ * The error uses `logger.error` for a nice message pointing at the input
+ * source code corresponding to `node`, to help identify what triggered the
+ * issue.
+ */
+const printErrorType = (description: string, node: ts.Node) => {
+  logger.error(node, { type: "FlowgenInternalError", description });
+  return `($FlowFixMe /* flowgen-error: ${description} */)`;
+};
+
 export const printType = withEnv<any, [any], string>(
   (env: any, rawType: any): string => {
     // debuggerif()
@@ -607,14 +622,7 @@ export const printType = withEnv<any, [any], string>(
         return type.text;
 
       case ts.SyntaxKind.ImportType:
-        // @ts-expect-error todo(flow->ts)
-        if (type.qualifier?.escapedText) {
-          return `$PropertyType<$Exports<${printType(
-            type.argument,
-            // @ts-expect-error todo(flow->ts)
-          )}>, ${JSON.stringify(type.qualifier.escapedText)}>`;
-        }
-        return `$Exports<${printType(type.argument)}>`;
+        return printErrorType("Failed to transform an ImportType node", type);
 
       case ts.SyntaxKind.FirstTypeNode:
         return printers.common.literalType(type);

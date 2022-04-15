@@ -18,6 +18,7 @@ import {
   importEqualsTransformer,
   legacyModules,
   declarationFileTransform,
+  importTypeToImportDeclaration,
 } from "../parse/transformers";
 import { recursiveWalkTree } from "../parse";
 import { printFlowGenHelper } from "../printers/node";
@@ -47,11 +48,33 @@ const reset = (options?: Options): void => {
   namespaceManager.reset();
 };
 
+const compilerOptions = {
+  noLib: true,
+  target: ScriptTarget.Latest,
+};
+
 const getTransformers = (options?: Options) => [
   legacyModules(),
   importEqualsTransformer(),
   declarationFileTransform(options),
+  importTypeToImportDeclaration(),
 ];
+
+const transformFile = (
+  fileName: string,
+  sourceText: string,
+  languageVersion: ScriptTarget,
+  options?: Options,
+) => {
+  const transformedAst = transform(
+    //$todo Flow has problems when switching variables instead of literals
+    createSourceFile(fileName, sourceText, languageVersion, true),
+    getTransformers(options),
+    compilerOptions,
+  ).transformed[0];
+  const transformedText = ts.createPrinter().printFile(transformedAst);
+  return createSourceFile(fileName, transformedText, languageVersion, true);
+};
 
 /**
  * Compiles typescript files
@@ -76,20 +99,11 @@ export default {
   compileDefinitionString: (string: string, options?: Options): string => {
     reset(options);
 
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
-    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     compilerHost.getSourceFile = (file, languageVersion) => {
       if (file === "file.ts") {
-        return transform(
-          //$todo Flow has problems when switching variables instead of literals
-          createSourceFile("/dev/null", string, languageVersion, true),
-          getTransformers(options),
-          compilerOptions,
-        ).transformed[0];
+        return transformFile("/dev/null", string, languageVersion, options);
       }
       return oldSourceFile(file, languageVersion);
     };
@@ -116,10 +130,6 @@ export default {
   ): string => {
     reset(options);
 
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
-    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     const oldReadFile = compilerHost.readFile;
@@ -127,17 +137,8 @@ export default {
       mapSourceCode(oldReadFile(fileName), fileName);
     compilerHost.getSourceFile = (file, languageVersion) => {
       if (file === path) {
-        return transform(
-          //$todo Flow has problems when switching variables instead of literals
-          createSourceFile(
-            file,
-            compilerHost.readFile(file),
-            languageVersion,
-            true,
-          ),
-          getTransformers(options),
-          compilerOptions,
-        ).transformed[0];
+        const sourceText = compilerHost.readFile(file);
+        return transformFile(file, sourceText, languageVersion, options);
       }
       return oldSourceFile(file, languageVersion);
     };
@@ -162,10 +163,6 @@ export default {
       fileName: string,
     ) => string | undefined = a => a,
   ): Array<[string, string]> => {
-    const compilerOptions = {
-      noLib: true,
-      target: ScriptTarget.Latest,
-    };
     const compilerHost = createCompilerHost({}, true);
     const oldSourceFile = compilerHost.getSourceFile;
     const oldReadFile = compilerHost.readFile;
@@ -173,17 +170,8 @@ export default {
       mapSourceCode(oldReadFile(fileName), fileName);
     compilerHost.getSourceFile = (file, languageVersion) => {
       if (paths.includes(file)) {
-        return transform(
-          //$todo Flow has problems when switching variables instead of literals
-          createSourceFile(
-            file,
-            compilerHost.readFile(file),
-            languageVersion,
-            true,
-          ),
-          getTransformers(options),
-          compilerOptions,
-        ).transformed[0];
+        const sourceText = compilerHost.readFile(file);
+        return transformFile(file, sourceText, languageVersion, options);
       }
       return oldSourceFile(file, languageVersion);
     };

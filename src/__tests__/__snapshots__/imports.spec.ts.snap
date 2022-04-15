@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle import type 1`] = `
-"declare type S = $Exports<\\"http\\">;
+"import * as $Flowgen$Import$http from \\"http\\";
+declare type S = typeof $Flowgen$Import$http;
 "
 `;
 
