@@ -135,14 +135,24 @@ export const methodSignature = (
   return `${left}${isMethod ? "" : ": "}${right}`;
 };
 
-export const generics = (
+export const generics = (types?: ReadonlyArray<RawNode> | null): string => {
+  if (types && typeof types.length !== "undefined") {
+    return `<${types.map(printers.node.printType).join(", ")}>`;
+  }
+  return "";
+};
+
+export const genericsWithoutDefault = (
   types?: ReadonlyArray<RawNode> | null,
-  map: (node: RawNode) => RawNode = node => node,
 ): string => {
   if (types && typeof types.length !== "undefined") {
-    return `<${types.map(map).map(printers.node.printType).join(", ")}>`;
+    return `<${types
+      .map(node => {
+        node.withoutDefault = true;
+        return printers.node.printType(node);
+      })
+      .join(", ")}>`;
   }
-
   return "";
 };
 
