@@ -135,16 +135,6 @@ export const methodSignature = (
   return `${left}${isMethod ? "" : ": "}${right}`;
 };
 
-export const parseTypeReference = (node: RawNode): string => {
-  if (node.typeName.left && node.typeName.right) {
-    return (
-      printers.node.printType(node.typeName) + generics(node.typeArguments)
-    );
-  }
-
-  return node.typeName.text + generics(node.typeArguments);
-};
-
 export const generics = (
   types?: ReadonlyArray<RawNode> | null,
   map: (node: RawNode) => RawNode = node => node,
