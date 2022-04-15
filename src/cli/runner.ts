@@ -146,7 +146,7 @@ export default (options: RunnerOptions) => {
   // the compile function into the wrapper, but I like the API it produces.
   return {
     compile: async (rawFiles: Array<string>): Promise<void> => {
-      const files = [];
+      const files: Array<File> = [];
       // Iterate all the files the user has passed in
       for (const rawFile of rawFiles) {
         files.push(...(await bfs(rawFile, options)));
@@ -248,10 +248,14 @@ function getOutputFile(
         ),
         filename: path.normalize(file.replace(prefix, "").replace(".d.ts", "")),
       };
-    case "directory":
+    case "directory": {
+      const basedir = options.out ?? "exports";
       return path.normalize(
-        file.replace(prefix, `exports${path.sep}`).replace(".d.ts", ".js.flow"),
+        file
+          .replace(prefix, `${basedir}${path.sep}`)
+          .replace(".d.ts", ".js.flow"),
       );
+    }
     case "flow-typed":
       return moduleName;
     default:
