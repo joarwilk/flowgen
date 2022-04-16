@@ -1,11 +1,11 @@
 import type { SourceFile } from "typescript";
+import ts from "typescript";
 import { opts } from "./options";
 import path from "path";
 import { codeFrameColumns } from "@babel/code-frame";
 import { getChalk } from "@babel/highlight";
 
 import { printErrorMessage } from "./errors/error-message";
-
 import type { ErrorMessage } from "./errors/error-message";
 
 const sourceFile: {
@@ -20,7 +20,7 @@ function padDashes(consumedWidth: number) {
   return "-".repeat(Math.max(4, process.stdout.columns - consumedWidth));
 }
 
-export function error(node: any, message: ErrorMessage): void {
+export function error(node: ts.Node, message: ErrorMessage): void {
   if (opts().quiet) return;
   const options = {
     highlightCode: true,

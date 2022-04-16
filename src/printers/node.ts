@@ -9,55 +9,25 @@ import { renames, getLeftMostEntityName } from "./smart-identifiers";
 import { printErrorMessage } from "../errors/error-message";
 import { opts } from "../options";
 
-type KeywordNode =
-  | {
-      kind: typeof ts.SyntaxKind.AnyKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.UnknownKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.NumberKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.BigIntKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.ObjectKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.BooleanKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.StringKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.SymbolKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.VoidKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.UndefinedKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.NullKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.NeverKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.FalseKeyword;
-    }
-  | {
-      kind: typeof ts.SyntaxKind.TrueKeyword;
-    };
+type ExpectedKeywordKind =
+  | ts.SyntaxKind.AnyKeyword
+  | ts.SyntaxKind.UnknownKeyword
+  | ts.SyntaxKind.NumberKeyword
+  | ts.SyntaxKind.BigIntKeyword
+  | ts.SyntaxKind.ObjectKeyword
+  | ts.SyntaxKind.BooleanKeyword
+  | ts.SyntaxKind.StringKeyword
+  | ts.SyntaxKind.SymbolKeyword
+  | ts.SyntaxKind.VoidKeyword
+  | ts.SyntaxKind.UndefinedKeyword
+  | ts.SyntaxKind.NullKeyword
+  | ts.SyntaxKind.NeverKeyword
+  | ts.SyntaxKind.FalseKeyword
+  | ts.SyntaxKind.TrueKeyword;
 
 type PrintNode =
-  | KeywordNode
-  | {
-      kind: typeof ts.SyntaxKind.FirstLiteralToken;
-    }
+  | ts.KeywordToken<ExpectedKeywordKind>
+  | { kind: typeof ts.SyntaxKind.FirstLiteralToken }
   | ts.CallSignatureDeclaration
   | ts.ConstructorDeclaration
   | ts.TypeParameterDeclaration

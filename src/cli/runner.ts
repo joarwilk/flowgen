@@ -107,7 +107,7 @@ async function bfs(
   while (queue.length) {
     current = queue.shift();
     try {
-      const dir: Array<any> = await readDir(current, { withFileTypes: true });
+      const dir = await readDir(current, { withFileTypes: true });
       for (const file of dir) {
         if (file.isDirectory()) {
           if (file.name === "node_modules") continue;

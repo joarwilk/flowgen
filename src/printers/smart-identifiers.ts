@@ -35,7 +35,10 @@ const setImportedName = (
   return false;
 };
 
-const setGlobalName = (type: any, _symbol): boolean => {
+const setGlobalName = (
+  type: ts.TypeReferenceNode,
+  _symbol: ts.Symbol,
+): boolean => {
   const globals = [
     {
       from: ts.createQualifiedName(ts.createIdentifier("JSX"), "Element"),
@@ -45,7 +48,11 @@ const setGlobalName = (type: any, _symbol): boolean => {
   if (checker.current) {
     const bools = [];
     for (const { from, to } of globals) {
-      if (compareQualifiedName(type.typeName, from)) {
+      if (
+        ts.isQualifiedName(type.typeName) &&
+        compareQualifiedName(type.typeName, from)
+      ) {
+        // @ts-expect-error readonly property, but we write to it
         type.typeName = to;
         bools.push(true);
       }
@@ -55,12 +62,15 @@ const setGlobalName = (type: any, _symbol): boolean => {
   return false;
 };
 
-export function renames(symbol: ts.Symbol | void, type: any): boolean {
+export function renames(
+  symbol: ts.Symbol | void,
+  type: ts.TypeReferenceNode | ts.ImportSpecifier,
+): boolean {
   if (!symbol) return false;
   if (!symbol.declarations) return false;
-  // todo(flow->ts)
-  const decl: any = symbol.declarations[0];
-  if (type.parent && ts.isNamedImports(type.parent)) {
+  const decl = symbol.declarations[0];
+  if (ts.isImportSpecifier(type)) {
+    // @ts-expect-error todo(flow->ts)
     setImportedName(decl.name.escapedText, decl.name, symbol, decl);
   } else if (type.kind === ts.SyntaxKind.TypeReference) {
     const leftMost = getLeftMostEntityName(type.typeName);
@@ -71,7 +81,7 @@ export function renames(symbol: ts.Symbol | void, type: any): boolean {
         return setGlobalName(type, symbol);
       }
     }
-    if (type.typeName.right) {
+    if (ts.isQualifiedName(type.typeName)) {
       return setImportedName(
         symbol.escapedName,
         type.typeName.right,
@@ -85,7 +95,7 @@ export function renames(symbol: ts.Symbol | void, type: any): boolean {
   return false;
 }
 
-export function getLeftMostEntityName(type: ts.EntityName) {
+export function getLeftMostEntityName(type: ts.EntityName): ts.Identifier {
   if (type.kind === ts.SyntaxKind.QualifiedName) {
     return type.left.kind === ts.SyntaxKind.Identifier
       ? type.left
@@ -121,7 +131,6 @@ function compareQualifiedName(
   a: ts.QualifiedName,
   b: ts.QualifiedName,
 ): boolean {
-  if (a.kind !== b.kind) return false;
   return (
     compareEntityName(a.left, b.left) && compareIdentifier(a.right, b.right)
   );

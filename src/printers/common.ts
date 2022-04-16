@@ -96,7 +96,9 @@ export const parameter = (param: RawNode): string => {
   return `${left}: ${right}`;
 };
 
-export const methodSignature = (param: RawNode): string => {
+export const methodSignature = (
+  param: ts.MethodSignature | ts.MethodDeclaration,
+): string => {
   let left = "";
   let isMethod = true;
   if (param.modifiers) {
