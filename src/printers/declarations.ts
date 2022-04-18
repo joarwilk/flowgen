@@ -203,21 +203,21 @@ export const enumDeclaration = (
   node: ts.EnumDeclaration,
 ): string => {
   const exporter = printers.relationships.exporter(node);
-  let members = "";
+  const members: string[] = [];
   // @ts-expect-error iterating over an iterator
   for (const [index, member] of node.members.entries()) {
-    let value;
+    let value: string;
     if (typeof member.initializer !== "undefined") {
       value = printers.node.printType(member.initializer);
     } else {
       value = index;
     }
-    members += `+${member.name.text}: ${value},\n`;
+    members.push(`+${member.name.text}: ${value}`);
   }
   return `
-declare ${exporter} var ${nodeName}: {|
-  ${members}
-|};\n`;
+declare ${exporter} var ${nodeName}: ${printers.common.printExactObjectType(
+    members,
+  )};\n`;
 };
 
 export const typeReference = (

@@ -194,9 +194,7 @@ declare interface E0$U1$S3 {
 
 declare var E0$U1$e2: number;
 
-declare var E0$U1$E2: {|
-  +E: 1,
-|};
+declare var E0$U1$E2: {| +E: 1 |};
 
 declare var npm$namespace$E0$U1$D1: {| S2: typeof npm$namespace$E0$U1$D1$S2 |};
 
