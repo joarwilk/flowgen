@@ -10,14 +10,8 @@ exports[`should handle module 1`] = `
         value: T,
         ...
       }
-    | {
-        type: \\"nothing\\",
-        ...
-      };
-  declare export type Ref<T> = {
-    current: T,
-    ...
-  };
+    | { type: \\"nothing\\", ... };
+  declare export type Ref<T> = { current: T, ... };
   declare export var ok: number;
 }
 "
