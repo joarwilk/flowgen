@@ -5,28 +5,27 @@ import { opts } from "../options";
 import { withEnv } from "../env";
 import ts from "typescript";
 
-const Record = ([key, value]: [any, any], isInexact = opts().inexact) => {
+const recordMembers = (key, value) => {
   const valueType = printers.node.printType(value);
 
   switch (key.kind) {
     case ts.SyntaxKind.LiteralType:
-      return `{ ${printers.node.printType(key)}: ${valueType}${
-        isInexact ? ", ..." : ""
-      }}`;
+      return [`${printers.node.printType(key)}: ${valueType}`];
     case ts.SyntaxKind.UnionType:
       if (key.types.every(t => t.kind === ts.SyntaxKind.LiteralType)) {
-        const fields = key.types.reduce((acc, t) => {
-          acc += `${printers.node.printType(t)}: ${valueType},\n`;
-          return acc;
-        }, "");
-        return `{ ${fields}${isInexact ? "..." : ""}}`;
+        return key.types.map(
+          t => `${printers.node.printType(t)}: ${valueType}`,
+        );
       }
     // Fallthrough
     default:
-      return `{[key: ${printers.node.printType(key)}]: ${valueType}${
-        isInexact ? ", ..." : ""
-      }}`;
+      return [`[key: ${printers.node.printType(key)}]: ${valueType}`];
   }
+};
+
+const Record = ([key, value]: [any, any], isInexact = opts().inexact) => {
+  const members = recordMembers(key, value);
+  return `{ ${members.join(",\n")}${isInexact ? ", ..." : ""} }`;
 };
 
 type IdentifierResult = string | ((...args: any[]) => any);
