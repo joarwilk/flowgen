@@ -50,10 +50,10 @@ const identifiers: { [name: string]: IdentifierResult } = {
   },
   Record,
   Omit: ([obj, keys]: [any, any]) => {
-    return `$Diff<${printers.node.printType(obj)},${Record(
-      [keys, { kind: ts.SyntaxKind.AnyKeyword }],
-      false,
-    )}>`;
+    const members = recordMembers(keys, { kind: ts.SyntaxKind.AnyKeyword });
+    return `$Diff<${printers.node.printType(
+      obj,
+    )},${printers.common.printExactObjectType(members)}>`;
   },
 };
 

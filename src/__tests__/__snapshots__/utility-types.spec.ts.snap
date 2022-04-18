@@ -7,7 +7,7 @@ exports[`should handle Omit type 1`] = `
     b: number,
     ...
   },
-  { a: any }
+  {| a: any |}
 >;
 declare type B = $Diff<
   {
@@ -15,7 +15,10 @@ declare type B = $Diff<
     b: number,
     ...
   },
-  { a: any, b: any }
+  {|
+    a: any,
+    b: any,
+  |}
 >;
 declare type O = {
   a: string,
@@ -23,7 +26,7 @@ declare type O = {
   ...
 };
 declare type U = \\"a\\";
-declare type C = $Diff<O, { [key: U]: any }>;
+declare type C = $Diff<O, {| [key: U]: any |}>;
 "
 `;
 
