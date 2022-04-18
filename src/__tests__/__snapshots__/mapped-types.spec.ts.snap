@@ -1,10 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle mapped types 1`] = `
-"declare type Ref<T> = {
-  current: T | null,
-  ...
-};
+"declare type Ref<T> = { current: T | null, ... };
 declare type SourceUnion = \\"a\\" | \\"b\\" | \\"c\\";
 declare type SourceObject = {
   a: number,

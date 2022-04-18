@@ -8,14 +8,8 @@ declare var combination: Foo & Bar;
 `;
 
 exports[`should use spread when performing union of object types 1`] = `
-"declare type Foo = {
-  foo: number,
-  ...
-};
-declare type Bar = {
-  bar: string,
-  ...
-};
+"declare type Foo = { foo: number, ... };
+declare type Bar = { bar: string, ... };
 declare var combination: {
   ...Foo,
   ...Bar,
@@ -25,12 +19,8 @@ declare var combination: {
 `;
 
 exports[`should use spread when performing union of object types 2`] = `
-"declare type Foo = {|
-  foo: number,
-|};
-declare type Bar = {|
-  bar: string,
-|};
+"declare type Foo = {| foo: number |};
+declare type Bar = {| bar: string |};
 declare var combination: {|
   ...Foo,
   ...Bar,

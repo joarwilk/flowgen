@@ -17,10 +17,7 @@ declare class Observable<T> mixins Subscribable<T> {
   jump?: () => void;
   +jump?: () => void;
   static +jump?: () => void;
-  cfnProperties: {
-    [key: string]: any,
-    ...
-  };
+  cfnProperties: { [key: string]: any, ... };
   static fooGet: string;
 }
 "

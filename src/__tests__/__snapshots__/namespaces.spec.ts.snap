@@ -68,10 +68,7 @@ exports[`should handle merging with other types function type 1`] = `
 "declare var test: typeof npm$namespace$test;
 
 declare var npm$namespace$test: {| (foo: number): string |};
-export type test$Foo = {
-  bar: number,
-  ...
-};
+export type test$Foo = { bar: number, ... };
 "
 `;
 
@@ -169,10 +166,7 @@ exports[`should handle nested namespace merging function type 1`] = `
 declare var npm$namespace$ns: {| test: typeof ns$test |};
 
 declare var npm$namespace$ns$test: {| (foo: number): string |};
-export type ns$test$Foo = {
-  bar: number,
-  ...
-};
+export type ns$test$Foo = { bar: number, ... };
 "
 `;
 

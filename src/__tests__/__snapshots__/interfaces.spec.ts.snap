@@ -14,10 +14,7 @@ exports[`should handle interface inheritance 1`] = `
 "declare interface User {
   firstName: string;
 }
-declare type SpecialUser = {
-  nice: number,
-  ...
-} & User;
+declare type SpecialUser = { nice: number, ... } & User;
 "
 `;
 
@@ -42,6 +39,14 @@ declare type SpecialUser = {|
 
   nice: number,
 |};
+"
+`;
+
+exports[`should handle interface inheritance 4`] = `
+"declare interface User {
+  firstName: string;
+}
+declare type SpecialUser = { nice: number, ... } & User;
 "
 `;
 
@@ -70,11 +75,7 @@ exports[`should handle mutli-extends pattern 1`] = `
 declare interface PenStroke {
   penWidth: number;
 }
-declare type Square = {
-  sideLength: number,
-  ...
-} & Shape &
-  PenStroke;
+declare type Square = { sideLength: number, ... } & Shape & PenStroke;
 "
 `;
 

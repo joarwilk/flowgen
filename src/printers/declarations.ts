@@ -76,31 +76,6 @@ export const typeMembers = (
     .filter(Boolean); // Filter rows which didn't print properly (private fields et al)
 };
 
-/**
- * Print as a Flow object type.
- *
- * If `forceInexact`, then print as an inexact object type.  Otherwise, the
- * exactness will be governed by the `inexact` option.
- */
-export const objectType = (
-  node: ts.InterfaceDeclaration | ts.TypeLiteralNode,
-  forceInexact: boolean,
-): string => {
-  const isInexact = opts().inexact;
-
-  const members = typeMembers(node).map(m => `\n${m}`);
-
-  if (isInexact) {
-    members.push("...\n");
-  } else if (members.length > 0) {
-    members.push("\n");
-  }
-
-  const inner = members.join(",");
-
-  return isInexact || forceInexact ? `{${inner}}` : `{|${inner}|}`;
-};
-
 /** Print as a Flow interface type's body (the `{…}` portion.) */
 const interfaceTypeBody = (node: ts.InterfaceDeclaration): string => {
   const members = typeMembers(node).map(m => `\n${m}`);
@@ -251,7 +226,10 @@ export const interfaceDeclaration = (
 
     return `${modifier}type ${nodeName}${printers.common.generics(
       node.typeParameters,
-    )} = ${objectType(node, true /* inexact so `&` works */)} ${heritage}`;
+    )} = ${
+      // inexact so `&` works
+      printers.common.printInexactObjectType(typeMembers(node))
+    } ${heritage}`;
   } else {
     return `${modifier}interface ${nodeName}${printers.common.generics(
       node.typeParameters,
