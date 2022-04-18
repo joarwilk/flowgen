@@ -114,10 +114,9 @@ export const interfaceType = <T>(
 const interfaceRecordType = (
   node: ts.InterfaceDeclaration,
   heritage: string,
-  withSemicolons = false,
 ): string => {
   const isInexact = opts().inexact;
-  let members = typeMembers(node).join(withSemicolons ? ";" : ",");
+  let members = typeMembers(node).join(",");
 
   if (members.length > 0) {
     members += "\n";
