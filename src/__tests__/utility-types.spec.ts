@@ -29,6 +29,13 @@ type F2<T, U> = Record<T, U>
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
+
+  const result2 = compiler.compileDefinitionString(ts, {
+    quiet: true,
+    inexact: false,
+  });
+  expect(beautify(result2)).toMatchSnapshot();
+  expect(result2).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle Omit type", () => {

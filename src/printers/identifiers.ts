@@ -23,11 +23,6 @@ const recordMembers = (key, value) => {
   }
 };
 
-const Record = ([key, value]: [any, any], isInexact = opts().inexact) => {
-  const members = recordMembers(key, value);
-  return `{ ${members.join(",\n")}${isInexact ? ", ..." : ""} }`;
-};
-
 type IdentifierResult = string | ((...args: any[]) => any);
 
 const identifiers: { [name: string]: IdentifierResult } = {
@@ -48,7 +43,10 @@ const identifiers: { [name: string]: IdentifierResult } = {
       typeArguments[0],
     )}>`;
   },
-  Record,
+  Record: ([keys, value]: [any, any]) => {
+    const members = recordMembers(keys, value);
+    return printers.common.printDefaultObjectType(members);
+  },
   Omit: ([obj, keys]: [any, any]) => {
     const members = recordMembers(keys, { kind: ts.SyntaxKind.AnyKeyword });
     return `$Diff<${printers.node.printType(
