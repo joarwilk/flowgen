@@ -1,7 +1,6 @@
 // Please add only built-in type references
 
 import * as printers from "./index";
-import { opts } from "../options";
 import { withEnv } from "../env";
 import ts from "typescript";
 
@@ -33,10 +32,9 @@ const identifiers: { [name: string]: IdentifierResult } = {
   RegExpMatchArray: "RegExp$matchResult",
   NonNullable: "$NonMaybeType",
   Partial: ([type]: any[]) => {
-    const isInexact = opts().inexact;
-    return `$Rest<${printers.node.printType(type)}, {${
-      isInexact ? "..." : ""
-    }}>`;
+    return `$Rest<${printers.node.printType(
+      type,
+    )}, ${printers.common.printInexactObjectType([])}>`;
   },
   ReturnType: (typeArguments: any[]) => {
     return `$Call<<R>((...args: any[]) => R) => R, ${printers.node.printType(
