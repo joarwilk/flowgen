@@ -133,8 +133,12 @@ exports[`should handle untyped array binding pattern 1`] = `
 exports[`should handle untyped object binding pattern 1`] = `
 "declare interface ObjectBinding {
   (): void;
-  (x: {}): void;
-  (x: { a: any, b: any }): void;
+  (x: { ... }): void;
+  (x: {
+    a: any,
+    b: any,
+    ...
+  }): void;
 }
 "
 `;

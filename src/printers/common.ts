@@ -96,13 +96,11 @@ export const parameter = (
 
   if (!param.type) {
     if (param.name.kind === ts.SyntaxKind.ObjectBindingPattern) {
-      if (param.name.elements.length > 0) {
-        right = `{${param.name.elements
-          .map(element => `${printers.node.printType(element)}: any`)
-          .join(", ")}}`;
-      } else {
-        right = "{}";
-      }
+      right = printInexactObjectType(
+        param.name.elements.map(
+          element => `${printers.node.printType(element)}: any`,
+        ),
+      );
     } else {
       right = "any";
     }
