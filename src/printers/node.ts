@@ -7,7 +7,6 @@ import * as logger from "../logger";
 import { withEnv } from "../env";
 import { renames, getLeftMostEntityName } from "./smart-identifiers";
 import { printErrorMessage } from "../errors/error-message";
-import { opts } from "../options";
 
 type ExpectedKeywordKind =
   | ts.SyntaxKind.AnyKeyword
@@ -771,13 +770,9 @@ export const printType = withEnv<any, [any], string>(
           return type.types.map(printType).join(" & ");
         }
 
-        const spreadType = type.types
-          .map(type => `...${printType(type)}`)
-          .join(",");
-
-        const isInexact = opts().inexact;
-
-        return isInexact ? `{ ${spreadType} }` : `{| ${spreadType} |}`;
+        return printers.common.printDefaultObjectType(
+          type.types.map(type => `...${printType(type)}`),
+        );
       }
 
       case ts.SyntaxKind.MethodDeclaration:

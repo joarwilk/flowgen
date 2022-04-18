@@ -16,7 +16,11 @@ declare type Bar = {
   bar: string,
   ...
 };
-declare var combination: { ...Foo, ...Bar };
+declare var combination: {
+  ...Foo,
+  ...Bar,
+  ...
+};
 "
 `;
 
@@ -27,6 +31,9 @@ exports[`should use spread when performing union of object types 2`] = `
 declare type Bar = {|
   bar: string,
 |};
-declare var combination: {| ...Foo, ...Bar |};
+declare var combination: {|
+  ...Foo,
+  ...Bar,
+|};
 "
 `;
