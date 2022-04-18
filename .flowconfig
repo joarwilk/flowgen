@@ -1,11 +1,4 @@
-[ignore]
-
-[include]
-
-[libs]
-
 [lints]
-
-[options]
-
-[strict]
+; This Flow config is used when having Flow check our output for validity,
+; in test cases that use `expect(…).toBeValidFlowTypeDeclarations()`.
+implicit-inexact-object=error
