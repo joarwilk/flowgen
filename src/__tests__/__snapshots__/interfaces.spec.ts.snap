@@ -19,24 +19,19 @@ declare type SpecialUser = { nice: number, ... } & User;
 `;
 
 exports[`should handle interface inheritance 2`] = `
-"declare type User = {
-  firstName: string,
-};
+"declare type User = { firstName: string, ... };
 declare type SpecialUser = {
   ...$Exact<User>,
-
   nice: number,
+  ...
 };
 "
 `;
 
 exports[`should handle interface inheritance 3`] = `
-"declare type User = {|
-  firstName: string,
-|};
+"declare type User = {| firstName: string |};
 declare type SpecialUser = {|
   ...$Exact<User>,
-
   nice: number,
 |};
 "
@@ -64,6 +59,7 @@ exports[`should handle interface merging 2`] = `
   firstName: string,
   lastName: string,
   username: string,
+  ...
 };
 "
 `;
@@ -87,9 +83,7 @@ exports[`should handle single interface 1`] = `
 `;
 
 exports[`should handle single interface 2`] = `
-"declare type User = {
-  firstName: string,
-};
+"declare type User = { firstName: string, ... };
 "
 `;
 
