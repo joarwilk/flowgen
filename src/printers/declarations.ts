@@ -76,15 +76,15 @@ export const typeMembers = (
     .filter(Boolean); // Filter rows which didn't print properly (private fields et al)
 };
 
-export const interfaceType = (
+/** Print as a Flow object type. */
+export const objectType = (
   node: ts.InterfaceDeclaration | ts.TypeLiteralNode,
-  isType = false,
 ): string => {
   const isInexact = opts().inexact;
 
   const members = typeMembers(node);
 
-  if (isType && isInexact) {
+  if (isInexact) {
     members.push("...\n");
   } else if (members.length > 0) {
     members.push("\n");
@@ -97,6 +97,18 @@ export const interfaceType = (
     return `{${inner}}`;
   }
   return isInexact ? `{${inner}}` : `{|${inner}|}`;
+};
+
+/** Print as a Flow interface type's body (the `{…}` portion.) */
+const interfaceTypeBody = (node: ts.InterfaceDeclaration): string => {
+  const members = typeMembers(node);
+  if (members.length > 0) {
+    members.push("\n");
+  }
+
+  const inner = members.join(",");
+
+  return `{${inner}}`;
 };
 
 const classBody = <T>(
@@ -235,11 +247,11 @@ export const interfaceDeclaration = (
 
     return `${modifier}type ${nodeName}${printers.common.generics(
       node.typeParameters,
-    )} = ${interfaceType(node, true)} ${heritage}`;
+    )} = ${objectType(node)} ${heritage}`;
   } else {
     return `${modifier}interface ${nodeName}${printers.common.generics(
       node.typeParameters,
-    )} ${interfaceType(node, false)} `;
+    )} ${interfaceTypeBody(node)} `;
   }
 };
 
