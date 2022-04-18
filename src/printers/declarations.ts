@@ -113,16 +113,6 @@ const classBody = <T>(
   return `{${inner}}`;
 };
 
-const interfaceRecordType = (
-  node: ts.InterfaceDeclaration,
-  heritage: string,
-): string => {
-  const members = typeMembers(node);
-  return printers.common.printDefaultObjectType(
-    heritage ? [heritage, ...members] : members,
-  );
-};
-
 const classHeritageClause = withEnv<
   { classHeritage?: boolean },
   [ts.ExpressionWithTypeArguments],
@@ -173,23 +163,22 @@ const interfaceRecordDeclaration = (
   node: ts.InterfaceDeclaration,
   modifier: string,
 ): string => {
-  let heritage = "";
+  let members: string[] = [];
 
   // If the class is extending something
   if (node.heritageClauses) {
-    heritage = node.heritageClauses
-      .map(clause => {
-        return clause.types
-          .map(interfaceHeritageClause)
-          .map(type => `...$Exact<${type}>`)
-          .join(",\n");
-      })
-      .join("");
+    for (const clause of node.heritageClauses) {
+      for (const type of clause.types) {
+        members.push(`...$Exact<${interfaceHeritageClause(type)}>`);
+      }
+    }
   }
+
+  members = members.concat(typeMembers(node));
 
   const str = `${modifier}type ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} = ${interfaceRecordType(node, heritage)}\n`;
+  )} = ${printers.common.printDefaultObjectType(members)}\n`;
 
   return str;
 };
