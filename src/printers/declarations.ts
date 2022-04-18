@@ -67,13 +67,15 @@ export const interfaceType = <T>(
   isType = false,
 ): string => {
   const isInexact = opts().inexact;
-  const members = node.members.map(member => {
-    const printed = printers.node.printType(member);
-    if (!printed) {
-      return null;
-    }
-    return "\n" + printers.common.jsdoc(member) + printed;
-  });
+  const members = node.members
+    .map(member => {
+      const printed = printers.node.printType(member);
+      if (!printed) {
+        return null;
+      }
+      return "\n" + printers.common.jsdoc(member) + printed;
+    })
+    .filter(Boolean); // Filter rows which didn't print properly (private fields et al)
 
   if (mergedNamespaceChildren.length > 0) {
     for (const child of Namespace.formatChildren(
@@ -90,9 +92,7 @@ export const interfaceType = <T>(
     members.push("\n");
   }
 
-  const inner = members
-    .filter(Boolean) // Filter rows which didn't print properly (private fields et al)
-    .join(withSemicolons ? ";" : ",");
+  const inner = members.join(withSemicolons ? ";" : ",");
 
   // we only want type literals to be exact. i.e. class Foo {} should not be class Foo {||}
   if (!ts.isTypeLiteralNode(node)) {
