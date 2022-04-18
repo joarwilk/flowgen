@@ -29,9 +29,9 @@ declare export class Album$AlbumLabel {}
 
 exports[`should handle merging with other types enum 1`] = `
 "declare var Color: {|
-  +red: 1, // 1
-  +green: 2, // 2
-  +blue: 4, // 4
+  +red: 1,
+  +green: 2,
+  +blue: 4,
 |};
 declare var Color: typeof npm$namespace$Color;
 
@@ -122,9 +122,9 @@ exports[`should handle nested namespace merging enum 1`] = `
 declare var npm$namespace$ns: {| Color: typeof npm$namespace$ns$Color |};
 
 declare var ns$Color: {|
-  +red: 1, // 1
-  +green: 2, // 2
-  +blue: 4, // 4
+  +red: 1,
+  +green: 2,
+  +blue: 4,
 |};
 
 declare var npm$namespace$ns$Color: {| mixColor: typeof ns$Color$mixColor |};
@@ -195,7 +195,7 @@ declare interface E0$U1$S3 {
 declare var E0$U1$e2: number;
 
 declare var E0$U1$E2: {|
-  +E: 1, // 1
+  +E: 1,
 |};
 
 declare var npm$namespace$E0$U1$D1: {| S2: typeof npm$namespace$E0$U1$D1$S2 |};
