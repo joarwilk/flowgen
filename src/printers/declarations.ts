@@ -223,28 +223,24 @@ export const interfaceDeclaration = (
   if (isRecord) {
     return interfaceRecordDeclaration(nodeName, node, modifier);
   }
-  let heritage = "";
 
-  // If the class is extending something
   if (node.heritageClauses) {
-    heritage = node.heritageClauses
+    // The interface is extending something.
+    let heritage = node.heritageClauses
       .map(clause => {
         return clause.types.map(interfaceHeritageClause).join(" & ");
       })
       .join("");
     heritage = heritage.length > 0 ? `& ${heritage}\n` : "";
+
+    return `${modifier}type ${nodeName}${printers.common.generics(
+      node.typeParameters,
+    )} = ${interfaceType(node, true)} ${heritage}`;
+  } else {
+    return `${modifier}interface ${nodeName}${printers.common.generics(
+      node.typeParameters,
+    )} ${interfaceType(node, false)} `;
   }
-
-  const type = node.heritageClauses ? "type" : "interface";
-
-  const str = `${modifier}${type} ${nodeName}${printers.common.generics(
-    node.typeParameters,
-  )} ${type === "type" ? "= " : ""}${interfaceType(
-    node,
-    type === "type",
-  )} ${heritage}`;
-
-  return str;
 };
 
 export const typeDeclaration = (
