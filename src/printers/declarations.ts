@@ -71,7 +71,7 @@ export const typeMembers = (
       if (!printed) {
         return null;
       }
-      return "\n" + printers.common.jsdoc(member) + printed;
+      return printers.common.jsdoc(member) + printed;
     })
     .filter(Boolean); // Filter rows which didn't print properly (private fields et al)
 };
@@ -82,7 +82,7 @@ export const objectType = (
 ): string => {
   const isInexact = opts().inexact;
 
-  const members = typeMembers(node);
+  const members = typeMembers(node).map(m => `\n${m}`);
 
   if (isInexact) {
     members.push("...\n");
@@ -101,7 +101,7 @@ export const objectType = (
 
 /** Print as a Flow interface type's body (the `{…}` portion.) */
 const interfaceTypeBody = (node: ts.InterfaceDeclaration): string => {
-  const members = typeMembers(node);
+  const members = typeMembers(node).map(m => `\n${m}`);
   if (members.length > 0) {
     members.push("\n");
   }
@@ -116,7 +116,7 @@ const classBody = <T>(
   nodeName: string,
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
 ): string => {
-  const members = typeMembers(node);
+  const members = typeMembers(node).map(m => `\n${m}`);
 
   if (mergedNamespaceChildren.length > 0) {
     for (const child of Namespace.formatChildren(
@@ -141,7 +141,9 @@ const interfaceRecordType = (
   heritage: string,
 ): string => {
   const isInexact = opts().inexact;
-  let members = typeMembers(node).join(",");
+  let members = typeMembers(node)
+    .map(m => `\n${m}`)
+    .join(",");
 
   if (members.length > 0) {
     members += "\n";
