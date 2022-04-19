@@ -2,19 +2,17 @@ import * as ts from "typescript";
 import { opts } from "../options";
 import { checker } from "../checker";
 import type Node from "../nodes/node";
-import type { RawNode } from "../nodes/node";
 import Namespace from "../nodes/namespace";
 import * as printers from "./index";
 import { withEnv } from "../env";
 
 export const propertyDeclaration = (
-  node: RawNode,
+  node: ts.VariableDeclaration | ts.PropertyDeclaration,
   keywordPrefix: string,
-  isVar = false,
 ): string => {
   let left = keywordPrefix;
   const symbol = checker.current.getSymbolAtLocation(node.name);
-  const name = isVar
+  const name = ts.isVariableDeclaration(node)
     ? printers.node.getFullyQualifiedName(symbol, node.name)
     : printers.node.printType(node.name);
   if (
@@ -36,23 +34,14 @@ export const propertyDeclaration = (
 
   left += name;
 
-  if (node.parameters) {
-    return left + ": " + node.parameters.map(printers.common.parameter);
-  }
-
   if (node.type) {
     let right = printers.node.printType(node.type);
-    if (
-      node.questionToken &&
-      node.name.kind !== ts.SyntaxKind.ComputedPropertyName
-    ) {
-      left += "?";
-    }
-    if (
-      node.questionToken &&
-      node.name.kind === ts.SyntaxKind.ComputedPropertyName
-    ) {
-      right = `(${right}) | void`;
+    if (ts.isPropertyDeclaration(node) && node.questionToken) {
+      if (node.name.kind !== ts.SyntaxKind.ComputedPropertyName) {
+        left += "?";
+      } else {
+        right = `(${right}) | void`;
+      }
     }
     return left + ": " + right;
   }
@@ -60,7 +49,7 @@ export const propertyDeclaration = (
   return left + `: ${printers.node.printType(node.initializer)}\n`;
 };
 
-export const variableDeclaration = (node: RawNode): string => {
+export const variableDeclaration = (node: ts.VariableStatement): string => {
   const declarations = node.declarationList.declarations.map(
     printers.node.printType,
   );
@@ -71,7 +60,7 @@ export const variableDeclaration = (node: RawNode): string => {
 };
 
 export const interfaceType = <T>(
-  node: RawNode,
+  node: ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeLiteralNode,
   nodeName: string,
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
   withSemicolons = false,
@@ -80,18 +69,10 @@ export const interfaceType = <T>(
   const isInexact = opts().inexact;
   const members = node.members.map(member => {
     const printed = printers.node.printType(member);
-
     if (!printed) {
       return null;
     }
-
-    let str = "\n";
-
-    if (member.jsDoc) {
-      str += printers.common.comment(member.jsDoc);
-    }
-
-    return str + printed;
+    return "\n" + printers.common.jsdoc(member) + printed;
   });
 
   if (mergedNamespaceChildren.length > 0) {
@@ -121,7 +102,7 @@ export const interfaceType = <T>(
 };
 
 const interfaceRecordType = (
-  node: RawNode,
+  node: ts.InterfaceDeclaration,
   heritage: string,
   withSemicolons = false,
 ): string => {
@@ -129,18 +110,10 @@ const interfaceRecordType = (
   let members = node.members
     .map(member => {
       const printed = printers.node.printType(member);
-
       if (!printed) {
         return null;
       }
-
-      let str = "\n";
-
-      if (member.jsDoc) {
-        str += printers.common.comment(member.jsDoc);
-      }
-
-      return str + printed;
+      return "\n" + printers.common.jsdoc(member) + printed;
     })
     .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
     .join(withSemicolons ? ";" : ",");
@@ -157,7 +130,7 @@ const interfaceRecordType = (
 };
 
 const classHeritageClause = withEnv<
-  any,
+  { classHeritage?: boolean },
   [ts.ExpressionWithTypeArguments],
   string
 >((env, type) => {
@@ -179,20 +152,19 @@ const classHeritageClause = withEnv<
   return ret;
 });
 
-const interfaceHeritageClause = type => {
+const interfaceHeritageClause = (type: ts.ExpressionWithTypeArguments) => {
   // TODO: refactor this
   const symbol = checker.current.getSymbolAtLocation(type.expression);
   printers.node.fixDefaultTypeArguments(symbol, type);
-  if (type.expression.kind === ts.SyntaxKind.Identifier && symbol) {
+  if (ts.isIdentifier(type.expression) && symbol) {
     const name = printers.node.getFullyQualifiedPropertyAccessExpression(
       symbol,
       type.expression,
     );
     return name + printers.common.generics(type.typeArguments);
-  } else if (type.expression.kind === ts.SyntaxKind.Identifier) {
+  } else if (ts.isIdentifier(type.expression)) {
     const name = printers.identifiers.print(type.expression.text);
     if (typeof name === "function") {
-      // @ts-expect-error todo(flow->ts)
       return name(type.typeArguments);
     } else {
       return name;
@@ -204,7 +176,7 @@ const interfaceHeritageClause = type => {
 
 const interfaceRecordDeclaration = (
   nodeName: string,
-  node: RawNode,
+  node: ts.InterfaceDeclaration,
   modifier: string,
 ): string => {
   let heritage = "";
@@ -231,7 +203,7 @@ const interfaceRecordDeclaration = (
 
 export const interfaceDeclaration = (
   nodeName: string,
-  node: RawNode,
+  node: ts.InterfaceDeclaration,
   modifier: string,
 ): string => {
   const isRecord = opts().interfaceRecords;
@@ -267,7 +239,7 @@ export const interfaceDeclaration = (
 
 export const typeDeclaration = (
   nodeName: string,
-  node: RawNode,
+  node: ts.TypeAliasDeclaration,
   modifier: string,
 ): string => {
   const str = `${modifier}type ${nodeName}${printers.common.generics(
@@ -277,9 +249,13 @@ export const typeDeclaration = (
   return str;
 };
 
-export const enumDeclaration = (nodeName: string, node: RawNode): string => {
+export const enumDeclaration = (
+  nodeName: string,
+  node: ts.EnumDeclaration,
+): string => {
   const exporter = printers.relationships.exporter(node);
   let members = "";
+  // @ts-expect-error iterating over an iterator
   for (const [index, member] of node.members.entries()) {
     let value;
     if (typeof member.initializer !== "undefined") {
@@ -296,8 +272,11 @@ declare ${exporter} var ${nodeName}: {|
 |};\n`;
 };
 
-export const typeReference = (node: RawNode, identifier: boolean): string => {
-  if (node.typeName.left && node.typeName.right) {
+export const typeReference = (
+  node: ts.TypeReferenceNode,
+  identifier: boolean,
+): string => {
+  if (ts.isQualifiedName(node.typeName)) {
     return (
       printers.node.printType(node.typeName) +
       printers.common.generics(node.typeArguments)
@@ -305,10 +284,11 @@ export const typeReference = (node: RawNode, identifier: boolean): string => {
   }
   let name = node.typeName.text;
   if (identifier) {
-    name = printers.identifiers.print(node.typeName.text);
-    if (typeof name === "function") {
-      return name(node.typeArguments);
+    const replaced = printers.identifiers.print(node.typeName.text);
+    if (typeof replaced === "function") {
+      return replaced(node.typeArguments);
     }
+    name = replaced;
   }
   return (
     printers.relationships.namespaceProp(name) +

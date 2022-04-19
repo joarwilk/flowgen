@@ -38,7 +38,13 @@ export const typeParameter = (
   return `${node.name.text}${constraint}${defaultType}`;
 };
 
-export const parameter = (param: RawNode): string => {
+export const parameter = (
+  param:
+    | ts.ParameterDeclaration
+    | ts.PropertySignature
+    | ts.GetAccessorDeclaration
+    | ts.SetAccessorDeclaration,
+): string => {
   let left = "";
   if (param.modifiers) {
     for (const modifier of param.modifiers) {
@@ -48,7 +54,7 @@ export const parameter = (param: RawNode): string => {
   if (param.kind === ts.SyntaxKind.SetAccessor) {
     left += "-";
   }
-  let right;
+  let right: string;
 
   if (
     param.name.kind === ts.SyntaxKind.ObjectBindingPattern ||
@@ -89,7 +95,7 @@ export const parameter = (param: RawNode): string => {
     right = `(${right}) | void`;
   }
 
-  if (param.dotDotDotToken) {
+  if (ts.isParameter(param) && param.dotDotDotToken) {
     left = "..." + left;
   }
 
@@ -135,24 +141,24 @@ export const methodSignature = (
   return `${left}${isMethod ? "" : ": "}${right}`;
 };
 
-export const parseTypeReference = (node: RawNode): string => {
-  if (node.typeName.left && node.typeName.right) {
-    return (
-      printers.node.printType(node.typeName) + generics(node.typeArguments)
-    );
+export const generics = (types?: ReadonlyArray<RawNode> | null): string => {
+  if (types && typeof types.length !== "undefined") {
+    return `<${types.map(printers.node.printType).join(", ")}>`;
   }
-
-  return node.typeName.text + generics(node.typeArguments);
+  return "";
 };
 
-export const generics = (
+export const genericsWithoutDefault = (
   types?: ReadonlyArray<RawNode> | null,
-  map: (node: RawNode) => RawNode = node => node,
 ): string => {
   if (types && typeof types.length !== "undefined") {
-    return `<${types.map(map).map(printers.node.printType).join(", ")}>`;
+    return `<${types
+      .map(node => {
+        node.withoutDefault = true;
+        return printers.node.printType(node);
+      })
+      .join(", ")}>`;
   }
-
   return "";
 };
 
@@ -191,24 +197,27 @@ const jsDocPrintTag = (tag): string => {
   return `\n * @${tag.tagName.text}${typeName}${parameterName}${comment}`;
 };
 
-export const comment = withEnv<any, any[], string>(
-  (env: any, jsdoc: Array<any>): string => {
-    if (!opts().jsdoc) return "";
-    const blocks = jsdoc
-      .map(doc => {
-        const comment = (doc.comment ? `\n${doc.comment}` : "").replace(
-          /\n/g,
-          "\n * ",
-        );
+/** The node's jsdoc comments, if any and if the `jsdoc` option is enabled. */
+export const jsdoc = withEnv<any, [ts.Node], string>((env, node): string => {
+  if (!opts().jsdoc) return "";
 
-        env.tsdoc = true;
-        const tags = (doc.tags || []).map(jsDocPrintTag);
-        env.tsdoc = false;
+  // @ts-expect-error The jsDoc property is internal, on ts.JSDocContainer.
+  const jsDoc = node.jsDoc as void | ts.JSDoc[];
+  if (!jsDoc) return "";
 
-        return `/**${comment + tags.join("")}\n */\n`;
-      })
-      .join("");
+  const blocks = jsDoc
+    .map(doc => {
+      const comment = (doc.comment ? `\n${doc.comment}` : "").replace(
+        /\n/g,
+        "\n * ",
+      );
 
-    return `\n${blocks}`;
-  },
-);
+      env.tsdoc = true;
+      const tags = (doc.tags || []).map(jsDocPrintTag);
+      env.tsdoc = false;
+
+      return `/**${comment + tags.join("")}\n */\n`;
+    })
+    .join("");
+  return `\n${blocks}`;
+});

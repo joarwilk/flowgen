@@ -1,4 +1,3 @@
-import type { RawNode } from "./node";
 import type {
   FunctionDeclaration,
   ClassDeclaration,
@@ -6,7 +5,6 @@ import type {
   TypeAliasDeclaration,
   EnumDeclaration,
   VariableStatement,
-  JSDoc,
 } from "typescript";
 import * as ts from "typescript";
 import Node from "./node";
@@ -16,36 +14,18 @@ import namespaceManager from "../namespace-manager";
 import { parseNameFromNode } from "../parse/ast";
 
 type PropertyNode =
-  | ({
-      //kind: "FunctionDeclaration",
-      jsDoc: Array<JSDoc>;
-    } & FunctionDeclaration)
-  | ({
-      //kind: "ClassDeclaration",
-      jsDoc: Array<JSDoc>;
-    } & ClassDeclaration)
-  | ({
-      //kind: "InterfaceDeclaration",
-      jsDoc: Array<JSDoc>;
-    } & InterfaceDeclaration)
-  | ({
-      //kind: "TypeAliasDeclaration",
-      jsDoc: Array<JSDoc>;
-    } & TypeAliasDeclaration)
-  | ({
-      //kind: "EnumDeclaration",
-      jsDoc: Array<JSDoc>;
-    } & EnumDeclaration)
-  | ({
-      //kind: "VariableStatement",
-      jsDoc: Array<JSDoc>;
-    } & VariableStatement);
+  | FunctionDeclaration
+  | ClassDeclaration
+  | InterfaceDeclaration
+  | TypeAliasDeclaration
+  | EnumDeclaration
+  | VariableStatement;
 
 export default class Property extends Node<PropertyNode> {
   name: string;
   skip: boolean;
 
-  constructor(node: RawNode) {
+  constructor(node: PropertyNode) {
     super(node);
 
     this.name = parseNameFromNode(node);
@@ -68,9 +48,7 @@ export default class Property extends Node<PropertyNode> {
       name = namespace + "$" + name;
     }
 
-    if (this.raw.jsDoc) {
-      out += printers.common.comment(this.raw.jsDoc);
-    }
+    out += printers.common.jsdoc(this.raw);
 
     const isDeclare = mod !== "root";
     const exporter = printers.relationships.exporter(this.raw);
@@ -116,7 +94,7 @@ export default class Property extends Node<PropertyNode> {
       case ts.SyntaxKind.VariableStatement:
         for (const decl of this.raw.declarationList.declarations) {
           if (namespace && decl.name.kind === ts.SyntaxKind.Identifier) {
-            const text = (decl.name as any).text;
+            const text = decl.name.text;
             namespaceManager.registerProp(namespace, text);
           }
         }

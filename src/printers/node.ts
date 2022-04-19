@@ -108,6 +108,7 @@ export function printPropertyAccessExpression(
     );
   } else if (type.kind === ts.SyntaxKind.Identifier) {
     return printers.relationships.namespace(
+      // @ts-expect-error todo(flow->ts)
       printers.identifiers.print(type.text),
       true,
     );
@@ -504,6 +505,7 @@ export const printType = withEnv<any, [any], string>(
       //case SyntaxKind.StringLiteralType:
       case ts.SyntaxKind.Identifier: {
         return printers.relationships.namespace(
+          // @ts-expect-error todo(flow->ts)
           printers.identifiers.print(type.text),
           true,
         );
@@ -673,11 +675,8 @@ export const printType = withEnv<any, [any], string>(
       }
 
       case ts.SyntaxKind.VariableDeclaration:
-        return printers.declarations.propertyDeclaration(
-          type,
-          keywordPrefix,
-          true,
-        );
+        return printers.declarations.propertyDeclaration(type, keywordPrefix);
+
       case ts.SyntaxKind.PropertyDeclaration:
         return printers.declarations.propertyDeclaration(type, keywordPrefix);
 
@@ -723,10 +722,9 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.CallSignature: {
         // TODO: rewrite to printers.functions.functionType
-        const generics = printers.common.generics(type.typeParameters, node => {
-          node.withoutDefault = true;
-          return node;
-        });
+        const generics = printers.common.genericsWithoutDefault(
+          type.typeParameters,
+        );
         const str = `${generics}(${type.parameters
           // @ts-expect-error todo(flow->ts)
           .filter(param => param.name.text !== "this")

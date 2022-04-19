@@ -29,8 +29,9 @@ const Record = ([key, value]: [any, any], isInexact = opts().inexact) => {
   }
 };
 
-const identifiers = Object.create(null);
-Object.assign(identifiers, {
+type IdentifierResult = string | ((...args: any[]) => any);
+
+const identifiers: { [name: string]: IdentifierResult } = {
   ReadonlyArray: "$ReadOnlyArray",
   ReadonlySet: "$ReadOnlySet",
   ReadonlyMap: "$ReadOnlyMap",
@@ -55,11 +56,11 @@ Object.assign(identifiers, {
       false,
     )}>`;
   },
-});
+};
 
-export const print = withEnv<any, [string], string>(
-  (env, kind: string): string => {
-    if (env.classHeritage) return kind;
-    return identifiers[kind] || kind;
-  },
-);
+export const print = withEnv<any, [string], IdentifierResult>((env, kind) => {
+  if (env.classHeritage) return kind;
+  return Object.prototype.hasOwnProperty.call(identifiers, kind)
+    ? identifiers[kind]
+    : kind;
+});

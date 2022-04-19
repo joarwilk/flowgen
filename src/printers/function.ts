@@ -2,14 +2,21 @@ import * as ts from "typescript";
 import type { RawNode } from "../nodes/node";
 import * as printers from "./index";
 
-export const functionType = (func: RawNode, dotAsReturn = false): string => {
+export const functionType = (
+  func:
+    | ts.FunctionTypeNode
+    | ts.FunctionDeclaration
+    | ts.MethodDeclaration
+    | ts.MethodSignature
+    | ts.ConstructSignatureDeclaration,
+  dotAsReturn = false,
+): string => {
   const params = func.parameters
-    .filter(param => param.name.text !== "this")
+    .filter(
+      param => !(ts.isIdentifier(param.name) && param.name.text === "this"),
+    )
     .map(printers.common.parameter);
-  const generics = printers.common.generics(func.typeParameters, node => {
-    node.withoutDefault = true;
-    return node;
-  });
+  const generics = printers.common.genericsWithoutDefault(func.typeParameters);
   const returns = func.type ? printers.node.printType(func.type) : "void";
 
   const firstPass = `${generics}(${params.join(", ")})${
