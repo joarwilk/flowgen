@@ -78,14 +78,8 @@ export const typeMembers = (
 
 /** Print as a Flow interface type's body (the `{…}` portion.) */
 const interfaceTypeBody = (node: ts.InterfaceDeclaration): string => {
-  const members = typeMembers(node).map(m => `\n${m}`);
-  if (members.length > 0) {
-    members.push("\n");
-  }
-
-  const inner = members.join(",");
-
-  return `{${inner}}`;
+  const members = typeMembers(node);
+  return members.length === 0 ? `{}` : `{\n${members.join(",\n")},\n}`;
 };
 
 const classBody = <T>(
@@ -93,24 +87,18 @@ const classBody = <T>(
   nodeName: string,
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
 ): string => {
-  const members = typeMembers(node).map(m => `\n${m}`);
+  const members = typeMembers(node);
 
   if (mergedNamespaceChildren.length > 0) {
     for (const child of Namespace.formatChildren(
       mergedNamespaceChildren,
       nodeName,
     )) {
-      members.push(`\nstatic ${child}`);
+      members.push(`static ${child}`);
     }
   }
 
-  if (members.length > 0) {
-    members.push("\n");
-  }
-
-  const inner = members.join(";");
-
-  return `{${inner}}`;
+  return members.length === 0 ? `{}` : `{\n${members.join(";\n")},\n}`;
 };
 
 const classHeritageClause = withEnv<
