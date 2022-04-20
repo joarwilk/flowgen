@@ -76,29 +76,13 @@ export const typeMembers = (
     .filter(Boolean); // Filter rows which didn't print properly (private fields et al)
 };
 
+const formatMembers = (members: string[], sep: string) =>
+  members.length ? `{\n${members.join(`${sep}\n`)}${sep}\n}` : `{}`;
+
 /** Print as a Flow interface type's body (the `{…}` portion.) */
 const interfaceTypeBody = (node: ts.InterfaceDeclaration): string => {
   const members = typeMembers(node);
   return members.length === 0 ? `{}` : `{\n${members.join(",\n")},\n}`;
-};
-
-const classBody = <T>(
-  node: ts.ClassDeclaration,
-  nodeName: string,
-  mergedNamespaceChildren: ReadonlyArray<Node<T>>,
-): string => {
-  const members = typeMembers(node);
-
-  if (mergedNamespaceChildren.length > 0) {
-    for (const child of Namespace.formatChildren(
-      mergedNamespaceChildren,
-      nodeName,
-    )) {
-      members.push(`static ${child}`);
-    }
-  }
-
-  return members.length === 0 ? `{}` : `{\n${members.join(";\n")},\n}`;
 };
 
 const classHeritageClause = withEnv<
@@ -279,11 +263,20 @@ export const classDeclaration = <T>(
     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
   }
 
-  const str = `declare ${printers.relationships.exporter(
+  const members = typeMembers(node);
+
+  if (mergedNamespaceChildren.length > 0) {
+    for (const child of Namespace.formatChildren(
+      mergedNamespaceChildren,
+      nodeName,
+    )) {
+      members.push(`static ${child}`);
+    }
+  }
+
+  return `declare ${printers.relationships.exporter(
     node,
   )}class ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} ${heritage} ${classBody(node, nodeName, mergedNamespaceChildren)}`;
-
-  return str;
+  )} ${heritage} ${formatMembers(members, ";")}`;
 };
