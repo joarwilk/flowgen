@@ -1,15 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle export list syntax 1`] = `
-"declare type ComplexType =
-  | {
-      type: number,
-      ...
-    }
-  | {
-      type: string,
-      ...
-    };
+"declare type ComplexType = { type: number, ... } | { type: string, ... };
 export type { ComplexType };
 declare var foo: 5;
 declare export { foo };
@@ -24,23 +16,12 @@ export type Maybe<T> =
       value: T,
       ...
     }
-  | {
-      type: \\"nothing\\",
-      ...
-    };
+  | { type: \\"nothing\\", ... };
 "
 `;
 
 exports[`should handle inline export list syntax 1`] = `
-"declare type ComplexType =
-  | {
-      type: number,
-      ...
-    }
-  | {
-      type: string,
-      ...
-    };
+"declare type ComplexType = { type: number, ... } | { type: string, ... };
 declare var foo: 5;
 export type { ComplexType };
 declare export { foo };

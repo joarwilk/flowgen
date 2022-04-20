@@ -1,31 +1,24 @@
 // Please add only built-in type references
 
 import * as printers from "./index";
-import { opts } from "../options";
 import { withEnv } from "../env";
 import ts from "typescript";
 
-const Record = ([key, value]: [any, any], isInexact = opts().inexact) => {
+const recordMembers = (key, value) => {
   const valueType = printers.node.printType(value);
 
   switch (key.kind) {
     case ts.SyntaxKind.LiteralType:
-      return `{ ${printers.node.printType(key)}: ${valueType}${
-        isInexact ? ", ..." : ""
-      }}`;
+      return [`${printers.node.printType(key)}: ${valueType}`];
     case ts.SyntaxKind.UnionType:
       if (key.types.every(t => t.kind === ts.SyntaxKind.LiteralType)) {
-        const fields = key.types.reduce((acc, t) => {
-          acc += `${printers.node.printType(t)}: ${valueType},\n`;
-          return acc;
-        }, "");
-        return `{ ${fields}${isInexact ? "..." : ""}}`;
+        return key.types.map(
+          t => `${printers.node.printType(t)}: ${valueType}`,
+        );
       }
     // Fallthrough
     default:
-      return `{[key: ${printers.node.printType(key)}]: ${valueType}${
-        isInexact ? ", ..." : ""
-      }}`;
+      return [`[key: ${printers.node.printType(key)}]: ${valueType}`];
   }
 };
 
@@ -39,22 +32,24 @@ const identifiers: { [name: string]: IdentifierResult } = {
   RegExpMatchArray: "RegExp$matchResult",
   NonNullable: "$NonMaybeType",
   Partial: ([type]: any[]) => {
-    const isInexact = opts().inexact;
-    return `$Rest<${printers.node.printType(type)}, {${
-      isInexact ? "..." : ""
-    }}>`;
+    return `$Rest<${printers.node.printType(
+      type,
+    )}, ${printers.common.printInexactObjectType([])}>`;
   },
   ReturnType: (typeArguments: any[]) => {
     return `$Call<<R>((...args: any[]) => R) => R, ${printers.node.printType(
       typeArguments[0],
     )}>`;
   },
-  Record,
+  Record: ([keys, value]: [any, any]) => {
+    const members = recordMembers(keys, value);
+    return printers.common.printDefaultObjectType(members);
+  },
   Omit: ([obj, keys]: [any, any]) => {
-    return `$Diff<${printers.node.printType(obj)},${Record(
-      [keys, { kind: ts.SyntaxKind.AnyKeyword }],
-      false,
-    )}>`;
+    const members = recordMembers(keys, { kind: ts.SyntaxKind.AnyKeyword });
+    return `$Diff<${printers.node.printType(
+      obj,
+    )},${printers.common.printExactObjectType(members)}>`;
   },
 };
 

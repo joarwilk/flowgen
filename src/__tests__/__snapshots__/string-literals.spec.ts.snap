@@ -12,33 +12,15 @@ exports[`should handle string literals in function argument "overloading" 1`] = 
   on(event: \\"close\\", cb: (code: number, message: string) => void): void;
   on(
     event: \\"message\\",
-    cb: (
-      data: any,
-      flags: {
-        binary: boolean,
-        ...
-      }
-    ) => void
+    cb: (data: any, flags: { binary: boolean, ... }) => void
   ): void;
   on(
     event: \\"ping\\",
-    cb: (
-      data: any,
-      flags: {
-        binary: boolean,
-        ...
-      }
-    ) => void
+    cb: (data: any, flags: { binary: boolean, ... }) => void
   ): void;
   on(
     event: \\"pong\\",
-    cb: (
-      data: any,
-      flags: {
-        binary: boolean,
-        ...
-      }
-    ) => void
+    cb: (data: any, flags: { binary: boolean, ... }) => void
   ): void;
   on(event: \\"open\\", cb: () => void): void;
   on(event: string, listener: (...args: any[]) => void): void;

@@ -59,75 +59,25 @@ export const variableDeclaration = (node: ts.VariableStatement): string => {
     .join("\n");
 };
 
-export const interfaceType = <T>(
+/**
+ * The members of the type, printed with their jsdoc.
+ */
+export const typeMembers = (
   node: ts.InterfaceDeclaration | ts.ClassDeclaration | ts.TypeLiteralNode,
-  nodeName: string,
-  mergedNamespaceChildren: ReadonlyArray<Node<T>>,
-  withSemicolons = false,
-  isType = false,
-): string => {
-  const isInexact = opts().inexact;
-  const members = node.members.map(member => {
-    const printed = printers.node.printType(member);
-    if (!printed) {
-      return null;
-    }
-    return "\n" + printers.common.jsdoc(member) + printed;
-  });
-
-  if (mergedNamespaceChildren.length > 0) {
-    for (const child of Namespace.formatChildren(
-      mergedNamespaceChildren,
-      nodeName,
-    )) {
-      members.push(`static ${child}\n`);
-    }
-  }
-
-  if (isType && isInexact) {
-    members.push("...\n");
-  } else if (members.length > 0) {
-    members.push("\n");
-  }
-
-  const inner = members
-    .filter(Boolean) // Filter rows which didn't print properly (private fields et al)
-    .join(withSemicolons ? ";" : ",");
-
-  // we only want type literals to be exact. i.e. class Foo {} should not be class Foo {||}
-  if (!ts.isTypeLiteralNode(node)) {
-    return `{${inner}}`;
-  }
-  return isInexact ? `{${inner}}` : `{|${inner}|}`;
-};
-
-const interfaceRecordType = (
-  node: ts.InterfaceDeclaration,
-  heritage: string,
-  withSemicolons = false,
-): string => {
-  const isInexact = opts().inexact;
-  let members = node.members
+): string[] => {
+  return node.members
     .map(member => {
       const printed = printers.node.printType(member);
       if (!printed) {
         return null;
       }
-      return "\n" + printers.common.jsdoc(member) + printed;
+      return printers.common.jsdoc(member) + printed;
     })
-    .filter(Boolean) // Filter rows which didnt print propely (private fields et al)
-    .join(withSemicolons ? ";" : ",");
-
-  if (members.length > 0) {
-    members += "\n";
-  }
-
-  if (isInexact) {
-    return `{${heritage}${members}}`;
-  } else {
-    return `{|${heritage}${members}|}`;
-  }
+    .filter(Boolean); // Filter rows which didn't print properly (private fields et al)
 };
+
+const formatMembers = (members: string[], sep: string) =>
+  members.length ? `{\n${members.join(`${sep}\n`)}${sep}\n}` : `{}`;
 
 const classHeritageClause = withEnv<
   { classHeritage?: boolean },
@@ -179,24 +129,22 @@ const interfaceRecordDeclaration = (
   node: ts.InterfaceDeclaration,
   modifier: string,
 ): string => {
-  let heritage = "";
+  let members: string[] = [];
 
   // If the class is extending something
   if (node.heritageClauses) {
-    heritage = node.heritageClauses
-      .map(clause => {
-        return clause.types
-          .map(interfaceHeritageClause)
-          .map(type => `...$Exact<${type}>`)
-          .join(",\n");
-      })
-      .join("");
-    heritage = heritage.length > 0 ? `${heritage},\n` : "";
+    for (const clause of node.heritageClauses) {
+      for (const type of clause.types) {
+        members.push(`...$Exact<${interfaceHeritageClause(type)}>`);
+      }
+    }
   }
+
+  members = members.concat(typeMembers(node));
 
   const str = `${modifier}type ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} = ${interfaceRecordType(node, heritage)}\n`;
+  )} = ${printers.common.printDefaultObjectType(members)}\n`;
 
   return str;
 };
@@ -210,31 +158,32 @@ export const interfaceDeclaration = (
   if (isRecord) {
     return interfaceRecordDeclaration(nodeName, node, modifier);
   }
-  let heritage = "";
 
-  // If the class is extending something
   if (node.heritageClauses) {
-    heritage = node.heritageClauses
+    // The interface is extending something.  Represent it as an
+    // intersection with an inexact object type.
+
+    let heritage = node.heritageClauses
       .map(clause => {
         return clause.types.map(interfaceHeritageClause).join(" & ");
       })
       .join("");
     heritage = heritage.length > 0 ? `& ${heritage}\n` : "";
+
+    return `${modifier}type ${nodeName}${printers.common.generics(
+      node.typeParameters,
+    )} = ${
+      // inexact so `&` works
+      printers.common.printInexactObjectType(typeMembers(node))
+    } ${heritage}`;
+  } else {
+    // The interface isn't extending anything.  Represent it as a
+    // Flow interface.
+
+    return `${modifier}interface ${nodeName}${printers.common.generics(
+      node.typeParameters,
+    )} ${formatMembers(typeMembers(node), ",")} `;
   }
-
-  const type = node.heritageClauses ? "type" : "interface";
-
-  const str = `${modifier}${type} ${nodeName}${printers.common.generics(
-    node.typeParameters,
-  )} ${type === "type" ? "= " : ""}${interfaceType(
-    node,
-    nodeName,
-    [],
-    false,
-    type === "type",
-  )} ${heritage}`;
-
-  return str;
 };
 
 export const typeDeclaration = (
@@ -254,22 +203,21 @@ export const enumDeclaration = (
   node: ts.EnumDeclaration,
 ): string => {
   const exporter = printers.relationships.exporter(node);
-  let members = "";
+  const members: string[] = [];
   // @ts-expect-error iterating over an iterator
   for (const [index, member] of node.members.entries()) {
-    let value;
+    let value: string;
     if (typeof member.initializer !== "undefined") {
       value = printers.node.printType(member.initializer);
     } else {
       value = index;
     }
-    members += `+${member.name.text}: ${value},`;
-    members += `// ${value}\n`;
+    members.push(`+${member.name.text}: ${value}`);
   }
   return `
-declare ${exporter} var ${nodeName}: {|
-  ${members}
-|};\n`;
+declare ${exporter} var ${nodeName}: ${printers.common.printExactObjectType(
+    members,
+  )};\n`;
 };
 
 export const typeReference = (
@@ -302,27 +250,28 @@ export const classDeclaration = <T>(
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
 ): string => {
   let heritage = "";
-
-  // If the class is extending something
   if (node.heritageClauses) {
+    // The class is extending and/or implementing something.
     heritage = node.heritageClauses
-      .map(clause => {
-        return clause.types.map(classHeritageClause).join(", ");
-      })
+      .map(clause => clause.types.map(classHeritageClause).join(", "))
       .join(", ");
-    heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
+    heritage = `mixins ${heritage}`;
   }
 
-  const str = `declare ${printers.relationships.exporter(
+  const members = typeMembers(node);
+
+  if (mergedNamespaceChildren.length > 0) {
+    for (const child of Namespace.formatChildren(
+      mergedNamespaceChildren,
+      nodeName,
+    )) {
+      members.push(`static ${child}`);
+    }
+  }
+
+  return `declare ${printers.relationships.exporter(
     node,
   )}class ${nodeName}${printers.common.generics(
     node.typeParameters,
-  )} ${heritage} ${interfaceType(
-    node,
-    nodeName,
-    mergedNamespaceChildren,
-    true,
-  )}`;
-
-  return str;
+  )} ${heritage} ${formatMembers(members, ";")}`;
 };

@@ -41,6 +41,12 @@ interface SpecialUser extends User {
   });
   expect(beautify(result3)).toMatchSnapshot();
   expect(result3).toBeValidFlowTypeDeclarations();
+
+  const result4 = compiler.compileDefinitionString(ts, {
+    inexact: false,
+  });
+  expect(beautify(result4)).toMatchSnapshot();
+  expect(result4).toBeValidFlowTypeDeclarations();
 });
 
 it("should handle interface merging", () => {

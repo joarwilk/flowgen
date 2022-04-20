@@ -29,15 +29,13 @@ declare export class Album$AlbumLabel {}
 
 exports[`should handle merging with other types enum 1`] = `
 "declare var Color: {|
-  +red: 1, // 1
-  +green: 2, // 2
-  +blue: 4, // 4
+  +red: 1,
+  +green: 2,
+  +blue: 4,
 |};
 declare var Color: typeof npm$namespace$Color;
 
-declare var npm$namespace$Color: {|
-  mixColor: typeof Color$mixColor,
-|};
+declare var npm$namespace$Color: {| mixColor: typeof Color$mixColor |};
 declare export function Color$mixColor(colorName: string): number;
 "
 `;
@@ -69,22 +67,15 @@ export interface test$Foo {
 exports[`should handle merging with other types function type 1`] = `
 "declare var test: typeof npm$namespace$test;
 
-declare var npm$namespace$test: {|
-  (foo: number): string,
-|};
-export type test$Foo = {
-  bar: number,
-  ...
-};
+declare var npm$namespace$test: {| (foo: number): string |};
+export type test$Foo = { bar: number, ... };
 "
 `;
 
 exports[`should handle namespace function merging 1`] = `
 "declare var test: typeof npm$namespace$test;
 
-declare var npm$namespace$test: {|
-  test: typeof test$test,
-|};
+declare var npm$namespace$test: {| test: typeof test$test |};
 declare function test$test(err: number): void;
 
 declare function test$test(response: string): string;
@@ -107,9 +98,7 @@ declare export var test$error: string;
 exports[`should handle namespaces 1`] = `
 "declare var test: typeof npm$namespace$test;
 
-declare var npm$namespace$test: {|
-  ok: typeof test$ok,
-|};
+declare var npm$namespace$test: {| ok: typeof test$ok |};
 declare export var test$ok: number;
 "
 `;
@@ -117,9 +106,7 @@ declare export var test$ok: number;
 exports[`should handle nested namespace merging class 1`] = `
 "declare var ns: typeof npm$namespace$ns;
 
-declare var npm$namespace$ns: {|
-  Album: typeof ns$Album,
-|};
+declare var npm$namespace$ns: {| Album: typeof ns$Album |};
 declare class ns$Album {
   label: ns$Album.AlbumLabel;
   static AlbumLabel: typeof ns$Album$AlbumLabel;
@@ -132,19 +119,15 @@ declare export class ns$Album$AlbumLabel {}
 exports[`should handle nested namespace merging enum 1`] = `
 "declare var ns: typeof npm$namespace$ns;
 
-declare var npm$namespace$ns: {|
-  Color: typeof npm$namespace$ns$Color,
-|};
+declare var npm$namespace$ns: {| Color: typeof npm$namespace$ns$Color |};
 
 declare var ns$Color: {|
-  +red: 1, // 1
-  +green: 2, // 2
-  +blue: 4, // 4
+  +red: 1,
+  +green: 2,
+  +blue: 4,
 |};
 
-declare var npm$namespace$ns$Color: {|
-  mixColor: typeof ns$Color$mixColor,
-|};
+declare var npm$namespace$ns$Color: {| mixColor: typeof ns$Color$mixColor |};
 declare export function ns$Color$mixColor(colorName: string): number;
 "
 `;
@@ -152,9 +135,7 @@ declare export function ns$Color$mixColor(colorName: string): number;
 exports[`should handle nested namespace merging function const 1`] = `
 "declare var ns: typeof npm$namespace$ns;
 
-declare var npm$namespace$ns: {|
-  test: typeof npm$namespace$ns$test,
-|};
+declare var npm$namespace$ns: {| test: typeof npm$namespace$ns$test |};
 
 declare var npm$namespace$ns$test: {|
   (foo: number): string,
@@ -167,9 +148,7 @@ declare export var test$ok: number;
 exports[`should handle nested namespace merging function interface 1`] = `
 "declare var ns: typeof npm$namespace$ns;
 
-declare var npm$namespace$ns: {|
-  test: typeof ns$test,
-|};
+declare var npm$namespace$ns: {| test: typeof ns$test |};
 
 declare var npm$namespace$ns$test: {|
   (foo: number): string,
@@ -184,17 +163,10 @@ export interface ns$test$Foo {
 exports[`should handle nested namespace merging function type 1`] = `
 "declare var ns: typeof npm$namespace$ns;
 
-declare var npm$namespace$ns: {|
-  test: typeof ns$test,
-|};
+declare var npm$namespace$ns: {| test: typeof ns$test |};
 
-declare var npm$namespace$ns$test: {|
-  (foo: number): string,
-|};
-export type ns$test$Foo = {
-  bar: number,
-  ...
-};
+declare var npm$namespace$ns$test: {| (foo: number): string |};
+export type ns$test$Foo = { bar: number, ... };
 "
 `;
 
@@ -222,13 +194,9 @@ declare interface E0$U1$S3 {
 
 declare var E0$U1$e2: number;
 
-declare var E0$U1$E2: {|
-  +E: 1, // 1
-|};
+declare var E0$U1$E2: {| +E: 1 |};
 
-declare var npm$namespace$E0$U1$D1: {|
-  S2: typeof npm$namespace$E0$U1$D1$S2,
-|};
+declare var npm$namespace$E0$U1$D1: {| S2: typeof npm$namespace$E0$U1$D1$S2 |};
 
 declare var npm$namespace$E0$U1$D1$S2: {|
   n3: typeof E0$U1$D1$S2$n3,
@@ -243,16 +211,12 @@ declare var E0$U1$D1$S2$n3: Symbol;
 
 declare class E0$U1$D1$S2$N3 {}
 
-declare var npm$namespace$E0$U1$DD1$S2: {|
-  S3: Class<E0$U1$DD1$S2$S3>,
-|};
+declare var npm$namespace$E0$U1$DD1$S2: {| S3: Class<E0$U1$DD1$S2$S3> |};
 declare interface E0$U1$DD1$S2$S3 {
   e: number;
 }
 
-declare var npm$namespace$E0$S1: {|
-  m3: typeof E0$S1$m3,
-|};
+declare var npm$namespace$E0$S1: {| m3: typeof E0$S1$m3 |};
 declare var E0$S1$m3: string;
 
 declare var E0$s1: string;
@@ -262,9 +226,7 @@ declare var E0$s1: string;
 exports[`should handle qualified namespaces 1`] = `
 "declare var A: typeof npm$namespace$A;
 
-declare var npm$namespace$A: {|
-  B: typeof npm$namespace$A$B,
-|};
+declare var npm$namespace$A: {| B: typeof npm$namespace$A$B |};
 
 declare var npm$namespace$A$B: {|
   D: typeof A$B$D,
@@ -277,9 +239,7 @@ declare interface A$B$S<A> {
 
 declare class A$B$D<S> {}
 
-declare var npm$namespace$A$B$C: {|
-  N: typeof A$B$C$N,
-|};
+declare var npm$namespace$A$B$C: {| N: typeof A$B$C$N |};
 declare class A$B$C$N<A> mixins A$B$D<A>, A$B$S<A> {
   a: string;
 }
