@@ -252,15 +252,12 @@ export const classDeclaration = <T>(
   mergedNamespaceChildren: ReadonlyArray<Node<T>>,
 ): string => {
   let heritage = "";
-
-  // If the class is extending something
   if (node.heritageClauses) {
+    // The class is extending and/or implementing something.
     heritage = node.heritageClauses
-      .map(clause => {
-        return clause.types.map(classHeritageClause).join(", ");
-      })
+      .map(clause => clause.types.map(classHeritageClause).join(", "))
       .join(", ");
-    heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
+    heritage = `mixins ${heritage}`;
   }
 
   const members = typeMembers(node);
