@@ -79,12 +79,6 @@ export const typeMembers = (
 const formatMembers = (members: string[], sep: string) =>
   members.length ? `{\n${members.join(`${sep}\n`)}${sep}\n}` : `{}`;
 
-/** Print as a Flow interface type's body (the `{…}` portion.) */
-const interfaceTypeBody = (node: ts.InterfaceDeclaration): string => {
-  const members = typeMembers(node);
-  return members.length === 0 ? `{}` : `{\n${members.join(",\n")},\n}`;
-};
-
 const classHeritageClause = withEnv<
   { classHeritage?: boolean },
   [ts.ExpressionWithTypeArguments],
@@ -166,7 +160,9 @@ export const interfaceDeclaration = (
   }
 
   if (node.heritageClauses) {
-    // The interface is extending something.
+    // The interface is extending something.  Represent it as an
+    // intersection with an inexact object type.
+
     let heritage = node.heritageClauses
       .map(clause => {
         return clause.types.map(interfaceHeritageClause).join(" & ");
@@ -181,9 +177,12 @@ export const interfaceDeclaration = (
       printers.common.printInexactObjectType(typeMembers(node))
     } ${heritage}`;
   } else {
+    // The interface isn't extending anything.  Represent it as a
+    // Flow interface.
+
     return `${modifier}interface ${nodeName}${printers.common.generics(
       node.typeParameters,
-    )} ${interfaceTypeBody(node)} `;
+    )} ${formatMembers(typeMembers(node), ",")} `;
   }
 };
 
