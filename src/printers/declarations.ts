@@ -100,7 +100,7 @@ const classBody = <T>(
       mergedNamespaceChildren,
       nodeName,
     )) {
-      members.push(`static ${child}\n`);
+      members.push(`\nstatic ${child}`);
     }
   }
 
