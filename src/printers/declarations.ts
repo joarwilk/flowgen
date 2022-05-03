@@ -304,14 +304,17 @@ export const classDeclaration = <T>(
   let heritage = "";
 
   // If the class is extending something
-  if (node.heritageClauses) {
-    heritage = node.heritageClauses
-      .map(clause => {
-        return clause.types.map(classHeritageClause).join(", ");
-      })
-      .join(", ");
-    heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
-  }
+   if (node.heritageClauses) {
+     let isExtends = "";
+     heritage = node.heritageClauses.map(clause => {
+       isExtends = clause.getText().includes('extends')
+       return clause.types.map(classHeritageClause).join(", ");
+     }).join(", ");
+     heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
+ 
+     const heritageKeyword = isExtends ? "extends" : "implements";
+     heritage = heritage.length > 0 ? `${heritageKeyword} ${heritage}` : "";
+   }
 
   const str = `declare ${printers.relationships.exporter(
     node,
