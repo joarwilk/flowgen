@@ -1,5 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`should handle class extends 1`] = `
+"declare class extension {
+  getString(): string;
+}
+declare class extender mixins extension {
+  getNumber(): number;
+}
+"
+`;
+
+exports[`should handle class implements 1`] = `
+"declare interface implementation {
+  getString(): string;
+}
+declare class implementor implements implementation {
+  getString(): string;
+}
+"
+`;
+
+exports[`should handle class implements and extends 1`] = `
+"declare interface implementation1 {
+  getString(): string;
+}
+declare interface implementation2 {
+  getNumber(): number;
+}
+declare class extension {}
+declare class implementor
+  mixins extension
+  implements implementation1, implementation2
+{
+  getString(): string;
+  getNumber(): number;
+}
+"
+`;
+
 exports[`should handle static methods ES6 classes 1`] = `
 "declare class Subscribable<T> {}
 declare class Operator<T, R> {}

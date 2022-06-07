@@ -280,7 +280,7 @@ declare class A$B$D<S> {}
 declare var npm$namespace$A$B$C: {|
   N: typeof A$B$C$N,
 |};
-declare class A$B$C$N<A> mixins A$B$D<A>, A$B$S<A> {
+declare class A$B$C$N<A> mixins A$B$D<A> implements A$B$S<A> {
   a: string;
 }
 "
