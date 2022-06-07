@@ -29,3 +29,50 @@ it("should handle static methods ES6 classes", () => {
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should handle class extends", () => {
+  const ts = `
+  class extension {
+    getString(): string
+  }
+  class extender extends extension {
+    getNumber(): number
+  }
+  `;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});
+
+it("should handle class implements", () => {
+  const ts = `
+  interface implementation {
+    getString(): string
+  }
+  class implementor implements implementation {
+    getString(): string
+  }
+  `;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});
+
+it("should handle class implements and extends", () => {
+  const ts = `
+  interface implementation1 {
+    getString(): string
+  }
+  interface implementation2 {
+    getNumber(): number
+  }
+  class extension {}
+  class implementor extends extension implements implementation1, implementation2 {
+    getString(): string
+    getNumber(): number
+  }
+  `;
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});

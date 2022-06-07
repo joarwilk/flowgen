@@ -129,28 +129,38 @@ const interfaceRecordType = (
   }
 };
 
-const classHeritageClause = withEnv<
-  { classHeritage?: boolean },
-  [ts.ExpressionWithTypeArguments],
-  string
->((env, type) => {
-  let ret: string;
-  env.classHeritage = true;
-  // TODO: refactor this
-  const symbol = checker.current.getSymbolAtLocation(type.expression);
-  printers.node.fixDefaultTypeArguments(symbol, type);
-  if (ts.isIdentifier(type.expression) && symbol) {
-    ret =
-      printers.node.getFullyQualifiedPropertyAccessExpression(
-        symbol,
-        type.expression,
-      ) + printers.common.generics(type.typeArguments);
-  } else {
-    ret = printers.node.printType(type);
-  }
-  env.classHeritage = false;
-  return ret;
-});
+const classHeritageClause = (
+  classMixins: string[],
+  classImplements: string[],
+) =>
+  withEnv<{ classHeritage?: boolean }, [ts.ExpressionWithTypeArguments], void>(
+    (env, type) => {
+      env.classHeritage = true;
+      // TODO: refactor this
+      const symbol = checker.current.getSymbolAtLocation(type.expression);
+      printers.node.fixDefaultTypeArguments(symbol, type);
+      if (ts.isIdentifier(type.expression) && symbol) {
+        const value =
+          printers.node.getFullyQualifiedPropertyAccessExpression(
+            symbol,
+            type.expression,
+          ) + printers.common.generics(type.typeArguments);
+        if (
+          symbol.declarations.some(
+            declaration =>
+              declaration.kind === ts.SyntaxKind.InterfaceDeclaration,
+          )
+        ) {
+          classImplements.push(value);
+        } else {
+          classMixins.push(value);
+        }
+      } else {
+        classMixins.push(printers.node.printType(type));
+      }
+      env.classHeritage = false;
+    },
+  );
 
 const interfaceHeritageClause = (type: ts.ExpressionWithTypeArguments) => {
   // TODO: refactor this
@@ -305,12 +315,19 @@ export const classDeclaration = <T>(
 
   // If the class is extending something
   if (node.heritageClauses) {
-    heritage = node.heritageClauses
-      .map(clause => {
-        return clause.types.map(classHeritageClause).join(", ");
-      })
-      .join(", ");
-    heritage = heritage.length > 0 ? `mixins ${heritage}` : "";
+    const classMixins = [];
+    const classImplements = [];
+    node.heritageClauses.forEach(clause => {
+      clause.types.forEach(classHeritageClause(classMixins, classImplements));
+    });
+    const mixinsMessage =
+      classMixins.length > 0 ? `mixins ${classMixins.join(",")}` : "";
+    const classImplementsMessage =
+      classImplements.length > 0
+        ? ` implements ${classImplements.join(",")}`
+        : "";
+    heritage += mixinsMessage;
+    heritage += classImplementsMessage;
   }
 
   const str = `declare ${printers.relationships.exporter(
