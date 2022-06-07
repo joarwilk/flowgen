@@ -40,3 +40,19 @@ type A = import("react").ComponentType<import("react").ComponentType<any>>;
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();
 });
+
+it("should handle import in an imported file", () => {
+  // There once was a bug where transformers wouldn't get run on the second
+  // (or later) file in a list like this.  Test that the transformer
+  // implementing this feature does indeed run there.
+  const results = compiler.compileDefinitionFiles(
+    [
+      "src/__tests__/snippet/import-import-type.ts",
+      "src/__tests__/snippet/import-type.ts",
+    ],
+    { quiet: false },
+  );
+  for (const result of results) {
+    expect(beautify(result[1])).toMatchSnapshot(result[0]);
+  }
+});

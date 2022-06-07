@@ -10,6 +10,17 @@ declare type D = $Flowgen$Import$zlib.Zlib;
 "
 `;
 
+exports[`should handle import in an imported file: src/__tests__/snippet/import-import-type.ts 1`] = `
+"declare export { R } from \\"./import-type\\";
+"
+`;
+
+exports[`should handle import in an imported file: src/__tests__/snippet/import-type.ts 1`] = `
+"import * as $Flowgen$Import$react from \\"react\\";
+declare export var R: $Flowgen$Import$react.RefAttributes<any>;
+"
+`;
+
 exports[`should handle import nested in type arguments of import 1`] = `
 "import * as $Flowgen$Import$react from \\"react\\";
 declare type A = $Flowgen$Import$react.ComponentType<

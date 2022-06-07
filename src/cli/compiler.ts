@@ -1,3 +1,4 @@
+import path from "path";
 import ts, {
   createProgram,
   createCompilerHost,
@@ -92,8 +93,8 @@ export default {
     return getTransformers(options);
   },
 
-  compileTest: (path: string, target: string): void => {
-    tsc.compile(path, "--module commonjs -t ES6 --out " + target);
+  compileTest: (testPath: string, target: string): void => {
+    tsc.compile(testPath, "--module commonjs -t ES6 --out " + target);
   },
 
   compileDefinitionString: (string: string, options?: Options): string => {
@@ -121,7 +122,7 @@ export default {
   },
 
   compileDefinitionFile: (
-    path: string,
+    definitionPath: string,
     options?: Options,
     mapSourceCode: (
       source: string | undefined,
@@ -135,18 +136,23 @@ export default {
     const oldReadFile = compilerHost.readFile;
     compilerHost.readFile = fileName =>
       mapSourceCode(oldReadFile(fileName), fileName);
+    const absolutePath = path.resolve(definitionPath);
     compilerHost.getSourceFile = (file, languageVersion) => {
-      if (file === path) {
+      if (path.resolve(file) === absolutePath) {
         const sourceText = compilerHost.readFile(file);
         return transformFile(file, sourceText, languageVersion, options);
       }
       return oldSourceFile(file, languageVersion);
     };
 
-    const program = createProgram([path], compilerOptions, compilerHost);
+    const program = createProgram(
+      [definitionPath],
+      compilerOptions,
+      compilerHost,
+    );
 
     checker.current = program.getTypeChecker();
-    const sourceFile = program.getSourceFile(path);
+    const sourceFile = program.getSourceFile(definitionPath);
 
     if (!sourceFile) return "";
 
@@ -156,7 +162,7 @@ export default {
   },
 
   compileDefinitionFiles: (
-    paths: string[],
+    definitionPaths: string[],
     options?: Options,
     mapSourceCode: (
       source: string | undefined,
@@ -168,24 +174,29 @@ export default {
     const oldReadFile = compilerHost.readFile;
     compilerHost.readFile = fileName =>
       mapSourceCode(oldReadFile(fileName), fileName);
+    const absolutePaths = new Set(definitionPaths.map(p => path.resolve(p)));
     compilerHost.getSourceFile = (file, languageVersion) => {
-      if (paths.includes(file)) {
+      if (absolutePaths.has(path.resolve(file))) {
         const sourceText = compilerHost.readFile(file);
         return transformFile(file, sourceText, languageVersion, options);
       }
       return oldSourceFile(file, languageVersion);
     };
 
-    const program = createProgram(paths, compilerOptions, compilerHost);
+    const program = createProgram(
+      definitionPaths,
+      compilerOptions,
+      compilerHost,
+    );
 
     checker.current = program.getTypeChecker();
 
-    return paths.map(path => {
-      const sourceFile = program.getSourceFile(path);
-      if (!sourceFile) return [path, ""];
+    return definitionPaths.map(definitionPath => {
+      const sourceFile = program.getSourceFile(definitionPath);
+      if (!sourceFile) return [definitionPath, ""];
       logger.setSourceFile(sourceFile);
       reset(options);
-      return [path, compile.withEnv({})(sourceFile)];
+      return [definitionPath, compile.withEnv({})(sourceFile)];
     });
   },
 };
