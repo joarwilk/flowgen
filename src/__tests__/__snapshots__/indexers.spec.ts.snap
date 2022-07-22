@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle indexers 1`] = `
+"declare type Map = {
+  [key: string]: number,
+};
+"
+`;
+
+exports[`should handle indexers 2`] = `
+"declare type Map = {
+  [key: string]: number,
+};
+"
+`;
