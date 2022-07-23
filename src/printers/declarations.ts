@@ -84,7 +84,13 @@ export const interfaceType = <T>(
     }
   }
 
-  if (isType && isInexact) {
+  const hasIndexSignature = node.members.some(member =>
+    ts.isIndexSignatureDeclaration(member),
+  );
+
+  // If an index signature is present in our type, we probably don't want to
+  // provide the trailing "...", since it will be ignored by Flow anyway.
+  if (isType && isInexact && !hasIndexSignature) {
     members.push("...\n");
   } else if (members.length > 0) {
     members.push("\n");
@@ -98,6 +104,18 @@ export const interfaceType = <T>(
   if (!ts.isTypeLiteralNode(node)) {
     return `{${inner}}`;
   }
+
+  // If a type contains an index signature (e.g. `[key: string]: number`), then
+  // we want to treat it as inexact no matter what, otherwise we may generate a
+  // Flow type like `{|[k: string]: any|}` which is invalid in Flow prior to
+  // v0.126.0 (source: https://github.com/facebook/flow/blob/main/Changelog.md#01260)
+  //
+  // It should also be safe to assume that if an index signature is present, the
+  // equivalent human-authored Flow type would be inexact.
+  if (hasIndexSignature) {
+    return `{${inner}}`;
+  }
+
   return isInexact ? `{${inner}}` : `{|${inner}|}`;
 };
 
