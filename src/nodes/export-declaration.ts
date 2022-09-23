@@ -37,13 +37,9 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
       } else {
         typeExports = [];
         valueExports = [];
-        let nextIsType = false;
         for (const node of rawElements) {
-          if (nextIsType) {
+          if (node.isTypeOnly) {
             typeExports.push(node);
-            nextIsType = false;
-          } else if (node.name.originalKeywordKind === 150) {
-            nextIsType = true;
           } else {
             valueExports.push(node);
           }
