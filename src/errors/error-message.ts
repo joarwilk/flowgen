@@ -5,9 +5,6 @@ export type ErrorMessage =
       readonly type: "UnsupportedComputedProperty";
     }
   | {
-      readonly type: "UnsupportedBigInt";
-    }
-  | {
       readonly type: "UnsupportedUniqueSymbol";
     }
   | {
@@ -39,9 +36,6 @@ export function printErrorMessage(error: ErrorMessage): string {
   switch (error.type) {
     case "UnsupportedComputedProperty":
       return "Flow doesn't support computed property names";
-
-    case "UnsupportedBigInt":
-      return "Flow doesn't support BigInt proposal: https://github.com/facebook/flow/issues/6639";
 
     case "UnsupportedUniqueSymbol":
       return "Flow doesn't support `unique symbol`";
