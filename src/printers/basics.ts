@@ -3,6 +3,7 @@ const types: {
 } = {
   VoidKeyword: "void",
   StringKeyword: "string",
+  BigIntKeyword: "bigint",
   AnyKeyword: "any",
   NumberKeyword: "number",
   BooleanKeyword: "boolean",

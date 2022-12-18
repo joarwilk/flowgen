@@ -28,6 +28,7 @@ type ExpectedKeywordKind =
 type PrintNode =
   | ts.KeywordToken<ExpectedKeywordKind>
   | { kind: typeof ts.SyntaxKind.FirstLiteralToken }
+  | { kind: ts.SyntaxKind.BigIntLiteral; text: string }
   | ts.CallSignatureDeclaration
   | ts.ConstructorDeclaration
   | ts.TypeParameterDeclaration
@@ -432,10 +433,7 @@ export const printType = withEnv<any, [any], string>(
         // TODO: What to print here?
         return "Symbol";
       case ts.SyntaxKind.BigIntKeyword:
-        logger.error(type, { type: "UnsupportedBigInt" });
-        // TODO: What to print here?
-        return "number";
-
+        return printers.basics.print(kind);
       // JSDoc types
       case ts.SyntaxKind.JSDocAllType:
         return "*";
@@ -588,6 +586,9 @@ export const printType = withEnv<any, [any], string>(
         }
         return `$ObjMapi<${source}, <${typeName}>(${typeName}) => ${value}>`;
       }
+
+      case ts.SyntaxKind.BigIntLiteral:
+        return type.text;
 
       case ts.SyntaxKind.FirstLiteralToken:
         // @ts-expect-error todo(flow->ts)

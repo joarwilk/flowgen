@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should handle bigint literals in type 1`] = `
+"declare type MyBigType = bigint;
+declare type bigint_like = number | bigint | string;
+declare var literal: 9007199254740991n;
+"
+`;
