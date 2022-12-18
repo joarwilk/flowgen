@@ -219,6 +219,9 @@ export function getFullyQualifiedName(
           decl.kind === ts.SyntaxKind.TypeParameter ||
           leftMostSymbol?.parent?.escapedName === "__global";
       }
+      // TODO: something here is fucky. we want to take the branch when merging namespaces
+      // so that we get ns$a.b instead of ns$a$b, but we want to not take it when printing
+      // globalThis.whatever; taking it will print globalThis.whatever instead of whatever
       if (!symbol || typeChecker.isUnknownSymbol(symbol) || isExternalSymbol) {
         return printEntityName(type);
       }
@@ -656,7 +659,12 @@ export const printType = withEnv<any, [any], string>(
                 ${isTypeImport ? "" : "typeof "}
                 ${getTypeofFullyQualifiedName(targetSymbol, type.typeName)}>`;
             }
-            return printers.declarations.typeReference(type, !targetSymbol);
+            // double-bang fixes most tests, but also breaks some utility types,
+            // esp the ones that aren't provided args when they're expected
+            // need to determine exactly what the difference between these two is
+            // and why they took different branches in 4.4
+            return printers.declarations.typeReference(type, targetSymbol);
+            // return printers.declarations.typeReference(type, !targetSymbol);
           };
 
           // if importing an enum, we have to change how the type is used across the file
@@ -672,7 +680,7 @@ export const printType = withEnv<any, [any], string>(
             return getAdjustedType(symbol);
           }
         }
-        return printers.declarations.typeReference(type, !symbol);
+        return printers.declarations.typeReference(type, symbol);
       }
 
       case ts.SyntaxKind.VariableDeclaration:
