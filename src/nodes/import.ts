@@ -3,6 +3,24 @@ import Node from "./node";
 import * as printers from "../printers";
 import { checker } from "../checker";
 import * as ts from "typescript";
+import { Identifier, SymbolFlags } from "typescript";
+
+const typeFlags = new Set([
+  SymbolFlags.Interface,
+  SymbolFlags.Type,
+  SymbolFlags.TypeAlias,
+  SymbolFlags.TypeLiteral,
+]);
+
+function isType(name: Identifier) {
+  return typeFlags.has(
+    checker.current.getAliasedSymbol(checker.current.getSymbolAtLocation(name))
+      .flags,
+  );
+}
+function printSpecifier(node) {
+  return (isType(node.name) ? "type " : "") + printers.node.printType(node);
+}
 
 export default class Import extends Node {
   constructor(node: RawNode) {
@@ -53,7 +71,11 @@ export default class Import extends Node {
             result += `import${
               this.module === "root" && !isTypeImport ? "" : " type"
             } ${name.text}, {
-            ${elements.map(node => printers.node.printType(node))}
+            ${elements.map(node =>
+              this.module !== "root" || isTypeImport
+                ? printers.node.printType(node)
+                : printSpecifier(node),
+            )}
             } from '${this.raw.moduleSpecifier.text}';\n`;
           }
           if (enumElems.length > 0) {
@@ -85,7 +107,11 @@ export default class Import extends Node {
             result += `import${
               this.module === "root" && !isTypeImport ? "" : " type"
             } {
-            ${regularElems.map(node => printers.node.printType(node))}
+            ${regularElems.map(node =>
+              this.module !== "root" || isTypeImport
+                ? printers.node.printType(node)
+                : printSpecifier(node),
+            )}
             } from '${this.raw.moduleSpecifier.text}';\n`;
           }
           if (enumElems.length > 0) {

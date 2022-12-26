@@ -7,9 +7,9 @@ declare type S = typeof $Flowgen$Import$http;
 `;
 
 exports[`should handle imports 1`] = `
-"import { GeneratorOptions } from \\"@babel/generator\\";
-import traverse, { Visitor, NodePath } from \\"@babel/traverse\\";
-import { Visitor as NewVisitor } from \\"@babel/traverse\\";
+"import { type GeneratorOptions } from \\"@babel/generator\\";
+import traverse, { type Visitor, NodePath } from \\"@babel/traverse\\";
+import { type Visitor as NewVisitor } from \\"@babel/traverse\\";
 import template from \\"@babel/template\\";
 import * as t from \\"@babel/types\\";
 import v, * as d from \\"typescript\\";
