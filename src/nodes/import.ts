@@ -53,7 +53,9 @@ export default class Import extends Node {
             result += `import${
               this.module === "root" && !isTypeImport ? "" : " type"
             } ${name.text}, {
-            ${elements.map(node => printers.node.printType(node))}
+              ${elements
+                .filter(node => node.name.escapedText !== "type")
+                .map(node => printers.node.printType(node))}
             } from '${this.raw.moduleSpecifier.text}';\n`;
           }
           if (enumElems.length > 0) {
@@ -85,7 +87,9 @@ export default class Import extends Node {
             result += `import${
               this.module === "root" && !isTypeImport ? "" : " type"
             } {
-            ${regularElems.map(node => printers.node.printType(node))}
+              ${regularElems
+                .filter(node => node.name.escapedText !== "type")
+                .map(node => printers.node.printType(node))}
             } from '${this.raw.moduleSpecifier.text}';\n`;
           }
           if (enumElems.length > 0) {

@@ -58,7 +58,7 @@ export default class ExportDeclaration extends Node<ExportDeclarationType> {
 
       let result = "";
       if (typeExports.length) {
-        result += generateOutput(`export type`, typeExports);
+        result += generateOutput(`declare export`, typeExports);
       }
       if (valueExports.length) {
         result += generateOutput(`declare export`, valueExports);
