@@ -46,6 +46,11 @@ export const importExportSpecifier = (
       node.propertyName,
     )} as ${printers.node.printType(node.name)}`;
   }
+
+  if (node.name.escapedText === "Record") {
+    return "Record";
+  }
+
   return printers.node.printType(node.name);
 };
 
