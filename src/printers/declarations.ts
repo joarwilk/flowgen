@@ -318,6 +318,9 @@ export const typeReference = (
     }
     name = replaced;
   }
+  // If the type reference name is broken in the format of `"string"$Name`,
+  // strip the prefixed quoted string from "Name":
+  name = name.replace(/^['"]@?[-\w/]+['"]\$(\w+)$/, "$1");
   return (
     printers.relationships.namespaceProp(name) +
     printers.common.generics(node.typeArguments)
