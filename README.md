@@ -29,8 +29,9 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | Pick | `Pick<T, K>` | `Pick<T, K>` |
 | ✅ | Exclude | `Exclude<T, U>` | `Exclude<T, U>` |
 | ✅ | Extract | `Extract<T, U>` | `Extract<T, U>` |
+| ✅ | Omit | `Omit<T, U>` | `Omit<T, U>` |
 | ✅ | NonNullable | `NonNullable<X>` | `$NonMaybeType<X>` |
-| ✅ | ReturnType | `ReturnType<F>` | `$Call<<R>((...args: any[]) => R) => R, F>` |
+| ✅ | ReturnType | `ReturnType<F>` | `ReturnType<F>` |
 |    | InstanceType | `InstanceType<X>` |  |
 | ✅ | Required | `Required<X>` | `Required<X>` |
 |    | ThisType | `ThisType<X>` |  |
