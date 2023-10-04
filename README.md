@@ -15,28 +15,29 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | Variance | `interface A { readonly b: B, c: C }` | `interface A { +b: B, c: C }` |
 | ✅ | Functions | `(a: A, b: B) => C` | `(a: A, b: B) => C` |
 | ✅ | Indexers | `{[k: string]: string}` | `{[k: string]: string}` |
-|    | This type | `(this: X, a: A, b: B) => C` | `(a: A, b: B) => C` |
+| ✅ | This type | `(this: X, a: A, b: B) => C` | `(this: X, a: A, b: B) => C` |
 |    | Type guards | `(a: X) => a is A` | `(a: X) => boolean` |
 | ✅ | Type parameter bounds | `function f<A extends string>(a:A){}` | `function f<A: string>(a:A){}` |
 | ✅ | keyof X | `keyof X` | `$Keys<X>` |
-| ✅ | X[keyof X] | `X[keyof X]` | `$ElementType<X, $Keys<X>>` |
+| ✅ | X[keyof X] | `X[keyof X]` | `X[$Keys<X>]` |
 | ✅ | Partial | `Partial<X>` | `$Rest<X, {}>` |
 | ✅ | Readonly | `Readonly<X>` | `$ReadOnly<X>` |
 | ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadOnlyArray<X>` |
 | ✅ | ReadonlySet | `ReadonlySet<X>` | `$ReadOnlySet<X>` |
 | ✅ | ReadonlyMap | `ReadonlyMap<X, Y>` | `$ReadOnlyMap<X, Y>` |
 | ✅ | Record | `Record<K, T>` | `{ [key: K]: T }` |
-|    | Pick | `Pick<T, K>` |  |
-|    | Exclude | `Exclude<T, U>` |  |
-|    | Extract | `Extract<T, U>` |  |
+| ✅ | Pick | `Pick<T, K>` | `Pick<T, K>` |
+| ✅ | Exclude | `Exclude<T, U>` | `Exclude<T, U>` |
+| ✅ | Extract | `Extract<T, U>` | `Extract<T, U>` |
+| ✅ | Omit | `Omit<T, U>` | `Omit<T, U>` |
 | ✅ | NonNullable | `NonNullable<X>` | `$NonMaybeType<X>` |
-| ✅ | ReturnType | `ReturnType<F>` | `$Call<<R>((...args: any[]) => R) => R, F>` |
+| ✅ | ReturnType | `ReturnType<F>` | `ReturnType<F>` |
 |    | InstanceType | `InstanceType<X>` |  |
-|    | Required | `Required<X>` |  |
+| ✅ | Required | `Required<X>` | `Required<X>` |
 |    | ThisType | `ThisType<X>` |  |
-| ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
-| ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |
-| ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => $ElementType<Obj, K>>` |
+| ✅ | T['string'] | `T['string']` | `T['string']` |
+| ✅ | T[k] | `T[k]` | `T[k]` |
+| ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => Obj[K]>` |
 |    | Conditional types | `A extends B ? C : D` | `any` |
 | ✅ | typeof operator | `typeof foo` | `typeof foo` |
 | ✅ | Tuple type | `[number, string]` | `[number, string]` |

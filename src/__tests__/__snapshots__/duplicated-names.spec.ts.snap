@@ -13,10 +13,9 @@ declare export var AuthMechanism: {
   +MONGODB_CR: \\"MONGODB-CR\\",
   ...
 };
-export type AuthMechanismType1 = $ElementType<
-  typeof AuthMechanism,
-  $Keys<typeof AuthMechanism>
->;
+export type AuthMechanismType1 = (typeof AuthMechanism)[$Keys<
+  typeof AuthMechanism
+>];
 "
 `;
 
@@ -26,10 +25,9 @@ exports[`should handle variable & type having same name 1`] = `
   +MONGODB_CR: \\"MONGODB-CR\\",
   ...
 };
-export type AuthMechanismType = $ElementType<
-  typeof AuthMechanism,
-  $Keys<typeof AuthMechanism>
->;
+export type AuthMechanismType = (typeof AuthMechanism)[$Keys<
+  typeof AuthMechanism
+>];
 "
 `;
 
@@ -38,10 +36,9 @@ exports[`should support generic type rename 1`] = `
   +off: \\"off\\",
   ...
 }>;
-export type ProfilingLevelType = $ElementType<
-  typeof ProfilingLevel,
-  $Keys<typeof ProfilingLevel>
->;
+export type ProfilingLevelType = (typeof ProfilingLevel)[$Keys<
+  typeof ProfilingLevel
+>];
 export type Callback<T = any> = (error?: Error, result?: T) => void;
 declare export var callback: Callback<ProfilingLevelType>;
 "

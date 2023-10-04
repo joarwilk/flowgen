@@ -105,14 +105,14 @@ it("should support call signature", () => {
   expect(result).toBeValidFlowTypeDeclarations();
 });
 
-it("should remove this in call signature", () => {
+it("should keep this in call signature", () => {
   const ts = `
 interface Arc<This, Datum> {
   (this: This, d: Datum, ...args: any[]): string | null;
 }
   
 interface D<This, Datum> {
-  new (this: This, d: Datum, ...args: any[]);
+  new (this: D<This, Datum>, d: Datum, ...args: any[]);
 }
   
 interface C<This, Datum> {
@@ -124,7 +124,7 @@ interface C<This, Datum> {
   expect(result).toBeValidFlowTypeDeclarations();
 });
 
-it("should remove generic defaults in call signature", () => {
+it("should keep generic defaults in call signature", () => {
   const ts = `
 interface AbstractLevelDOWN<K, V> {}
 interface AbstractLevelDOWNConstructor {

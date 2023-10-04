@@ -531,16 +531,7 @@ export const printType = withEnv<any, [any], string>(
         return "boolean";
 
       case ts.SyntaxKind.IndexedAccessType: {
-        let fn = "$ElementType";
-        if (
-          ts.isLiteralTypeNode(type.indexType) &&
-          type.indexType.literal.kind === ts.SyntaxKind.StringLiteral
-        ) {
-          fn = "$PropertyType";
-        }
-        return `${fn}<${printType(type.objectType)}, ${printType(
-          type.indexType,
-        )}>`;
+        return `${printType(type.objectType)}[${printType(type.indexType)}]`;
       }
 
       case ts.SyntaxKind.TypeOperator:
@@ -723,12 +714,8 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.CallSignature: {
         // TODO: rewrite to printers.functions.functionType
-        const generics = printers.common.genericsWithoutDefault(
-          type.typeParameters,
-        );
+        const generics = printers.common.generics(type.typeParameters);
         const str = `${generics}(${type.parameters
-          // @ts-expect-error todo(flow->ts)
-          .filter(param => param.name.text !== "this")
           .map(printers.common.parameter)
           .join(", ")})`;
         // TODO: I can't understand this
@@ -756,29 +743,30 @@ export const printType = withEnv<any, [any], string>(
         return "";
 
       case ts.SyntaxKind.IntersectionType: {
-        // for non-class types, we can't easily just merge types together using &
-        // this is because in Typescript
+        // for exact types we can't easily just intersect types together
+        // using &. This is because in Typescript
         // { a: number } & { b: string}
         // is NOT equivalent to {| a: number |} & {| b: string |} in Flow
         // since you can't intersect exact types in Flow
-        // https://github.com/facebook/flow/issues/4946#issuecomment-331520118
+        // https://github.com/joarwilk/flowgen/pull/136
         // instead, you have to use the spread notation
-        // HOWEVER, you must use & to intersect classes (you can't spread a class)
         const containsClass = type.types
           .map(checker.current.getTypeAtLocation)
           .find(type => type.isClass());
 
-        if (containsClass) {
+        const isInexact = opts().inexact;
+
+        // Classes and inexact objects
+        if (isInexact || containsClass) {
           return type.types.map(printType).join(" & ");
         }
 
+        // Exact objects should use spread instead
         const spreadType = type.types
           .map(type => `...${printType(type)}`)
           .join(",");
 
-        const isInexact = opts().inexact;
-
-        return isInexact ? `{ ${spreadType} }` : `{| ${spreadType} |}`;
+        return `{| ${spreadType} |}`;
       }
 
       case ts.SyntaxKind.MethodDeclaration:

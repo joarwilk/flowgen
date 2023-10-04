@@ -2082,9 +2082,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001286:
-  version "1.0.30001296"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001296.tgz#d99f0f3bee66544800b93d261c4be55a35f1cec8"
-  integrity sha512-WfrtPEoNSoeATDlf4y3QvkwiELl9GyPLISV5GejTbbQRtQx4LhsXmc9IQ6XCL2d7UxCyEzToEZNMeqR79OUw8Q==
+  version "1.0.30001543"
+  resolved "https://npm.abs.sh/caniuse-lite/-/caniuse-lite-1.0.30001543.tgz"
+  integrity sha512-qxdO8KPWPQ+Zk6bvNpPeQIOH47qZSYdFZd6dXQzb2KzhnSXju4Kd7H1PkSJx6NICSMgo/IhRZRhhfPTHYpJUCA==
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -2755,10 +2755,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.4.tgz#28d9969ea90661b5134259f312ab6aa7929ac5e2"
   integrity sha512-8/sOawo8tJ4QOBX8YlQBMxL8+RLZfxMQOif9o0KUKTNTjMYElWPE0r/m5VNFxTRd0NSw8qSy8dajrwX4RYI1Hw==
 
-flow-bin@^0.195.0:
-  version "0.195.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.195.0.tgz#67075596cc4ef2560ec001d5c781b07777f05f81"
-  integrity sha512-VGIwDVxcZRLbc2k8dsMcdHHjrPDzr1frqGvpRdYpdnpK/qi4heHFGDU747NElcsNiqyzs+G8gaZmhxZiBvwyUg==
+flow-bin@^0.217.2:
+  version "0.217.2"
+  resolved "https://npm.abs.sh/flow-bin/-/flow-bin-0.217.2.tgz#96affa17f3cb303019f740bffeb28cfab7ce1250"
+  integrity sha512-fk4NcfybYjzlww1sEsfk71nqXvonAYpMRFEjmZxibDWWBiaw8DGmqXWZ7XzSunVB15VkJfOstn/sYP1EYPPyWg==
 
 form-data@^3.0.0:
   version "3.0.1"

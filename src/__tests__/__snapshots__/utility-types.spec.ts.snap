@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should handle Omit type 1`] = `
-"declare type A = $Diff<
+"declare type A = Omit<
   {
     a: string,
     b: number,
     ...
   },
-  { a: any }
+  \\"a\\"
 >;
-declare type B = $Diff<
+declare type B = Omit<
   {
     a: string,
     b: number,
     ...
   },
-  { a: any, b: any }
+  \\"a\\" | \\"b\\"
 >;
 declare type O = {
   a: string,
@@ -23,7 +23,7 @@ declare type O = {
   ...
 };
 declare type U = \\"a\\";
-declare type C = $Diff<O, { [key: U]: any }>;
+declare type C = Omit<O, U>;
 "
 `;
 
@@ -32,19 +32,20 @@ exports[`should handle utility types 1`] = `
   a: number,
   ...
 }>;
-declare type B = $Rest<
-  {
-    a: number,
-    ...
-  },
-  { ... }
->;
+declare type B = Partial<{
+  a: number,
+  ...
+}>;
 declare type C = $NonMaybeType<string | null>;
 declare type D = $ReadOnlyArray<string>;
-declare type E = $Call<<R>((...args: any[]) => R) => R, () => string>;
+declare type E = ReturnType<() => string>;
 declare type F = { [key: string]: number, ... };
 declare type G = $ReadOnlySet<number>;
 declare type H = $ReadOnlyMap<string, number>;
+declare type I = Pick<A, \\"foo\\" | \\"bar\\">;
+declare type J = Exclude<1 | 2 | 3 | 4, 1 | 3>;
+declare type K = Extract<A | B>;
+declare type L = Required<A>;
 declare type A1<Readonly> = Readonly;
 declare type B1<Partial> = Partial;
 declare type C1<NonNullable> = NonNullable;
@@ -52,10 +53,10 @@ declare type D1<ReadonlyArray> = ReadonlyArray;
 declare type E1<ReturnType> = ReturnType;
 declare type F1<Record> = Record;
 declare type A2<T> = $ReadOnly<T>;
-declare type B2<T> = $Rest<T, { ... }>;
+declare type B2<T> = Partial<T>;
 declare type C2<T> = $NonMaybeType<T>;
 declare type D2<T> = $ReadOnlyArray<T>;
-declare type E2<T> = $Call<<R>((...args: any[]) => R) => R, () => T>;
+declare type E2<T> = ReturnType<() => T>;
 declare type F2<T, U> = { [key: T]: U, ... };
 "
 `;
