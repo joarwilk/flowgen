@@ -756,7 +756,7 @@ export const printType = withEnv<any, [any], string>(
         return "";
 
       case ts.SyntaxKind.IntersectionType: {
-        // for  exact types, we can't easily just merge types together
+        // for exact types we can't easily just intersect types together
         // using &. This is because in Typescript
         // { a: number } & { b: string}
         // is NOT equivalent to {| a: number |} & {| b: string |} in Flow
