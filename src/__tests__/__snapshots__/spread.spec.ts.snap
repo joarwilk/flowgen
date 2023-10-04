@@ -20,33 +20,7 @@ declare var combination: Foo & Bar;
 "
 `;
 
-exports[`should not use spread when performing union of inexact object types 2`] = `
-"declare type Foo = {
-  foo: number,
-  ...
-};
-declare type Bar = {
-  bar: string,
-  ...
-};
-declare var combination: Foo & Bar;
-"
-`;
-
 exports[`should use spread when performing union of exact object types 1`] = `
-"declare type Foo = {
-  foo: number,
-  ...
-};
-declare type Bar = {
-  bar: string,
-  ...
-};
-declare var combination: Foo & Bar;
-"
-`;
-
-exports[`should use spread when performing union of exact object types 2`] = `
 "declare type Foo = {|
   foo: number,
 |};
