@@ -11,6 +11,10 @@ type E = ReturnType<() => string>
 type F = Record<string, number>
 type G = ReadonlySet<number>
 type H = ReadonlyMap<string, number>
+type I = Pick<A, 'foo' | 'bar'>
+type J = Exclude<1 | 2 | 3 | 4, 1 | 3>
+type K = Extract<A | B>
+type L = Required<A>
 
 type A1<Readonly> = Readonly
 type B1<Partial> = Partial

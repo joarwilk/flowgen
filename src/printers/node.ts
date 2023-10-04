@@ -756,29 +756,30 @@ export const printType = withEnv<any, [any], string>(
         return "";
 
       case ts.SyntaxKind.IntersectionType: {
-        // for non-class types, we can't easily just merge types together using &
-        // this is because in Typescript
+        // for  exact types, we can't easily just merge types together
+        // using &. This is because in Typescript
         // { a: number } & { b: string}
         // is NOT equivalent to {| a: number |} & {| b: string |} in Flow
         // since you can't intersect exact types in Flow
-        // https://github.com/facebook/flow/issues/4946#issuecomment-331520118
+        // https://github.com/joarwilk/flowgen/pull/136
         // instead, you have to use the spread notation
-        // HOWEVER, you must use & to intersect classes (you can't spread a class)
         const containsClass = type.types
           .map(checker.current.getTypeAtLocation)
           .find(type => type.isClass());
 
-        if (containsClass) {
+        const isInexact = opts().inexact;
+
+        // Classes and inexact objects
+        if (isInexact || containsClass) {
           return type.types.map(printType).join(" & ");
         }
 
+        // Exact objects should use spread instead
         const spreadType = type.types
           .map(type => `...${printType(type)}`)
           .join(",");
 
-        const isInexact = opts().inexact;
-
-        return isInexact ? `{ ${spreadType} }` : `{| ${spreadType} |}`;
+        return `{| ${spreadType} |}`;
       }
 
       case ts.SyntaxKind.MethodDeclaration:

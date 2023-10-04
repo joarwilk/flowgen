@@ -38,24 +38,14 @@ const identifiers: { [name: string]: IdentifierResult } = {
   Readonly: "$ReadOnly",
   RegExpMatchArray: "RegExp$matchResult",
   NonNullable: "$NonMaybeType",
-  Partial: ([type]: any[]) => {
-    const isInexact = opts().inexact;
-    return `$Rest<${printers.node.printType(type)}, {${
-      isInexact ? "..." : ""
-    }}>`;
-  },
-  ReturnType: (typeArguments: any[]) => {
-    return `$Call<<R>((...args: any[]) => R) => R, ${printers.node.printType(
-      typeArguments[0],
-    )}>`;
-  },
+  Pick: "Pick",
+  Exclude: "Exclude",
+  Extract: "Extract",
+  Required: "Required",
+  Partial: "Partial",
+  ReturnType: "ReturnType",
   Record,
-  Omit: ([obj, keys]: [any, any]) => {
-    return `$Diff<${printers.node.printType(obj)},${Record(
-      [keys, { kind: ts.SyntaxKind.AnyKeyword }],
-      false,
-    )}>`;
-  },
+  Omit: "Omit",
 };
 
 export const print = withEnv<any, [string], IdentifierResult>((env, kind) => {

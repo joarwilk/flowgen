@@ -26,13 +26,13 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | ReadonlySet | `ReadonlySet<X>` | `$ReadOnlySet<X>` |
 | ✅ | ReadonlyMap | `ReadonlyMap<X, Y>` | `$ReadOnlyMap<X, Y>` |
 | ✅ | Record | `Record<K, T>` | `{ [key: K]: T }` |
-|    | Pick | `Pick<T, K>` |  |
-|    | Exclude | `Exclude<T, U>` |  |
-|    | Extract | `Extract<T, U>` |  |
+| ✅ | Pick | `Pick<T, K>` | `Pick<T, K>` |
+| ✅ | Exclude | `Exclude<T, U>` | `Exclude<T, U>` |
+| ✅ | Extract | `Extract<T, U>` | `Extract<T, U>` |
 | ✅ | NonNullable | `NonNullable<X>` | `$NonMaybeType<X>` |
 | ✅ | ReturnType | `ReturnType<F>` | `$Call<<R>((...args: any[]) => R) => R, F>` |
 |    | InstanceType | `InstanceType<X>` |  |
-|    | Required | `Required<X>` |  |
+| ✅ | Required | `Required<X>` | `Required<X>` |
 |    | ThisType | `ThisType<X>` |  |
 | ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
 | ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |

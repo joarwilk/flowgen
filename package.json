@@ -50,7 +50,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^25.3.4",
     "eslint-plugin-prettier": "^4.0.0",
-    "flow-bin": "^0.195.0",
+    "flow-bin": "^0.217.2",
     "jest": "^27.4.7",
     "mongodb": "^4.1.3"
   },
