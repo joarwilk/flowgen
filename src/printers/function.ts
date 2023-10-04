@@ -11,12 +11,8 @@ export const functionType = (
     | ts.ConstructSignatureDeclaration,
   dotAsReturn = false,
 ): string => {
-  const params = func.parameters
-    .filter(
-      param => !(ts.isIdentifier(param.name) && param.name.text === "this"),
-    )
-    .map(printers.common.parameter);
-  const generics = printers.common.genericsWithoutDefault(func.typeParameters);
+  const params = func.parameters.map(printers.common.parameter);
+  const generics = printers.common.generics(func.typeParameters);
   const returns = func.type ? printers.node.printType(func.type) : "void";
 
   const firstPass = `${generics}(${params.join(", ")})${

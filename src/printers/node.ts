@@ -723,12 +723,8 @@ export const printType = withEnv<any, [any], string>(
 
       case ts.SyntaxKind.CallSignature: {
         // TODO: rewrite to printers.functions.functionType
-        const generics = printers.common.genericsWithoutDefault(
-          type.typeParameters,
-        );
+        const generics = printers.common.generics(type.typeParameters);
         const str = `${generics}(${type.parameters
-          // @ts-expect-error todo(flow->ts)
-          .filter(param => param.name.text !== "this")
           .map(printers.common.parameter)
           .join(", ")})`;
         // TODO: I can't understand this

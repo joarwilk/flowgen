@@ -51,7 +51,7 @@ export function routerReducer(state?: RouterState): RouterState;
   expect(result).toBeValidFlowTypeDeclarations();
 });
 
-it("should remove this annotation from functions", () => {
+it("should keep this annotation in functions", () => {
   const ts =
     "function addClickListener(onclick: (this: void, e: Event) => void): void;";
   const result = compiler.compileDefinitionString(ts, { quiet: true });
@@ -59,9 +59,17 @@ it("should remove this annotation from functions", () => {
   expect(result).toBeValidFlowTypeDeclarations();
 });
 
-it("should remove default parameters from functions", () => {
+it("should keep default parameters in functions", () => {
   const ts =
     "function addClickListener<T = Error>(onclick: (e: Event) => void): T;";
+  const result = compiler.compileDefinitionString(ts, { quiet: true });
+  expect(beautify(result)).toMatchSnapshot();
+  expect(result).toBeValidFlowTypeDeclarations();
+});
+
+it("should transform generic `<T extends E>` to `<T: E>` on functions", () => {
+  const ts =
+    "function addClickListener<T extends Error>(onclick: (e: Event) => void): T;";
   const result = compiler.compileDefinitionString(ts, { quiet: true });
   expect(beautify(result)).toMatchSnapshot();
   expect(result).toBeValidFlowTypeDeclarations();

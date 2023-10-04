@@ -139,23 +139,23 @@ exports[`should handle untyped object binding pattern 1`] = `
 "
 `;
 
-exports[`should remove generic defaults in call signature 1`] = `
+exports[`should keep generic defaults in call signature 1`] = `
 "declare interface AbstractLevelDOWN<K, V> {}
 declare interface AbstractLevelDOWNConstructor {
-  <K, V>(location: string): AbstractLevelDOWN<K, V>;
+  <K = any, V = any>(location: string): AbstractLevelDOWN<K, V>;
 }
 "
 `;
 
-exports[`should remove this in call signature 1`] = `
+exports[`should keep this in call signature 1`] = `
 "declare interface Arc<This, Datum> {
-  (d: Datum, ...args: any[]): string | null;
+  (this: This, d: Datum, ...args: any[]): string | null;
 }
 declare interface D<This, Datum> {
-  new(d: Datum, ...args: any[]): void;
+  new(this: D<This, Datum>, d: Datum, ...args: any[]): void;
 }
 declare interface C<This, Datum> {
-  (d: Datum, ...args: any[]): any;
+  (this: This, d: Datum, ...args: any[]): any;
 }
 "
 `;

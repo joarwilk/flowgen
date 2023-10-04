@@ -15,7 +15,7 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 | ✅ | Variance | `interface A { readonly b: B, c: C }` | `interface A { +b: B, c: C }` |
 | ✅ | Functions | `(a: A, b: B) => C` | `(a: A, b: B) => C` |
 | ✅ | Indexers | `{[k: string]: string}` | `{[k: string]: string}` |
-|    | This type | `(this: X, a: A, b: B) => C` | `(a: A, b: B) => C` |
+| ✅ | This type | `(this: X, a: A, b: B) => C` | `(this: X, a: A, b: B) => C` |
 |    | Type guards | `(a: X) => a is A` | `(a: X) => boolean` |
 | ✅ | Type parameter bounds | `function f<A extends string>(a:A){}` | `function f<A: string>(a:A){}` |
 | ✅ | keyof X | `keyof X` | `$Keys<X>` |
