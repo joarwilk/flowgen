@@ -19,7 +19,7 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 |    | Type guards | `(a: X) => a is A` | `(a: X) => boolean` |
 | ✅ | Type parameter bounds | `function f<A extends string>(a:A){}` | `function f<A: string>(a:A){}` |
 | ✅ | keyof X | `keyof X` | `$Keys<X>` |
-| ✅ | X[keyof X] | `X[keyof X]` | `$ElementType<X, $Keys<X>>` |
+| ✅ | X[keyof X] | `X[keyof X]` | `X[$Keys<X>]` |
 | ✅ | Partial | `Partial<X>` | `$Rest<X, {}>` |
 | ✅ | Readonly | `Readonly<X>` | `$ReadOnly<X>` |
 | ✅ | ReadonlyArray | `ReadonlyArray<X>` | `$ReadOnlyArray<X>` |
@@ -35,9 +35,9 @@ It's surprisingly robust and non-lossy as it stands right now, in big part thank
 |    | InstanceType | `InstanceType<X>` |  |
 | ✅ | Required | `Required<X>` | `Required<X>` |
 |    | ThisType | `ThisType<X>` |  |
-| ✅ | T['string'] | `T['string']` | `$PropertyType<T, k>` |
-| ✅ | T[k] | `T[k]` | `$ElementType<T, k>` |
-| ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => $ElementType<Obj, K>>` |
+| ✅ | T['string'] | `T['string']` | `T['string']` |
+| ✅ | T[k] | `T[k]` | `T[k]` |
+| ✅ | Mapped types | `{[K in keyof Obj]: Obj[K]}` | `$ObjMapi<Obj, <K>(K) => Obj[K]>` |
 |    | Conditional types | `A extends B ? C : D` | `any` |
 | ✅ | typeof operator | `typeof foo` | `typeof foo` |
 | ✅ | Tuple type | `[number, string]` | `[number, string]` |

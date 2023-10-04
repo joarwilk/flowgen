@@ -15,10 +15,7 @@ declare type MappedUnion = $ObjMapi<
   { [k: SourceUnion]: any },
   <K>(K) => Ref<number>
 >;
-declare type MappedObj = $ObjMapi<
-  SourceObject,
-  <K>(K) => Ref<$ElementType<SourceObject, K>>
->;
-declare type ConstantKey = $PropertyType<MappedObj, \\"a\\">;
+declare type MappedObj = $ObjMapi<SourceObject, <K>(K) => Ref<SourceObject[K]>>;
+declare type ConstantKey = MappedObj[\\"a\\"];
 "
 `;
