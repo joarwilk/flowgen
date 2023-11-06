@@ -100,7 +100,7 @@ export function declarationFileTransform(options?: Options) {
         ctx.factory.createModuleDeclaration(
           undefined,
           undefined,
-          ctx.factory.createIdentifier(options.asModule),
+          ctx.factory.createStringLiteral(options.asModule),
           ctx.factory.createModuleBlock(
             node.statements.map(statement => {
               if (statement.modifiers) {

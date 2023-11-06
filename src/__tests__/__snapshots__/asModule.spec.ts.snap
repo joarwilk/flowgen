@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should wrap in module 1`] = `
+"declare module \\"myModule\\" {
+  declare type Test = \\"ok\\" | \\"error\\";
+  declare type Test2 = \\"ok\\" | \\"error\\";
+  declare type Maybe<T> =
+    | {
+        type: \\"just\\",
+        value: T,
+        ...
+      }
+    | {
+        type: \\"nothing\\",
+        ...
+      };
+  declare type Ref<T> = {
+    current: T,
+    ...
+  };
+  declare var ok: number;
+}
+"
+`;
+
+exports[`should wrap in module with scoped name 1`] = `
+"declare module \\"@company/project\\" {
+  declare type Test = \\"ok\\" | \\"error\\";
+  declare type Test2 = \\"ok\\" | \\"error\\";
+  declare type Maybe<T> =
+    | {
+        type: \\"just\\",
+        value: T,
+        ...
+      }
+    | {
+        type: \\"nothing\\",
+        ...
+      };
+  declare type Ref<T> = {
+    current: T,
+    ...
+  };
+  declare var ok: number;
+}
+"
+`;
